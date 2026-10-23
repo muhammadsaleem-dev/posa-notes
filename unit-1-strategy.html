@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/style.css?v=2026.6">
+<link rel="stylesheet" href="assets/style.css?v=2026.8">
 <style>
   .quote-card {
     margin: 1.5rem 0 2rem;
@@ -113,7 +113,7 @@
       <a href="#stage-3-refactoring" class="jump-stage-btn" data-target-stage="stage-3-refactoring"><span class="toc-num">3</span>Before &amp; After Code Lab</a>
       <a href="#stage-4-decision" class="jump-stage-btn" data-target-stage="stage-4-decision"><span class="toc-num">4</span>Trade-offs &amp; Decision Wizard</a>
       <a href="#stage-5-exam" class="jump-stage-btn" data-target-stage="stage-5-exam"><span class="toc-num">5</span>Prof. Schäfer Exam Drills</a>
-      <button type="button" class="sidebar-blueprint-trigger" id="sidebarBlueprintBtn">
+      <button type="button" class="sidebar-blueprint-trigger" id="sidebarBlueprintBtn" onclick="openBlueprintModal()">
         <span class="toc-num" style="background:#6366f1; color:#fff;">★</span>
         <span>8-Pillar Pattern Blueprint</span>
       </button>
@@ -176,7 +176,7 @@
               Mastering a design pattern requires far more than memorizing code. Discover the 8 mandatory pillars required in Prof. Schäfer's exams and enterprise code reviews—from formal GoF intent down to UML arrow rules, OCP invariants, and rival pattern trade-offs.
             </p>
           </div>
-          <button type="button" class="btn-open-blueprint" id="openBlueprintBtn" aria-haspopup="dialog">
+          <button type="button" class="btn-open-blueprint" id="openBlueprintBtn" onclick="openBlueprintModal()" aria-haspopup="dialog">
             <span>Explore 8 Pillars</span>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"></path></svg>
           </button>
@@ -1143,11 +1143,11 @@ public abstract class Duck {
         <span>The 8 Pillars of Software Pattern Anatomy</span>
       </h3>
       <div style="display:flex; align-items:center; gap:0.6rem;">
-        <button type="button" class="btn-copy-rubric" id="copyRubricBtn" title="Copy markdown rubric checklist to clipboard">
+        <button type="button" class="btn-copy-rubric" id="copyRubricBtn" onclick="copyBlueprintRubric()" title="Copy markdown rubric checklist to clipboard">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
           <span id="copyRubricLabel">Copy Rubric (Markdown)</span>
         </button>
-        <button type="button" class="blueprint-close-btn" id="closeBlueprintBtn" aria-label="Close blueprint modal">✕</button>
+        <button type="button" class="blueprint-close-btn" id="closeBlueprintBtn" onclick="closeBlueprintModal()" aria-label="Close blueprint modal">✕</button>
       </div>
     </div>
     <div class="blueprint-modal-body">
@@ -1282,6 +1282,111 @@ public abstract class Duck {
   </div>
 </div>
 
-<script src="assets/site.js" defer></script>
+<script>
+// Instant Blueprint Modal Controller (Resilient to Browser Caching)
+function openBlueprintModal() {
+  var modal = document.getElementById("blueprintModal");
+  if (modal) {
+    modal.classList.add("active");
+    modal.style.display = "flex";
+    document.body.style.overflow = "hidden";
+  }
+}
+
+function closeBlueprintModal() {
+  var modal = document.getElementById("blueprintModal");
+  if (modal) {
+    modal.classList.remove("active");
+    modal.style.display = "none";
+    document.body.style.overflow = "";
+  }
+}
+
+function copyBlueprintRubric() {
+  var copyLabel = document.getElementById("copyRubricLabel");
+  var rubricMarkdown = 
+    "# Software Pattern Mastery: The 8-Pillar Architectural Rubric\n" +
+    "*(Standard for POSA Exams & Technical Architecture Reviews)*\n\n" +
+    "## Pattern Name: Strategy Pattern (Policy)\n\n" +
+    "### 1. Intent & Architectural Motivation\n" +
+    "- **GoF Intent**: Define a family of algorithms, encapsulate each one, and make them interchangeable.\n" +
+    "- **Problem Solved**: Eliminates brittle inheritance hierarchies, prevents combinatorial subclass explosion, and removes complex switch/if-else logic.\n\n" +
+    "### 2. Structural Roles & Participants\n" +
+    "- **Context**: Maintains a reference to a Strategy object and delegates requests to it.\n" +
+    "- **Strategy Interface**: Declares a common interface for all supported algorithms.\n" +
+    "- **Concrete Strategies**: Encapsulates specific algorithmic implementations.\n" +
+    "- **Client**: Configures the Context with a chosen ConcreteStrategy at runtime.\n\n" +
+    "### 3. Formal UML Anatomy & Relationships\n" +
+    "- **Context -> Strategy**: Directed Association / Aggregation (`──>`), Multiplicity `1`.\n" +
+    "- **Strategy**: Interface stereotype `<<interface>>`.\n" +
+    "- **ConcreteStrategy -> Strategy**: Realization / Implementation (`···▷`), dashed line with hollow triangle.\n\n" +
+    "### 4. Core Design Principles Enforced\n" +
+    "- **Open/Closed Principle (OCP)**: Context is closed for modification, open for new strategy extensions.\n" +
+    "- **Dependency Inversion Principle (DIP)**: High-level Context depends on Strategy abstraction, not concrete implementations.\n" +
+    "- **Favor Composition over Inheritance**: Object composition (HAS-A) preferred over rigid subclassing (IS-A).\n\n" +
+    "### 5. Implementation Mechanics & Hot-Swapping\n" +
+    "- Context holds `private Strategy strategy;`.\n" +
+    "- Setter method `public void setStrategy(Strategy s)` enables dynamic runtime mutation.\n" +
+    "- Context delegates execution via `strategy.execute()`.\n" +
+    "- Modern Java: Functional interfaces allow lambdas and method references.\n\n" +
+    "### 6. Architectural Costs & Trade-offs\n" +
+    "- **Pros**: Clean testability with mock strategies, dynamic runtime reconfigurability, eliminates conditional branches.\n" +
+    "- **Cons**: Increases total class/object count; Client must understand algorithmic differences; minor heap indirection overhead.\n\n" +
+    "### 7. Rival Pattern Decision Matrix\n" +
+    "- **Strategy vs. State**: Identical UML. State transitions dynamically and autonomously based on internal state without client awareness. Strategy is chosen explicitly by client.\n" +
+    "- **Strategy vs. Template Method**: Template Method uses inheritance to fix an algorithm skeleton at compile time. Strategy uses composition to swap entire algorithms at runtime.\n\n" +
+    "### 8. Real-World JDK Reference & Exam Traps\n" +
+    "- **JDK Standard**: `java.util.Comparator`, `java.awt.LayoutManager`, `javax.servlet.Filter`.\n" +
+    "- **Exam Traps**: Forgetting the runtime setter in Context; circular references between Context and Strategy; creating unnecessary instances when stateless lambdas or Flyweights suffice.\n";
+
+  function updateLabelSuccess() {
+    if (copyLabel) copyLabel.textContent = "Copied to Clipboard!";
+    if (typeof window.showToast === "function") window.showToast("8-Pillar Study Rubric copied to clipboard!");
+    setTimeout(function () {
+      if (copyLabel) copyLabel.textContent = "Copy Rubric (Markdown)";
+    }, 2500);
+  }
+
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(rubricMarkdown).then(updateLabelSuccess).catch(function () {
+      fallbackCopy(rubricMarkdown);
+    });
+  } else {
+    fallbackCopy(rubricMarkdown);
+  }
+
+  function fallbackCopy(text) {
+    var ta = document.createElement("textarea");
+    ta.value = text;
+    ta.style.position = "fixed";
+    ta.style.opacity = "0";
+    document.body.appendChild(ta);
+    ta.select();
+    try {
+      document.execCommand("copy");
+      updateLabelSuccess();
+    } catch (e) {
+      alert("Please press Ctrl+C to copy rubric");
+    }
+    document.body.removeChild(ta);
+  }
+}
+
+// Bind overlay and ESC key directly
+document.addEventListener("DOMContentLoaded", function () {
+  var modal = document.getElementById("blueprintModal");
+  if (modal) {
+    modal.addEventListener("click", function (e) {
+      if (e.target === modal) closeBlueprintModal();
+    });
+  }
+});
+
+document.addEventListener("keydown", function (e) {
+  if (e.key === "Escape") closeBlueprintModal();
+});
+</script>
+
+<script src="assets/site.js?v=2026.8" defer></script>
 </body>
 </html>

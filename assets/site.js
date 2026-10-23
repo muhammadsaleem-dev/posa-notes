@@ -733,7 +733,11 @@
   var modeBtn = document.getElementById("stageModeToggle");
 
   // Load user preference for view mode (default: focused)
-  var isFocused = localStorage.getItem("posa-stage-mode") !== "full";
+  var isFocused = true;
+  try {
+    isFocused = localStorage.getItem("posa-stage-mode") !== "full";
+  } catch (e) {}
+
   if (isFocused) {
     document.body.classList.add("mode-stage-focused");
     if (modeBtn) modeBtn.textContent = "📑 Focused Stage Mode";
@@ -745,7 +749,7 @@
   if (modeBtn) {
     modeBtn.addEventListener("click", function () {
       var nowFocused = document.body.classList.toggle("mode-stage-focused");
-      localStorage.setItem("posa-stage-mode", nowFocused ? "focused" : "full");
+      try { localStorage.setItem("posa-stage-mode", nowFocused ? "focused" : "full"); } catch (e) {}
       modeBtn.textContent = nowFocused ? "📑 Focused Stage Mode" : "📜 Full Document Mode";
       showToast(nowFocused ? "Focused Stage Mode Active (1 Stage at a time)" : "Full Document Mode Active (All stages visible)");
     });
@@ -993,13 +997,18 @@
 
     masteryBtns.forEach(function (btn) {
       var stageId = btn.getAttribute("data-stage");
-      var isMastered = localStorage.getItem("posa-mastery-" + stageId) === "true";
+      var isMastered = false;
+      try {
+        isMastered = localStorage.getItem("posa-mastery-" + stageId) === "true";
+      } catch (e) {}
       if (isMastered) updateMasteryUI(btn, stageId, true);
 
       btn.addEventListener("click", function () {
         var current = btn.classList.contains("mastered");
         var nextState = !current;
-        localStorage.setItem("posa-mastery-" + stageId, nextState ? "true" : "false");
+        try {
+          localStorage.setItem("posa-mastery-" + stageId, nextState ? "true" : "false");
+        } catch (e) {}
         updateMasteryUI(btn, stageId, nextState);
         showToast(nextState ? "🎯 Stage marked as Mastered!" : "Stage status reset to In Progress");
       });
@@ -1041,45 +1050,51 @@
     var pct = total > 0 ? (window.pageYOffset / total) * 100 : 0;
     bar.style.width = Math.min(100, Math.max(0, pct)) + "%";
   }, { passive: true });
+})();
 
-  // ==========================================================================
-  // 8-PILLAR ARCHITECTURE BLUEPRINT MODAL & RUBRIC EXPORT
-  // ==========================================================================
-  (function initBlueprintModal() {
-    var modal = document.getElementById("blueprintModal");
-    if (!modal) return;
+// ==========================================================================
+// 8-PILLAR ARCHITECTURE BLUEPRINT MODAL & RUBRIC EXPORT
+// ==========================================================================
+(function initBlueprintModal() {
+  var modal = document.getElementById("blueprintModal");
+  if (!modal) return;
 
-    var openBtn = document.getElementById("openBlueprintBtn");
-    var sidebarBtn = document.getElementById("sidebarBlueprintBtn");
-    var closeBtn = document.getElementById("closeBlueprintBtn");
-    var copyBtn = document.getElementById("copyRubricBtn");
-    var copyLabel = document.getElementById("copyRubricLabel");
+  var openBtn = document.getElementById("openBlueprintBtn");
+  var sidebarBtn = document.getElementById("sidebarBlueprintBtn");
+  var closeBtn = document.getElementById("closeBlueprintBtn");
+  var copyBtn = document.getElementById("copyRubricBtn");
+  var copyLabel = document.getElementById("copyRubricLabel");
 
-    function openModal() {
-      modal.classList.add("active");
-      document.body.style.overflow = "hidden";
+  function openModal() {
+    modal.classList.add("active");
+    modal.style.display = "flex";
+    document.body.style.overflow = "hidden";
+  }
+
+  function closeModal() {
+    modal.classList.remove("active");
+    modal.style.display = "none";
+    document.body.style.overflow = "";
+  }
+
+  window.openBlueprintModal = openModal;
+  window.closeBlueprintModal = closeModal;
+
+  if (openBtn) openBtn.addEventListener("click", openModal);
+  if (sidebarBtn) sidebarBtn.addEventListener("click", openModal);
+  if (closeBtn) closeBtn.addEventListener("click", closeModal);
+
+  modal.addEventListener("click", function (e) {
+    if (e.target === modal) {
+      closeModal();
     }
+  });
 
-    function closeModal() {
-      modal.classList.remove("active");
-      document.body.style.overflow = "";
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape" && (modal.classList.contains("active") || modal.style.display === "flex")) {
+      closeModal();
     }
-
-    if (openBtn) openBtn.addEventListener("click", openModal);
-    if (sidebarBtn) sidebarBtn.addEventListener("click", openModal);
-    if (closeBtn) closeBtn.addEventListener("click", closeModal);
-
-    modal.addEventListener("click", function (e) {
-      if (e.target === modal) {
-        closeModal();
-      }
-    });
-
-    document.addEventListener("keydown", function (e) {
-      if (e.key === "Escape" && modal.classList.contains("active")) {
-        closeModal();
-      }
-    });
+  });
 
     // Copy Markdown Rubric
     if (copyBtn) {
@@ -1131,4 +1146,3 @@
       });
     }
   })();
-})();

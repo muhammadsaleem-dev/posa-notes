@@ -5710,7 +5710,7 @@ body.mode-stage-focused .stage-view.active {
 }
 
 .blueprint-modal-overlay.active {
-  display: flex;
+  display: flex !important;
   animation: modalFadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
