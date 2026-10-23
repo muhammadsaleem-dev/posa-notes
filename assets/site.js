@@ -788,6 +788,20 @@
       di.classList.toggle("active", target === stageId);
     });
 
+    // Synchronize Section 2 Roadmap Flow Chips
+    var roadmapChips = document.querySelectorAll(".roadmap-steps-flow .roadmap-chip");
+    roadmapChips.forEach(function (rc) {
+      var target = rc.getAttribute("data-target-stage");
+      rc.classList.toggle("active", target === stageId);
+    });
+
+    // Synchronize Sidebar Links
+    var sidebarLinks = document.querySelectorAll(".sidebar .jump-stage-btn");
+    sidebarLinks.forEach(function (sl) {
+      var target = sl.getAttribute("data-target-stage");
+      sl.classList.toggle("active", target === stageId);
+    });
+
     // Reset scroll cleanly to the top of the newly displayed stage
     requestAnimationFrame(function () {
       var navBar = document.querySelector(".masterclass-stage-nav");
@@ -1066,6 +1080,8 @@
   var pillsBar = document.getElementById("blueprintPillsBar");
   var contentArea = document.getElementById("blueprintContentArea");
   var matrixArea = document.getElementById("blueprintMatrixArea");
+  var collapseBtn = document.getElementById("btnCollapseBlueprint");
+  var collBody = document.getElementById("blueprintCollapsibleBody");
 
   tabBtns.forEach(function (btn) {
     btn.addEventListener("click", function () {
@@ -1101,9 +1117,42 @@
     }
   }
 
+  function toggleCollapse() {
+    var isCollapsed = suite.classList.toggle("is-collapsed");
+    if (collapseBtn) {
+      var icon = collapseBtn.querySelector(".collapse-icon");
+      var label = collapseBtn.querySelector(".collapse-label");
+      if (isCollapsed) {
+        if (icon) icon.textContent = "▼";
+        if (label) label.textContent = "Expand Rubric";
+        collapseBtn.setAttribute("aria-expanded", "false");
+        collapseBtn.title = "Expand the 8-Pillar Architecture Rubric";
+      } else {
+        if (icon) icon.textContent = "▲";
+        if (label) label.textContent = "Collapse Rubric";
+        collapseBtn.setAttribute("aria-expanded", "true");
+        collapseBtn.title = "Collapse the 8-Pillar Architecture Rubric";
+      }
+    }
+  }
+
   if (explorerBtn) explorerBtn.addEventListener("click", function () { setView("explorer"); });
   if (matrixBtn) matrixBtn.addEventListener("click", function () { setView("matrix"); });
+  if (collapseBtn) collapseBtn.addEventListener("click", toggleCollapse);
+
+  // Sidebar blueprint trigger listener
+  var sidebarTrigger = document.getElementById("sidebarBlueprintBtn");
+  if (sidebarTrigger) {
+    sidebarTrigger.addEventListener("click", function (e) {
+      e.preventDefault();
+      if (suite.classList.contains("is-collapsed")) {
+        toggleCollapse();
+      }
+      suite.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  }
 
   window.selectPillar = selectPillar;
   window.setBlueprintView = setView;
+  window.toggleBlueprintCollapse = toggleCollapse;
 })();

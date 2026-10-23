@@ -5905,11 +5905,59 @@ body.mode-stage-focused .stage-view.active {
   color: var(--text);
   margin: 0.5rem 0 1rem;
   overflow-x: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
+  -webkit-overflow-scrolling: touch;
 }
 
 [data-theme="light"] .pillar-app-snippet {
   background: #f1f5f9;
-  border-color: #e2e8f0;
+  border-color: #cbd5e1;
+}
+
+.pillar-svg-box {
+  background: var(--bg-raised);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 0.85rem;
+  margin: 0.5rem 0 1rem;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+[data-theme="light"] .pillar-svg-box {
+  background: #f8fafc;
+  border-color: #cbd5e1;
+}
+
+.pillar-matrix-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.8rem;
+  margin: 0.5rem 0 1rem;
+}
+
+.pillar-matrix-table th {
+  text-align: left;
+  padding: 0.55rem 0.65rem;
+  background: var(--bg-subtle);
+  color: var(--text-muted);
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 0.7rem;
+  border-bottom: 1px solid var(--border);
+}
+
+[data-theme="light"] .pillar-matrix-table th {
+  background: #e2e8f0;
+  color: #334155;
+}
+
+.pillar-matrix-table td {
+  padding: 0.6rem 0.65rem;
+  border-bottom: 1px solid var(--border);
+  color: var(--text);
+  line-height: 1.45;
 }
 
 .pillar-exam-tip {
@@ -6028,6 +6076,389 @@ body.mode-stage-focused .stage-view.active {
   border-color: var(--accent);
   color: #ffffff;
   transform: translateX(2px);
+}
+
+/* ==========================================================================
+   ENTERPRISE SECTION DEMARCATION & COLLAPSIBLE SYSTEM
+   ========================================================================== */
+
+/* Section 1: Collapsible Blueprint Actions */
+.btn-section-collapse {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  background: var(--bg-subtle);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 0.45rem 0.85rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btn-section-collapse:hover {
+  background: var(--accent-soft);
+  border-color: var(--accent);
+  color: var(--accent-ink);
+}
+
+.btn-section-collapse .collapse-icon {
+  font-size: 0.7rem;
+  transition: transform 0.2s ease;
+}
+
+.blueprint-suite.is-collapsed .blueprint-suite-top {
+  border-bottom: none;
+}
+
+.blueprint-suite.is-collapsed .blueprint-collapsible-body {
+  display: none !important;
+}
+
+.section-badge-pill {
+  display: inline-flex;
+  align-items: center;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  background: rgba(99, 102, 241, 0.2);
+  color: #a5b4fc;
+  padding: 0.15rem 0.5rem;
+  border-radius: 4px;
+}
+
+[data-theme="light"] .section-badge-pill {
+  background: #e0e7ff;
+  color: #4338ca;
+}
+
+.section-badge-pill.accent {
+  background: rgba(16, 185, 129, 0.2);
+  color: #6ee7b7;
+}
+
+[data-theme="light"] .section-badge-pill.accent {
+  background: #d1fae5;
+  color: #047857;
+}
+
+.badge-sep {
+  opacity: 0.5;
+  margin: 0 0.15rem;
+}
+
+/* Section Divider Between Section 1 and Section 2 */
+.masterclass-section-divider {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  margin: 3.5rem 0 2rem;
+  position: relative;
+}
+
+.section-divider-line {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--border-strong) 20%, var(--border-strong) 80%, transparent);
+}
+
+.section-divider-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.35rem 0.95rem;
+  border-radius: 999px;
+  background: var(--bg-raised);
+  border: 1px solid var(--border-strong);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  box-shadow: var(--shadow-sm);
+}
+
+[data-theme="light"] .section-divider-chip {
+  background: #ffffff;
+  border-color: #cbd5e1;
+}
+
+/* Section 2: Curriculum Super Header */
+.curriculum-super-header {
+  background: var(--bg-raised);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-lg);
+  padding: 1.75rem 2rem;
+  margin-bottom: 1.5rem;
+  box-shadow: var(--shadow-sm);
+  position: relative;
+  overflow: hidden;
+}
+
+[data-theme="light"] .curriculum-super-header {
+  background: #ffffff;
+  border-color: #cbd5e1;
+}
+
+.curriculum-super-header::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background: linear-gradient(180deg, #6366F1 0%, #10B981 100%);
+}
+
+.curriculum-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--accent-ink);
+  margin-bottom: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.curriculum-main-title {
+  font-family: var(--font-display);
+  font-size: 1.45rem;
+  font-weight: 800;
+  color: var(--text);
+  margin: 0 0 0.5rem;
+  letter-spacing: -0.02em;
+}
+
+.curriculum-main-desc {
+  margin: 0 0 1.25rem;
+  font-size: 0.92rem;
+  line-height: 1.6;
+  color: var(--text-muted);
+  max-width: 75ch;
+}
+
+/* Roadmap Flow in Section 2 Header */
+.curriculum-roadmap-preview {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  padding: 0.85rem 1.15rem;
+  background: var(--bg-subtle);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+[data-theme="light"] .curriculum-roadmap-preview {
+  background: #f8fafc;
+  border-color: #e2e8f0;
+}
+
+.roadmap-track-label {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.roadmap-steps-flow {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: nowrap;
+  white-space: nowrap;
+}
+
+.roadmap-chip {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  padding: 0.2rem 0.55rem;
+  border-radius: 4px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  transition: all 0.15s ease;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.roadmap-chip:hover {
+  color: var(--text);
+  border-color: var(--accent);
+}
+
+.roadmap-chip.active {
+  background: var(--accent-soft);
+  color: var(--accent-ink);
+  border-color: var(--accent);
+  font-weight: 700;
+}
+
+.roadmap-arrow {
+  color: var(--text-dim);
+  font-size: 0.75rem;
+}
+
+/* Stripe/Vercel Style "Up Next" Card at Bottom of Each Stage */
+.stage-next-card {
+  background: var(--bg-raised);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem 1.75rem;
+  margin: 3.5rem 0 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  box-shadow: var(--shadow-sm);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+[data-theme="light"] .stage-next-card {
+  background: #ffffff;
+  border-color: #cbd5e1;
+}
+
+.stage-next-card:hover {
+  border-color: var(--accent);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px -10px rgba(99, 102, 241, 0.2);
+}
+
+.stage-next-left {
+  flex: 1;
+}
+
+.stage-next-tag {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: var(--emerald);
+  letter-spacing: 0.05em;
+  margin-bottom: 0.35rem;
+}
+
+.stage-next-title {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: var(--text);
+  margin: 0 0 0.35rem;
+}
+
+.stage-next-desc {
+  font-size: 0.88rem;
+  line-height: 1.55;
+  color: var(--text-muted);
+  margin: 0;
+  max-width: 65ch;
+}
+
+.btn-stage-advance {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: linear-gradient(135deg, #6366F1 0%, #4F46E5 100%);
+  color: #ffffff;
+  border: none;
+  border-radius: var(--radius-sm);
+  padding: 0.85rem 1.5rem;
+  font-family: var(--font-body);
+  font-size: 0.92rem;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+  box-shadow: 0 4px 14px rgba(99, 102, 241, 0.35);
+  transition: all 0.2s ease;
+}
+
+.btn-stage-advance:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(99, 102, 241, 0.5);
+}
+
+@media (max-width: 768px) {
+  .stage-next-card {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1.25rem;
+    padding: 1.25rem;
+  }
+  .btn-stage-advance {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+/* Badges for Pattern Comparison Table */
+.badge-pattern {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.2rem 0.55rem;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+
+.badge-pattern.strategy {
+  background: rgba(99, 102, 241, 0.18);
+  color: #a5b4fc;
+  border: 1px solid rgba(99, 102, 241, 0.3);
+}
+
+[data-theme="light"] .badge-pattern.strategy {
+  background: #e0e7ff;
+  color: #4338ca;
+  border-color: #c7d2fe;
+}
+
+.badge-pattern.template {
+  background: rgba(245, 158, 11, 0.18);
+  color: #fcd34d;
+  border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+[data-theme="light"] .badge-pattern.template {
+  background: #fef3c7;
+  color: #b45309;
+  border-color: #fde68a;
+}
+
+.badge-pattern.state {
+  background: rgba(16, 185, 129, 0.18);
+  color: #6ee7b7;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+[data-theme="light"] .badge-pattern.state {
+  background: #d1fae5;
+  color: #047857;
+  border-color: #a7f3d0;
+}
+
+.badge-pattern.command {
+  background: rgba(56, 189, 248, 0.18);
+  color: #7dd3fc;
+  border: 1px solid rgba(56, 189, 248, 0.3);
+}
+
+[data-theme="light"] .badge-pattern.command {
+  background: #e0f2fe;
+  color: #0369a1;
+  border-color: #bae6fd;
 }
 
 /* ==========================================================================
