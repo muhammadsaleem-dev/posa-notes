@@ -2,46 +2,121 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Unit 7: OO Principles II (Packaging Principles &amp; Metrics) | POSA 2026</title>
-<meta name="description" content="Unit 7 of Pattern-Oriented Software Architecture by Prof. Dr. Jörg Schäfer: Package Cohesion (REP, CRP, CCP), Package Coupling (ADP, SDP, SAP), Instability, Abstractness, and Distance metrics.">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230c7a73'/%3E%3Cpath d='M8 10h16M8 16h16M8 22h10' stroke='%23fff' stroke-width='2.2' stroke-linecap='round'/%3E%3C/svg%3E">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Unit 7: Packaging Principles &amp; Modularity Metrics | POSA 2026 Masterclass</title>
+<meta name="description" content="Unit 7 of Pattern-Oriented Software Architecture by Prof. Dr. Jörg Schäfer: Package Cohesion (REP, CRP, CCP), Package Coupling (ADP, SDP, SAP), Instability, Abstractness, and the Main Sequence metrics.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2310b981'/%3E%3Cpath d='M8 10h16M8 16h16M8 22h10' stroke='%23fff' stroke-width='2.2' stroke-linecap='round'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/style.css">
+<link rel="stylesheet" href="assets/style.css?v=2026.15">
 <style>
-  .metric-card {
-    background: var(--bg-raised);
-    border: 1px solid var(--border);
+  .reading-progress-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #10b981 0%, #38bdf8 50%, #6366f1 100%);
+    width: 0%;
+    z-index: 9999;
+    transition: width 0.1s ease-out;
+  }
+  .stage-takeaways-box {
+    background: rgba(16, 185, 129, 0.05);
+    border: 1px solid rgba(16, 185, 129, 0.2);
     border-radius: var(--radius-md);
     padding: 1.5rem;
-    margin: 1.5rem 0;
+    margin: 2rem 0;
+  }
+  [data-theme="light"] .stage-takeaways-box {
+    background: #f0fdf4;
+    border-color: #bbf7d0;
+  }
+  .stage-takeaways-title {
+    font-weight: 800;
+    color: #10b981;
+    margin-bottom: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1.05rem;
+  }
+  .takeaway-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+  .takeaway-item {
+    background: var(--bg-raised);
+    padding: 1rem;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+  }
+  .takeaway-item strong {
+    color: var(--text);
+    display: block;
+    margin-bottom: 0.35rem;
+    font-size: 0.92rem;
+  }
+  .takeaway-item p {
+    margin: 0;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    line-height: 1.5;
   }
   .formula-box {
     margin: 1rem 0;
     padding: 1rem 1.25rem;
-    background: var(--code-bg);
+    background: #090d16;
+    border: 1px solid #1e293b;
     border-radius: var(--radius-sm);
     font-family: var(--font-mono);
     font-size: 1.05rem;
     font-weight: 600;
-    color: var(--accent-ink);
+    color: #38bdf8;
+  }
+  .calc-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    gap: 1rem;
+    margin: 1rem 0;
+  }
+  .calc-input-group label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    display: block;
+    margin-bottom: 0.25rem;
+  }
+  .calc-input-group input {
+    width: 100%;
+    padding: 0.55rem;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-mono);
+    font-size: 0.95rem;
   }
 </style>
 <script>(function(){try{var t=localStorage.getItem('posa-theme')||'dark';document.documentElement.setAttribute('data-theme',t);var m=localStorage.getItem('posa-mode')||'concept';document.documentElement.setAttribute('data-mode',m);}catch(e){}})();</script>
 </head>
-<body>
+<body class="mode-stage-focused">
+
+<div class="reading-progress-bar" id="readingProgressBar"></div>
 
 <nav class="sitenav">
   <div class="sitenav-inner">
     <a class="sitenav-home" href="index.html">
-      <span style="background:linear-gradient(135deg, #6366f1 0%, #38bdf8 100%);color:#fff;padding:0.2rem 0.55rem;border-radius:6px;font-size:0.82rem;font-weight:800;letter-spacing:0.04em;">POSA</span>
+      <span style="background:linear-gradient(135deg, #10b981 0%, #38bdf8 100%);color:#fff;padding:0.2rem 0.55rem;border-radius:6px;font-size:0.82rem;font-weight:800;letter-spacing:0.04em;">POSA</span>
       <span style="font-weight:800;letter-spacing:-0.02em;">2026</span>
     </a>
     <div class="sitenav-links">
       <a href="index.html">Overview</a>
       <a href="unit-1-strategy.html">1 · Strategy</a>
+      <a href="unit-2-behavioral.html">2 · Behavioral</a>
+      <a href="unit-3-structural.html">3 · Structural</a>
       <a href="unit-6-solid.html">6 · SOLID</a>
       <a href="unit-7-packaging.html" class="active">7 · Packaging</a>
       <a href="mock-1.html">📝 Mock 1</a>
@@ -60,8 +135,11 @@
     <div class="nav-panel-section">
       <span class="nav-panel-label">Course Navigation</span>
       <a href="index.html">Overview</a>
+      <a href="unit-1-strategy.html">Unit 1 · Strategy</a>
+      <a href="unit-2-behavioral.html">Unit 2 · Behavioral Patterns</a>
+      <a href="unit-3-structural.html">Unit 3 · Structural Patterns</a>
       <a href="unit-6-solid.html">Unit 6 · SOLID Principles</a>
-      <a href="unit-7-packaging.html" class="active">Unit 7 · Packaging Principles &amp; Metrics</a>
+      <a href="unit-7-packaging.html" class="active">Unit 7 · Packaging Architecture</a>
       <a href="mock-1.html">📝 Mock Exam 1</a>
     </div>
   </div>
@@ -69,345 +147,1153 @@
 
 <!-- Mobile Native Bottom Dock (iOS App Bar) -->
 <nav class="mobile-bottom-dock" aria-label="Mobile Navigation Dock">
-  <a href="#package-cohesion" class="dock-item active">
+  <a href="#stage-1-cohesion" class="dock-item active">
     <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
     <span>Cohesion</span>
   </a>
-  <a href="#package-coupling" class="dock-item">
+  <a href="#stage-2-coupling" class="dock-item">
     <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
     <span>Coupling</span>
   </a>
-  <a href="#package-metrics" class="dock-item">
-    <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
-    <span>Metrics</span>
-  </a>
-  <a href="#main-sequence" class="dock-item">
+  <a href="#stage-3-calculator" class="dock-item">
     <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
-    <span>Sequence</span>
+    <span>Metrics Lab</span>
   </a>
-  <a href="#self-study" class="dock-item">
+  <a href="#stage-4-code" class="dock-item">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+    <span>Modules</span>
+  </a>
+  <a href="#stage-5-exam" class="dock-item">
     <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
-    <span>Gotchas</span>
+    <span>Drills</span>
   </a>
 </nav>
 
 <div class="page-shell">
   <aside class="sidebar-toc">
     <div class="sidebar-block">
-      <span class="sidebar-label">On This Page</span>
-      <a href="#package-cohesion"><span class="toc-num">1</span>Package Cohesion (REP, CRP, CCP)</a>
-      <a href="#package-coupling"><span class="toc-num">2</span>Package Coupling (ADP, SDP, SAP)</a>
-      <a href="#package-metrics"><span class="toc-num">3</span>Formulas: I, A, and D Metrics</a>
-      <a href="#main-sequence"><span class="toc-num">4</span>Main Sequence &amp; Zone of Pain</a>
-      <a href="#self-study"><span class="toc-num">5</span>Self-Study Exam Questions</a>
+      <span class="sidebar-label">Curriculum Navigation</span>
+      <a href="#stage-1-cohesion" class="jump-stage-btn" data-target-stage="stage-1-cohesion"><span class="toc-num">1</span>Package Cohesion (REP, CRP, CCP)</a>
+      <a href="#stage-2-coupling" class="jump-stage-btn" data-target-stage="stage-2-coupling"><span class="toc-num">2</span>Package Coupling (ADP, SDP, SAP)</a>
+      <a href="#stage-3-calculator" class="jump-stage-btn" data-target-stage="stage-3-calculator"><span class="toc-num">3</span>Main Sequence Interactive Lab</a>
+      <a href="#stage-4-code" class="jump-stage-btn" data-target-stage="stage-4-code"><span class="toc-num">4</span>Multi-Module Architecture</a>
+      <a href="#stage-5-exam" class="jump-stage-btn" data-target-stage="stage-5-exam"><span class="toc-num">5</span>Prof. Schäfer Exam Drills</a>
     </div>
     <div class="sidebar-block">
-      <span class="sidebar-label">Instructor</span>
-      <p style="font-size: 0.85rem; color: var(--text-muted); margin: 0;">
-        Prof. Dr. Jörg Schäfer<br>
-        <em>Frankfurt University of Applied Sciences</em>
+      <span class="sidebar-label">Course Origin</span>
+      <p style="font-size: 0.85rem; color: var(--text-muted); margin: 0 0 0.5rem; line-height: 1.5;">
+        <strong>Prof. Dr. Jörg Schäfer</strong><br>
+        Frankfurt University of Applied Sciences<br>
+        Fachbereich 2: Informatik
       </p>
+      <div style="font-size:0.75rem; font-weight:700; color:#10b981; background:rgba(16,185,129,0.12); border:1px solid rgba(16,185,129,0.25); padding:0.25rem 0.5rem; border-radius:4px; display:inline-block; margin-top:0.4rem;">
+        ⏱️ 45 Min · 20 Exam Pts
+      </div>
     </div>
   </aside>
 
   <div class="page">
-    <div class="masthead">
+    
+    <!-- Hero Masthead -->
+    <header class="masthead">
       <div>
-        <div class="eyebrow">Unit 7 · Macro Architecture &amp; Modularity</div>
-        <h1 class="title">OO Principles II: Packaging Patterns &amp; Metrics</h1>
+        <div class="eyebrow">
+          <span>Macro Architecture &amp; Modularity · Uncle Bob Package Engineering</span>
+        </div>
+        <h1 class="title">Unit 7: Packaging Principles &amp; Modularity Metrics</h1>
+        <p class="dek" style="font-size:1.05rem; line-height:1.65; max-width:68ch; color:var(--text-muted);">
+          Scaling beyond individual classes into packages, JARs, and microservice modules. Uncle Bob’s 6 package principles, DAG dependency topologies, and the mathematical metrics for stability, abstractness, and the Main Sequence.
+        </p>
+
+        <!-- Course Meta Metric Chips -->
+        <div class="masthead-metrics-grid">
+          <div class="metric-chip">
+            <div class="metric-chip-label">⏱️ Study Time</div>
+            <div class="metric-chip-val" style="color:#38bdf8;">45 Minutes</div>
+          </div>
+          <div class="metric-chip">
+            <div class="metric-chip-label">🎯 Exam Weight</div>
+            <div class="metric-chip-val" style="color:#10b981;">20 Pts (Grade 1.0)</div>
+          </div>
+          <div class="metric-chip">
+            <div class="metric-chip-label">🏛️ Category</div>
+            <div class="metric-chip-val" style="color:#a5b4fc;">Macro Architecture</div>
+          </div>
+          <div class="metric-chip">
+            <div class="metric-chip-label">⚙️ Visual Sandbox</div>
+            <div class="metric-chip-val" style="color:#f59e0b;">Main Sequence Plotter</div>
+          </div>
+        </div>
+
+      </div>
+    </header>
+
+    <!-- ====================================================================
+         SECTION 1: 8-PILLAR ARCHITECTURAL BLUEPRINT (UNIVERSAL RUBRIC)
+         ==================================================================== -->
+    <div class="masterclass-section-divider" style="margin: 2.5rem 0 1.5rem;">
+      <div class="section-divider-line"></div>
+      <div class="section-divider-chip">
+        <span>PART 1 · ARCHITECTURAL RUBRIC</span>
+      </div>
+      <div class="section-divider-line"></div>
+    </div>
+
+    <section class="blueprint-suite" id="blueprintSuite" aria-label="8-Pillar Architecture Rubric">
+      <div class="blueprint-suite-top">
+        <div>
+          <div class="blueprint-suite-badge">
+            <span class="section-badge-pill">SECTION 1 OF 2</span>
+            <span class="badge-sep">·</span>
+            <span>📐 Universal Pattern Rubric</span>
+            <span class="badge-sep">·</span>
+            <span>Exam &amp; Production Standard</span>
+          </div>
+          <h3 class="blueprint-suite-title">The 8 Pillars of Software Pattern Mastery</h3>
+          <p class="blueprint-suite-desc">
+            The definitive architectural rubric for package modularity, cohesion-coupling tensions, and quantitative architecture health metrics (I, A, D).
+          </p>
+        </div>
+        <div class="blueprint-suite-actions">
+          <div class="blueprint-view-toggles" style="display:inline-flex; gap:0.4rem;">
+            <button type="button" class="btn-suite-toggle active" id="btnViewExplorer" onclick="setBlueprintView('explorer')" title="Explore one pillar at a time with interactive details">
+              <span>⚡ Interactive Explorer</span>
+            </button>
+            <button type="button" class="btn-suite-toggle" id="btnViewMatrix" onclick="setBlueprintView('matrix')" title="View all 8 pillars simultaneously in an executive grid">
+              <span>📊 Full Matrix</span>
+            </button>
+          </div>
+          <button type="button" class="btn-copy-rubric" id="btnCopyRubricSuite" onclick="copyBlueprintRubric()" title="Copy entire 8-pillar markdown study rubric to clipboard">
+            <span>📋</span>
+            <span id="copyRubricSuiteLabel">Copy Rubric</span>
+          </button>
+          <button type="button" class="btn-section-collapse" id="btnCollapseBlueprint" onclick="toggleBlueprintCollapse()" aria-expanded="true" title="Collapse or expand the 8-Pillar section">
+            <span class="collapse-icon">▲</span>
+            <span class="collapse-label">Collapse Rubric</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Collapsed Hint Bar -->
+      <div class="blueprint-collapsed-hint" id="blueprintCollapsedHint" style="display:none; padding:0.85rem 1.75rem; background:var(--bg-subtle); border-top:1px dashed var(--border); font-size:0.85rem; color:var(--text-muted); align-items:center; justify-content:space-between; flex-wrap:wrap; gap:0.5rem;">
+        <div style="display:flex; align-items:center; gap:0.6rem;">
+          <span style="font-size:1.1rem;">📐</span>
+          <span><strong>8-Pillar Architecture Rubric is Collapsed</strong> (Packaging Principles &amp; Modularity Metrics). Click to restore instant reference.</span>
+        </div>
+        <button type="button" class="btn-restore-rubric" onclick="toggleBlueprintCollapse(false)" style="background:var(--accent); color:#fff; border:none; padding:0.35rem 0.85rem; border-radius:6px; font-weight:700; cursor:pointer; font-size:0.8rem;">
+          Restore Rubric ▲
+        </button>
+      </div>
+
+      <div class="blueprint-collapsible-body" id="blueprintCollapsibleBody">
+        <!-- Explorer View -->
+        <div class="blueprint-explorer" id="blueprintExplorer">
+          <nav class="blueprint-pillar-tabs" role="tablist" aria-label="8 Pillars Navigation">
+            <button type="button" class="pillar-tab-btn active" role="tab" aria-selected="true" onclick="selectPillar(1)">
+              <span class="pillar-tab-num">1</span>
+              <span class="pillar-tab-label">Intent</span>
+            </button>
+            <button type="button" class="pillar-tab-btn" role="tab" aria-selected="false" onclick="selectPillar(2)">
+              <span class="pillar-tab-num">2</span>
+              <span class="pillar-tab-label">Roles</span>
+            </button>
+            <button type="button" class="pillar-tab-btn" role="tab" aria-selected="false" onclick="selectPillar(3)">
+              <span class="pillar-tab-num">3</span>
+              <span class="pillar-tab-label">UML</span>
+            </button>
+            <button type="button" class="pillar-tab-btn" role="tab" aria-selected="false" onclick="selectPillar(4)">
+              <span class="pillar-tab-num">4</span>
+              <span class="pillar-tab-label">Principles</span>
+            </button>
+            <button type="button" class="pillar-tab-btn" role="tab" aria-selected="false" onclick="selectPillar(5)">
+              <span class="pillar-tab-num">5</span>
+              <span class="pillar-tab-label">Mechanics</span>
+            </button>
+            <button type="button" class="pillar-tab-btn" role="tab" aria-selected="false" onclick="selectPillar(6)">
+              <span class="pillar-tab-num">6</span>
+              <span class="pillar-tab-label">Trade-offs</span>
+            </button>
+            <button type="button" class="pillar-tab-btn" role="tab" aria-selected="false" onclick="selectPillar(7)">
+              <span class="pillar-tab-num">7</span>
+              <span class="pillar-tab-label">Rivals</span>
+            </button>
+            <button type="button" class="pillar-tab-btn" role="tab" aria-selected="false" onclick="selectPillar(8)">
+              <span class="pillar-tab-num">8</span>
+              <span class="pillar-tab-label">Exam Traps</span>
+            </button>
+          </nav>
+
+          <div class="blueprint-active-pillar-card" id="pillarActiveCard">
+            <div class="pillar-panel active" id="pillarPanel1">
+              <div class="pillar-panel-badge">PILLAR 1 OF 8 · INTENT &amp; MOTIVATION</div>
+              <h4 class="pillar-panel-title">Macro Architecture: Packaging Granularity</h4>
+              <p style="font-size:0.95rem; line-height:1.6; color:var(--text); margin-bottom:1rem;">
+                When an application grows past dozens of classes, organizing code at the class level alone is insufficient. Packaging principles determine how classes are grouped into deployable modules (JARs, DLLs, npm packages) and how dependencies flow between them without cycles.
+              </p>
+              <div style="background:var(--bg-subtle); padding:1rem; border-radius:6px; border-left:3px solid #10b981;">
+                <strong style="color:#10b981; display:block; margin-bottom:0.35rem;">Architectural Goal</strong>
+                <p style="font-size:0.85rem; color:var(--text-muted); margin:0;">
+                  Prevent the "Morning-After Syndrome" (where independent team commits break unrelated modules) by establishing Directed Acyclic Graphs (DAG) and quantifying stability metrics.
+                </p>
+              </div>
+            </div>
+
+            <div class="pillar-panel" id="pillarPanel2" style="display:none;">
+              <div class="pillar-panel-badge">PILLAR 2 OF 8 · PARTICIPANTS &amp; ROLES</div>
+              <h4 class="pillar-panel-title">The 6 Packaging Principles Breakdown</h4>
+              <div class="pillar-matrix-table-wrap">
+                <table class="pillar-matrix-table">
+                  <thead>
+                    <tr>
+                      <th>Category</th>
+                      <th>Acronym</th>
+                      <th>Principle Name</th>
+                      <th>Architectural Mandate</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><strong>Cohesion</strong></td>
+                      <td><strong>REP</strong></td>
+                      <td>Reuse-Release Equivalence</td>
+                      <td>The granule of reuse is the granule of release. Track versions jointly.</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Cohesion</strong></td>
+                      <td><strong>CCP</strong></td>
+                      <td>Common-Closure Principle</td>
+                      <td>Package classes together that change for the same reasons (Package SRP).</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Cohesion</strong></td>
+                      <td><strong>CRP</strong></td>
+                      <td>Common-Reuse Principle</td>
+                      <td>Don't force clients to depend on classes they don't use (Package ISP).</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Coupling</strong></td>
+                      <td><strong>ADP</strong></td>
+                      <td>Acyclic-Dependencies</td>
+                      <td>No cyclic dependencies allowed in package dependency topology.</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Coupling</strong></td>
+                      <td><strong>SDP</strong></td>
+                      <td>Stable-Dependencies</td>
+                      <td>Depend in the direction of stability ($I_{dependee} \le I_{dependent}$).</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Coupling</strong></td>
+                      <td><strong>SAP</strong></td>
+                      <td>Stable-Abstractions</td>
+                      <td>A package should be as abstract as it is stable ($A \approx 1 - I$).</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div class="pillar-panel" id="pillarPanel3" style="display:none;">
+              <div class="pillar-panel-badge">PILLAR 3 OF 8 · FORMAL UML ANATOMY</div>
+              <h4 class="pillar-panel-title">Breaking Dependency Cycles with DIP</h4>
+              <p style="font-size:0.88rem; color:var(--text-muted); margin-bottom:1rem;">
+                When Package A depends on Package B, and Package B introduces a back-dependency on Package A, a toxic cycle forms. Applying DIP breaks the cycle into a DAG.
+              </p>
+              <div class="uml-svg-container" style="background:#090d16; border-radius:8px; padding:1.5rem; text-align:center; overflow-x:auto;">
+                <svg viewBox="0 0 720 200" width="100%" height="auto" xmlns="http://www.w3.org/2000/svg" style="font-family:'JetBrains Mono', 'SF Mono', monospace; font-size:12px;">
+                  <defs>
+                    <marker id="u7-arrow" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                      <path d="M 0 1 L 10 5 L 0 9 z" fill="#10b981"/>
+                    </marker>
+                    <marker id="u7-tri" viewBox="0 0 12 12" refX="12" refY="6" markerWidth="10" markerHeight="10" orient="auto-start-reverse">
+                      <polygon points="0,0 12,6 0,12" fill="#090d16" stroke="#38bdf8" stroke-width="1.8"/>
+                    </marker>
+                  </defs>
+
+                  <!-- Package A -->
+                  <rect x="40" y="50" width="180" height="90" rx="6" fill="#1e293b" stroke="#10b981" stroke-width="2"/>
+                  <rect x="40" y="50" width="180" height="24" rx="6" fill="#059669"/>
+                  <text x="130" y="67" fill="#ffffff" font-weight="700" text-anchor="middle">📦 Package A (UI)</text>
+                  <text x="50" y="100" fill="#a7f3d0">+ OrderWindow</text>
+
+                  <!-- Package B -->
+                  <rect x="270" y="50" width="190" height="90" rx="6" fill="#1e293b" stroke="#6366f1" stroke-width="2"/>
+                  <rect x="270" y="50" width="190" height="24" rx="6" fill="#4f46e5"/>
+                  <text x="365" y="67" fill="#ffffff" font-weight="700" text-anchor="middle">📦 Package B (Core)</text>
+                  <text x="280" y="100" fill="#c7d2fe">+ OrderProcessor</text>
+
+                  <!-- Package C (Extracted Abstraction) -->
+                  <rect x="510" y="50" width="180" height="90" rx="6" fill="#1e293b" stroke="#38bdf8" stroke-width="2"/>
+                  <rect x="510" y="50" width="180" height="24" rx="6" fill="#0284c7"/>
+                  <text x="600" y="67" fill="#ffffff" font-weight="700" text-anchor="middle">📦 Package C (API)</text>
+                  <text x="520" y="100" fill="#bae6fd">&lt;&lt;interface&gt;&gt; IOrderListener</text>
+
+                  <!-- Directed Arrows -->
+                  <line x1="220" y1="95" x2="260" y2="95" stroke="#10b981" stroke-width="2" marker-end="url(#u7-arrow)"/>
+                  <line x1="460" y1="95" x2="500" y2="95" stroke="#10b981" stroke-width="2" marker-end="url(#u7-arrow)"/>
+                  <path d="M 130 140 L 130 170 L 600 170 L 600 145" fill="none" stroke="#38bdf8" stroke-width="1.8" stroke-dasharray="4,4" marker-end="url(#u7-tri)"/>
+                  <text x="365" y="185" fill="#38bdf8" font-size="10" text-anchor="middle">Implements API interface (Cycle Broken!)</text>
+                </svg>
+              </div>
+            </div>
+
+            <div class="pillar-panel" id="pillarPanel4" style="display:none;">
+              <div class="pillar-panel-badge">PILLAR 4 OF 8 · CORE FORMULAS &amp; METRICS</div>
+              <h4 class="pillar-panel-title">The Quantitative Metrics (I, A, D)</h4>
+              <div class="takeaway-grid">
+                <div class="takeaway-item" style="border-left:3px solid #38bdf8;">
+                  <strong>Instability Metric: \(I = \frac{C_e}{C_a + C_e}\)</strong>
+                  <p>\(C_a\) = Afferent coupling (incoming). \(C_e\) = Efferent coupling (outgoing). \(I=0\) is maximally stable; \(I=1\) is maximally volatile.</p>
+                </div>
+                <div class="takeaway-item" style="border-left:3px solid #10b981;">
+                  <strong>Abstractness Metric: \(A = \frac{N_a}{N_c}\)</strong>
+                  <p>\(N_a\) = Abstract classes &amp; interfaces. \(N_c\) = Total classes. \(A=0\) is pure concrete; \(A=1\) is pure abstraction.</p>
+                </div>
+                <div class="takeaway-item" style="border-left:3px solid #f59e0b;">
+                  <strong>Main Sequence Distance: \(D = |A + I - 1|\)</strong>
+                  <p>On the Main Sequence, \(A + I = 1\). Drift towards 1 indicates severe design flaws (Zone of Pain or Zone of Uselessness).</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="pillar-panel" id="pillarPanel5" style="display:none;">
+              <div class="pillar-panel-badge">PILLAR 5 OF 8 · IMPLEMENTATION MECHANICS</div>
+              <h4 class="pillar-panel-title">Mechanics: Cycle-Breaking Strategies</h4>
+              <div class="mac-ide-window" style="margin: 0.5rem 0;">
+                <div class="mac-ide-top">
+                  <div class="mac-ide-dots">
+                    <span class="mac-dot mac-dot-red"></span>
+                    <span class="mac-dot mac-dot-yellow"></span>
+                    <span class="mac-dot mac-dot-green"></span>
+                  </div>
+                  <div class="mac-ide-tab">pom.xml / build.gradle · DAG Enforcement</div>
+                  <button type="button" class="btn-copy-code" onclick="copySnippet('codeSnippetP5Pkg')">Copy Code</button>
+                </div>
+                <pre class="mac-ide-content" id="codeSnippetP5Pkg"><code>// 1. Enforcing Acyclic Dependencies via Build Tool
+plugins {
+    id 'java'
+}
+dependencies {
+    // UI depends on Core, but Core CANNOT depend on UI!
+    implementation project(':core-domain')
+    implementation project(':shared-api')
+}
+
+// 2. Cycle Detection Tooling (e.g. ArchUnit / JDepend)
+@ArchTest
+public static final ArchRule NO_PACKAGE_CYCLES = 
+    slices().matching("de.frankfurt.posa.(*)..")
+    .should().beFreeOfCycles();</code></pre>
+              </div>
+            </div>
+
+            <div class="pillar-panel" id="pillarPanel6" style="display:none;">
+              <div class="pillar-panel-badge">PILLAR 6 OF 8 · COSTS &amp; TRADE-OFFS</div>
+              <h4 class="pillar-panel-title">The Cohesion Tension Triangle</h4>
+              <p style="font-size:0.92rem; line-height:1.6; color:var(--text); margin-bottom:1rem;">
+                An architect cannot maximize all three cohesion principles simultaneously. You must balance the tension:
+              </p>
+              <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:1rem;">
+                <div style="background:var(--bg-subtle); padding:1rem; border-radius:6px; border-top:3px solid #10b981;">
+                  <strong style="color:#10b981;">REP + CCP (Group Together)</strong>
+                  <p style="font-size:0.85rem; color:var(--text-muted); margin:0.35rem 0 0;">Favors package maintainers and frequent releases. Results in larger packages that require fewer cross-package edits.</p>
+                </div>
+                <div style="background:var(--bg-subtle); padding:1rem; border-radius:6px; border-top:3px solid #38bdf8;">
+                  <strong style="color:#38bdf8;">CRP (Split Apart)</strong>
+                  <p style="font-size:0.85rem; color:var(--text-muted); margin:0.35rem 0 0;">Favors external package consumers. Results in smaller packages so clients don't download unneeded code.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="pillar-panel" id="pillarPanel7" style="display:none;">
+              <div class="pillar-panel-badge">PILLAR 7 OF 8 · RIVAL CONCEPTS MATRIX</div>
+              <h4 class="pillar-panel-title">Class Principles vs Package Principles</h4>
+              <div class="pillar-matrix-table-wrap">
+                <table class="pillar-matrix-table">
+                  <thead>
+                    <tr>
+                      <th>Class-Level Principle (SOLID)</th>
+                      <th>Package-Level Counterpart</th>
+                      <th>Architectural Scope</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>Single Responsibility (SRP)</td>
+                      <td>Common-Closure Principle (CCP)</td>
+                      <td>What changes together belongs together.</td>
+                    </tr>
+                    <tr>
+                      <td>Interface Segregation (ISP)</td>
+                      <td>Common-Reuse Principle (CRP)</td>
+                      <td>Don't force dependencies on unused components.</td>
+                    </tr>
+                    <tr>
+                      <td>Open-Closed Principle (OCP)</td>
+                      <td>Stable-Abstractions Principle (SAP)</td>
+                      <td>Stable packages must be abstract for extensibility.</td>
+                    </tr>
+                    <tr>
+                      <td>Dependency Inversion (DIP)</td>
+                      <td>Stable-Dependencies Principle (SDP)</td>
+                      <td>Depend in the direction of stability.</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div class="pillar-panel" id="pillarPanel8" style="display:none;">
+              <div class="pillar-panel-badge">PILLAR 8 OF 8 · EXAM TRAPS &amp; BENCHMARKS</div>
+              <h4 class="pillar-panel-title">Prof. Schäfer Exam Traps: The Main Sequence</h4>
+              <div style="background:rgba(245,158,11,0.08); border-left:4px solid #f59e0b; padding:1.25rem; border-radius:0 6px 6px 0; margin-bottom:1rem;">
+                <strong style="color:#f59e0b; font-size:0.92rem;">🚨 Frankfurt UAS Exam Trap #1: The Zone of Pain</strong>
+                <p style="font-size:0.86rem; color:var(--text); margin:0.35rem 0 0; line-height:1.5;">
+                  Question: <em>"Why is a package with A=0 and I=0 located in the Zone of Pain?"</em><br>
+                  <strong>Model Answer:</strong> Because \(I=0\) means it has high afferent coupling (\(C_a > 0, C_e = 0\))—many packages depend on it, making it extremely stable and painful to change. Simultaneously, \(A=0\) means it is 100% concrete with zero interfaces. It cannot be extended polymorphically, freezing the entire architecture into rigidity.
+                </p>
+              </div>
+              <div style="font-size:0.85rem; color:var(--text-muted);">
+                <strong>Industry Standard:</strong> Java Platform Module System (JPMS) and ArchUnit.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Full Matrix View (Hidden by default) -->
+        <div class="blueprint-matrix-view" id="blueprintMatrix" style="display:none;">
+          <div class="pillar-matrix-table-wrap">
+            <table class="pillar-matrix-table">
+              <thead>
+                <tr>
+                  <th style="width:12%;">Pillar #</th>
+                  <th style="width:20%;">Mastery Dimension</th>
+                  <th style="width:34%;">Package Cohesion (REP, CCP, CRP)</th>
+                  <th style="width:34%;">Package Coupling &amp; Metrics (ADP, SDP, SAP)</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Pillar 1</strong></td>
+                  <td><strong>Intent &amp; Motivation</strong></td>
+                  <td>Define boundary criteria: Which classes belong inside a single package?</td>
+                  <td>Define relationship topologies and quantify stability and abstractness.</td>
+                </tr>
+                <tr>
+                  <td><strong>Pillar 2</strong></td>
+                  <td><strong>Principles</strong></td>
+                  <td>Reuse-Release (REP), Common-Closure (CCP), Common-Reuse (CRP).</td>
+                  <td>Acyclic Dependencies (ADP), Stable Dependencies (SDP), Stable Abstractions (SAP).</td>
+                </tr>
+                <tr>
+                  <td><strong>Pillar 3</strong></td>
+                  <td><strong>UML Topology</strong></td>
+                  <td>Package containment boundaries.</td>
+                  <td>Directed Acyclic Graph (DAG) without dependency cycles.</td>
+                </tr>
+                <tr>
+                  <td><strong>Pillar 4</strong></td>
+                  <td><strong>Formulas &amp; Laws</strong></td>
+                  <td>Tension triangle balancing maintainability vs consumer convenience.</td>
+                  <td>\(I = C_e / (C_a + C_e)\), \(A = N_a / N_c\), \(D = |A + I - 1|\).</td>
+                </tr>
+                <tr>
+                  <td><strong>Pillar 5</strong></td>
+                  <td><strong>Mechanics</strong></td>
+                  <td>Semantic versioning (SemVer) and bundle packaging.</td>
+                  <td>Cycle-breaking via DIP or extracting third shared packages.</td>
+                </tr>
+                <tr>
+                  <td><strong>Pillar 6</strong></td>
+                  <td><strong>Trade-offs</strong></td>
+                  <td>Large cohesive packages vs fine-grained reusable packages.</td>
+                  <td>Zone of Pain (\(A=0, I=0\)) vs Zone of Uselessness (\(A=1, I=1\)).</td>
+                </tr>
+                <tr>
+                  <td><strong>Pillar 7</strong></td>
+                  <td><strong>Rival Concepts</strong></td>
+                  <td>Class cohesion vs Package cohesion.</td>
+                  <td>Loose coupling vs Over-abstracted dead code.</td>
+                </tr>
+                <tr>
+                  <td><strong>Pillar 8</strong></td>
+                  <td><strong>Exam Traps</strong></td>
+                  <td>Forgetting that REP requires changelogs and unified release numbers.</td>
+                  <td>Calculating \(I\) upside-down (confusing \(C_a\) and \(C_e\)); Main Sequence distance math.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         SECTION 2: 5-STAGE HANDS-ON CURRICULUM
+         ==================================================================== -->
+    <div class="masterclass-section-divider" style="margin: 3.5rem 0 1.5rem;">
+      <div class="section-divider-line"></div>
+      <div class="section-divider-chip">
+        <span>PART 2 · HANDS-ON CURRICULUM</span>
+      </div>
+      <div class="section-divider-line"></div>
+    </div>
+
+    <!-- Curriculum Super-Header with Metadata Chips -->
+    <div class="curriculum-super-header" id="curriculumHeader" style="margin-bottom:1.5rem; background:var(--bg-raised); border:1px solid var(--border); border-radius:var(--radius-md); padding:1.5rem;">
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem;">
+        <div>
+          <div style="font-size:0.75rem; font-weight:800; letter-spacing:0.08em; text-transform:uppercase; color:#10b981; margin-bottom:0.25rem;">
+            STAGE-DRIVEN MASTERY PATH
+          </div>
+          <h2 style="font-size:1.4rem; font-weight:800; margin:0; letter-spacing:-0.02em;">
+            Packaging Architecture: 5 Stages to Grade 1.0
+          </h2>
+        </div>
+        <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
+          <span style="background:rgba(16,185,129,0.12); color:#10b981; font-size:0.78rem; font-weight:700; padding:0.35rem 0.75rem; border-radius:20px; border:1px solid rgba(16,185,129,0.25);">⏱️ 45 Min Total</span>
+          <span style="background:rgba(56,189,248,0.12); color:#38bdf8; font-size:0.78rem; font-weight:700; padding:0.35rem 0.75rem; border-radius:20px; border:1px solid rgba(56,189,248,0.25);">🎯 20 Exam Points</span>
+          <span style="background:rgba(99,102,241,0.12); color:#6366f1; font-size:0.78rem; font-weight:700; padding:0.35rem 0.75rem; border-radius:20px; border:1px solid rgba(99,102,241,0.25);">🏛️ Prof. Dr. Jörg Schäfer</span>
+        </div>
       </div>
     </div>
 
-    <p class="dek">
-      Scaling beyond individual classes into packages, JARs, and microservice modules. Uncle Bob’s 6 package principles and the mathematical metrics for stability and abstractness.
-    </p>
+    <!-- Masterclass Stage Navigation Bar -->
+    <nav class="masterclass-stage-nav" aria-label="Curriculum Stages">
+      <a href="#stage-1-cohesion" class="stage-nav-pill active" data-stage="1">
+        <span class="pill-number">1</span>
+        <span class="pill-title">Package Cohesion</span>
+      </a>
+      <a href="#stage-2-coupling" class="stage-nav-pill" data-stage="2">
+        <span class="pill-number">2</span>
+        <span class="pill-title">Package Coupling</span>
+      </a>
+      <a href="#stage-3-calculator" class="stage-nav-pill" data-stage="3">
+        <span class="pill-number">3</span>
+        <span class="pill-title">Main Sequence Lab</span>
+      </a>
+      <a href="#stage-4-code" class="stage-nav-pill" data-stage="4">
+        <span class="pill-number">4</span>
+        <span class="pill-title">Multi-Module Setup</span>
+      </a>
+      <a href="#stage-5-exam" class="stage-nav-pill" data-stage="5">
+        <span class="pill-number">5</span>
+        <span class="pill-title">Exam Traps</span>
+      </a>
+    </nav>
 
-    <!-- Section 1: Cohesion -->
-    <section class="chapter" id="package-cohesion">
-      <div class="chapter-head">
-        <span class="chapter-num">1</span>
-        <h2>7.3.2 Principles of Package Cohesion</h2>
+    <!-- ====================================================================
+         STAGE 1: PACKAGE COHESION (REP, CRP, CCP)
+         ==================================================================== -->
+    <section class="masterclass-stage-section" id="stage-1-cohesion">
+      <div class="stage-header-top">
+        <div class="stage-eyebrow-pill">● Stage 01 · Package Cohesion Principles</div>
+        <button type="button" class="stage-mastery-btn" onclick="markStageComplete(1)">Mark Stage 1 Complete ✓</button>
       </div>
-      <p class="chapter-dek">Which classes belong inside the same package?</p>
+      <h2 class="stage-title">Package Cohesion: REP, CCP, and CRP</h2>
 
-      <div style="display: flex; flex-direction: column; gap: 1rem; margin: 1.5rem 0;">
-        <div style="padding: 1.25rem; background: var(--bg-raised); border: 1px solid var(--border); border-radius: var(--radius-sm);">
-          <strong style="color: var(--accent);">1. REP: Reuse-Release Equivalence Principle</strong>
-          <p style="font-size: 0.9rem; color: var(--text-muted); margin: 0.3rem 0 0;">
-            <em>“The granule of reuse is the granule of release.”</em> You cannot effectively reuse a library without tracking version numbers and changelogs. Everything inside a package must be released together under a shared version tag.
+      <p style="font-size:1rem; line-height:1.7; color:var(--text); margin-bottom:1.5rem;">
+        Which classes belong together in the same package? Uncle Bob formulated three cohesion principles that govern package boundaries.
+      </p>
+
+      <div style="display:flex; flex-direction:column; gap:1rem; margin:1.5rem 0;">
+        <div style="padding:1.25rem; background:var(--bg-raised); border:1px solid var(--border); border-radius:var(--radius-sm); border-left:4px solid #10b981;">
+          <strong style="color:#10b981; font-size:1.05rem;">1. REP: Reuse-Release Equivalence Principle</strong>
+          <p style="font-size:0.92rem; color:var(--text); margin:0.35rem 0 0; line-height:1.6;">
+            <em>“The granule of reuse is the granule of release.”</em> You cannot effectively reuse software without tracking versions, release notes, and deprecation schedules. Everything grouped inside a package must be released together under a shared semantic version tag.
           </p>
         </div>
 
-        <div style="padding: 1.25rem; background: var(--bg-raised); border: 1px solid var(--border); border-radius: var(--radius-sm);">
-          <strong style="color: var(--accent);">2. CRP: Common-Reuse Principle</strong>
-          <p style="font-size: 0.9rem; color: var(--text-muted); margin: 0.3rem 0 0;">
-            <em>“Classes that aren’t reused together should not be packaged together.”</em> Prevents clients from depending on classes they don’t actually need. (The package-level equivalent of the Interface Segregation Principle).
+        <div style="padding:1.25rem; background:var(--bg-raised); border:1px solid var(--border); border-radius:var(--radius-sm); border-left:4px solid #38bdf8;">
+          <strong style="color:#38bdf8; font-size:1.05rem;">2. CCP: Common-Closure Principle</strong>
+          <p style="font-size:0.92rem; color:var(--text); margin:0.35rem 0 0; line-height:1.6;">
+            <em>“The classes in a package should be closed together against the same kinds of changes.”</em> If requirements change, all affected classes should reside in a single package. CCP is the package-level equivalent of the Single Responsibility Principle (SRP).
           </p>
         </div>
 
-        <div style="padding: 1.25rem; background: var(--bg-raised); border: 1px solid var(--border); border-radius: var(--radius-sm);">
-          <strong style="color: var(--accent);">3. CCP: Common-Closure Principle</strong>
-          <p style="font-size: 0.9rem; color: var(--text-muted); margin: 0.3rem 0 0;">
-            <em>“The classes in a package should be closed together against the same kinds of changes.”</em> If requirements change, all affected classes should reside in a single package. (The package-level equivalent of the Single Responsibility Principle).
+        <div style="padding:1.25rem; background:var(--bg-raised); border:1px solid var(--border); border-radius:var(--radius-sm); border-left:4px solid #f59e0b;">
+          <strong style="color:#f59e0b; font-size:1.05rem;">3. CRP: Common-Reuse Principle</strong>
+          <p style="font-size:0.92rem; color:var(--text); margin:0.35rem 0 0; line-height:1.6;">
+            <em>“Classes that aren’t reused together should not be packaged together.”</em> Prevents clients from depending on classes they don’t actually need. CRP is the package-level equivalent of the Interface Segregation Principle (ISP).
           </p>
         </div>
       </div>
-    </section>
 
-    <!-- Section 2: Coupling -->
-    <section class="chapter" id="package-coupling">
-      <div class="chapter-head">
-        <span class="chapter-num">2</span>
-        <h2>7.3.6 Principles of Package Coupling</h2>
-      </div>
-      <p class="chapter-dek">How packages should depend on one another.</p>
-
-      <div style="display: flex; flex-direction: column; gap: 1rem; margin: 1.5rem 0;">
-        <div style="padding: 1.25rem; background: var(--bg-raised); border: 1px solid var(--border); border-radius: var(--radius-sm);">
-          <strong style="color: var(--accent);">1. ADP: Acyclic-Dependencies Principle</strong>
-          <p style="font-size: 0.9rem; color: var(--text-muted); margin: 0.3rem 0 0;">
-            <em>“The dependency structure between packages must form a Directed Acyclic Graph (DAG).”</em> No cyclic dependencies! Cycles create a “morning-after syndrome” where changes anywhere break builds everywhere.
-            <br><strong>How to break cycles:</strong> (A) Apply Dependency Inversion (DIP) with an interface; or (B) extract shared dependencies into a new third package.
-          </p>
+      <!-- Key Takeaways Box -->
+      <div class="stage-takeaways-box">
+        <div class="stage-takeaways-title">
+          <span>🧠 Key Takeaways: The Cohesion Tension Triangle</span>
         </div>
-
-        <div style="padding: 1.25rem; background: var(--bg-raised); border: 1px solid var(--border); border-radius: var(--radius-sm);">
-          <strong style="color: var(--accent);">2. SDP: Stable-Dependencies Principle</strong>
-          <p style="font-size: 0.9rem; color: var(--text-muted); margin: 0.3rem 0 0;">
-            <em>“Depend in the direction of stability.”</em> A package should only depend on packages that are more stable than itself. Volatile packages should sit at the top of the dependency graph; stable packages at the bottom.
-          </p>
-        </div>
-
-        <div style="padding: 1.25rem; background: var(--bg-raised); border: 1px solid var(--border); border-radius: var(--radius-sm);">
-          <strong style="color: var(--accent);">3. SAP: Stable-Abstractions Principle</strong>
-          <p style="font-size: 0.9rem; color: var(--text-muted); margin: 0.3rem 0 0;">
-            <em>“A package should be as abstract as it is stable.”</em> A stable package that is heavily depended upon must be abstract (composed of interfaces) so it can be extended without requiring source code modifications.
-          </p>
-        </div>
-      </div>
-    </section>
-
-    <!-- Section 3: Package Metrics -->
-    <section class="chapter" id="package-metrics">
-      <div class="chapter-head">
-        <span class="chapter-num">3</span>
-        <h2>7.3.8 Mathematical Package Metrics</h2>
-      </div>
-      <p class="chapter-dek">Quantifying stability, abstractness, and architectural health.</p>
-
-      <div class="metric-card">
-        <h3>1. Instability Metric ($I$)</h3>
-        <p style="font-size: 0.9rem; color: var(--text-muted);">
-          Coupling count: $C_a$ (Afferent coupling: incoming dependencies), $C_e$ (Efferent coupling: outgoing dependencies).
-        </p>
-        <div class="formula-box">
-          Instability: I = C_e / (C_a + C_e)
-        </div>
-        <ul>
-          <li><strong>$I = 0$ (Maximally Stable):</strong> $C_e = 0$, $C_a &gt; 0$. Depended upon by many packages, depends on none. Hard to change.</li>
-          <li><strong>$I = 1$ (Maximally Unstable):</strong> $C_e &gt; 0$, $C_a = 0$. Depends on many packages, depended upon by none. Easy to change.</li>
-        </ul>
-      </div>
-
-      <div class="metric-card">
-        <h3>2. Abstractness Metric ($A$)</h3>
-        <p style="font-size: 0.9rem; color: var(--text-muted);">
-          Ratio of abstract classes &amp; interfaces ($N_a$) to total classes ($N_c$).
-        </p>
-        <div class="formula-box">
-          Abstractness: A = N_a / N_c
-        </div>
-        <ul>
-          <li><strong>$A = 0$:</strong> Completely concrete package (no interfaces).</li>
-          <li><strong>$A = 1$:</strong> Pure abstraction (only interfaces and abstract classes).</li>
-        </ul>
-      </div>
-
-      <div class="metric-card" id="main-sequence">
-        <h3>3. Normalized Distance from the Main Sequence ($D$)</h3>
-        <div class="formula-box">
-          Normalized Distance: D = |A + I - 1|
-        </div>
-        <p style="font-size: 0.9rem; color: var(--text-muted); line-height: 1.6;">
-          On the ideal Main Sequence, $A + I = 1$. The further a package drifts ($D \to 1$), the more architecturally troubled it is:
-        </p>
-        <div class="uml-svg-container">
-          <svg viewBox="0 0 600 380" width="100%" height="auto" xmlns="http://www.w3.org/2000/svg" style="font-family:'JetBrains Mono', 'SF Mono', monospace; font-size:11px;">
-            <!-- Grid Background -->
-            <rect x="70" y="30" width="460" height="280" fill="var(--bg-raised, #ffffff)" stroke="var(--border, #cbd5e1)" stroke-width="1.5"/>
-            
-            <!-- Zone of Pain Area -->
-            <polygon points="70,310 190,310 70,190" fill="rgba(239, 68, 68, 0.12)"/>
-            <text x="80" y="295" fill="#dc2626" font-weight="700" font-size="11">⚠️ Zone of Pain</text>
-            <text x="80" y="307" fill="#b91c1c" font-size="9.5">(A=0, I=0: Rigid Concrete)</text>
-
-            <!-- Zone of Uselessness Area -->
-            <polygon points="530,30 410,30 530,150" fill="rgba(100, 116, 139, 0.12)"/>
-            <text x="415" y="45" fill="#475569" font-weight="700" font-size="11">👻 Zone of Uselessness</text>
-            <text x="415" y="57" fill="#64748b" font-size="9.5">(A=1, I=1: Unused Abstract)</text>
-
-            <!-- The Main Sequence Line -->
-            <line x1="70" y1="30" x2="530" y2="310" stroke="#10b981" stroke-width="3"/>
-            <text x="270" y="160" fill="#059669" font-weight="700" font-size="12" transform="rotate(31, 270, 160)">
-              ★ THE MAIN SEQUENCE (A + I = 1)
-            </text>
-
-            <!-- Dynamic Package Marker -->
-            <circle id="pkgPoint" cx="300" cy="170" r="7" fill="#3b82f6" stroke="#ffffff" stroke-width="2"/>
-            <text id="pkgLabel" x="315" y="174" fill="#1d4ed8" font-weight="700" font-size="11">Your Package (I=0.50, A=0.50, D=0.00)</text>
-
-            <!-- Axes -->
-            <line x1="70" y1="310" x2="550" y2="310" stroke="var(--text, #1e293b)" stroke-width="2"/>
-            <line x1="70" y1="310" x2="70" y2="15" stroke="var(--text, #1e293b)" stroke-width="2"/>
-
-            <!-- Axis Labels -->
-            <text x="300" y="340" fill="var(--text, #1e293b)" font-weight="700" text-anchor="middle" font-size="12">Instability Metric (I = Ce / (Ca + Ce)) ──►</text>
-            <text x="25" y="170" fill="var(--text, #1e293b)" font-weight="700" text-anchor="middle" font-size="12" transform="rotate(-90, 25, 170)">▲ Abstractness (A = Na / Nc)</text>
-
-            <!-- Axis Ticks -->
-            <text x="70" y="325" fill="var(--text-muted, #64748b)" text-anchor="middle">0.0</text>
-            <text x="300" y="325" fill="var(--text-muted, #64748b)" text-anchor="middle">0.5</text>
-            <text x="530" y="325" fill="var(--text-muted, #64748b)" text-anchor="middle">1.0</text>
-
-            <text x="55" y="315" fill="var(--text-muted, #64748b)" text-anchor="end">0.0</text>
-            <text x="55" y="175" fill="var(--text-muted, #64748b)" text-anchor="end">0.5</text>
-            <text x="55" y="35" fill="var(--text-muted, #64748b)" text-anchor="end">1.0</text>
-          </svg>
-        </div>
-
-        <!-- Interactive Calculator Widget -->
-        <div style="background:var(--bg-raised); border:1px solid var(--border); border-radius:var(--radius-md); padding:1.5rem; margin-top:1.5rem;">
-          <h4 style="margin:0 0 1rem; font-size:1rem; color:var(--accent);">🧮 Live Package Metric Calculator</h4>
-          <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(130px, 1fr)); gap:1rem; margin-bottom:1rem;">
-            <div>
-              <label style="font-size:0.75rem; font-weight:700; color:var(--text-muted); display:block; margin-bottom:0.25rem;">Ca (Afferent)</label>
-              <input type="number" id="inputCa" value="8" min="0" style="width:100%; padding:0.5rem; border:1px solid var(--border); border-radius:4px; background:var(--bg); color:var(--text); font-family:var(--font-mono);">
-            </div>
-            <div>
-              <label style="font-size:0.75rem; font-weight:700; color:var(--text-muted); display:block; margin-bottom:0.25rem;">Ce (Efferent)</label>
-              <input type="number" id="inputCe" value="8" min="0" style="width:100%; padding:0.5rem; border:1px solid var(--border); border-radius:4px; background:var(--bg); color:var(--text); font-family:var(--font-mono);">
-            </div>
-            <div>
-              <label style="font-size:0.75rem; font-weight:700; color:var(--text-muted); display:block; margin-bottom:0.25rem;">Na (Abstract)</label>
-              <input type="number" id="inputNa" value="5" min="0" style="width:100%; padding:0.5rem; border:1px solid var(--border); border-radius:4px; background:var(--bg); color:var(--text); font-family:var(--font-mono);">
-            </div>
-            <div>
-              <label style="font-size:0.75rem; font-weight:700; color:var(--text-muted); display:block; margin-bottom:0.25rem;">Nc (Total Classes)</label>
-              <input type="number" id="inputNc" value="10" min="1" style="width:100%; padding:0.5rem; border:1px solid var(--border); border-radius:4px; background:var(--bg); color:var(--text); font-family:var(--font-mono);">
-            </div>
+        <div class="takeaway-grid">
+          <div class="takeaway-item">
+            <strong>REP + CCP</strong>
+            <p>Make packages larger so all related changes stay contained within one package release.</p>
           </div>
-          <button type="button" id="calcPkgBtn" class="sim-btn-primary" style="padding:0.6rem 1.2rem; font-size:0.85rem;">
-            Calculate Health &amp; Plot on Chart
-          </button>
-        </div>
-        
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1rem;">
-          <div style="padding: 1rem; background: var(--warn-soft); border-radius: var(--radius-sm);">
-            <strong style="color: var(--warn);">⚠️ Zone of Pain ($A=0, I=0$)</strong>
-            <p style="font-size: 0.85rem; margin-top: 0.3rem;">
-              Completely concrete, but heavily depended upon. Highly rigid and painful to change (e.g. core database entities without interfaces).
-            </p>
+          <div class="takeaway-item">
+            <strong>CRP</strong>
+            <p>Splits packages smaller so external consumers don't download unneeded transitive dependencies.</p>
           </div>
-          <div style="padding: 1rem; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-sm);">
-            <strong>👻 Zone of Uselessness ($A=1, I=1$)</strong>
-            <p style="font-size: 0.85rem; margin-top: 0.3rem; color: var(--text-muted);">
-              Pure abstract classes that nobody depends on. Waste of design effort; dead abstractions.
-            </p>
+          <div class="takeaway-item">
+            <strong>Architect's Duty</strong>
+            <p>Balance this dynamic tension as the codebase matures from early development to stable public library.</p>
           </div>
         </div>
       </div>
+
+      <!-- Up Next Card -->
+      <div class="stage-next-card">
+        <div class="stage-next-card-content">
+          <div class="stage-next-card-label">UP NEXT · STAGE 02</div>
+          <div class="stage-next-card-title">Package Coupling Principles: ADP, SDP, and SAP</div>
+          <p class="stage-next-card-desc">Learn how to eliminate dependency cycles and establish stable Directed Acyclic Graph topologies.</p>
+        </div>
+        <a href="#stage-2-coupling" class="stage-next-card-btn">Jump to Stage 2 →</a>
+      </div>
     </section>
 
-    <!-- Section 4: Self Study Questions -->
-    <section class="chapter" id="self-study">
-      <div class="chapter-head">
-        <span class="chapter-num">4</span>
-        <h2>7.5 Questions for Self-Study (Exam Practice)</h2>
+    <!-- ====================================================================
+         STAGE 2: PACKAGE COUPLING (ADP, SDP, SAP)
+         ==================================================================== -->
+    <section class="masterclass-stage-section" id="stage-2-coupling">
+      <div class="stage-header-top">
+        <div class="stage-eyebrow-pill">● Stage 02 · Package Coupling Principles</div>
+        <button type="button" class="stage-mastery-btn" onclick="markStageComplete(2)">Mark Stage 2 Complete ✓</button>
       </div>
+      <h2 class="stage-title">Package Coupling: ADP, SDP, and SAP</h2>
+
+      <p style="font-size:1rem; line-height:1.7; color:var(--text); margin-bottom:1.5rem;">
+        How should packages depend on one another? Uncle Bob formulated three coupling principles to prevent the dreaded "morning-after syndrome".
+      </p>
+
+      <div style="display:flex; flex-direction:column; gap:1rem; margin:1.5rem 0;">
+        <div style="padding:1.25rem; background:var(--bg-raised); border:1px solid var(--border); border-radius:var(--radius-sm); border-left:4px solid #ef4444;">
+          <strong style="color:#ef4444; font-size:1.05rem;">1. ADP: Acyclic-Dependencies Principle</strong>
+          <p style="font-size:0.92rem; color:var(--text); margin:0.35rem 0 0; line-height:1.6;">
+            <em>“The dependency structure between packages must form a Directed Acyclic Graph (DAG).”</em> No cyclic dependencies! Cycles force entire systems into single indivisible monolithic deployment units.<br>
+            <strong>How to break cycles:</strong> (1) Apply DIP by inverting dependencies with an interface; or (2) Extract shared dependencies into a new third package.
+          </p>
+        </div>
+
+        <div style="padding:1.25rem; background:var(--bg-raised); border:1px solid var(--border); border-radius:var(--radius-sm); border-left:4px solid #10b981;">
+          <strong style="color:#10b981; font-size:1.05rem;">2. SDP: Stable-Dependencies Principle</strong>
+          <p style="font-size:0.92rem; color:var(--text); margin:0.35rem 0 0; line-height:1.6;">
+            <em>“Depend in the direction of stability.”</em> A package should only depend on packages that are more stable than itself. Packages that are expected to change frequently (volatile UI or presentation) should depend on rock-solid core business domains.
+          </p>
+        </div>
+
+        <div style="padding:1.25rem; background:var(--bg-raised); border:1px solid var(--border); border-radius:var(--radius-sm); border-left:4px solid #6366f1;">
+          <strong style="color:#6366f1; font-size:1.05rem;">3. SAP: Stable-Abstractions Principle</strong>
+          <p style="font-size:0.92rem; color:var(--text); margin:0.35rem 0 0; line-height:1.6;">
+            <em>“A package should be as abstract as it is stable.”</em> A stable package that is heavily depended upon must be abstract (composed of interfaces) so it can be extended without modifying its source code.
+          </p>
+        </div>
+      </div>
+
+      <!-- Up Next Card -->
+      <div class="stage-next-card">
+        <div class="stage-next-card-content">
+          <div class="stage-next-card-label">UP NEXT · STAGE 03</div>
+          <div class="stage-next-card-title">Live Main Sequence Interactive Calculator</div>
+          <p class="stage-next-card-desc">Calculate Afferent/Efferent coupling, plot Instability (I), Abstractness (A), and Distance (D) on the live SVG chart.</p>
+        </div>
+        <a href="#stage-3-calculator" class="stage-next-card-btn">Jump to Stage 3 →</a>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         STAGE 3: MAIN SEQUENCE & INTERACTIVE CALCULATOR
+         ==================================================================== -->
+    <section class="masterclass-stage-section" id="stage-3-calculator">
+      <div class="stage-header-top">
+        <div class="stage-eyebrow-pill">● Stage 03 · Metrics &amp; Main Sequence Lab</div>
+        <button type="button" class="stage-mastery-btn" onclick="markStageComplete(3)">Mark Stage 3 Complete ✓</button>
+      </div>
+      <h2 class="stage-title">The Main Sequence: Zone of Pain vs Zone of Uselessness</h2>
+
+      <p style="font-size:1rem; line-height:1.7; color:var(--text); margin-bottom:1.5rem;">
+        Modify the package coupling metrics below in real time to observe where your module plots on Robert C. Martin's Main Sequence.
+      </p>
+
+      <!-- SVG Main Sequence Chart -->
+      <div class="uml-svg-container" style="background:#090d16; border-radius:8px; padding:2rem 1rem; border:1px solid #1e293b; margin:1.5rem 0;">
+        <svg viewBox="0 0 600 380" width="100%" height="auto" xmlns="http://www.w3.org/2000/svg" style="font-family:'JetBrains Mono', 'SF Mono', monospace; font-size:11px;">
+          <!-- Grid Background -->
+          <rect x="70" y="30" width="460" height="280" fill="#0f172a" stroke="#334155" stroke-width="1.5"/>
+          
+          <!-- Zone of Pain Area -->
+          <polygon points="70,310 190,310 70,190" fill="rgba(239, 68, 68, 0.2)"/>
+          <text x="80" y="295" fill="#f87171" font-weight="700" font-size="11">⚠️ Zone of Pain</text>
+          <text x="80" y="307" fill="#fca5a5" font-size="9.5">(A=0, I=0: Rigid Concrete)</text>
+
+          <!-- Zone of Uselessness Area -->
+          <polygon points="530,30 410,30 530,150" fill="rgba(100, 116, 139, 0.25)"/>
+          <text x="415" y="45" fill="#94a3b8" font-weight="700" font-size="11">👻 Zone of Uselessness</text>
+          <text x="415" y="57" fill="#cbd5e1" font-size="9.5">(A=1, I=1: Dead Abstract)</text>
+
+          <!-- The Main Sequence Line -->
+          <line x1="70" y1="30" x2="530" y2="310" stroke="#10b981" stroke-width="3"/>
+          <text x="270" y="160" fill="#34d399" font-weight="700" font-size="12" transform="rotate(31, 270, 160)">
+            ★ THE MAIN SEQUENCE (A + I = 1)
+          </text>
+
+          <!-- Dynamic Package Marker -->
+          <circle id="pkgPoint" cx="300" cy="170" r="7" fill="#38bdf8" stroke="#ffffff" stroke-width="2"/>
+          <text id="pkgLabel" x="315" y="174" fill="#38bdf8" font-weight="700" font-size="11">Your Package (I=0.50, A=0.50, D=0.00)</text>
+
+          <!-- Axes -->
+          <line x1="70" y1="310" x2="550" y2="310" stroke="#94a3b8" stroke-width="2"/>
+          <line x1="70" y1="310" x2="70" y2="15" stroke="#94a3b8" stroke-width="2"/>
+
+          <!-- Axis Labels -->
+          <text x="300" y="340" fill="#f8fafc" font-weight="700" text-anchor="middle" font-size="12">Instability Metric (I = Ce / (Ca + Ce)) ──►</text>
+          <text x="25" y="170" fill="#f8fafc" font-weight="700" text-anchor="middle" font-size="12" transform="rotate(-90, 25, 170)">▲ Abstractness (A = Na / Nc)</text>
+
+          <!-- Axis Ticks -->
+          <text x="70" y="325" fill="#94a3b8" text-anchor="middle">0.0</text>
+          <text x="300" y="325" fill="#94a3b8" text-anchor="middle">0.5</text>
+          <text x="530" y="325" fill="#94a3b8" text-anchor="middle">1.0</text>
+
+          <text x="55" y="315" fill="#94a3b8" text-anchor="end">0.0</text>
+          <text x="55" y="175" fill="#94a3b8" text-anchor="end">0.5</text>
+          <text x="55" y="35" fill="#94a3b8" text-anchor="end">1.0</text>
+        </svg>
+      </div>
+
+      <!-- Interactive Calculator Controls -->
+      <div style="background:var(--bg-raised); border:1px solid var(--border); border-radius:var(--radius-md); padding:1.5rem; margin-top:1.5rem;">
+        <h4 style="margin:0 0 1rem; font-size:1.05rem; color:#10b981;">🧮 Live Package Metric Calculator</h4>
+        <div class="calc-grid">
+          <div class="calc-input-group">
+            <label>Ca (Afferent / Incoming)</label>
+            <input type="number" id="inputCa" value="8" min="0">
+          </div>
+          <div class="calc-input-group">
+            <label>Ce (Efferent / Outgoing)</label>
+            <input type="number" id="inputCe" value="8" min="0">
+          </div>
+          <div class="calc-input-group">
+            <label>Na (Abstract Classes)</label>
+            <input type="number" id="inputNa" value="5" min="0">
+          </div>
+          <div class="calc-input-group">
+            <label>Nc (Total Classes)</label>
+            <input type="number" id="inputNc" value="10" min="1">
+          </div>
+        </div>
+        <div class="terminal-output" id="pkgDiagnosisConsole">
+          >> [Diagnosis] I = 0.50 | A = 0.50 | D = 0.00 -> Perfectly aligned with the Main Sequence! Excellent architectural health.
+        </div>
+      </div>
+
+      <!-- Up Next Card -->
+      <div class="stage-next-card">
+        <div class="stage-next-card-content">
+          <div class="stage-next-card-label">UP NEXT · STAGE 04</div>
+          <div class="stage-next-card-title">Multi-Module Setup &amp; ArchUnit Enforcement</div>
+          <p class="stage-next-card-desc">Inspect automated test suites that fail builds whenever cyclic package dependencies or stability violations occur.</p>
+        </div>
+        <a href="#stage-4-code" class="stage-next-card-btn">Jump to Stage 4 →</a>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         STAGE 4: MULTI-MODULE SETUP & AUTOMATED ENFORCEMENT
+         ==================================================================== -->
+    <section class="masterclass-stage-section" id="stage-4-code">
+      <div class="stage-header-top">
+        <div class="stage-eyebrow-pill">● Stage 04 · Architecture as Code</div>
+        <button type="button" class="stage-mastery-btn" onclick="markStageComplete(4)">Mark Stage 4 Complete ✓</button>
+      </div>
+      <h2 class="stage-title">Automating Architecture Governance with ArchUnit</h2>
+
+      <p style="font-size:1rem; line-height:1.7; color:var(--text); margin-bottom:1.5rem;">
+        Modern engineering organizations do not rely on manual code review to enforce package coupling rules. They use automated architecture testing frameworks like <strong>ArchUnit</strong> in CI/CD pipelines.
+      </p>
+
+      <div class="mac-ide-window" style="margin: 1.5rem 0;">
+        <div class="mac-ide-top">
+          <div class="mac-ide-dots">
+            <span class="mac-dot mac-dot-red"></span>
+            <span class="mac-dot mac-dot-yellow"></span>
+            <span class="mac-dot mac-dot-green"></span>
+          </div>
+          <div class="mac-ide-tab">PackageArchitectureTest.java · ArchUnit</div>
+          <button type="button" class="btn-copy-code" onclick="copySnippet('codeSnippetArch')">Copy Code</button>
+        </div>
+        <pre class="mac-ide-content" id="codeSnippetArch"><code>package de.frankfurt.posa.packaging;
+
+import com.tngtech.archunit.junit.AnalyzeClasses;
+import com.tngtech.archunit.junit.ArchTest;
+import com.tngtech.archunit.lang.ArchRule;
+import static com.tngtech.archunit.library.dependencies.SlicesRuleDefinition.slices;
+import static com.tngtech.archunit.library.Architectures.layeredArchitecture;
+
+@AnalyzeClasses(packages = "de.frankfurt.posa")
+public class PackageArchitectureTest {
+
+    // 1. ADP Enforcement: Strictly forbid cyclic dependencies across all packages!
+    @ArchTest
+    public static final ArchRule NO_PACKAGE_CYCLES =
+        slices().matching("de.frankfurt.posa.(*)..")
+            .should().beFreeOfCycles();
+
+    // 2. SDP Enforcement: Presentation cannot be accessed by Domain
+    @ArchTest
+    public static final ArchRule LAYER_DEPENDENCY_RULE =
+        layeredArchitecture()
+            .consideringAllDependencies()
+            .layer("Presentation").definedBy("..presentation..")
+            .layer("Domain").definedBy("..domain..")
+            .layer("Infrastructure").definedBy("..infrastructure..")
+            .whereLayer("Presentation").mayNotBeAccessedByAnyLayer()
+            .whereLayer("Domain").mayOnlyBeAccessedByLayers("Presentation", "Infrastructure");
+}</code></pre>
+      </div>
+
+      <!-- Up Next Card -->
+      <div class="stage-next-card">
+        <div class="stage-next-card-content">
+          <div class="stage-next-card-label">UP NEXT · STAGE 05</div>
+          <div class="stage-next-card-title">Frankfurt UAS Exam Traps &amp; Calculation Drills</div>
+          <p class="stage-next-card-desc">Solve authentic 20-point past-paper exam calculation problems from Prof. Dr. Jörg Schäfer with step-by-step scoring rubrics.</p>
+        </div>
+        <a href="#stage-5-exam" class="stage-next-card-btn">Jump to Stage 5 →</a>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         STAGE 5: EXAM TRAPS & CALCULATION DRILLS
+         ==================================================================== -->
+    <section class="masterclass-stage-section" id="stage-5-exam">
+      <div class="stage-header-top">
+        <div class="stage-eyebrow-pill">● Stage 05 · Exam Traps &amp; Drills</div>
+        <button type="button" class="stage-mastery-btn" onclick="markStageComplete(5)">Mark Stage 5 Complete ✓</button>
+      </div>
+      <h2 class="stage-title">Frankfurt UAS Exam Drills: Prof. Dr. Jörg Schäfer</h2>
+
+      <p style="font-size:1rem; line-height:1.7; color:var(--text); margin-bottom:1.5rem;">
+        Click each drill to reveal the exact grading rubric, common pitfalls, and 1.0 model answers expected in POSA examinations.
+      </p>
 
       <div class="drill-list">
+        <!-- Drill 1 -->
         <details class="drill-item" open>
           <summary>
-            <span class="drill-tag">Exam Calculation</span>
-            <span class="drill-q">A package has 3 incoming package dependencies ($C_a = 3$) and depends on 1 external package ($C_e = 1$). It contains 2 interfaces and 8 concrete classes ($N_c = 10$). Compute Instability ($I$), Abstractness ($A$), and Distance ($D$). Is this package in good architectural health?</span>
+            <span class="drill-tag">Exam Calculation Drill 1</span>
+            <span class="drill-q">A package has 3 incoming package dependencies ($C_a = 3$) and depends on 1 external package ($C_e = 1$). It contains 2 interfaces and 8 concrete classes ($N_c = 10$). Compute I, A, and D. Diagnose architectural health. (10 Exam Points)</span>
             <span class="drill-reveal-hint"></span>
           </summary>
           <div class="drill-a">
             <p><strong>Step-by-Step Calculation:</strong></p>
             <ol>
-              <li>$I = \frac{C_e}{C_a + C_e} = \frac{1}{3 + 1} = \frac{1}{4} = \mathbf{0.25}$</li>
-              <li>$A = \frac{N_a}{N_c} = \frac{2}{10} = \mathbf{0.20}$</li>
-              <li>$D = |A + I - 1| = |0.20 + 0.25 - 1| = |-0.55| = \mathbf{0.55}$</li>
+              <li>\(I = \frac{C_e}{C_a + C_e} = \frac{1}{3 + 1} = \frac{1}{4} = \mathbf{0.25}\)</li>
+              <li>\(A = \frac{N_a}{N_c} = \frac{2}{10} = \mathbf{0.20}\)</li>
+              <li>\(D = |A + I - 1| = |0.20 + 0.25 - 1| = |-0.55| = \mathbf{0.55}\)</li>
             </ol>
             <p><strong>Architectural Diagnosis:</strong></p>
             <p>
-              $D = 0.55$ indicates noticeable drift toward the <strong>Zone of Pain</strong> ($A + I = 0.45 &lt; 1$). Because the package is relatively stable ($I = 0.25$), it is depended upon by 3 external packages, but it is $80\%$ concrete ($A = 0.20$). To restore balance closer to the Main Sequence, the developers should extract interfaces for the exported classes to increase $A$.
+              \(D = 0.55\) indicates significant drift toward the <strong>Zone of Pain</strong> (\(A + I = 0.45 < 1\)). Because the package is relatively stable (\(I = 0.25\)), it is depended upon by 3 external packages, but it is \(80\%\) concrete (\(A = 0.20\)). To restore balance closer to the Main Sequence, developers must extract interfaces for public classes to raise \(A\) closer to \(0.75\).
             </p>
           </div>
         </details>
+
+        <!-- Drill 2 -->
+        <details class="drill-item">
+          <summary>
+            <span class="drill-tag">Exam Drill 2</span>
+            <span class="drill-q">Explain the two distinct strategies to break a cyclic dependency between Package A and Package B. (6 Exam Points)</span>
+            <span class="drill-reveal-hint"></span>
+          </summary>
+          <div class="drill-a">
+            <p><strong>Strategy 1: Dependency Inversion (DIP)</strong></p>
+            <p>Create an interface in Package A that defines the operations Package B needs to call. Package B then realizes this interface. The dependency arrow inverts, transforming the cycle into a single-direction graph.</p>
+            <p><strong>Strategy 2: Extract a Shared Third Package (Package C)</strong></p>
+            <p>Extract the shared classes or data entities that both A and B need into a new independent package C. Both A and B depend on C, completely breaking the cycle between A and B.</p>
+          </div>
+        </details>
+
+        <!-- Drill 3 -->
+        <details class="drill-item">
+          <summary>
+            <span class="drill-tag">Exam Drill 3</span>
+            <span class="drill-q">Why does the Common-Reuse Principle (CRP) cause packages to become smaller, while the Common-Closure Principle (CCP) causes them to become larger? (4 Exam Points)</span>
+            <span class="drill-reveal-hint"></span>
+          </summary>
+          <div class="drill-a">
+            <p><strong>Model Answer:</strong></p>
+            <p><strong>CCP (Group Together):</strong> Dictates that classes changing for the same reason should be packaged together. To reduce the blast radius of changes and the number of packages needing re-release, CCP groups classes, making packages larger.</p>
+            <p><strong>CRP (Split Apart):</strong> Dictates that classes not reused together must be split. To prevent consumers from being forced to re-compile or re-deploy due to changes in classes they don't care about, CRP breaks packages into smaller units.</p>
+          </div>
+        </details>
+      </div>
+
+      <!-- Final Masterclass Roadmap Transition Card -->
+      <div class="stage-next-card" style="margin-top:2.5rem; border:1px solid #0284c7; background:rgba(2,132,199,0.06);">
+        <div class="stage-next-card-content">
+          <div class="stage-next-card-label" style="color:#0284c7;">NEXT CHAPTER IN CURRICULUM · UNIT 8</div>
+          <div class="stage-next-card-title">Unit 8: Creational Patterns &amp; Object Factories</div>
+          <p class="stage-next-card-desc">Master Factory Method, Abstract Factory, and Singleton patterns with thread-safe double-checked locking and dependency injection.</p>
+        </div>
+        <a href="unit-8-creational.html" class="stage-next-card-btn" style="background:#0284c7;">Go to Unit 8: Creational →</a>
       </div>
     </section>
 
-    <footer class="page-footer" style="margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--border); display: flex; justify-content: space-between;">
-      <span><a href="unit-6-solid.html">← Previous: Unit 6 SOLID</a></span>
-      <span><a href="index.html">Course Hub →</a></span>
+    <!-- Footer -->
+    <footer class="page-footer" style="margin-top: 3.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border); display: flex; justify-content: space-between; flex-wrap:wrap; gap:1rem;">
+      <span><a href="unit-6-solid.html" style="color:var(--text-muted); font-weight:600;">← Previous: Unit 6 SOLID Principles</a></span>
+      <span><a href="unit-8-creational.html" style="color:var(--accent); font-weight:700;">Next: Unit 8 Creational Patterns →</a></span>
     </footer>
 
   </div>
 </div>
 
-<script src="assets/site.js" defer></script>
+<script src="assets/site.js?v=2026.15"></script>
 <script>
-  (function() {
-    var btn = document.getElementById("calcPkgBtn");
-    var pt = document.getElementById("pkgPoint");
-    var lbl = document.getElementById("pkgLabel");
+// Reading Progress Bar
+window.addEventListener("scroll", function () {
+  var winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+  var height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+  var scrolled = (winScroll / height) * 100;
+  var bar = document.getElementById("readingProgressBar");
+  if (bar) bar.style.width = scrolled + "%";
+});
 
-    if (btn && pt && lbl) {
-      function update() {
-        var ca = parseFloat(document.getElementById("inputCa").value) || 0;
-        var ce = parseFloat(document.getElementById("inputCe").value) || 0;
-        var na = parseFloat(document.getElementById("inputNa").value) || 0;
-        var nc = Math.max(1, parseFloat(document.getElementById("inputNc").value) || 1);
-
-        var totalC = ca + ce;
-        var i = totalC > 0 ? ce / totalC : 0;
-        var a = Math.min(1, Math.max(0, na / nc));
-        var d = Math.abs(a + i - 1);
-
-        // SVG coordinates:
-        // X maps I from 0 to 1 -> 70 to 530 (width 460)
-        // Y maps A from 0 to 1 -> 310 to 30 (height 280, inverted)
-        var cx = 70 + (i * 460);
-        var cy = 310 - (a * 280);
-
-        pt.setAttribute("cx", cx);
-        pt.setAttribute("cy", cy);
-
-        lbl.setAttribute("x", Math.min(380, cx + 15));
-        lbl.setAttribute("y", cy > 50 ? cy + 4 : cy + 18);
-        lbl.textContent = "Your Pkg (I=" + i.toFixed(2) + ", A=" + a.toFixed(2) + ", D=" + d.toFixed(2) + ")";
-
-        if (d < 0.2) {
-          pt.setAttribute("fill", "#10b981");
-          lbl.setAttribute("fill", "#059669");
-        } else if (a + i < 0.8) {
-          pt.setAttribute("fill", "#ef4444");
-          lbl.setAttribute("fill", "#dc2626");
-        } else {
-          pt.setAttribute("fill", "#64748b");
-          lbl.setAttribute("fill", "#475569");
-        }
-      }
-
-      btn.addEventListener("click", update);
-      ["inputCa", "inputCe", "inputNa", "inputNc"].forEach(function(id) {
-        var el = document.getElementById(id);
-        if (el) el.addEventListener("input", update);
-      });
-      update();
+// 8-Pillar Selection & Matrix View Toggles
+var _currentPillar = 1;
+function selectPillar(num) {
+  _currentPillar = num;
+  var tabs = document.querySelectorAll(".pillar-tab-btn");
+  tabs.forEach(function (t, i) {
+    if (i + 1 === num) {
+      t.classList.add("active");
+      t.setAttribute("aria-selected", "true");
+    } else {
+      t.classList.remove("active");
+      t.setAttribute("aria-selected", "false");
     }
-  })();
+  });
+
+  for (var i = 1; i <= 8; i++) {
+    var p = document.getElementById("pillarPanel" + i);
+    if (p) p.style.display = (i === num) ? "block" : "none";
+  }
+}
+
+function setBlueprintView(mode) {
+  var explorer = document.getElementById("blueprintExplorer");
+  var matrix = document.getElementById("blueprintMatrix");
+  var btnExp = document.getElementById("btnViewExplorer");
+  var btnMat = document.getElementById("btnViewMatrix");
+
+  if (mode === "matrix") {
+    if (explorer) explorer.style.display = "none";
+    if (matrix) matrix.style.display = "block";
+    if (btnExp) btnExp.classList.remove("active");
+    if (btnMat) btnMat.classList.add("active");
+  } else {
+    if (explorer) explorer.style.display = "block";
+    if (matrix) matrix.style.display = "none";
+    if (btnExp) btnExp.classList.add("active");
+    if (btnMat) btnMat.classList.remove("active");
+    selectPillar(_currentPillar);
+  }
+}
+
+// Debounced Collapse Handler
+var _lastInlineCollapseTime = 0;
+function toggleBlueprintCollapse(forceState) {
+  var now = Date.now();
+  if (typeof forceState !== "boolean" && now - _lastInlineCollapseTime < 250) {
+    return;
+  }
+  _lastInlineCollapseTime = now;
+
+  var suite = document.getElementById("blueprintSuite");
+  var collapseBtn = document.getElementById("btnCollapseBlueprint");
+  var body = document.getElementById("blueprintCollapsibleBody");
+  var hint = document.getElementById("blueprintCollapsedHint");
+  if (!suite) return;
+
+  var isCurrentlyCollapsed = suite.classList.contains("is-collapsed");
+  var willCollapse = (typeof forceState === "boolean") ? forceState : !isCurrentlyCollapsed;
+
+  if (willCollapse) {
+    suite.classList.add("is-collapsed");
+    if (body) body.style.display = "none";
+    if (hint) hint.style.display = "flex";
+  } else {
+    suite.classList.remove("is-collapsed");
+    if (body) body.style.display = "block";
+    if (hint) hint.style.display = "none";
+  }
+
+  if (collapseBtn) {
+    var icon = collapseBtn.querySelector(".collapse-icon");
+    var label = collapseBtn.querySelector(".collapse-label");
+    if (willCollapse) {
+      if (icon) icon.textContent = "▼";
+      if (label) label.textContent = "Expand Rubric";
+      collapseBtn.setAttribute("aria-expanded", "false");
+    } else {
+      if (icon) icon.textContent = "▲";
+      if (label) label.textContent = "Collapse Rubric";
+      collapseBtn.setAttribute("aria-expanded", "true");
+    }
+  }
+}
+
+function copyBlueprintRubric() {
+  var copyLabel = document.getElementById("copyRubricSuiteLabel");
+  var rubricMarkdown = 
+    "# Software Pattern Mastery: The 8-Pillar Architectural Rubric\n" +
+    "*(Standard for POSA Exams & Technical Architecture Reviews)*\n\n" +
+    "## Domain: Packaging Principles & Modularity Metrics (REP, CCP, CRP, ADP, SDP, SAP)\n\n" +
+    "### 1. Intent & Architectural Motivation\n" +
+    "- Organize classes into cohesive, independently deployable packages; eliminate cyclic build dependencies.\n\n" +
+    "### 2. Structural Roles & Principles\n" +
+    "- Cohesion: REP (Reuse-Release), CCP (Common-Closure), CRP (Common-Reuse).\n" +
+    "- Coupling: ADP (Acyclic Dependencies), SDP (Stable Dependencies), SAP (Stable Abstractions).\n\n" +
+    "### 3. Formal UML Topology\n" +
+    "- Directed Acyclic Graph (DAG) enforced; cycles broken via Dependency Inversion.\n\n" +
+    "### 4. Quantitative Metrics\n" +
+    "- Instability: I = Ce / (Ca + Ce)\n" +
+    "- Abstractness: A = Na / Nc\n" +
+    "- Main Sequence Distance: D = |A + I - 1|\n\n" +
+    "### 5. Implementation Mechanics\n" +
+    "- Semantic versioning; ArchUnit automated rule tests; modular build tools (Gradle/Maven).\n\n" +
+    "### 6. Architectural Costs & Trade-offs\n" +
+    "- The Cohesion Tension Triangle: CCP groups classes vs CRP splits classes.\n\n" +
+    "### 7. Rival Concepts Matrix\n" +
+    "- Class SOLID principles vs Macro Package principles.\n\n" +
+    "### 8. Real-World JDK & Exam Traps\n" +
+    "- Zone of Pain (A=0, I=0: Rigid Concrete, highly depended upon).\n" +
+    "- Zone of Uselessness (A=1, I=1: Dead abstract code nobody depends on).\n";
+
+  function updateLabelSuccess() {
+    if (copyLabel) copyLabel.textContent = "Copied to Clipboard!";
+    if (typeof window.showToast === "function") window.showToast("8-Pillar Study Rubric copied to clipboard!");
+    setTimeout(function () {
+      if (copyLabel) copyLabel.textContent = "Copy Rubric (Markdown)";
+    }, 2500);
+  }
+
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(rubricMarkdown).then(updateLabelSuccess).catch(function () {
+      fallbackCopy(rubricMarkdown);
+    });
+  } else {
+    fallbackCopy(rubricMarkdown);
+  }
+
+  function fallbackCopy(text) {
+    var ta = document.createElement("textarea");
+    ta.value = text;
+    ta.style.position = "fixed";
+    ta.style.opacity = "0";
+    document.body.appendChild(ta);
+    ta.select();
+    try {
+      document.execCommand("copy");
+      updateLabelSuccess();
+    } catch (e) {
+      alert("Please press Ctrl+C to copy rubric");
+    }
+    document.body.removeChild(ta);
+  }
+}
+
+function copySnippet(elementId) {
+  var el = document.getElementById(elementId);
+  if (!el) return;
+  var text = el.innerText || el.textContent;
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(function() {
+      if (typeof window.showToast === "function") window.showToast("Code snippet copied to clipboard!");
+    });
+  }
+}
+
+// Stage Completion Indicator
+function markStageComplete(stageNum) {
+  var btn = event.target;
+  if (btn) {
+    btn.textContent = "Completed ✓";
+    btn.style.background = "#10b981";
+    btn.style.color = "#fff";
+  }
+  var pill = document.querySelector('.stage-nav-pill[data-stage="' + stageNum + '"]');
+  if (pill) {
+    pill.style.borderColor = "#10b981";
+  }
+  if (typeof window.showToast === "function") window.showToast("Stage " + stageNum + " marked complete! Great progress.");
+}
+
+// Interactive Main Sequence Calculator Controller
+(function initMetricsCalculator() {
+  var pt = document.getElementById("pkgPoint");
+  var lbl = document.getElementById("pkgLabel");
+  var consoleEl = document.getElementById("pkgDiagnosisConsole");
+  var inputs = ["inputCa", "inputCe", "inputNa", "inputNc"];
+
+  if (!pt || !lbl || !consoleEl) return;
+
+  function update() {
+    var ca = parseFloat(document.getElementById("inputCa").value) || 0;
+    var ce = parseFloat(document.getElementById("inputCe").value) || 0;
+    var na = parseFloat(document.getElementById("inputNa").value) || 0;
+    var nc = Math.max(1, parseFloat(document.getElementById("inputNc").value) || 1);
+
+    var totalC = ca + ce;
+    var i = totalC > 0 ? ce / totalC : 0;
+    var a = Math.min(1, Math.max(0, na / nc));
+    var d = Math.abs(a + i - 1);
+
+    // SVG coordinates:
+    // X maps I from 0 to 1 -> 70 to 530 (width 460)
+    // Y maps A from 0 to 1 -> 310 to 30 (height 280, inverted)
+    var cx = 70 + (i * 460);
+    var cy = 310 - (a * 280);
+
+    pt.setAttribute("cx", cx);
+    pt.setAttribute("cy", cy);
+
+    lbl.setAttribute("x", Math.min(380, cx + 15));
+    lbl.setAttribute("y", cy > 50 ? cy + 4 : cy + 18);
+    lbl.textContent = "Your Pkg (I=" + i.toFixed(2) + ", A=" + a.toFixed(2) + ", D=" + d.toFixed(2) + ")";
+
+    var diagnosis = "";
+    if (d < 0.2) {
+      pt.setAttribute("fill", "#10b981");
+      lbl.setAttribute("fill", "#34d399");
+      diagnosis = ">> [Diagnosis] I = " + i.toFixed(2) + " | A = " + a.toFixed(2) + " | D = " + d.toFixed(2) + " -> Balanced on the Main Sequence! Excellent architectural health.";
+      consoleEl.style.color = "#10b981";
+    } else if (a + i < 0.8) {
+      pt.setAttribute("fill", "#ef4444");
+      lbl.setAttribute("fill", "#f87171");
+      diagnosis = ">> [Diagnosis] I = " + i.toFixed(2) + " | A = " + a.toFixed(2) + " | D = " + d.toFixed(2) + " -> ⚠️ DRIFT INTO ZONE OF PAIN! Package is rigid and concrete. Extract interfaces to raise A.";
+      consoleEl.style.color = "#ef4444";
+    } else {
+      pt.setAttribute("fill", "#94a3b8");
+      lbl.setAttribute("fill", "#cbd5e1");
+      diagnosis = ">> [Diagnosis] I = " + i.toFixed(2) + " | A = " + a.toFixed(2) + " | D = " + d.toFixed(2) + " -> 👻 DRIFT INTO ZONE OF USELESSNESS! Dead abstract classes nobody depends on.";
+      consoleEl.style.color = "#cbd5e1";
+    }
+    consoleEl.textContent = diagnosis;
+  }
+
+  inputs.forEach(function (id) {
+    var el = document.getElementById(id);
+    if (el) el.addEventListener("input", update);
+  });
+  update();
+})();
+
+window.selectPillar = selectPillar;
+window.setBlueprintView = setBlueprintView;
+window.toggleBlueprintCollapse = toggleBlueprintCollapse;
+window.copyBlueprintRubric = copyBlueprintRubric;
+window.copySnippet = copySnippet;
+window.markStageComplete = markStageComplete;
 </script>
 </body>
 </html>
