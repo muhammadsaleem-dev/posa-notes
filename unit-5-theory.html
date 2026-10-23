@@ -2,57 +2,117 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Unit 5: Pattern Theory &amp; Origins | POSA 2026</title>
-<meta name="description" content="Unit 5 of Pattern-Oriented Software Architecture by Prof. Dr. Jörg Schäfer: Christopher Alexander, GoF categorization, Pattern Languages, and criticisms.">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230c7a73'/%3E%3Cpath d='M8 10h16M8 16h16M8 22h10' stroke='%23fff' stroke-width='2.2' stroke-linecap='round'/%3E%3C/svg%3E">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Unit 5: Pattern Theory &amp; Origins | POSA 2026 Masterclass</title>
+<meta name="description" content="Master Christopher Alexander's architectural origins, the Three-Part Rule, System of Forces, Pattern Languages vs Catalogs, and Peter Norvig's criticisms with Prof. Dr. Jörg Schäfer.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%238b5cf6'/%3E%3Cpath d='M8 10h16M8 16h16M8 22h10' stroke='%23fff' stroke-width='2.2' stroke-linecap='round'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/style.css">
+<link rel="stylesheet" href="assets/style.css?v=2026.15">
 <style>
-  .quote-card {
-    margin: 1.5rem 0 2rem;
-    padding: 1.25rem 1.5rem;
-    background: var(--accent-soft);
-    border-left: 4px solid var(--accent);
-    border-radius: 0 var(--radius-md) var(--radius-md) 0;
-    font-style: italic;
-    color: var(--accent-ink);
+  .reading-progress-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #8b5cf6 0%, #a855f7 50%, #d946ef 100%);
+    width: 0%;
+    z-index: 9999;
+    transition: width 0.1s ease-out;
   }
-  .quote-author {
+  .stage-takeaways-box {
+    background: rgba(139, 92, 246, 0.05);
+    border: 1px solid rgba(139, 92, 246, 0.2);
+    border-radius: var(--radius-md);
+    padding: 1.5rem;
+    margin: 2rem 0;
+  }
+  [data-theme="light"] .stage-takeaways-box {
+    background: #faf5ff;
+    border-color: #e9d5ff;
+  }
+  .stage-takeaways-title {
+    font-weight: 800;
+    color: #8b5cf6;
+    margin-bottom: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1.05rem;
+  }
+  .takeaway-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+  .takeaway-item {
+    background: var(--bg-raised);
+    padding: 1rem;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+  }
+  .takeaway-item strong {
+    color: var(--text);
     display: block;
-    margin-top: 0.5rem;
-    font-style: normal;
-    font-weight: 700;
-    font-size: 0.85rem;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
+    margin-bottom: 0.35rem;
+    font-size: 0.92rem;
   }
-  .theory-card {
+  .takeaway-item p {
+    margin: 0;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    line-height: 1.5;
+  }
+  /* Forces Interactive Simulator */
+  .forces-sim-card {
     background: var(--bg-raised);
     border: 1px solid var(--border);
     border-radius: var(--radius-md);
     padding: 1.5rem;
-    margin-bottom: 1.5rem;
+    margin: 2rem 0;
+  }
+  .forces-balance-bar {
+    display: flex;
+    height: 24px;
+    border-radius: 12px;
+    overflow: hidden;
+    margin: 1rem 0;
+    border: 1px solid var(--border);
+  }
+  .force-seg-flex {
+    background: #8b5cf6;
+    transition: width 0.3s ease;
+  }
+  .force-seg-perf {
+    background: #ec4899;
+    transition: width 0.3s ease;
+  }
+  .force-seg-simplicity {
+    background: #10b981;
+    transition: width 0.3s ease;
   }
 </style>
-<script>(function(){try{var t=localStorage.getItem('posa-theme')||'light';document.documentElement.setAttribute('data-theme',t);var m=localStorage.getItem('posa-mode')||'concept';document.documentElement.setAttribute('data-mode',m);}catch(e){}})();</script>
+<script>(function(){try{var t=localStorage.getItem('posa-theme')||'dark';document.documentElement.setAttribute('data-theme',t);var m=localStorage.getItem('posa-mode')||'concept';document.documentElement.setAttribute('data-mode',m);}catch(e){}})();</script>
 </head>
-<body>
+<body class="mode-stage-focused">
+
+<div class="reading-progress-bar" id="readingProgressBar"></div>
 
 <nav class="sitenav">
   <div class="sitenav-inner">
     <a class="sitenav-home" href="index.html">
-      <span style="background:var(--accent);color:#fff;padding:0.15rem 0.45rem;border-radius:4px;font-size:0.8rem;font-weight:800;letter-spacing:0.04em;">POSA</span>
-      <span>2026</span>
+      <span style="background:linear-gradient(135deg, #8b5cf6 0%, #a855f7 100%);color:#fff;padding:0.2rem 0.55rem;border-radius:6px;font-size:0.82rem;font-weight:800;letter-spacing:0.04em;">POSA</span>
+      <span style="font-weight:800;letter-spacing:-0.02em;">2026</span>
     </a>
     <div class="sitenav-links">
       <a href="index.html">Overview</a>
-      <a href="unit-1-strategy.html">1 · Strategy</a>
+      <a href="unit-3-structural.html">3 · Structural</a>
       <a href="unit-4-junit.html">4 · JUnit</a>
       <a href="unit-5-theory.html" class="active">5 · Theory</a>
       <a href="unit-6-solid.html">6 · SOLID</a>
+      <a href="unit-7-packaging.html">7 · Packaging</a>
       <a href="mock-1.html">📝 Mock 1</a>
     </div>
     <button class="nav-toggle" id="navToggle" type="button" aria-expanded="false" aria-controls="navPanel">
@@ -68,10 +128,11 @@
   <div class="nav-panel" id="navPanel">
     <div class="nav-panel-section">
       <span class="nav-panel-label">Course Navigation</span>
-      <a href="index.html">Overview</a>
+      <a href="index.html">Course Overview</a>
       <a href="unit-4-junit.html">Unit 4 · Case Study JUnit</a>
-      <a href="unit-5-theory.html" class="active">Unit 5 · Pattern Theory</a>
+      <a href="unit-5-theory.html" class="active">Unit 5 · Software Pattern Theory</a>
       <a href="unit-6-solid.html">Unit 6 · SOLID Principles</a>
+      <a href="unit-7-packaging.html">Unit 7 · Packaging Architecture</a>
       <a href="mock-1.html">📝 Mock Exam 1</a>
     </div>
   </div>
@@ -80,174 +141,917 @@
 <div class="page-shell">
   <aside class="sidebar-toc">
     <div class="sidebar-block">
-      <span class="sidebar-label">On This Page</span>
-      <a href="#alexander-origins"><span class="toc-num">1</span>Christopher Alexander's Origins</a>
-      <a href="#three-part-rule"><span class="toc-num">2</span>The Three-Part Rule &amp; Forces</a>
-      <a href="#pattern-hierarchy"><span class="toc-num">3</span>Pattern Taxonomies (GoF vs POSA)</a>
-      <a href="#criticism"><span class="toc-num">4</span>Pattern Criticisms &amp; Overuse</a>
-      <a href="#self-study"><span class="toc-num">5</span>Self-Study Exam Questions</a>
+      <span class="sidebar-label">PART 1 · RUBRIC</span>
+      <a href="#pillar-1"><span class="toc-num">P1</span>Epistemology</a>
+      <a href="#pillar-2"><span class="toc-num">P2</span>Three-Part Topology</a>
+      <a href="#pillar-3"><span class="toc-num">P3</span>Generative Dynamics</a>
+      <a href="#pillar-4"><span class="toc-num">P4</span>POSA Taxonomy Scope</a>
+      <a href="#pillar-5"><span class="toc-num">P5</span>Catalog vs Language</a>
+      <a href="#pillar-6"><span class="toc-num">P6</span>Pathologies &amp; Norvig</a>
+      <a href="#pillar-7"><span class="toc-num">P7</span>Modern FP Evolution</a>
+      <a href="#pillar-8"><span class="toc-num">P8</span>Frankfurt UAS Exam Traps</a>
     </div>
     <div class="sidebar-block">
-      <span class="sidebar-label">Instructor</span>
-      <p style="font-size: 0.85rem; color: var(--text-muted); margin: 0;">
-        Prof. Dr. Jörg Schäfer<br>
-        <em>Frankfurt University of Applied Sciences</em>
+      <span class="sidebar-label">PART 2 · CURRICULUM</span>
+      <a href="#stage-1"><span class="toc-num">1</span>Alexander Origins</a>
+      <a href="#stage-2"><span class="toc-num">2</span>Three-Part Rule</a>
+      <a href="#stage-3"><span class="toc-num">3</span>Forces Simulator</a>
+      <a href="#stage-4"><span class="toc-num">4</span>Norvig's Analysis</a>
+      <a href="#stage-5"><span class="toc-num">5</span>Exam Drills</a>
+    </div>
+    <div class="sidebar-block">
+      <span class="sidebar-label">Academic Profile</span>
+      <p style="font-size: 0.85rem; color: var(--text-muted); margin: 0; line-height: 1.4;">
+        <strong>Prof. Dr. Jörg Schäfer</strong><br>
+        Frankfurt University of Applied Sciences<br>
+        <span style="display:inline-block;margin-top:0.35rem;padding:0.15rem 0.4rem;background:rgba(139,92,246,0.15);border-radius:4px;color:#a855f7;font-weight:700;font-size:0.75rem;">Epistemology &amp; Theory</span>
       </p>
     </div>
   </aside>
 
-  <div class="page">
+  <main class="page">
     <div class="masthead">
-      <div>
-        <div class="eyebrow">Unit 5 · Epistemology &amp; Foundations</div>
-        <h1 class="title">Pattern Theory: Origins, Languages &amp; Limits</h1>
-      </div>
+      <div class="eyebrow">Unit 5 · Epistemology &amp; Foundations</div>
+      <h1 class="title">Pattern Theory: Origins, Languages &amp; Limits</h1>
+      <p class="dek">
+        Deconstruct Christopher Alexander’s architectural origins, the Three-Part Rule, the System of Forces, the POSA taxonomy levels, and Peter Norvig’s functional criticisms.
+      </p>
     </div>
 
-    <div class="quote-card">
-      “Each pattern describes a problem which occurs over and over again in our environment, and then describes the core of the solution to that problem, in such a way that you can use this solution a million times over, without ever doing it the same way twice.”
-      <span class="quote-author">— Christopher Alexander (A Pattern Language, 1977)</span>
+    <!-- Symmetrical Demarcation 1 -->
+    <div class="section-divider-wrapper" style="margin: 2.5rem 0 1.5rem;">
+      <div class="section-divider-line"></div>
+      <div class="section-divider-tag">
+        <span class="section-divider-dot"></span>
+        <span>PART 1 · ARCHITECTURAL RUBRIC</span>
+      </div>
+      <div class="section-divider-line"></div>
     </div>
 
-    <p class="dek">
-      Where do patterns come from? The philosophical roots in building architecture, the definition of a pattern language, and the scientific criticisms of software design patterns.
-    </p>
-
-    <!-- Section 1: Origins -->
-    <section class="chapter" id="alexander-origins">
-      <div class="chapter-head">
-        <span class="chapter-num">1</span>
-        <h2>5.3 The Origins: Christopher Alexander</h2>
+    <section class="blueprint-suite" id="blueprintSuite" aria-label="8-Pillar Architecture Rubric">
+      <div class="blueprint-suite-top">
+        <div>
+          <div class="blueprint-suite-badge">
+            <span class="section-badge-pill">SECTION 1 OF 2</span>
+            <span class="badge-sep">·</span>
+            <span>8-PILLAR ARCHITECTURAL RUBRIC</span>
+          </div>
+          <h2 class="blueprint-suite-heading">The Software Pattern Epistemology Blueprint</h2>
+          <p class="blueprint-suite-sub">
+            The canonical architectural specification of Alexander's Three-Part Rule, Force Balancing, and Pattern Language synthesis.
+          </p>
+        </div>
+        <div class="blueprint-suite-actions">
+          <div class="blueprint-view-toggle" role="group" aria-label="Blueprint Layout">
+            <button class="blueprint-toggle-btn active" id="btnViewExplorer" type="button" onclick="setBlueprintView('explorer')">Explorer View</button>
+            <button class="blueprint-toggle-btn" id="btnViewMatrix" type="button" onclick="setBlueprintView('matrix')">Full Matrix</button>
+          </div>
+          <button class="rubric-action-btn" type="button" onclick="copyBlueprintRubric()">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            Export Rubric (MD)
+          </button>
+          <button class="rubric-action-btn rubric-collapse-btn" id="btnCollapseRubric" type="button" onclick="toggleBlueprintCollapse()">
+            <span id="collapseLabel">▲ Collapse Rubric</span>
+          </button>
+        </div>
       </div>
-      <p class="chapter-dek">From physical architecture in urban planning to object-oriented software engineering.</p>
+
+      <div class="blueprint-collapsed-hint" id="blueprintCollapsedHint" style="display:none;">
+        <span class="hint-icon">💡</span>
+        <span>The 8-Pillar Rubric is currently collapsed. Click <strong>Expand Rubric</strong> above to inspect details.</span>
+      </div>
+
+      <div class="blueprint-suite-body" id="blueprintSuiteBody">
+        <div class="blueprint-tabs" role="tablist" aria-label="8 Pillars">
+          <button class="blueprint-tab active" role="tab" aria-selected="true" data-pillar="1" onclick="selectPillar(1)">
+            <span class="blueprint-tab-num">01</span>
+            <span class="blueprint-tab-title">Epistemology</span>
+          </button>
+          <button class="blueprint-tab" role="tab" aria-selected="false" data-pillar="2" onclick="selectPillar(2)">
+            <span class="blueprint-tab-num">02</span>
+            <span class="blueprint-tab-title">Three-Part Topology</span>
+          </button>
+          <button class="blueprint-tab" role="tab" aria-selected="false" data-pillar="3" onclick="selectPillar(3)">
+            <span class="blueprint-tab-num">03</span>
+            <span class="blueprint-tab-title">Generative Dynamics</span>
+          </button>
+          <button class="blueprint-tab" role="tab" aria-selected="false" data-pillar="4" onclick="selectPillar(4)">
+            <span class="blueprint-tab-num">04</span>
+            <span class="blueprint-tab-title">POSA Taxonomy Scope</span>
+          </button>
+          <button class="blueprint-tab" role="tab" aria-selected="false" data-pillar="5" onclick="selectPillar(5)">
+            <span class="blueprint-tab-num">05</span>
+            <span class="blueprint-tab-title">Catalog vs Language</span>
+          </button>
+          <button class="blueprint-tab" role="tab" aria-selected="false" data-pillar="6" onclick="selectPillar(6)">
+            <span class="blueprint-tab-num">06</span>
+            <span class="blueprint-tab-title">Pathologies &amp; Norvig</span>
+          </button>
+          <button class="blueprint-tab" role="tab" aria-selected="false" data-pillar="7" onclick="selectPillar(7)">
+            <span class="blueprint-tab-num">07</span>
+            <span class="blueprint-tab-title">Modern FP Evolution</span>
+          </button>
+          <button class="blueprint-tab" role="tab" aria-selected="false" data-pillar="8" onclick="selectPillar(8)">
+            <span class="blueprint-tab-num">08</span>
+            <span class="blueprint-tab-title">Exam Traps (Schäfer)</span>
+          </button>
+        </div>
+
+        <div class="blueprint-content-area" id="blueprintContentArea">
+          <!-- Pillar 1 -->
+          <article class="pillar-panel active" id="pillar-1" data-pillar="1">
+            <div class="pillar-header">
+              <span class="pillar-tag">PILLAR 01 · FOUNDATIONAL INTENT</span>
+              <h3 class="pillar-title">Epistemology &amp; Christopher Alexander’s Core Vision</h3>
+            </div>
+            <div class="pillar-body">
+              <div class="pillar-grid-2col">
+                <div>
+                  <h4 style="color:var(--text);margin-top:0;">The Origin: Physical Architecture</h4>
+                  <p>In 1977, British-American architect <strong>Christopher Alexander</strong> published <em>A Pattern Language</em>, followed by <em>The Timeless Way of Building</em> (1979). Alexander observed that timeless towns, buildings, and rooms were not designed from clean slates by solitary geniuses, but emerged through a shared vocabulary of proven spatial solutions.</p>
+                  <p>Alexander famously defined a pattern as:</p>
+                  <blockquote style="border-left:3px solid #8b5cf6;padding-left:1rem;margin:1rem 0;color:var(--text);font-style:italic;">
+                    “Each pattern describes a problem which occurs over and over again in our environment, and then describes the core of the solution to that problem, in such a way that you can use this solution a million times over, without ever doing it the same way twice.”
+                  </blockquote>
+                </div>
+                <div>
+                  <h4 style="color:var(--text);margin-top:0;">Transfer to Software Engineering</h4>
+                  <p>In 1987, <strong>Kent Beck and Ward Cunningham</strong> applied Alexander’s architectural concepts to Smalltalk GUI development at OOPSLA. In 1994, the Gang of Four (GoF: Gamma, Helm, Johnson, Vlissides) published the landmark <em>Design Patterns: Elements of Reusable Object-Oriented Software</em>.</p>
+                  <p>Shortly after, Frank Buschmann, Regine Meunier, Hans Rohnert, Peter Sommerlad, and Michael Stal (POSA) expanded the concept into large-scale distributed enterprise software architectures.</p>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <!-- Pillar 2 -->
+          <article class="pillar-panel" id="pillar-2" data-pillar="2">
+            <div class="pillar-header">
+              <span class="pillar-tag">PILLAR 02 · STRUCTURAL TOPOLOGY</span>
+              <h3 class="pillar-title">The Three-Part Rule &amp; System of Forces (Vector SVG)</h3>
+            </div>
+            <div class="pillar-body">
+              <p>Every genuine software pattern consists of three inseparable components: <strong>Context</strong>, <strong>System of Forces</strong>, and <strong>Configuration/Solution</strong>:</p>
+
+              <div style="background:var(--bg-raised);border:1px solid var(--border);border-radius:var(--radius-md);padding:1.5rem;margin:1.5rem 0;">
+                <svg viewBox="0 0 880 300" style="width:100%;height:auto;display:block;" xmlns="http://www.w3.org/2000/svg">
+                  <defs>
+                    <marker id="uml-arrow-5" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+                      <polygon points="0 2, 8 5, 0 8" fill="#8b5cf6"/>
+                    </marker>
+                  </defs>
+
+                  <!-- 1. Context -->
+                  <g transform="translate(40, 40)">
+                    <rect width="220" height="100" rx="8" fill="var(--bg)" stroke="#8b5cf6" stroke-width="2"/>
+                    <text x="110" y="30" font-family="var(--font-display)" font-size="14" font-weight="800" fill="#8b5cf6" text-anchor="middle">1. CONTEXT</text>
+                    <line x1="0" y1="42" x2="220" y2="42" stroke="var(--border)" stroke-width="1"/>
+                    <text x="14" y="64" font-family="var(--font-sans)" font-size="11" fill="var(--text-muted)">The recurring situation,</text>
+                    <text x="14" y="82" font-family="var(--font-sans)" font-size="11" fill="var(--text-muted)">preconditions, &amp; domain</text>
+                  </g>
+
+                  <!-- 2. System of Forces -->
+                  <g transform="translate(330, 40)">
+                    <rect width="220" height="100" rx="8" fill="var(--bg)" stroke="#ec4899" stroke-width="2"/>
+                    <text x="110" y="30" font-family="var(--font-display)" font-size="14" font-weight="800" fill="#ec4899" text-anchor="middle">2. FORCES &amp; PROBLEM</text>
+                    <line x1="0" y1="42" x2="220" y2="42" stroke="var(--border)" stroke-width="1"/>
+                    <text x="14" y="64" font-family="var(--font-sans)" font-size="11" fill="var(--text-muted)">Conflicting requirements:</text>
+                    <text x="14" y="82" font-family="var(--font-sans)" font-size="11" fill="var(--text-muted)">Flexibility vs Performance</text>
+                  </g>
+
+                  <!-- 3. Solution -->
+                  <g transform="translate(620, 40)">
+                    <rect width="220" height="100" rx="8" fill="var(--bg)" stroke="#10b981" stroke-width="2"/>
+                    <text x="110" y="30" font-family="var(--font-display)" font-size="14" font-weight="800" fill="#10b981" text-anchor="middle">3. SOLUTION / SHAPE</text>
+                    <line x1="0" y1="42" x2="220" y2="42" stroke="var(--border)" stroke-width="1"/>
+                    <text x="14" y="64" font-family="var(--font-sans)" font-size="11" fill="var(--text-muted)">Structural configuration</text>
+                    <text x="14" y="82" font-family="var(--font-sans)" font-size="11" fill="var(--text-muted)">that resolves the forces</text>
+                  </g>
+
+                  <!-- Resulting Context -->
+                  <g transform="translate(330, 190)">
+                    <rect width="220" height="85" rx="8" fill="var(--bg)" stroke="#3b82f6" stroke-width="1.8" stroke-dasharray="4 3"/>
+                    <text x="110" y="28" font-family="var(--font-display)" font-size="13" font-weight="800" fill="#3b82f6" text-anchor="middle">RESULTING CONTEXT</text>
+                    <line x1="0" y1="38" x2="220" y2="38" stroke="var(--border)" stroke-width="1"/>
+                    <text x="14" y="58" font-family="var(--font-sans)" font-size="11" fill="var(--text-muted)">New state &amp; consequences:</text>
+                    <text x="14" y="74" font-family="var(--font-sans)" font-size="11" fill="var(--text-muted)">Acts as Context for next pattern!</text>
+                  </g>
+
+                  <!-- Connections -->
+                  <line x1="260" y1="90" x2="320" y2="90" stroke="#8b5cf6" stroke-width="2" marker-end="url(#uml-arrow-5)"/>
+                  <line x1="550" y1="90" x2="610" y2="90" stroke="#ec4899" stroke-width="2" marker-end="url(#uml-arrow-5)"/>
+                  <path d="M 730 140 L 730 230 L 560 230" fill="none" stroke="#10b981" stroke-width="2" marker-end="url(#uml-arrow-5)"/>
+                </svg>
+              </div>
+            </div>
+          </article>
+
+          <!-- Pillar 3 -->
+          <article class="pillar-panel" id="pillar-3" data-pillar="3">
+            <div class="pillar-header">
+              <span class="pillar-tag">PILLAR 03 · GENERATIVE DYNAMICS</span>
+              <h3 class="pillar-title">Alexander’s Generative Process &amp; The Web of Life</h3>
+            </div>
+            <div class="pillar-body">
+              <div class="pillar-grid-2col">
+                <div>
+                  <h4 style="color:#8b5cf6;margin-top:0;">Generative vs Descriptive</h4>
+                  <p>In Alexander’s philosophy, patterns are not mere descriptive recipes; they are <strong>generative</strong>. Applying a pattern does not simply configure an isolated object; it transforms the entire systemic equilibrium.</p>
+                  <p>When Pattern A is applied, it balances the initial forces, but creates a <strong>Resulting Context</strong>. This resulting context contains new, smaller conflicting forces, which are in turn resolved by subordinate Pattern B and Pattern C.</p>
+                </div>
+                <div>
+                  <h4 style="color:#ec4899;margin-top:0;">Quality Without a Name (QWAN)</h4>
+                  <p>Alexander coined the term <em>"Quality Without a Name"</em> to describe the objective vitality, harmony, and wholeness experienced in well-designed physical structures.</p>
+                  <p>In software architecture, QWAN manifests as clean maintainability, lack of friction during extensions, natural testability, and self-documenting structural clarity.</p>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <!-- Pillar 4 -->
+          <article class="pillar-panel" id="pillar-4" data-pillar="4">
+            <div class="pillar-header">
+              <span class="pillar-tag">PILLAR 04 · POSA TAXONOMY SCOPE</span>
+              <h3 class="pillar-title">The Three Architectural Abstraction Levels (POSA)</h3>
+            </div>
+            <div class="pillar-body">
+              <table class="blueprint-table" style="width:100%;border-collapse:collapse;margin-top:0.5rem;font-size:0.88rem;">
+                <thead>
+                  <tr style="border-bottom:2px solid var(--border);text-align:left;">
+                    <th style="padding:0.6rem;">Taxonomy Level</th>
+                    <th style="padding:0.6rem;">Scope &amp; Granularity</th>
+                    <th style="padding:0.6rem;">Primary Focus</th>
+                    <th style="padding:0.6rem;">Canonical Examples</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr style="border-bottom:1px solid var(--border);">
+                    <td style="padding:0.6rem;font-weight:700;color:#3b82f6;">1. Architectural Patterns</td>
+                    <td style="padding:0.6rem;">System-wide macro structure</td>
+                    <td style="padding:0.6rem;">Subsystem partitioning &amp; communications</td>
+                    <td style="padding:0.6rem;"><em>Layers, Pipes &amp; Filters, Blackboard, Broker, MVC</em></td>
+                  </tr>
+                  <tr style="border-bottom:1px solid var(--border);">
+                    <td style="padding:0.6rem;font-weight:700;color:#8b5cf6;">2. Design Patterns (GoF)</td>
+                    <td style="padding:0.6rem;">Medium-scale component refinement</td>
+                    <td style="padding:0.6rem;">Class relationships &amp; object choreography</td>
+                    <td style="padding:0.6rem;"><em>Strategy, Observer, Composite, Command, Abstract Factory</em></td>
+                  </tr>
+                  <tr>
+                    <td style="padding:0.6rem;font-weight:700;color:#10b981;">3. Idioms</td>
+                    <td style="padding:0.6rem;">Low-level programming language specific</td>
+                    <td style="padding:0.6rem;">Resource safety, thread locks, syntactic idioms</td>
+                    <td style="padding:0.6rem;"><em>RAII (C++), Try-with-resources (Java), Context Managers (Python)</em></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </article>
+
+          <!-- Pillar 5 -->
+          <article class="pillar-panel" id="pillar-5" data-pillar="5">
+            <div class="pillar-header">
+              <span class="pillar-tag">PILLAR 05 · CATALOG VS LANGUAGE</span>
+              <h3 class="pillar-title">Pattern Catalog vs. Pattern Language</h3>
+            </div>
+            <div class="pillar-body">
+              <div class="pillar-grid-2col">
+                <div class="takeaway-item">
+                  <strong style="color:#ef4444;">Pattern Catalog (GoF Model)</strong>
+                  <p>A dictionary or encyclopedia of independent patterns categorized by intent (Creational, Structural, Behavioral). Patterns can be read in isolation, but the reader is given little guidance on how to sequence them or synthesize a complete system from scratch.</p>
+                </div>
+                <div class="takeaway-item">
+                  <strong style="color:#10b981;">Pattern Language (Alexander / POSA Model)</strong>
+                  <p>An interlocking network of mutually supportive patterns. The solution of macro pattern #1 generates the context for pattern #2, guiding the engineer through an unfolding sequence from system topology down to concrete method algorithms.</p>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <!-- Pillar 6 -->
+          <article class="pillar-panel" id="pillar-6" data-pillar="6">
+            <div class="pillar-header">
+              <span class="pillar-tag">PILLAR 06 · PATHOLOGIES &amp; NORVIG</span>
+              <h3 class="pillar-title">Pattern Pathologies &amp; Peter Norvig’s Functional Critique</h3>
+            </div>
+            <div class="pillar-body">
+              <div class="smell-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+                <div style="background:var(--bg-raised);padding:1rem;border-left:4px solid #ef4444;border-radius:0 4px 4px 0;">
+                  <strong style="color:#ef4444;">1. "Patternitis" (The Golden Hammer)</strong>
+                  <p style="font-size:0.85rem;color:var(--text-muted);margin:0.4rem 0 0;">
+                    Junior architects attempting to shoehorn 10 GoF patterns into a 200-line utility. Introducing unnecessary factory-of-factories and visitor hierarchies when a simple 10-line function satisfies requirements.
+                  </p>
+                  <span style="font-size:0.78rem;color:#10b981;font-weight:700;">Remedy: YAGNI principle &amp; refactoring to patterns only when forces demand it.</span>
+                </div>
+                <div style="background:var(--bg-raised);padding:1rem;border-left:4px solid #eab308;border-radius:0 4px 4px 0;">
+                  <strong style="color:#eab308;">2. Peter Norvig's 16/23 Critique</strong>
+                  <p style="font-size:0.85rem;color:var(--text-muted);margin:0.4rem 0 0;">
+                    In 1996, Peter Norvig proved that 16 of the 23 GoF patterns are merely compensations for weaknesses in early static languages like C++ and Java 1.1. In languages with first-class functions, Strategy is just a lambda!
+                  </p>
+                  <span style="font-size:0.78rem;color:#10b981;font-weight:700;">Remedy: Recognize language evolution: modern Java 17+ uses lambdas and records.</span>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <!-- Pillar 7 -->
+          <article class="pillar-panel" id="pillar-7" data-pillar="7">
+            <div class="pillar-header">
+              <span class="pillar-tag">PILLAR 07 · MODERN FP EVOLUTION</span>
+              <h3 class="pillar-title">The Evolution: Heavy OOP Patterns vs Modern Functional Equivalents</h3>
+            </div>
+            <div class="pillar-body">
+              <div class="code-window">
+                <div class="code-window-bar">
+                  <div class="code-dots"><span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span></div>
+                  <span class="code-file">PatternEvolution.java · Classical OOP vs Modern Java 21 Lambdas</span>
+                  <button class="code-copy-btn" onclick="copySnippet('codeEvolution')">Copy Code</button>
+                </div>
+                <pre class="code-pre" id="codeEvolution"><code><span class="k">package</span> de.frankfurt.uas.posa.evolution;
+
+<span class="k">import</span> java.util.function.Function;
+
+<span class="c">// 1. CLASSICAL GoF STRATEGY (1994): Requires interface + 3 classes</span>
+<span class="k">interface</span> <span class="nc">DiscountStrategy</span> { <span class="k">double</span> <span class="nf">apply</span>(<span class="k">double</span> price); }
+<span class="k">class</span> <span class="nc">VipDiscount</span> <span class="k">implements</span> <span class="nc">DiscountStrategy</span> {
+    <span class="nd">@Override</span> <span class="k">public double</span> <span class="nf">apply</span>(<span class="k">double</span> price) { <span class="k">return</span> price * <span class="m">0.80</span>; }
+}
+
+<span class="c">// 2. MODERN FUNCTIONAL EQUIVALENT (Java 17+ / Peter Norvig): Zero classes</span>
+<span class="k">public class</span> <span class="nc">ModernStrategy</span> {
+    <span class="k">public static void</span> <span class="nf">main</span>(<span class="nc">String</span>[] args) {
+        <span class="c">// Strategy is simply a first-class function Function&lt;Double, Double&gt;</span>
+        <span class="nc">Function</span>&lt;<span class="nc">Double</span>, <span class="nc">Double</span>&gt; vipDiscount = price -&gt; price * <span class="m">0.80</span>;
+        <span class="nc">Function</span>&lt;<span class="nc">Double</span>, <span class="nc">Double</span>&gt; summerDiscount = price -&gt; price - <span class="m">15.0</span>;
+
+        <span class="k">double</span> finalPrice = calculatePrice(<span class="m">100.0</span>, vipDiscount);
+        <span class="nc">System</span>.out.println(<span class="s">"Price: "</span> + finalPrice);
+    }
+
+    <span class="k">public static double</span> <span class="nf">calculatePrice</span>(<span class="k">double</span> base, <span class="nc">Function</span>&lt;<span class="nc">Double</span>, <span class="nc">Double</span>&gt; strategy) {
+        <span class="k">return</span> strategy.apply(base);
+    }
+}</code></pre>
+              </div>
+            </div>
+          </article>
+
+          <!-- Pillar 8 -->
+          <article class="pillar-panel" id="pillar-8" data-pillar="8">
+            <div class="pillar-header">
+              <span class="pillar-tag">PILLAR 08 · EXAM TRAPS &amp; DEFENSE</span>
+              <h3 class="pillar-title">Frankfurt UAS Examination Pitfalls (Prof. Dr. Jörg Schäfer)</h3>
+            </div>
+            <div class="pillar-body">
+              <div class="pillar-grid-2col">
+                <div style="background:rgba(239,68,68,0.06);border:1px solid rgba(239,68,68,0.3);border-radius:var(--radius-sm);padding:1rem;">
+                  <strong style="color:#ef4444;">Exam Trap 1: "Is a Pattern just a Solution?"</strong>
+                  <p style="font-size:0.86rem;color:var(--text-muted);margin-top:0.4rem;">
+                    <strong>Schäfer's Trap:</strong> "Define a software pattern in the exam by stating its UML class diagram."<br>
+                    <strong>Correct UAS Defense:</strong> A solution without Context and Forces is NOT a pattern! According to Christopher Alexander and the POSA curriculum, a pattern is a <strong>Three-Part Rule</strong>: Context + System of Forces + Balanced Solution. Memorizing only class diagrams guarantees a failing grade.
+                  </p>
+                </div>
+                <div style="background:rgba(239,68,68,0.06);border:1px solid rgba(239,68,68,0.3);border-radius:var(--radius-sm);padding:1rem;">
+                  <strong style="color:#ef4444;">Exam Trap 2: Pattern Catalog vs Pattern Language</strong>
+                  <p style="font-size:0.86rem;color:var(--text-muted);margin-top:0.4rem;">
+                    <strong>Schäfer's Trap:</strong> "Are GoF and POSA identical pattern languages?"<br>
+                    <strong>Correct UAS Defense:</strong> GoF is primarily a <strong>Pattern Catalog</strong> (independent categorized entries). A <strong>Pattern Language</strong> contains explicit generative sequences where the resulting context of one pattern establishes the forces for subordinate patterns.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Symmetrical Demarcation 2 -->
+    <div class="section-divider-wrapper" style="margin: 3.5rem 0 1.5rem;">
+      <div class="section-divider-line"></div>
+      <div class="section-divider-tag">
+        <span class="section-divider-dot"></span>
+        <span>PART 2 · HANDS-ON CURRICULUM</span>
+      </div>
+      <div class="section-divider-line"></div>
+    </div>
+
+    <!-- Curriculum Super-Header -->
+    <header class="curriculum-header" id="curriculumHeader">
+      <div class="curriculum-meta-chip">
+        <span>⏱️ 40 Min Curriculum</span>
+        <span class="dot-sep">·</span>
+        <span>🎯 Exam Target: Epistemology &amp; Pattern Theory</span>
+        <span class="dot-sep">·</span>
+        <span>🏛️ Prof. Dr. Jörg Schäfer</span>
+      </div>
+      <h2 class="curriculum-title">5-Stage Masterclass: Software Pattern Epistemology</h2>
+      <p class="curriculum-desc">
+        Trace the philosophical origins of design patterns from Christopher Alexander's physical architecture to modern functional programming, force-balancing simulators, and POSA exam mastery.
+      </p>
+
+      <!-- Stage Navigation Bar -->
+      <nav class="masterclass-stage-nav" aria-label="Curriculum Stages">
+        <a class="stage-nav-pill active" href="#stage-1" data-stage="1">
+          <span class="pill-number">01</span>
+          <span class="pill-label">Alexander Origins</span>
+        </a>
+        <a class="stage-nav-pill" href="#stage-2" data-stage="2">
+          <span class="pill-number">02</span>
+          <span class="pill-label">Three-Part Rule</span>
+        </a>
+        <a class="stage-nav-pill" href="#stage-3" data-stage="3">
+          <span class="pill-number">03</span>
+          <span class="pill-label">Forces Lab</span>
+        </a>
+        <a class="stage-nav-pill" href="#stage-4" data-stage="4">
+          <span class="pill-number">04</span>
+          <span class="pill-label">Norvig &amp; FP</span>
+        </a>
+        <a class="stage-nav-pill" href="#stage-5" data-stage="5">
+          <span class="pill-number">05</span>
+          <span class="pill-label">Exam Drills</span>
+        </a>
+      </nav>
+    </header>
+
+    <!-- Stage 1 -->
+    <section class="masterclass-stage" id="stage-1" data-stage="1">
+      <div class="stage-header-top">
+        <div>
+          <span class="stage-eyebrow-pill">STAGE 01 OF 05 · PHILOSOPHICAL ORIGINS</span>
+          <h3 class="stage-title">Christopher Alexander &amp; The Architecture of Space</h3>
+        </div>
+        <button class="stage-mastery-btn" type="button" onclick="markStageComplete(1)">Mark Stage 1 Complete</button>
+      </div>
+
+      <div class="stage-takeaways-box">
+        <div class="stage-takeaways-title">
+          <span>⚡</span>
+          <span>Core Takeaways for Frankfurt UAS Students</span>
+        </div>
+        <div class="takeaway-grid">
+          <div class="takeaway-item">
+            <strong>1. Not Invented by CS</strong>
+            <p>Patterns originated in physical urban planning and architecture (Christopher Alexander, 1977).</p>
+          </div>
+          <div class="takeaway-item">
+            <strong>2. Quality Without a Name</strong>
+            <p>Well-balanced designs produce an objective feeling of vitality and harmony (maintainability in software).</p>
+          </div>
+          <div class="takeaway-item">
+            <strong>3. Kent Beck &amp; Ward Cunningham</strong>
+            <p>The first computer scientists to bring Alexandrian patterns to software engineering at OOPSLA 1987.</p>
+          </div>
+        </div>
+      </div>
 
       <p>
-        Design patterns were not invented by computer scientists. They originated with architect <strong>Christopher Alexander</strong> in books like <em>A Pattern Language</em> (1977) and <em>The Timeless Way of Building</em> (1979).
+        Design patterns were born out of a rebellion against top-down modernist architecture in the 1960s. Alexander argued that traditional towns were beautiful because common folk resolved local trade-offs with established patterns over centuries.
       </p>
+
+      <div class="stage-next-card">
+        <div class="stage-next-body">
+          <span class="stage-next-eyebrow">UP NEXT · STAGE 02</span>
+          <h4 class="stage-next-title">The Three-Part Rule &amp; System of Forces</h4>
+          <p class="stage-next-desc">Examine how Context, Forces, and Configuration form an indivisible triad.</p>
+        </div>
+        <a class="stage-next-btn" href="#stage-2">Proceed to Stage 2 →</a>
+      </div>
+    </section>
+
+    <!-- Stage 2 -->
+    <section class="masterclass-stage" id="stage-2" data-stage="2">
+      <div class="stage-header-top">
+        <div>
+          <span class="stage-eyebrow-pill">STAGE 02 OF 05 · CORE ANATOMY</span>
+          <h3 class="stage-title">The Three-Part Rule: Context, Forces, and Solution</h3>
+        </div>
+        <button class="stage-mastery-btn" type="button" onclick="markStageComplete(2)">Mark Stage 2 Complete</button>
+      </div>
+
       <p>
-        Alexander observed that master builders over centuries solved recurring structural problems with common harmonious forms: *Light on Two Sides of Every Room*, *A Place to Wait*, *Alcoves*, and *Arcades*.
+        In Prof. Dr. Jörg Schäfer’s course, a software pattern is formally defined by its three constituent parts:
       </p>
+
+      <div class="pillar-grid-2col" style="margin: 2rem 0;">
+        <div style="background:var(--bg-raised);border:1px solid var(--border);border-radius:var(--radius-md);padding:1.5rem;">
+          <h4 style="color:#8b5cf6;margin-top:0;">1. Context &amp; Conflicting Forces</h4>
+          <p style="font-size:0.88rem;color:var(--text-muted);line-height:1.6;">
+            The <strong>Context</strong> defines when the pattern applies. The <strong>Forces</strong> are the conflicting requirements and architectural constraints:
+          </p>
+          <ul style="font-size:0.85rem;color:var(--text-muted);line-height:1.6;">
+            <li>Force A: High execution performance and low memory allocation.</li>
+            <li>Force B: Runtime extensibility and dynamic algorithm swapping.</li>
+            <li>Force C: Strong static type safety and maintainability.</li>
+          </ul>
+        </div>
+
+        <div style="background:var(--bg-raised);border:1px solid var(--border);border-radius:var(--radius-md);padding:1.5rem;">
+          <h4 style="color:#10b981;margin-top:0;">2. Solution &amp; Resulting Context</h4>
+          <p style="font-size:0.88rem;color:var(--text-muted);line-height:1.6;">
+            The <strong>Solution</strong> is not concrete code, but a spatial or structural configuration of collaborating roles that balances the conflicting forces.
+          </p>
+          <p style="font-size:0.85rem;color:var(--text-muted);line-height:1.6;">
+            Every solution creates a <strong>Resulting Context</strong>: benefits gained, new liabilities introduced, and subordinate forces that require smaller child patterns.
+          </p>
+        </div>
+      </div>
+
+      <div class="stage-next-card">
+        <div class="stage-next-body">
+          <span class="stage-next-eyebrow">UP NEXT · STAGE 03</span>
+          <h4 class="stage-next-title">Interactive Laboratory: The System of Forces Balancer</h4>
+          <p class="stage-next-desc">Adjust sliders for Flexibility, Performance, and Simplicity to observe how architectural patterns balance trade-offs.</p>
+        </div>
+        <a class="stage-next-btn" href="#stage-3">Proceed to Stage 3 →</a>
+      </div>
+    </section>
+
+    <!-- Stage 3 -->
+    <section class="masterclass-stage" id="stage-3" data-stage="3">
+      <div class="stage-header-top">
+        <div>
+          <span class="stage-eyebrow-pill">STAGE 03 OF 05 · HANDS-ON LAB</span>
+          <h3 class="stage-title">Interactive Architectural Forces Balancer</h3>
+        </div>
+        <button class="stage-mastery-btn" type="button" onclick="markStageComplete(3)">Mark Stage 3 Complete</button>
+      </div>
+
+      <div class="forces-sim-card">
+        <h4 style="margin:0;color:var(--text);">System of Forces Equilibrium Simulator</h4>
+        <p style="font-size:0.85rem;color:var(--text-muted);margin:0.25rem 0 1rem;">
+          Select a candidate architectural solution to see how it distributes forces between Flexibility, Runtime Performance, and Code Simplicity:
+        </p>
+
+        <div style="display:flex;gap:0.75rem;flex-wrap:wrap;margin-bottom:1rem;">
+          <button class="stage-mastery-btn" id="btnSimHardcoded" style="background:var(--bg);color:var(--text);border:1px solid var(--border);" onclick="setForcesSimulation('hardcoded')">1. Hardcoded Switch</button>
+          <button class="stage-mastery-btn" id="btnSimStrategy" style="background:#8b5cf6;" onclick="setForcesSimulation('strategy')">2. GoF Strategy Pattern</button>
+          <button class="stage-mastery-btn" id="btnSimMicrokernel" style="background:var(--bg);color:var(--text);border:1px solid var(--border);" onclick="setForcesSimulation('microkernel')">3. POSA Microkernel Plugin</button>
+        </div>
+
+        <div class="forces-balance-bar">
+          <div class="force-seg-flex" id="barFlex" style="width: 33%;" title="Flexibility"></div>
+          <div class="force-seg-perf" id="barPerf" style="width: 33%;" title="Performance"></div>
+          <div class="force-seg-simplicity" id="barSimplicity" style="width: 34%;" title="Simplicity"></div>
+        </div>
+
+        <div style="display:flex;justify-content:space-between;font-size:0.8rem;font-weight:700;color:var(--text-muted);margin-bottom:1rem;">
+          <span style="color:#8b5cf6;">■ Flexibility / Extensibility (<span id="txtFlex">33%</span>)</span>
+          <span style="color:#ec4899;">■ Performance / Low Memory (<span id="txtPerf">33%</span>)</span>
+          <span style="color:#10b981;">■ Simplicity / Low Indirection (<span id="txtSimp">34%</span>)</span>
+        </div>
+
+        <div id="simForcesExplanation" style="background:var(--bg);padding:1rem;border-radius:var(--radius-sm);border:1px solid var(--border);font-family:var(--font-mono);font-size:0.85rem;color:var(--text);">
+          [Balanced State]: Select a pattern above to observe how conflicting forces shift the architectural equilibrium.
+        </div>
+      </div>
+
+      <div class="stage-next-card">
+        <div class="stage-next-body">
+          <span class="stage-next-eyebrow">UP NEXT · STAGE 04</span>
+          <h4 class="stage-next-title">Peter Norvig’s Critique: Patterns as Missing Language Features</h4>
+          <p class="stage-next-desc">Explore how modern languages (Java 21, Kotlin, Python, Rust) obsolete 16 of the 23 GoF patterns.</p>
+        </div>
+        <a class="stage-next-btn" href="#stage-4">Proceed to Stage 4 →</a>
+      </div>
+    </section>
+
+    <!-- Stage 4 -->
+    <section class="masterclass-stage" id="stage-4" data-stage="4">
+      <div class="stage-header-top">
+        <div>
+          <span class="stage-eyebrow-pill">STAGE 04 OF 05 · SCIENTIFIC CRITICISM</span>
+          <h3 class="stage-title">Peter Norvig’s Critique: Missing Language Features</h3>
+        </div>
+        <button class="stage-mastery-btn" type="button" onclick="markStageComplete(4)">Mark Stage 4 Complete</button>
+      </div>
+
       <p>
-        In 1987, <strong>Kent Beck and Ward Cunningham</strong> applied Alexander’s architectural concepts to Smalltalk GUI programming. In 1994, the <strong>Gang of Four (GoF)</strong> popularized the 23 foundational object-oriented design patterns.
+        In 1996, Peter Norvig (Director of Research at Google) published his famous presentation <em>Design Patterns in Dynamic Languages</em>. He demonstrated that <strong>16 of the 23 GoF patterns</strong> are simply workarounds for deficiencies in early static OOP languages:
       </p>
-    </section>
 
-    <!-- Section 2: Three-Part Rule -->
-    <section class="chapter" id="three-part-rule">
-      <div class="chapter-head">
-        <span class="chapter-num">2</span>
-        <h2>5.6 The Three-Part Rule &amp; Resolving Forces</h2>
+      <div class="blueprint-table-wrapper" style="margin: 1.5rem 0; overflow-x: auto;">
+        <table class="blueprint-table" style="width:100%; border-collapse: collapse; font-size: 0.9rem;">
+          <thead>
+            <tr style="border-bottom: 2px solid var(--border); text-align: left;">
+              <th style="padding: 0.75rem;">GoF Pattern</th>
+              <th style="padding: 0.75rem;">Heavy OOP Requirement (Java 1.1)</th>
+              <th style="padding: 0.75rem;">Modern Language Solution (Java 17+, Kotlin, Python)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 0.75rem; font-weight:700; color:#8b5cf6;">Strategy</td>
+              <td style="padding: 0.75rem;">Interface + separate ConcreteStrategy classes</td>
+              <td style="padding: 0.75rem; color:#10b981;">First-class lambda functions (<code>Function&lt;T, R&gt;</code>)</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 0.75rem; font-weight:700; color:#8b5cf6;">Command</td>
+              <td style="padding: 0.75rem;">Command interface with <code>execute()</code> + receiver binding</td>
+              <td style="padding: 0.75rem; color:#10b981;">Closures / `Runnable` lambdas</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 0.75rem; font-weight:700; color:#8b5cf6;">Visitor</td>
+              <td style="padding: 0.75rem;">Double-dispatch with <code>accept(v)</code> and <code>visit(e)</code></td>
+              <td style="padding: 0.75rem; color:#10b981;">Pattern matching on sealed hierarchies (Java 21 <code>switch</code>)</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 0.75rem; font-weight:700; color:#8b5cf6;">Decorator</td>
+              <td style="padding: 0.75rem;">Subclassing wrapper with forwarding boilerplate</td>
+              <td style="padding: 0.75rem; color:#10b981;">Method delegation / Python `@decorator` syntax</td>
+            </tr>
+            <tr>
+              <td style="padding: 0.75rem; font-weight:700; color:#8b5cf6;">Singleton</td>
+              <td style="padding: 0.75rem;">Private constructor, static instance, volatile locks</td>
+              <td style="padding: 0.75rem; color:#10b981;">Language-level `object` declaration (Kotlin) or modules</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
 
-      <div class="theory-card">
-        <h3>The Fundamental Anatomy of a Pattern</h3>
-        <div class="arch-diagram-block">
-┌────────────────────────────────────────────────────────┐
-│ 1. CONTEXT: The environment, preconditions, and        │
-│    situation in which the problem recurs.              │
-└──────────────────────────┬─────────────────────────────┘
-                           │ presents
-                           ▼
-┌────────────────────────────────────────────────────────┐
-│ 2. PROBLEM &amp; FORCES: The conflicting requirements,      │
-│    trade-offs, and design goals (e.g., speed vs.       │
-│    memory, flexibility vs. complexity).                │
-└──────────────────────────┬─────────────────────────────┘
-                           │ resolves
-                           ▼
-┌────────────────────────────────────────────────────────┐
-│ 3. SOLUTION: The structural relationship of components │
-│    that resolves the forces into balance.              │
-└────────────────────────────────────────────────────────┘</div>
-      </div>
-    </section>
-
-    <!-- Section 3: Pattern Hierarchy -->
-    <section class="chapter" id="pattern-hierarchy">
-      <div class="chapter-head">
-        <span class="chapter-num">3</span>
-        <h2>5.6.2 Pattern Taxonomies: POSA vs. GoF</h2>
-      </div>
-
-      <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; margin: 1.5rem 0;">
-        <div style="padding: 1rem; background: var(--bg-raised); border: 1px solid var(--border); border-radius: var(--radius-sm);">
-          <strong style="color: var(--accent);">Architectural Patterns (POSA)</strong>
-          <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.4rem;">
-            Fundamental structural organization of whole systems: <em>Layers, Broker, Pipes &amp; Filters, Blackboard, Model-View-Controller</em>.
-          </p>
+      <div class="stage-next-card">
+        <div class="stage-next-body">
+          <span class="stage-next-eyebrow">UP NEXT · STAGE 05</span>
+          <h4 class="stage-next-title">Frankfurt UAS Exam Drills &amp; Self-Study Traps</h4>
+          <p class="stage-next-desc">Test your understanding with Prof. Dr. Jörg Schäfer's official exam questions.</p>
         </div>
-        <div style="padding: 1rem; background: var(--bg-raised); border: 1px solid var(--border); border-radius: var(--radius-sm);">
-          <strong style="color: var(--accent);">Design Patterns (GoF)</strong>
-          <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.4rem;">
-            Medium-scale component refinement: <em>Strategy, Observer, Composite, Command, Abstract Factory, Decorator</em>.
-          </p>
-        </div>
-        <div style="padding: 1rem; background: var(--bg-raised); border: 1px solid var(--border); border-radius: var(--radius-sm);">
-          <strong style="color: var(--accent);">Idioms (Language-Specific)</strong>
-          <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.4rem;">
-            Low-level implementation idioms: <em>RAII in C++, Double-Checked Locking in Java, Context Managers (with) in Python</em>.
-          </p>
-        </div>
+        <a class="stage-next-btn" href="#stage-5">Proceed to Stage 5 →</a>
       </div>
     </section>
 
-    <!-- Section 4: Criticism -->
-    <section class="chapter" id="criticism">
-      <div class="chapter-head">
-        <span class="chapter-num">4</span>
-        <h2>5.6.3 Criticisms &amp; The Limits of Patterns</h2>
-      </div>
-
-      <div style="display: flex; flex-direction: column; gap: 1rem; margin: 1.5rem 0;">
-        <div style="padding: 1.25rem; background: var(--warn-soft); border-radius: var(--radius-sm);">
-          <strong style="color: var(--warn);">1. Patterns as "Missing Language Features" (Peter Norvig)</strong>
-          <p style="font-size: 0.9rem; margin: 0.3rem 0 0;">
-            In his famous 1996 analysis, Peter Norvig demonstrated that <strong>16 out of the 23 GoF patterns</strong> are either invisible or trivial in first-class dynamic languages (Lisp, Python). For example, <em>Strategy</em> is just passing a first-class function!
-          </p>
+    <!-- Stage 5 -->
+    <section class="masterclass-stage" id="stage-5" data-stage="5">
+      <div class="stage-header-top">
+        <div>
+          <span class="stage-eyebrow-pill">STAGE 05 OF 05 · ACADEMIC VERIFICATION</span>
+          <h3 class="stage-title">Frankfurt UAS Examination Drills (Prof. Dr. Jörg Schäfer)</h3>
         </div>
-        <div style="padding: 1.25rem; background: var(--bg-raised); border: 1px solid var(--border); border-radius: var(--radius-sm);">
-          <strong>2. "Patternitis" (Premature Over-Engineering)</strong>
-          <p style="font-size: 0.9rem; color: var(--text-muted); margin: 0.3rem 0 0;">
-            Novice developers often attempt to squeeze as many patterns as possible into a codebase, creating needless indirection and complexity when a simple 5-line function would do.
-          </p>
-        </div>
-      </div>
-    </section>
-
-    <!-- Section 5: Self Study -->
-    <section class="chapter" id="self-study">
-      <div class="chapter-head">
-        <span class="chapter-num">5</span>
-        <h2>5.10 Questions for Self-Study</h2>
+        <button class="stage-mastery-btn" type="button" onclick="markStageComplete(5)">Mark Stage 5 Complete</button>
       </div>
 
       <div class="drill-list">
         <details class="drill-item" open>
           <summary>
-            <span class="drill-tag">Exam Question</span>
-            <span class="drill-q">What is the distinction between a "Pattern Catalog" and a "Pattern Language"?</span>
+            <span class="drill-tag">Exam Drill 1 · Fundamental Definition</span>
+            <span class="drill-q">What is the "Three-Part Rule" according to Christopher Alexander and POSA?</span>
             <span class="drill-reveal-hint"></span>
           </summary>
           <div class="drill-a">
+            <p><strong>Official Model Answer:</strong></p>
             <p>
-              A <strong>Pattern Catalog</strong> (like GoF) is an organized dictionary of independent patterns with alphabetical or topical groupings, but leaves the connections and composition rules largely to the reader.
+              A software pattern is fundamentally defined as a <strong>Three-Part Rule</strong>:
             </p>
+            <ol>
+              <li><strong>Context:</strong> The recurring situation, environmental preconditions, and design constraints under which the problem appears.</li>
+              <li><strong>System of Forces:</strong> The conflicting technical and organizational trade-offs (e.g. speed vs memory, flexibility vs simplicity) that must be balanced.</li>
+              <li><strong>Solution / Configuration:</strong> The spatial or structural relationship of components that resolves these conflicting forces into a stable, maintainable equilibrium.</li>
+            </ol>
+          </div>
+        </details>
+
+        <details class="drill-item">
+          <summary>
+            <span class="drill-tag">Exam Drill 2 · Taxonomies</span>
+            <span class="drill-q">Differentiate between an Architectural Pattern, a Design Pattern, and an Idiom in POSA.</span>
+            <span class="drill-reveal-hint"></span>
+          </summary>
+          <div class="drill-a">
+            <p><strong>Official Model Answer:</strong></p>
+            <ul>
+              <li><strong>Architectural Pattern (POSA):</strong> Defines the fundamental structural organization of an entire system (e.g., <em>Layers, Broker, Pipes &amp; Filters</em>). Dictates major subsystem partitioning and deployment boundaries.</li>
+              <li><strong>Design Pattern (GoF):</strong> Refines medium-scale components and their relationships without affecting whole-system architecture (e.g., <em>Strategy, Observer, Composite</em>).</li>
+              <li><strong>Idiom:</strong> Low-level pattern specific to a single programming language's idioms and syntax (e.g., <em>RAII in C++, Try-with-resources in Java</em>).</li>
+            </ul>
+          </div>
+        </details>
+
+        <details class="drill-item">
+          <summary>
+            <span class="drill-tag">Exam Drill 3 · Pattern Language vs Catalog</span>
+            <span class="drill-q">Why is a Pattern Language considered generative while a Pattern Catalog is merely descriptive?</span>
+            <span class="drill-reveal-hint"></span>
+          </summary>
+          <div class="drill-a">
+            <p><strong>Official Model Answer:</strong></p>
             <p>
-              A <strong>Pattern Language</strong> is a network of interlocking patterns where the solution of one pattern establishes the context and forces for the next pattern, guiding the developer through a complete design synthesis from macro architecture to micro implementation.
+              A <strong>Pattern Catalog</strong> is an alphabetical or topical dictionary of isolated solutions. A <strong>Pattern Language</strong> is an interconnected network: applying pattern #1 creates a "Resulting Context" with new, smaller forces, which systematically triggers pattern #2, guiding the engineer step-by-step from high-level system structure down to individual method algorithms.
             </p>
           </div>
         </details>
       </div>
     </section>
 
-    <footer class="page-footer" style="margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--border); display: flex; justify-content: space-between;">
-      <span><a href="unit-4-junit.html">← Previous: Unit 4 JUnit</a></span>
-      <span><a href="unit-6-solid.html">Next: Unit 6 SOLID Principles →</a></span>
+    <!-- Footer Navigation -->
+    <footer class="page-footer" style="margin-top: 4rem; padding-top: 2rem; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+      <a class="nav-prev" href="unit-4-junit.html" style="font-weight: 700; color: var(--accent); text-decoration: none;">← Previous: Unit 4 · Case Study JUnit</a>
+      <a class="nav-next" href="unit-6-solid.html" style="font-weight: 700; color: var(--accent); text-decoration: none;">Next: Unit 6 · SOLID &amp; Code Smells →</a>
     </footer>
-
-  </div>
+  </main>
 </div>
 
-<script src="assets/site.js" defer></script>
+<script src="assets/site.js?v=2026.15" defer></script>
+<script>
+// Reading progress bar
+window.addEventListener('scroll', function() {
+  var h = document.documentElement, b = document.body;
+  var st = 'scrollTop', sh = 'scrollHeight';
+  var percent = (h[st]||b[st]) / ((h[sh]||b[sh]) - h.clientHeight) * 100;
+  var bar = document.getElementById('readingProgressBar');
+  if (bar) bar.style.width = percent + '%';
+});
+
+// Blueprint Pillar & Layout Controls
+var _blueprintCollapsed = false;
+var _lastInlineCollapseTime = 0;
+
+function selectPillar(num) {
+  var tabs = document.querySelectorAll('.blueprint-tab');
+  var panels = document.querySelectorAll('.pillar-panel');
+  tabs.forEach(function(t) {
+    var match = t.getAttribute('data-pillar') == num;
+    t.classList.toggle('active', match);
+    t.setAttribute('aria-selected', match ? 'true' : 'false');
+  });
+  panels.forEach(function(p) {
+    p.classList.toggle('active', p.getAttribute('data-pillar') == num);
+  });
+}
+
+function setBlueprintView(mode) {
+  var suite = document.getElementById('blueprintSuite');
+  var btnExplorer = document.getElementById('btnViewExplorer');
+  var btnMatrix = document.getElementById('btnViewMatrix');
+  if (!suite) return;
+
+  if (mode === 'matrix') {
+    suite.classList.add('view-matrix');
+    if (btnMatrix) btnMatrix.classList.add('active');
+    if (btnExplorer) btnExplorer.classList.remove('active');
+    document.querySelectorAll('.pillar-panel').forEach(function(p) { p.classList.add('active'); });
+  } else {
+    suite.classList.remove('view-matrix');
+    if (btnExplorer) btnExplorer.classList.add('active');
+    if (btnMatrix) btnMatrix.classList.remove('active');
+    var activeTab = document.querySelector('.blueprint-tab.active');
+    var pNum = activeTab ? activeTab.getAttribute('data-pillar') : 1;
+    selectPillar(pNum);
+  }
+}
+
+function toggleBlueprintCollapse() {
+  var now = Date.now();
+  if (now - _lastInlineCollapseTime < 250) return;
+  _lastInlineCollapseTime = now;
+
+  _blueprintCollapsed = !_blueprintCollapsed;
+  var body = document.getElementById('blueprintSuiteBody');
+  var hint = document.getElementById('blueprintCollapsedHint');
+  var label = document.getElementById('collapseLabel');
+
+  if (_blueprintCollapsed) {
+    if (body) body.style.display = 'none';
+    if (hint) hint.style.display = 'flex';
+    if (label) label.textContent = '▼ Expand Rubric';
+  } else {
+    if (body) body.style.display = '';
+    if (hint) hint.style.display = 'none';
+    if (label) label.textContent = '▲ Collapse Rubric';
+  }
+}
+
+function copyBlueprintRubric() {
+  var md = `# Unit 5: Pattern Theory & Origins - 8-Pillar Architecture Rubric
+## Instructor: Prof. Dr. Jörg Schäfer · Frankfurt University of Applied Sciences
+
+### Pillar 1: Epistemology & Alexander
+- Originated in physical urban architecture by Christopher Alexander (1977).
+- "Quality Without a Name" represents living architectural wholeness.
+
+### Pillar 2: Three-Part Topology
+- Context + System of Conflicting Forces + Balanced Structural Configuration.
+
+### Pillar 3: Generative Dynamics
+- Patterns generate resulting contexts that trigger downstream subordinate patterns.
+
+### Pillar 4: POSA Taxonomy Scope
+- 1. Architectural Patterns (Macro) -> 2. Design Patterns (Medium) -> 3. Idioms (Language-specific).
+
+### Pillar 5: Catalog vs Language
+- Catalog is a static dictionary; Language is an interlocking generative synthesis.
+
+### Pillar 6: Pathologies & Norvig
+- Patternitis (premature over-engineering).
+- Peter Norvig: 16 of 23 GoF patterns are missing language features in dynamic/functional languages.
+
+### Pillar 7: Modern FP Evolution
+- Strategy, Command, and Visitor replaced with lambdas and pattern-matching switches.
+
+### Pillar 8: Frankfurt UAS Exam Traps
+- Solutions without Context and Forces are NOT patterns.
+- GoF is a Catalog; POSA emphasizes generative Architectural Languages.
+`;
+
+  function updateLabelSuccess() {
+    var btn = document.querySelector('.blueprint-suite-actions button[onclick="copyBlueprintRubric()"]');
+    if (btn) {
+      var orig = btn.innerHTML;
+      btn.innerHTML = 'Copied to Clipboard! ✓';
+      setTimeout(function() { btn.innerHTML = orig; }, 2000);
+    }
+  }
+
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(md).then(updateLabelSuccess);
+  } else {
+    var ta = document.createElement('textarea');
+    ta.value = md;
+    document.body.appendChild(ta);
+    ta.select();
+    try {
+      document.execCommand('copy');
+      updateLabelSuccess();
+    } catch (e) {
+      alert("Please press Ctrl+C to copy rubric");
+    }
+    document.body.removeChild(ta);
+  }
+}
+
+function copySnippet(elementId) {
+  var el = document.getElementById(elementId);
+  if (!el) return;
+  var text = el.innerText || el.textContent;
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(function() {
+      if (typeof window.showToast === "function") window.showToast("Code snippet copied to clipboard!");
+    });
+  }
+}
+
+function markStageComplete(stageNum) {
+  var btn = event.target;
+  if (btn) {
+    btn.textContent = "Completed ✓";
+    btn.style.background = "#8b5cf6";
+    btn.style.color = "#fff";
+  }
+  var pill = document.querySelector('.stage-nav-pill[data-stage="' + stageNum + '"]');
+  if (pill) {
+    pill.style.borderColor = "#8b5cf6";
+  }
+  if (typeof window.showToast === "function") window.showToast("Stage " + stageNum + " marked complete! Great progress.");
+}
+
+// System of Forces Simulator
+function setForcesSimulation(type) {
+  var bFlex = document.getElementById('barFlex');
+  var bPerf = document.getElementById('barPerf');
+  var bSimp = document.getElementById('barSimplicity');
+  var tFlex = document.getElementById('txtFlex');
+  var tPerf = document.getElementById('txtPerf');
+  var tSimp = document.getElementById('txtSimp');
+  var expl = document.getElementById('simForcesExplanation');
+
+  var btns = ['btnSimHardcoded', 'btnSimStrategy', 'btnSimMicrokernel'];
+  btns.forEach(function(b) {
+    var el = document.getElementById(b);
+    if (el) {
+      el.style.background = 'var(--bg)';
+      el.style.color = 'var(--text)';
+      el.style.borderColor = 'var(--border)';
+    }
+  });
+
+  if (type === 'hardcoded') {
+    document.getElementById('btnSimHardcoded').style.background = '#8b5cf6';
+    document.getElementById('btnSimHardcoded').style.color = '#fff';
+    bFlex.style.width = '10%'; tFlex.textContent = '10%';
+    bPerf.style.width = '55%'; tPerf.textContent = '55%';
+    bSimp.style.width = '35%'; tSimp.textContent = '35%';
+    expl.innerHTML = "<strong>Hardcoded Switch Statement:</strong> Maximum execution speed (inlining) and immediate simplicity, but catastrophic inflexibility: adding new algorithm requires modifying core class (violates OCP).";
+  } else if (type === 'strategy') {
+    document.getElementById('btnSimStrategy').style.background = '#8b5cf6';
+    document.getElementById('btnSimStrategy').style.color = '#fff';
+    bFlex.style.width = '50%'; tFlex.textContent = '50%';
+    bPerf.style.width = '25%'; tPerf.textContent = '25%';
+    bSimp.style.width = '25%'; tSimp.textContent = '25%';
+    expl.innerHTML = "<strong>GoF Strategy Pattern:</strong> Perfectly balances flexibility (polymorphic swapping at runtime) with acceptable virtual method invocation overhead. The balanced sweet spot for medium-scale components.";
+  } else if (type === 'microkernel') {
+    document.getElementById('btnSimMicrokernel').style.background = '#8b5cf6';
+    document.getElementById('btnSimMicrokernel').style.color = '#fff';
+    bFlex.style.width = '75%'; tFlex.textContent = '75%';
+    bPerf.style.width = '15%'; tPerf.textContent = '15%';
+    bSimp.style.width = '10%'; tSimp.textContent = '10%';
+    expl.innerHTML = "<strong>POSA Microkernel Architecture:</strong> Extreme flexibility (hot-swappable plugins loaded over RPC/dynamic classloader), but incurs high complexity and inter-process communication latency.";
+  }
+}
+
+window.selectPillar = selectPillar;
+window.setBlueprintView = setBlueprintView;
+window.toggleBlueprintCollapse = toggleBlueprintCollapse;
+window.copyBlueprintRubric = copyBlueprintRubric;
+window.copySnippet = copySnippet;
+window.markStageComplete = markStageComplete;
+window.setForcesSimulation = setForcesSimulation;
+</script>
 </body>
 </html>
