@@ -332,23 +332,39 @@ html[data-mode="concept"] .mode-tech { display: none !important; }
     margin-bottom: 0.6rem;
   }
   .sidebar-toc a {
-    display: block;
-    padding: 0.34rem 0.55rem;
-    margin: 0 -0.55rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.4rem 0.6rem;
+    margin: 0.2rem 0;
     border-radius: 6px;
-    font-size: 0.83rem;
+    font-size: 0.84rem;
     line-height: 1.35;
     color: var(--text-muted);
     text-decoration: none;
-    transition: background-color 0.15s ease, color 0.15s ease;
+    border-left: 2px solid transparent;
+    transition: all 0.15s ease;
   }
-  .sidebar-toc a:hover { background: var(--code-bg); color: var(--text); }
-  .sidebar-toc a.active { background: var(--accent-soft); color: var(--accent-ink); font-weight: 700; }
-  .sidebar-toc .toc-num {
+  .sidebar-toc a:hover {
+    background: var(--bg-subtle);
+    color: var(--text);
+    border-left-color: var(--accent);
+  }
+  .sidebar-toc a.active {
+    background: var(--accent-soft);
     color: var(--accent-ink);
     font-weight: 700;
-    margin-right: 0.35rem;
-    font-family: var(--font-display);
+    border-left-color: var(--accent);
+  }
+  .sidebar-toc .toc-num {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    font-weight: 700;
+    background: var(--accent-soft);
+    color: var(--accent-ink);
+    padding: 0.1rem 0.38rem;
+    border-radius: 4px;
+    line-height: 1;
   }
 }
 

@@ -486,28 +486,34 @@
 // €1,500 MASTERCLASS SUITE: MOBILE DOCK, WIZARD, SMELL DRILL & PLAYGROUND
 // ==========================================================================
 
-// 1. Mobile Bottom Dock Intersection Observer
-(function initMobileDock() {
+// 1. Mobile Bottom Dock & Desktop Sidebar Intersection Observer
+(function initNavigationObserver() {
   var dockItems = document.querySelectorAll(".dock-item");
-  if (!dockItems.length) return;
+  var sidebarLinks = document.querySelectorAll(".sidebar-toc a");
+  if (!dockItems.length && !sidebarLinks.length) return;
 
   var observer = new IntersectionObserver(function (entries) {
     entries.forEach(function (entry) {
       if (entry.isIntersecting) {
         var id = entry.target.getAttribute("id");
+        if (!id) return;
+
         dockItems.forEach(function (item) {
-          var href = item.getAttribute("href");
-          if (href === "#" + id) {
-            item.classList.add("active");
-          } else {
-            item.classList.remove("active");
-          }
+          var target = item.getAttribute("data-target-stage") || item.getAttribute("href");
+          var matches = target === id || target === "#" + id;
+          item.classList.toggle("active", matches);
+        });
+
+        sidebarLinks.forEach(function (link) {
+          var target = link.getAttribute("data-target-stage") || link.getAttribute("href");
+          var matches = target === id || target === "#" + id;
+          link.classList.toggle("active", matches);
         });
       }
     });
-  }, { threshold: 0.25 });
+  }, { threshold: 0.2, rootMargin: "-10% 0px -70% 0px" });
 
-  document.querySelectorAll("section.chapter").forEach(function (sec) {
+  document.querySelectorAll(".stage-view, section.chapter").forEach(function (sec) {
     observer.observe(sec);
   });
 })();
