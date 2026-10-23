@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/style.css?v=2026.13">
+<link rel="stylesheet" href="assets/style.css?v=2026.14">
 <style>
   .quote-card {
     margin: 1.5rem 0 2rem;
@@ -172,6 +172,15 @@
     <!-- ====================================================================
          SECTION 1: 8-PILLAR ARCHITECTURAL BLUEPRINT (UNIVERSAL RUBRIC)
          ==================================================================== -->
+    <!-- Prominent Section Divider for Part 1 -->
+    <div class="masterclass-section-divider" style="margin: 2.5rem 0 1.5rem;">
+      <div class="section-divider-line"></div>
+      <div class="section-divider-chip">
+        <span>PART 1 · ARCHITECTURAL RUBRIC</span>
+      </div>
+      <div class="section-divider-line"></div>
+    </div>
+
     <section class="blueprint-suite" id="blueprintSuite" aria-label="8-Pillar Architecture Rubric">
       <div class="blueprint-suite-top">
         <div>
@@ -205,6 +214,17 @@
             <span class="collapse-label">Collapse Rubric</span>
           </button>
         </div>
+      </div>
+
+      <!-- Subtle Collapsed Hint Bar (Visible when section is collapsed) -->
+      <div class="blueprint-collapsed-hint" id="blueprintCollapsedHint" style="display:none; padding:0.85rem 1.75rem; background:var(--bg-subtle); border-top:1px dashed var(--border); font-size:0.85rem; color:var(--text-muted); align-items:center; justify-content:space-between; flex-wrap:wrap; gap:0.5rem;">
+        <div style="display:flex; align-items:center; gap:0.5rem;">
+          <span>📐</span>
+          <span><strong>8 Architectural Pillars Collapsed</strong> (Click "Expand Rubric" anytime to inspect)</span>
+        </div>
+        <button type="button" class="btn-suite-toggle" onclick="toggleBlueprintCollapse(false)" style="padding:0.25rem 0.65rem; font-size:0.78rem;">
+          <span>▼ Expand</span>
+        </button>
       </div>
 
       <!-- Collapsible Body Wrapper for Section 1 -->
@@ -1791,22 +1811,46 @@ function setBlueprintView(view) {
   }
 }
 
-function toggleBlueprintCollapse() {
+var _lastInlineCollapseTime = 0;
+function toggleBlueprintCollapse(forceState) {
+  var now = Date.now();
+  if (typeof forceState !== "boolean" && now - _lastInlineCollapseTime < 250) {
+    return; // Debounce guard against double execution
+  }
+  _lastInlineCollapseTime = now;
+
   var suite = document.getElementById("blueprintSuite");
   var collapseBtn = document.getElementById("btnCollapseBlueprint");
+  var body = document.getElementById("blueprintCollapsibleBody");
+  var hint = document.getElementById("blueprintCollapsedHint");
   if (!suite) return;
-  var isCollapsed = suite.classList.toggle("is-collapsed");
+
+  var isCurrentlyCollapsed = suite.classList.contains("is-collapsed");
+  var willCollapse = (typeof forceState === "boolean") ? forceState : !isCurrentlyCollapsed;
+
+  if (willCollapse) {
+    suite.classList.add("is-collapsed");
+    if (body) body.style.display = "none";
+    if (hint) hint.style.display = "flex";
+  } else {
+    suite.classList.remove("is-collapsed");
+    if (body) body.style.display = "block";
+    if (hint) hint.style.display = "none";
+  }
+
   if (collapseBtn) {
     var icon = collapseBtn.querySelector(".collapse-icon");
     var label = collapseBtn.querySelector(".collapse-label");
-    if (isCollapsed) {
+    if (willCollapse) {
       if (icon) icon.textContent = "▼";
       if (label) label.textContent = "Expand Rubric";
       collapseBtn.setAttribute("aria-expanded", "false");
+      collapseBtn.title = "Expand the 8-Pillar Architecture Rubric";
     } else {
       if (icon) icon.textContent = "▲";
       if (label) label.textContent = "Collapse Rubric";
       collapseBtn.setAttribute("aria-expanded", "true");
+      collapseBtn.title = "Collapse the 8-Pillar Architecture Rubric";
     }
   }
 }
@@ -1887,6 +1931,6 @@ window.toggleBlueprintCollapse = toggleBlueprintCollapse;
 window.copyBlueprintRubric = copyBlueprintRubric;
 </script>
 
-<script src="assets/site.js?v=2026.13" defer></script>
+<script src="assets/site.js?v=2026.14" defer></script>
 </body>
 </html>

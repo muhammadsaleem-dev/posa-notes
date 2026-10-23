@@ -1110,12 +1110,32 @@
     }
   }
 
-  function toggleCollapse() {
-    var isCollapsed = suite.classList.toggle("is-collapsed");
+  var _lastCollapseTime = 0;
+  function toggleCollapse(forceState) {
+    var now = Date.now();
+    if (typeof forceState !== "boolean" && now - _lastCollapseTime < 250) {
+      return; // Debounce guard against double execution
+    }
+    _lastCollapseTime = now;
+
+    var isCurrentlyCollapsed = suite.classList.contains("is-collapsed");
+    var willCollapse = (typeof forceState === "boolean") ? forceState : !isCurrentlyCollapsed;
+    var hint = document.getElementById("blueprintCollapsedHint");
+
+    if (willCollapse) {
+      suite.classList.add("is-collapsed");
+      if (collBody) collBody.style.display = "none";
+      if (hint) hint.style.display = "flex";
+    } else {
+      suite.classList.remove("is-collapsed");
+      if (collBody) collBody.style.display = "block";
+      if (hint) hint.style.display = "none";
+    }
+
     if (collapseBtn) {
       var icon = collapseBtn.querySelector(".collapse-icon");
       var label = collapseBtn.querySelector(".collapse-label");
-      if (isCollapsed) {
+      if (willCollapse) {
         if (icon) icon.textContent = "▼";
         if (label) label.textContent = "Expand Rubric";
         collapseBtn.setAttribute("aria-expanded", "false");
@@ -1131,16 +1151,13 @@
 
   if (explorerBtn) explorerBtn.addEventListener("click", function () { setView("explorer"); });
   if (matrixBtn) matrixBtn.addEventListener("click", function () { setView("matrix"); });
-  if (collapseBtn) collapseBtn.addEventListener("click", toggleCollapse);
 
   // Sidebar blueprint trigger listener
   var sidebarTrigger = document.getElementById("sidebarBlueprintBtn");
   if (sidebarTrigger) {
     sidebarTrigger.addEventListener("click", function (e) {
       e.preventDefault();
-      if (suite.classList.contains("is-collapsed")) {
-        toggleCollapse();
-      }
+      toggleCollapse(false);
       suite.scrollIntoView({ behavior: "smooth", block: "start" });
     });
   }
