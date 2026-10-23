@@ -1041,4 +1041,94 @@
     var pct = total > 0 ? (window.pageYOffset / total) * 100 : 0;
     bar.style.width = Math.min(100, Math.max(0, pct)) + "%";
   }, { passive: true });
+
+  // ==========================================================================
+  // 8-PILLAR ARCHITECTURE BLUEPRINT MODAL & RUBRIC EXPORT
+  // ==========================================================================
+  (function initBlueprintModal() {
+    var modal = document.getElementById("blueprintModal");
+    if (!modal) return;
+
+    var openBtn = document.getElementById("openBlueprintBtn");
+    var sidebarBtn = document.getElementById("sidebarBlueprintBtn");
+    var closeBtn = document.getElementById("closeBlueprintBtn");
+    var copyBtn = document.getElementById("copyRubricBtn");
+    var copyLabel = document.getElementById("copyRubricLabel");
+
+    function openModal() {
+      modal.classList.add("active");
+      document.body.style.overflow = "hidden";
+    }
+
+    function closeModal() {
+      modal.classList.remove("active");
+      document.body.style.overflow = "";
+    }
+
+    if (openBtn) openBtn.addEventListener("click", openModal);
+    if (sidebarBtn) sidebarBtn.addEventListener("click", openModal);
+    if (closeBtn) closeBtn.addEventListener("click", closeModal);
+
+    modal.addEventListener("click", function (e) {
+      if (e.target === modal) {
+        closeModal();
+      }
+    });
+
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape" && modal.classList.contains("active")) {
+        closeModal();
+      }
+    });
+
+    // Copy Markdown Rubric
+    if (copyBtn) {
+      var rubricMarkdown = 
+        "# Software Pattern Mastery: The 8-Pillar Architectural Rubric\n" +
+        "*(Standard for POSA Exams & Technical Architecture Reviews)*\n\n" +
+        "## Pattern Name: Strategy Pattern (Policy)\n\n" +
+        "### 1. Intent & Architectural Motivation\n" +
+        "- **GoF Intent**: Define a family of algorithms, encapsulate each one, and make them interchangeable.\n" +
+        "- **Problem Solved**: Eliminates brittle inheritance hierarchies, prevents combinatorial subclass explosion, and removes complex switch/if-else logic.\n\n" +
+        "### 2. Structural Roles & Participants\n" +
+        "- **Context**: Maintains a reference to a Strategy object and delegates requests to it.\n" +
+        "- **Strategy Interface**: Declares a common interface for all supported algorithms.\n" +
+        "- **Concrete Strategies**: Encapsulates specific algorithmic implementations.\n" +
+        "- **Client**: Configures the Context with a chosen ConcreteStrategy at runtime.\n\n" +
+        "### 3. Formal UML Anatomy & Relationships\n" +
+        "- **Context -> Strategy**: Directed Association / Aggregation (`──>`), Multiplicity `1`.\n" +
+        "- **Strategy**: Interface stereotype `<<interface>>`.\n" +
+        "- **ConcreteStrategy -> Strategy**: Realization / Implementation (`···▷`), dashed line with hollow triangle.\n\n" +
+        "### 4. Core Design Principles Enforced\n" +
+        "- **Open/Closed Principle (OCP)**: Context is closed for modification, open for new strategy extensions.\n" +
+        "- **Dependency Inversion Principle (DIP)**: High-level Context depends on Strategy abstraction, not concrete implementations.\n" +
+        "- **Favor Composition over Inheritance**: Object composition (HAS-A) preferred over rigid subclassing (IS-A).\n\n" +
+        "### 5. Implementation Mechanics & Hot-Swapping\n" +
+        "- Context holds `private Strategy strategy;`.\n" +
+        "- Setter method `public void setStrategy(Strategy s)` enables dynamic runtime mutation.\n" +
+        "- Context delegates execution via `strategy.execute()`.\n" +
+        "- Modern Java: Functional interfaces allow lambdas and method references.\n\n" +
+        "### 6. Architectural Costs & Trade-offs\n" +
+        "- **Pros**: Clean testability with mock strategies, dynamic runtime reconfigurability, eliminates conditional branches.\n" +
+        "- **Cons**: Increases total class/object count; Client must understand algorithmic differences; minor heap indirection overhead.\n\n" +
+        "### 7. Rival Pattern Decision Matrix\n" +
+        "- **Strategy vs. State**: Identical UML. State transitions dynamically and autonomously based on internal state without client awareness. Strategy is chosen explicitly by client.\n" +
+        "- **Strategy vs. Template Method**: Template Method uses inheritance to fix an algorithm skeleton at compile time. Strategy uses composition to swap entire algorithms at runtime.\n\n" +
+        "### 8. Real-World JDK Reference & Exam Traps\n" +
+        "- **JDK Standard**: `java.util.Comparator`, `java.awt.LayoutManager`, `javax.servlet.Filter`.\n" +
+        "- **Exam Traps**: Forgetting the runtime setter in Context; circular references between Context and Strategy; creating unnecessary instances when stateless lambdas or Flyweights suffice.\n";
+
+      copyBtn.addEventListener("click", function () {
+        navigator.clipboard.writeText(rubricMarkdown).then(function () {
+          if (copyLabel) copyLabel.textContent = "Copied to Clipboard!";
+          showToast("8-Pillar Study Rubric copied to clipboard!");
+          setTimeout(function () {
+            if (copyLabel) copyLabel.textContent = "Copy Rubric (Markdown)";
+          }, 2500);
+        }).catch(function () {
+          showToast("Press Ctrl+C to copy");
+        });
+      });
+    }
+  })();
 })();

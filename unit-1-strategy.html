@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/style.css?v=2026.5">
+<link rel="stylesheet" href="assets/style.css?v=2026.6">
 <style>
   .quote-card {
     margin: 1.5rem 0 2rem;
@@ -113,6 +113,10 @@
       <a href="#stage-3-refactoring" class="jump-stage-btn" data-target-stage="stage-3-refactoring"><span class="toc-num">3</span>Before &amp; After Code Lab</a>
       <a href="#stage-4-decision" class="jump-stage-btn" data-target-stage="stage-4-decision"><span class="toc-num">4</span>Trade-offs &amp; Decision Wizard</a>
       <a href="#stage-5-exam" class="jump-stage-btn" data-target-stage="stage-5-exam"><span class="toc-num">5</span>Prof. Schäfer Exam Drills</a>
+      <button type="button" class="sidebar-blueprint-trigger" id="sidebarBlueprintBtn">
+        <span class="toc-num" style="background:#6366f1; color:#fff;">★</span>
+        <span>8-Pillar Pattern Blueprint</span>
+      </button>
     </div>
     <div class="sidebar-block">
       <span class="sidebar-label">Curriculum Origin</span>
@@ -158,6 +162,24 @@
             <div style="font-size:0.75rem; font-weight:700; text-transform:uppercase; color:var(--text-muted);">⚙️ Refactoring Lab</div>
             <div style="font-size:1.15rem; font-weight:800; color:#f59e0b; font-family:var(--font-mono); margin-top:0.2rem;">Sorter Pipeline</div>
           </div>
+        </div>
+
+        <!-- 8-Pillar Architecture Anatomy Banner -->
+        <div class="blueprint-banner">
+          <div>
+            <div class="blueprint-badge-row">
+              <span class="blueprint-pill">Core Architectural Rubric</span>
+              <span class="blueprint-pill-accent">Exam &amp; Production Standard</span>
+            </div>
+            <h3 class="blueprint-banner-title">The 8 Pillars of Pattern Mastery</h3>
+            <p class="blueprint-banner-desc">
+              Mastering a design pattern requires far more than memorizing code. Discover the 8 mandatory pillars required in Prof. Schäfer's exams and enterprise code reviews—from formal GoF intent down to UML arrow rules, OCP invariants, and rival pattern trade-offs.
+            </p>
+          </div>
+          <button type="button" class="btn-open-blueprint" id="openBlueprintBtn" aria-haspopup="dialog">
+            <span>Explore 8 Pillars</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"></path></svg>
+          </button>
         </div>
 
       </div>
@@ -1109,6 +1131,154 @@ public abstract class Duck {
       </a>
     </footer>
 
+  </div>
+</div>
+
+<!-- 8-Pillar Architecture Blueprint Modal Dialog -->
+<div class="blueprint-modal-overlay" id="blueprintModal" role="dialog" aria-modal="true" aria-labelledby="blueprintModalTitle">
+  <div class="blueprint-modal-card">
+    <div class="blueprint-modal-header">
+      <h3 class="blueprint-modal-title" id="blueprintModalTitle">
+        <span>🏛️</span>
+        <span>The 8 Pillars of Software Pattern Anatomy</span>
+      </h3>
+      <div style="display:flex; align-items:center; gap:0.6rem;">
+        <button type="button" class="btn-copy-rubric" id="copyRubricBtn" title="Copy markdown rubric checklist to clipboard">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+          <span id="copyRubricLabel">Copy Rubric (Markdown)</span>
+        </button>
+        <button type="button" class="blueprint-close-btn" id="closeBlueprintBtn" aria-label="Close blueprint modal">✕</button>
+      </div>
+    </div>
+    <div class="blueprint-modal-body">
+      <div style="background:var(--bg-raised); border:1px solid var(--border); border-left:4px solid #38BDF8; border-radius:var(--radius-sm); padding:1rem 1.25rem; margin-bottom:1.5rem;">
+        <p style="margin:0; font-size:0.9rem; line-height:1.6; color:var(--text);">
+          <strong>Architectural Rubric:</strong> When evaluating, implementing, or being examined on any design pattern (in Prof. Schäfer's masterclass or technical architecture reviews), you must master these 8 structural dimensions. Below is the blueprint with concrete applications to the <em>Strategy Pattern</em>.
+        </p>
+      </div>
+
+      <div class="blueprint-grid">
+        <!-- Pillar 1 -->
+        <div class="pillar-card">
+          <div class="pillar-header">
+            <span class="pillar-num">Pillar 01 · Intent</span>
+            <span class="pillar-icon">🎯</span>
+          </div>
+          <h4 class="pillar-title">Intent &amp; Architectural Motivation</h4>
+          <p class="pillar-desc">
+            The precise problem the pattern solves and its formal Gang of Four definition. Identifies the specific architectural failure mode (brittle inheritance, conditional explosion, rigid coupling) it eliminates.
+          </p>
+          <div class="pillar-example">
+            <strong>Strategy:</strong> "Define a family of algorithms, encapsulate each one, and make them interchangeable. Lets the algorithm vary independently from clients." Eliminates cascading switch/if-else chains and subclass duplication.
+          </div>
+        </div>
+
+        <!-- Pillar 2 -->
+        <div class="pillar-card">
+          <div class="pillar-header">
+            <span class="pillar-num">Pillar 02 · Roles</span>
+            <span class="pillar-icon">🧩</span>
+          </div>
+          <h4 class="pillar-title">Structural Roles &amp; Participants</h4>
+          <p class="pillar-desc">
+            The exact participants and their single responsibilities (SRP). Distinguishes the chassis from the interchangeable algorithmic engines, and clarifies who initiates and who delegates.
+          </p>
+          <div class="pillar-example">
+            <strong>Participants:</strong> Context (maintains reference &amp; delegates), Strategy Interface (declares algorithmic signature contract), ConcreteStrategies (implement algorithmic variants), Client (configures Context).
+          </div>
+        </div>
+
+        <!-- Pillar 3 -->
+        <div class="pillar-card">
+          <div class="pillar-header">
+            <span class="pillar-num">Pillar 03 · UML</span>
+            <span class="pillar-icon">📐</span>
+          </div>
+          <h4 class="pillar-title">Formal UML Anatomy &amp; Connectors</h4>
+          <p class="pillar-desc">
+            Exact UML 2.5 notation, class stereotypes, and connector arrowheads. A strict requirement in POSA exams to prevent grade deductions.
+          </p>
+          <div class="pillar-example">
+            <strong>UML Rules:</strong> Context has Directed Association / Aggregation (──&gt;) with multiplicity 1 to Strategy &lt;&lt;interface&gt;&gt;. ConcreteStrategies have Realization (···▷) pointing up to the interface. (Never solid inheritance arrows!)
+          </div>
+        </div>
+
+        <!-- Pillar 4 -->
+        <div class="pillar-card">
+          <div class="pillar-header">
+            <span class="pillar-num">Pillar 04 · SOLID</span>
+            <span class="pillar-icon">🛡️</span>
+          </div>
+          <h4 class="pillar-title">Core Principles Enforced</h4>
+          <p class="pillar-desc">
+            The underlying software engineering axioms the pattern protects. Demonstrates mastery of OCP, DIP, SRP, and Composition over Inheritance.
+          </p>
+          <div class="pillar-example">
+            <strong>Principles:</strong> Open/Closed Principle (add new strategies without editing Context), Dependency Inversion (Context depends on interface, not implementations), Favor Composition over Inheritance (HAS-A &gt; IS-A).
+          </div>
+        </div>
+
+        <!-- Pillar 5 -->
+        <div class="pillar-card">
+          <div class="pillar-header">
+            <span class="pillar-num">Pillar 05 · Mechanics</span>
+            <span class="pillar-icon">⚡</span>
+          </div>
+          <h4 class="pillar-title">Implementation &amp; Runtime Hot-Swapping</h4>
+          <p class="pillar-desc">
+            The concrete boilerplate and wiring. How the context references the strategy, delegates execution, and exposes setters for dynamic runtime mutation.
+          </p>
+          <div class="pillar-example">
+            <strong>Wiring:</strong> Context holds `private Strategy strategy;`. Constructor sets initial behavior; `setStrategy(...)` enables dynamic hot-swapping. Context calls `strategy.execute()`. In modern Java, functional interfaces allow lambdas.
+          </div>
+        </div>
+
+        <!-- Pillar 6 -->
+        <div class="pillar-card">
+          <div class="pillar-header">
+            <span class="pillar-num">Pillar 06 · Trade-offs</span>
+            <span class="pillar-icon">⚖️</span>
+          </div>
+          <h4 class="pillar-title">Architectural Costs &amp; Trade-offs</h4>
+          <p class="pillar-desc">
+            Nothing in software engineering is free. A balanced assessment of benefits versus memory overhead, class count inflation, and cognitive indirection.
+          </p>
+          <div class="pillar-example">
+            <strong>Trade-offs:</strong> Benefits: Clean testing &amp; OCP compliance. Costs: Increased class explosion (mitigated via lambdas or Flyweight Singletons), client must understand differences between strategies, extra pointer indirection.
+          </div>
+        </div>
+
+        <!-- Pillar 7 -->
+        <div class="pillar-card">
+          <div class="pillar-header">
+            <span class="pillar-num">Pillar 07 · Matrix</span>
+            <span class="pillar-icon">🧭</span>
+          </div>
+          <h4 class="pillar-title">Rival Pattern Decision Matrix</h4>
+          <p class="pillar-desc">
+            Clear disambiguation between patterns sharing similar UML structures. Vital for exam discrimination questions and high-stakes architecture decisions.
+          </p>
+          <div class="pillar-example">
+            <strong>Disambiguation:</strong> vs. State (identical UML, but State transitions dynamically internally without client knowing; Strategy is chosen by client); vs. Template Method (Template uses inheritance for skeleton; Strategy uses composition for whole algorithm).
+          </div>
+        </div>
+
+        <!-- Pillar 8 -->
+        <div class="pillar-card">
+          <div class="pillar-header">
+            <span class="pillar-num">Pillar 08 · Drills</span>
+            <span class="pillar-icon">🔍</span>
+          </div>
+          <h4 class="pillar-title">Real-World JDK &amp; Exam Traps</h4>
+          <p class="pillar-desc">
+            Standard library citations (proving real-world ubiquity) and classic trick questions from Prof. Schäfer's past exam papers.
+          </p>
+          <div class="pillar-example">
+            <strong>Real-World &amp; Traps:</strong> JDK `Comparator.compare()`, `LayoutManager`. Exam Traps: Forgetting Context setter prevents runtime swaps; passing whole Context to strategy causing circular tight coupling; failing to recognize Strategy when written as a Lambda.
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 
