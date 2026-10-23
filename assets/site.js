@@ -784,13 +784,24 @@
       di.classList.toggle("active", target === stageId);
     });
 
-    var targetElement = document.getElementById(stageId);
-    if (targetElement) {
-      var headerOffset = window.innerWidth <= 900 ? 70 : 120;
-      var elementPosition = targetElement.getBoundingClientRect().top;
-      var offsetPosition = elementPosition + window.pageYOffset - headerOffset;
-      window.scrollTo({ top: offsetPosition, behavior: "smooth" });
-    }
+    // Reset scroll cleanly to the top of the newly displayed stage
+    requestAnimationFrame(function () {
+      var navBar = document.querySelector(".masterclass-stage-nav");
+      var topNav = document.querySelector(".sitenav");
+      if (document.body.classList.contains("mode-stage-focused") && navBar) {
+        var topNavHeight = (topNav && window.getComputedStyle(topNav).display !== "none") ? topNav.offsetHeight : 0;
+        var navBarTop = navBar.getBoundingClientRect().top + window.pageYOffset;
+        window.scrollTo({ top: Math.max(0, navBarTop - topNavHeight), behavior: "smooth" });
+      } else {
+        var targetElement = document.getElementById(stageId);
+        if (targetElement) {
+          var headerOffset = window.innerWidth <= 900 ? 70 : 120;
+          var elementPosition = targetElement.getBoundingClientRect().top;
+          var offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+          window.scrollTo({ top: Math.max(0, offsetPosition), behavior: "smooth" });
+        }
+      }
+    });
   }
 
   // ==========================================================================

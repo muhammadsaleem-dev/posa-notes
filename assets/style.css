@@ -166,12 +166,16 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outlin
 .sitenav-home:hover { color: var(--accent-ink); }
 .sitenav-links {
   display: flex;
-  gap: 0.15rem;
+  gap: 0.2rem;
   flex-wrap: nowrap;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
   flex: 1;
   min-width: 0;
+}
+.sitenav-links::-webkit-scrollbar {
+  display: none;
 }
 .sitenav-links a {
   display: inline-block;
