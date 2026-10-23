@@ -8,7 +8,7 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230c7a73'/%3E%3Cpath d='M8 10h16M8 16h16M8 22h10' stroke='%23fff' stroke-width='2.2' stroke-linecap='round'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/style.css">
 <style>
   .metric-card {
@@ -35,7 +35,10 @@
 
 <nav class="sitenav">
   <div class="sitenav-inner">
-    <a class="sitenav-home" href="index.html">POSA 2026</a>
+    <a class="sitenav-home" href="index.html">
+      <span style="background:var(--accent);color:#fff;padding:0.15rem 0.45rem;border-radius:4px;font-size:0.8rem;font-weight:800;letter-spacing:0.04em;">POSA</span>
+      <span>2026</span>
+    </a>
     <div class="sitenav-links">
       <a href="index.html">Overview</a>
       <a href="unit-1-strategy.html">1 · Strategy</a>
@@ -204,21 +207,75 @@
         <p style="font-size: 0.9rem; color: var(--text-muted); line-height: 1.6;">
           On the ideal Main Sequence, $A + I = 1$. The further a package drifts ($D \to 1$), the more architecturally troubled it is:
         </p>
-        <div class="arch-diagram-block">
-A (Abstractness)
-▲
-1.0 ┌──────────────────────────────────────┐
-    │  Zone of Uselessness                 │
-    │  (A=1, I=1: Abstract, but unreferenced)
-    │        \                             │
-    │         \    THE MAIN SEQUENCE       │
-    │          \   (Ideal Balance: A+I=1)  │
-    │           \                          │
-    │            \                         │
-    │  Zone of Pain                        │
-    │  (A=0, I=0: Concrete & unchangeable) │
-0.0 └──────────────────────────────────────┴──► I (Instability)
-    0.0                                    1.0</div>
+        <div class="uml-svg-container">
+          <svg viewBox="0 0 600 380" width="100%" height="auto" xmlns="http://www.w3.org/2000/svg" style="font-family:'JetBrains Mono', 'SF Mono', monospace; font-size:11px;">
+            <!-- Grid Background -->
+            <rect x="70" y="30" width="460" height="280" fill="var(--bg-raised, #ffffff)" stroke="var(--border, #cbd5e1)" stroke-width="1.5"/>
+            
+            <!-- Zone of Pain Area -->
+            <polygon points="70,310 190,310 70,190" fill="rgba(239, 68, 68, 0.12)"/>
+            <text x="80" y="295" fill="#dc2626" font-weight="700" font-size="11">⚠️ Zone of Pain</text>
+            <text x="80" y="307" fill="#b91c1c" font-size="9.5">(A=0, I=0: Rigid Concrete)</text>
+
+            <!-- Zone of Uselessness Area -->
+            <polygon points="530,30 410,30 530,150" fill="rgba(100, 116, 139, 0.12)"/>
+            <text x="415" y="45" fill="#475569" font-weight="700" font-size="11">👻 Zone of Uselessness</text>
+            <text x="415" y="57" fill="#64748b" font-size="9.5">(A=1, I=1: Unused Abstract)</text>
+
+            <!-- The Main Sequence Line -->
+            <line x1="70" y1="30" x2="530" y2="310" stroke="#10b981" stroke-width="3"/>
+            <text x="270" y="160" fill="#059669" font-weight="700" font-size="12" transform="rotate(31, 270, 160)">
+              ★ THE MAIN SEQUENCE (A + I = 1)
+            </text>
+
+            <!-- Dynamic Package Marker -->
+            <circle id="pkgPoint" cx="300" cy="170" r="7" fill="#3b82f6" stroke="#ffffff" stroke-width="2"/>
+            <text id="pkgLabel" x="315" y="174" fill="#1d4ed8" font-weight="700" font-size="11">Your Package (I=0.50, A=0.50, D=0.00)</text>
+
+            <!-- Axes -->
+            <line x1="70" y1="310" x2="550" y2="310" stroke="var(--text, #1e293b)" stroke-width="2"/>
+            <line x1="70" y1="310" x2="70" y2="15" stroke="var(--text, #1e293b)" stroke-width="2"/>
+
+            <!-- Axis Labels -->
+            <text x="300" y="340" fill="var(--text, #1e293b)" font-weight="700" text-anchor="middle" font-size="12">Instability Metric (I = Ce / (Ca + Ce)) ──►</text>
+            <text x="25" y="170" fill="var(--text, #1e293b)" font-weight="700" text-anchor="middle" font-size="12" transform="rotate(-90, 25, 170)">▲ Abstractness (A = Na / Nc)</text>
+
+            <!-- Axis Ticks -->
+            <text x="70" y="325" fill="var(--text-muted, #64748b)" text-anchor="middle">0.0</text>
+            <text x="300" y="325" fill="var(--text-muted, #64748b)" text-anchor="middle">0.5</text>
+            <text x="530" y="325" fill="var(--text-muted, #64748b)" text-anchor="middle">1.0</text>
+
+            <text x="55" y="315" fill="var(--text-muted, #64748b)" text-anchor="end">0.0</text>
+            <text x="55" y="175" fill="var(--text-muted, #64748b)" text-anchor="end">0.5</text>
+            <text x="55" y="35" fill="var(--text-muted, #64748b)" text-anchor="end">1.0</text>
+          </svg>
+        </div>
+
+        <!-- Interactive Calculator Widget -->
+        <div style="background:var(--bg-raised); border:1px solid var(--border); border-radius:var(--radius-md); padding:1.5rem; margin-top:1.5rem;">
+          <h4 style="margin:0 0 1rem; font-size:1rem; color:var(--accent);">🧮 Live Package Metric Calculator</h4>
+          <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(130px, 1fr)); gap:1rem; margin-bottom:1rem;">
+            <div>
+              <label style="font-size:0.75rem; font-weight:700; color:var(--text-muted); display:block; margin-bottom:0.25rem;">Ca (Afferent)</label>
+              <input type="number" id="inputCa" value="8" min="0" style="width:100%; padding:0.5rem; border:1px solid var(--border); border-radius:4px; background:var(--bg); color:var(--text); font-family:var(--font-mono);">
+            </div>
+            <div>
+              <label style="font-size:0.75rem; font-weight:700; color:var(--text-muted); display:block; margin-bottom:0.25rem;">Ce (Efferent)</label>
+              <input type="number" id="inputCe" value="8" min="0" style="width:100%; padding:0.5rem; border:1px solid var(--border); border-radius:4px; background:var(--bg); color:var(--text); font-family:var(--font-mono);">
+            </div>
+            <div>
+              <label style="font-size:0.75rem; font-weight:700; color:var(--text-muted); display:block; margin-bottom:0.25rem;">Na (Abstract)</label>
+              <input type="number" id="inputNa" value="5" min="0" style="width:100%; padding:0.5rem; border:1px solid var(--border); border-radius:4px; background:var(--bg); color:var(--text); font-family:var(--font-mono);">
+            </div>
+            <div>
+              <label style="font-size:0.75rem; font-weight:700; color:var(--text-muted); display:block; margin-bottom:0.25rem;">Nc (Total Classes)</label>
+              <input type="number" id="inputNc" value="10" min="1" style="width:100%; padding:0.5rem; border:1px solid var(--border); border-radius:4px; background:var(--bg); color:var(--text); font-family:var(--font-mono);">
+            </div>
+          </div>
+          <button type="button" id="calcPkgBtn" class="sim-btn-primary" style="padding:0.6rem 1.2rem; font-size:0.85rem;">
+            Calculate Health &amp; Plot on Chart
+          </button>
+        </div>
         
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1rem;">
           <div style="padding: 1rem; background: var(--warn-soft); border-radius: var(--radius-sm);">
@@ -276,5 +333,57 @@ A (Abstractness)
 </div>
 
 <script src="assets/site.js" defer></script>
+<script>
+  (function() {
+    var btn = document.getElementById("calcPkgBtn");
+    var pt = document.getElementById("pkgPoint");
+    var lbl = document.getElementById("pkgLabel");
+
+    if (btn && pt && lbl) {
+      function update() {
+        var ca = parseFloat(document.getElementById("inputCa").value) || 0;
+        var ce = parseFloat(document.getElementById("inputCe").value) || 0;
+        var na = parseFloat(document.getElementById("inputNa").value) || 0;
+        var nc = Math.max(1, parseFloat(document.getElementById("inputNc").value) || 1);
+
+        var totalC = ca + ce;
+        var i = totalC > 0 ? ce / totalC : 0;
+        var a = Math.min(1, Math.max(0, na / nc));
+        var d = Math.abs(a + i - 1);
+
+        // SVG coordinates:
+        // X maps I from 0 to 1 -> 70 to 530 (width 460)
+        // Y maps A from 0 to 1 -> 310 to 30 (height 280, inverted)
+        var cx = 70 + (i * 460);
+        var cy = 310 - (a * 280);
+
+        pt.setAttribute("cx", cx);
+        pt.setAttribute("cy", cy);
+
+        lbl.setAttribute("x", Math.min(380, cx + 15));
+        lbl.setAttribute("y", cy > 50 ? cy + 4 : cy + 18);
+        lbl.textContent = "Your Pkg (I=" + i.toFixed(2) + ", A=" + a.toFixed(2) + ", D=" + d.toFixed(2) + ")";
+
+        if (d < 0.2) {
+          pt.setAttribute("fill", "#10b981");
+          lbl.setAttribute("fill", "#059669");
+        } else if (a + i < 0.8) {
+          pt.setAttribute("fill", "#ef4444");
+          lbl.setAttribute("fill", "#dc2626");
+        } else {
+          pt.setAttribute("fill", "#64748b");
+          lbl.setAttribute("fill", "#475569");
+        }
+      }
+
+      btn.addEventListener("click", update);
+      ["inputCa", "inputCe", "inputNa", "inputNc"].forEach(function(id) {
+        var el = document.getElementById(id);
+        if (el) el.addEventListener("input", update);
+      });
+      update();
+    }
+  })();
+</script>
 </body>
 </html>

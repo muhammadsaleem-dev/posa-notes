@@ -8,7 +8,7 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230c7a73'/%3E%3Cpath d='M8 10h16M8 16h16M8 22h10' stroke='%23fff' stroke-width='2.2' stroke-linecap='round'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/style.css">
 <style>
   /* Mock Exam Specific Additions */
@@ -116,7 +116,10 @@
 
 <nav class="sitenav">
   <div class="sitenav-inner">
-    <a class="sitenav-home" href="index.html">POSA 2026</a>
+    <a class="sitenav-home" href="index.html">
+      <span style="background:var(--accent);color:#fff;padding:0.15rem 0.45rem;border-radius:4px;font-size:0.8rem;font-weight:800;letter-spacing:0.04em;">POSA</span>
+      <span>2026</span>
+    </a>
     <div class="sitenav-links">
       <a href="index.html">Overview</a>
       <a href="#section-1">1 · Architecture (POSA 1)</a>
@@ -278,20 +281,34 @@
           </summary>
           <div class="drill-a">
             <p><strong>Structural Comparison:</strong></p>
-            <div class="arch-diagram-block">
-┌──────────────────┬─────────────────────────────┬──────────────────────────────┐
-│ Attribute        │ Pipes and Filters           │ Blackboard                   │
-├──────────────────┼─────────────────────────────┼──────────────────────────────┤
-│ Control Flow     │ Data-driven (push/pull      │ Centralized Controller       │
-│                  │ through passive/active pipe)│ evaluates Knowledge Sources  │
-├──────────────────┼─────────────────────────────┼──────────────────────────────┤
-│ Data Flow        │ Unidirectional stream       │ Shared central repository    │
-│                  │ without feedback loops      │ with iterative modifications │
-├──────────────────┼─────────────────────────────┼──────────────────────────────┤
-│ Problem Domain   │ Deterministic data trans-   │ Non-deterministic, heuristic │
-│                  │ forms (compilers, ETL, image│ search (speech recognition,  │
-│                  │ pipelines)                  │ robotic path planning, AI)   │
-└──────────────────┴─────────────────────────────┴──────────────────────────────┘</div>
+            <div class="matrix-table-wrap">
+              <table class="matrix-table">
+                <thead>
+                  <tr>
+                    <th>Attribute</th>
+                    <th>Pipes and Filters</th>
+                    <th>Blackboard</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>Control Flow</strong></td>
+                    <td>Data-driven (push/pull through passive/active pipe)</td>
+                    <td>Centralized Controller evaluates Knowledge Sources</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Data Flow</strong></td>
+                    <td>Unidirectional stream without feedback loops</td>
+                    <td>Shared central repository with iterative modifications</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Problem Domain</strong></td>
+                    <td>Deterministic data transforms (compilers, ETL, image pipelines)</td>
+                    <td>Non-deterministic, heuristic search (speech recognition, AI, robotics)</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
             <div class="gotcha-box">
               <strong>⚠️ Critical Exam Gotcha:</strong> When asked how Knowledge Sources interact in Blackboard, note that <em>Knowledge Sources NEVER communicate directly with one another</em>. All communication is strictly mediated via reads and writes to the shared Blackboard state.
             </div>
@@ -560,30 +577,51 @@ public class SafeBuffer {
           </summary>
           <div class="drill-a">
             <p><strong>1. Architectural Pattern Composition:</strong></p>
-            <div class="arch-diagram-block">
-[ 80,000 WebSockets ]
-         │ (I/O Events)
-         ▼
-┌─────────────────────────────────────────────────────────────┐
-│ 1. REACTOR LAYER (Async Network Demux)                      │
-│    • epoll() on single/small thread pool                    │
-│    • Non-blocking read of order packets                     │
-└──────────────────────────┬──────────────────────────────────┘
-                           │ Enqueues Order Events
-                           ▼
-┌─────────────────────────────────────────────────────────────┐
-│ 2. HALF-SYNC / HALF-ASYNC QUEUEING BUFFER                    │
-│    • Bounded lock-free ring buffer (Disruptor / LMAX)       │
-│    • Enforces backpressure if downstream consumers lag      │
-└──────────────────────────┬──────────────────────────────────┘
-                           │ Worker Thread Pool Dequeues
-                           ▼
-┌─────────────────────────────────────────────────────────────┐
-│ 3. ACTIVE OBJECT (Persistence & Matching Engine)            │
-│    • Client Proxy immediately returns OrderFuture           │
-│    • Activation List stages disk journaling                 │
-│    • Servant executes matching logic on dedicated thread    │
-└─────────────────────────────────────────────────────────────┘</div>
+            <div class="uml-svg-container">
+              <svg viewBox="0 0 760 380" width="100%" height="auto" xmlns="http://www.w3.org/2000/svg" style="font-family:'JetBrains Mono', 'SF Mono', monospace; font-size:12px;">
+                <defs>
+                  <marker id="m1-arrow" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                    <path d="M 0 1 L 10 5 L 0 9 z" fill="#0c7a73"/>
+                  </marker>
+                </defs>
+                <!-- 80k Connections Pill -->
+                <rect x="250" y="10" width="260" height="38" rx="19" fill="var(--bg-raised, #ffffff)" stroke="#0c7a73" stroke-width="2"/>
+                <text x="380" y="34" fill="#0c7a73" font-weight="700" text-anchor="middle" font-size="13">⚡ 80,000 Concurrent WebSockets</text>
+                
+                <line x1="380" y1="48" x2="380" y2="78" stroke="#0c7a73" stroke-width="2" marker-end="url(#m1-arrow)"/>
+                <text x="390" y="68" fill="var(--text-muted, #64748b)" font-size="10">TCP I/O Events</text>
+
+                <!-- Layer 1: Reactor -->
+                <rect x="100" y="80" width="560" height="75" rx="8" fill="var(--bg-raised, #ffffff)" stroke="#0c7a73" stroke-width="2"/>
+                <rect x="100" y="80" width="560" height="26" rx="8" fill="#0c7a73"/>
+                <rect x="100" y="100" width="560" height="6" fill="#0c7a73"/>
+                <text x="380" y="98" fill="#ffffff" font-weight="700" text-anchor="middle" font-size="12">1. REACTOR LAYER (Async Event Demultiplexer)</text>
+                <text x="120" y="125" fill="var(--text, #1e293b)">• epoll() on minimal thread pool pinned to CPU cores</text>
+                <text x="120" y="143" fill="var(--text, #1e293b)">• Non-blocking socket packet ingestion (Zero Blocking Operations)</text>
+
+                <line x1="380" y1="155" x2="380" y2="185" stroke="#0c7a73" stroke-width="2" marker-end="url(#m1-arrow)"/>
+                <text x="390" y="174" fill="var(--text-muted, #64748b)" font-size="10">Enqueues Order Payloads</text>
+
+                <!-- Layer 2: Queue -->
+                <rect x="100" y="185" width="560" height="75" rx="8" fill="var(--bg-raised, #ffffff)" stroke="#3b82f6" stroke-width="2"/>
+                <rect x="100" y="185" width="560" height="26" rx="8" fill="#3b82f6"/>
+                <rect x="100" y="205" width="560" height="6" fill="#3b82f6"/>
+                <text x="380" y="203" fill="#ffffff" font-weight="700" text-anchor="middle" font-size="12">2. HALF-SYNC / HALF-ASYNC QUEUEING BUFFER</text>
+                <text x="120" y="230" fill="var(--text, #1e293b)">• Bounded lock-free ring buffer (LMAX Disruptor pattern)</text>
+                <text x="120" y="248" fill="var(--text, #1e293b)">• Shock absorber enforcing backpressure if consumers lag</text>
+
+                <line x1="380" y1="260" x2="380" y2="290" stroke="#3b82f6" stroke-width="2" marker-end="url(#m1-arrow)"/>
+                <text x="390" y="279" fill="var(--text-muted, #64748b)" font-size="10">Worker Threads Dequeue</text>
+
+                <!-- Layer 3: Active Object -->
+                <rect x="100" y="290" width="560" height="75" rx="8" fill="var(--bg-raised, #ffffff)" stroke="#8b5cf6" stroke-width="2"/>
+                <rect x="100" y="290" width="560" height="26" rx="8" fill="#8b5cf6"/>
+                <rect x="100" y="310" width="560" height="6" fill="#8b5cf6"/>
+                <text x="380" y="308" fill="#ffffff" font-weight="700" text-anchor="middle" font-size="12">3. ACTIVE OBJECT (Persistence &amp; Matching Engine)</text>
+                <text x="120" y="335" fill="var(--text, #1e293b)">• Client Proxy returns OrderFuture token immediately</text>
+                <text x="120" y="353" fill="var(--text, #1e293b)">• Servant thread performs synchronous Disk WAL journaling in background</text>
+              </svg>
+            </div>
 
             <p><strong>Responsibilities Breakdown:</strong></p>
             <ul>

@@ -157,4 +157,168 @@
       showToast('All items collapsed');
     });
   });
+
+  // ==========================================================================
+  // PREMIUM €1,500 COURSE EXPERIENCE ENGINE (2026 EDITION)
+  // ==========================================================================
+
+  // Reading Progress Bar
+  var progressBar = document.createElement("div");
+  progressBar.className = "reading-progress-bar";
+  document.body.appendChild(progressBar);
+  window.addEventListener("scroll", function () {
+    var winScroll = document.documentElement.scrollTop || document.body.scrollTop;
+    var height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+    var scrolled = height > 0 ? (winScroll / height) * 100 : 0;
+    progressBar.style.width = scrolled + "%";
+  }, { passive: true });
+
+  // Universal Tabs Engine
+  document.addEventListener("click", function (e) {
+    var btn = e.target.closest(".tab-btn");
+    if (!btn) return;
+    var container = btn.closest(".tabs-container");
+    if (!container) return;
+    var targetId = btn.getAttribute("data-tab");
+    if (!targetId) return;
+
+    container.querySelectorAll(".tab-btn").forEach(function (b) { b.classList.remove("active"); });
+    container.querySelectorAll(".tab-panel").forEach(function (p) { p.classList.remove("active"); });
+
+    btn.classList.add("active");
+    var panel = container.querySelector("#" + targetId);
+    if (panel) panel.classList.add("active");
+  });
+
+  // Universal Interactive Quiz Engine
+  document.addEventListener("click", function (e) {
+    var opt = e.target.closest(".quiz-opt");
+    if (!opt) return;
+    var widget = opt.closest(".quiz-widget");
+    if (!widget) return;
+    var isCorrect = opt.getAttribute("data-correct") === "true";
+    var feedback = widget.querySelector(".quiz-feedback");
+
+    widget.querySelectorAll(".quiz-opt").forEach(function (o) {
+      o.classList.remove("correct", "wrong");
+    });
+
+    if (isCorrect) {
+      opt.classList.add("correct");
+      if (feedback) {
+        feedback.className = "quiz-feedback show-correct";
+        feedback.innerHTML = "<strong>✅ Correct!</strong> " + (opt.getAttribute("data-reason") || "Spot on! You mastered this architectural trade-off.");
+      }
+    } else {
+      opt.classList.add("wrong");
+      var correctOpt = widget.querySelector('.quiz-opt[data-correct="true"]');
+      if (correctOpt) correctOpt.classList.add("correct");
+      if (feedback) {
+        feedback.className = "quiz-feedback show-wrong";
+        feedback.innerHTML = "<strong>❌ Incorrect.</strong> " + (opt.getAttribute("data-reason") || "Review the trade-off and try again.");
+      }
+    }
+  });
+
+  // SimUDuck Strategy Pattern Simulator Engine
+  var simRunBtn = document.getElementById("simRunBtn");
+  var simSwapBtn = document.getElementById("simSwapBtn");
+  var simConsole = document.getElementById("simConsole");
+  if (simRunBtn && simConsole) {
+    simRunBtn.addEventListener("click", function () {
+      var duckSelect = document.getElementById("simDuckSelect");
+      var flySelect = document.getElementById("simFlySelect");
+      var quackSelect = document.getElementById("simQuackSelect");
+      var duckType = duckSelect ? duckSelect.value : "MallardDuck";
+      var flyType = flySelect ? flySelect.value : "FlyWithWings";
+      var quackType = quackSelect ? quackSelect.value : "Quack";
+
+      var logs = [];
+      logs.push(">> Instantiating Duck: " + duckType);
+      logs.push(">> Strategy Injected: flyBehavior = new " + flyType + "()");
+      logs.push(">> Strategy Injected: quackBehavior = new " + quackType + "()");
+      logs.push("------------------------------------------------------------------");
+      logs.push("[DUCK DISPLAY]  " + getDuckDisplay(duckType));
+      logs.push("[FLY EXECUTE]   " + getFlyExecution(flyType));
+      logs.push("[QUACK EXECUTE] " + getQuackExecution(quackType));
+      logs.push("------------------------------------------------------------------");
+      logs.push(">> Result: Clean runtime delegation. Zero subclass coupling!");
+
+      simConsole.textContent = logs.join("\n");
+    });
+
+    if (simSwapBtn) {
+      simSwapBtn.addEventListener("click", function () {
+        var flySelect = document.getElementById("simFlySelect");
+        if (flySelect) flySelect.value = "FlyRocketPowered";
+        var duckSelect = document.getElementById("simDuckSelect");
+        var quackSelect = document.getElementById("simQuackSelect");
+        var duckType = duckSelect ? duckSelect.value : "ModelDuck";
+        var quackType = quackSelect ? quackSelect.value : "Quack";
+
+        var logs = [];
+        logs.push("⚡ [RUNTIME HOT-SWAP TRIGGERED]");
+        logs.push(">> Executing: duck.setFlyBehavior(new FlyRocketPowered())");
+        logs.push(">> Context pointer re-bound: Target algorithm switched dynamically!");
+        logs.push("------------------------------------------------------------------");
+        logs.push("[DUCK DISPLAY]  " + getDuckDisplay(duckType));
+        logs.push("[FLY EXECUTE]   🚀 WHOOOOSH! Mach 3 Jet Rocket Thrusters Ignited!");
+        logs.push("[QUACK EXECUTE] " + getQuackExecution(quackType));
+        logs.push("------------------------------------------------------------------");
+        logs.push(">> Architectural Takeaway: Changed behavior in-flight without re-compilation or inheritance!");
+
+        simConsole.textContent = logs.join("\n");
+      });
+    }
+  }
+
+  function getDuckDisplay(type) {
+    switch (type) {
+      case "MallardDuck": return "🦆 I am a genuine wild Mallard Duck with green plumage.";
+      case "RedheadDuck": return "🦆 I am a North American Redhead diving duck.";
+      case "RubberDuck": return "🐤 I am a yellow bath Rubber Duck. Made of 100% silicone.";
+      case "DecoyDuck": return "🪵 I am an ornamental wooden Decoy Duck.";
+      case "ModelDuck": return "🤖 I am a cybernetic Model Prototype Duck.";
+      default: return "🦆 Generic Duck instance.";
+    }
+  }
+  function getFlyExecution(type) {
+    switch (type) {
+      case "FlyWithWings": return "🪽 Flapping biological wings... Gliding gracefully at 30 km/h!";
+      case "FlyNoWay": return "🚫 << Silence >> Cannot fly. Grounded or floating peacefully.";
+      case "FlyRocketPowered": return "🚀 WHOOOOSH! Rocket thruster ignited! Flying at Mach 3!";
+      default: return "Flying behavior executed.";
+    }
+  }
+  function getQuackExecution(type) {
+    switch (type) {
+      case "Quack": return "🔊 QUACK! QUACK! Loud resonant duck call.";
+      case "Squeak": return "🔉 Squeeeak! High-pitched vinyl squeak sound.";
+      case "MuteQuack": return "🔇 << Absolute Silence >> Cannot produce sound.";
+      default: return "Quack behavior executed.";
+    }
+  }
+
+  // Universal Code Copy Button
+  document.querySelectorAll(".code-container").forEach(function (box) {
+    var header = box.querySelector(".code-header");
+    var code = box.querySelector("code");
+    if (!header || !code) return;
+
+    var copyBtn = document.createElement("button");
+    copyBtn.type = "button";
+    copyBtn.className = "copy-btn";
+    copyBtn.style.cssText = "background:transparent;border:none;color:var(--text-muted);cursor:pointer;font-size:0.75rem;display:inline-flex;align-items:center;gap:0.3rem;";
+    copyBtn.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg> Copy';
+    
+    copyBtn.addEventListener("click", function () {
+      navigator.clipboard.writeText(code.innerText).then(function () {
+        copyBtn.innerHTML = '✓ Copied!';
+        setTimeout(function () {
+          copyBtn.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg> Copy';
+        }, 2000);
+      });
+    });
+    header.appendChild(copyBtn);
+  });
 })();

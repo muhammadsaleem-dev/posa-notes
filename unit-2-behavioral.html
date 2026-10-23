@@ -2,72 +2,86 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Unit 2: Behavioral Patterns (Template &amp; Command) | POSA 2026</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Unit 2: Behavioral Patterns (Template Method &amp; Command) | POSA 2026 Masterclass</title>
 <meta name="description" content="Unit 2 of Pattern-Oriented Software Architecture by Prof. Dr. Jörg Schäfer: Template Method, Hollywood Principle, Command Pattern, Macro commands, and self-study questions.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230c7a73'/%3E%3Cpath d='M8 10h16M8 16h16M8 22h10' stroke='%23fff' stroke-width='2.2' stroke-linecap='round'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/style.css">
 <style>
-  .quote-card {
-    margin: 1.5rem 0 2rem;
-    padding: 1.25rem 1.5rem;
-    background: var(--accent-soft);
-    border-left: 4px solid var(--accent);
-    border-radius: 0 var(--radius-md) var(--radius-md) 0;
-    font-style: italic;
-    color: var(--accent-ink);
-  }
-  .quote-author {
-    display: block;
-    margin-top: 0.5rem;
-    font-style: normal;
-    font-weight: 700;
-    font-size: 0.85rem;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-  }
-  .compare-grid {
+  .recipe-compare {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1.5rem;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1.25rem;
     margin: 1.5rem 0;
   }
-  @media (max-width: 768px) {
-    .compare-grid { grid-template-columns: 1fr; }
-  }
-  .compare-col {
+  .recipe-card {
     background: var(--bg-raised);
     border: 1px solid var(--border);
     border-radius: var(--radius-md);
     padding: 1.25rem;
   }
-  .compare-col h4 { margin-top: 0; color: var(--accent); }
-  .code-container {
-    margin: 1.5rem 0;
-    border-radius: var(--radius-md);
-    overflow: hidden;
-    background: var(--code-bg);
-    border: 1px solid var(--border);
-  }
-  .code-header {
-    background: rgba(0,0,0,0.05);
-    padding: 0.5rem 1rem;
+  .recipe-card h4 {
+    margin: 0 0 0.75rem;
     display: flex;
-    justify-content: space-between;
-    font-family: var(--font-mono);
-    font-size: 0.8rem;
-    color: var(--text-muted);
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--text);
   }
-  .code-body {
-    padding: 1rem;
-    margin: 0;
-    font-family: var(--font-mono);
+  .recipe-step {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.45rem 0;
     font-size: 0.88rem;
-    overflow-x: auto;
-    line-height: 1.5;
+    border-bottom: 1px solid var(--border);
+  }
+  .recipe-step:last-child { border-bottom: none; }
+  .step-badge-common {
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: #10b981;
+    background: rgba(16, 185, 129, 0.12);
+    padding: 0.15rem 0.45rem;
+    border-radius: 4px;
+    margin-left: auto;
+  }
+  .step-badge-variant {
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: #3b82f6;
+    background: rgba(59, 130, 246, 0.12);
+    padding: 0.15rem 0.45rem;
+    border-radius: 4px;
+    margin-left: auto;
+  }
+  .smart-home-demo {
+    background: linear-gradient(135deg, var(--bg-raised) 0%, var(--accent-soft) 100%);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-lg);
+    padding: 1.75rem;
+    margin: 2rem 0;
+  }
+  .light-bulb-indicator {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    margin: 0 auto 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    background: #334155;
+    color: #94a3b8;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  }
+  .light-bulb-indicator.on {
+    background: #fef08a;
+    color: #ca8a04;
+    box-shadow: 0 0 25px rgba(234, 179, 8, 0.6);
   }
 </style>
 <script>(function(){try{var t=localStorage.getItem('posa-theme')||'light';document.documentElement.setAttribute('data-theme',t);var m=localStorage.getItem('posa-mode')||'concept';document.documentElement.setAttribute('data-mode',m);}catch(e){}})();</script>
@@ -76,11 +90,17 @@
 
 <nav class="sitenav">
   <div class="sitenav-inner">
-    <a class="sitenav-home" href="index.html">POSA 2026</a>
+    <a class="sitenav-home" href="index.html">
+      <span style="background:var(--accent);color:#fff;padding:0.15rem 0.45rem;border-radius:4px;font-size:0.8rem;font-weight:800;letter-spacing:0.04em;">POSA</span>
+      <span>2026</span>
+    </a>
     <div class="sitenav-links">
       <a href="index.html">Overview</a>
       <a href="unit-1-strategy.html">Unit 1 · Strategy</a>
       <a href="unit-2-behavioral.html" class="active">Unit 2 · Behavioral</a>
+      <a href="unit-6-solid.html">Unit 6 · SOLID</a>
+      <a href="unit-7-packaging.html">Unit 7 · Packaging</a>
+      <a href="past-papers.html">Past Papers</a>
       <a href="mock-1.html">📝 Mock 1 (75 pts)</a>
     </div>
     <button class="nav-toggle" id="navToggle" type="button" aria-expanded="false" aria-controls="navPanel">
@@ -96,10 +116,13 @@
   <div class="nav-panel" id="navPanel">
     <div class="nav-panel-section">
       <span class="nav-panel-label">Course Navigation</span>
-      <a href="index.html">Course Overview</a>
+      <a href="index.html">Course Hub</a>
       <a href="unit-1-strategy.html">Unit 1 · Strategy Pattern</a>
       <a href="unit-2-behavioral.html" class="active">Unit 2 · Template &amp; Command</a>
-      <a href="mock-1.html">📝 Mock Exam 1</a>
+      <a href="unit-6-solid.html">Unit 6 · SOLID &amp; Formal LSP</a>
+      <a href="unit-7-packaging.html">Unit 7 · Packaging Architecture</a>
+      <a href="past-papers.html">Past Papers Hub</a>
+      <a href="mock-1.html">Mock Exam 1</a>
     </div>
   </div>
 </nav>
@@ -107,103 +130,130 @@
 <div class="page-shell">
   <aside class="sidebar-toc">
     <div class="sidebar-block">
-      <span class="sidebar-label">On This Page</span>
-      <a href="#template-method"><span class="toc-num">1</span>Template Method: Coffee &amp; Tea</a>
+      <span class="sidebar-label">Unit Roadmap</span>
+      <a href="#template-method"><span class="toc-num">1</span>Template Method Pattern</a>
       <a href="#hollywood-principle"><span class="toc-num">2</span>The Hollywood Principle</a>
-      <a href="#command-pattern"><span class="toc-num">3</span>Command Pattern: Modeling Verbs</a>
-      <a href="#macro-commands"><span class="toc-num">4</span>Macro Commands &amp; Threads</a>
-      <a href="#self-study"><span class="toc-num">5</span>Self-Study Exam Questions</a>
+      <a href="#command-pattern"><span class="toc-num">3</span>The Command Pattern</a>
+      <a href="#interactive-command"><span class="toc-num">4</span>Interactive Remote Demo</a>
+      <a href="#macro-commands"><span class="toc-num">5</span>Macro Commands &amp; Threads</a>
+      <a href="#self-study"><span class="toc-num">6</span>Professor Dr. Schäfer Gotchas</a>
+      <a href="#quiz"><span class="toc-num">7</span>Self-Assessment Quiz</a>
     </div>
     <div class="sidebar-block">
-      <span class="sidebar-label">Instructor</span>
-      <p style="font-size: 0.85rem; color: var(--text-muted); margin: 0;">
-        Prof. Dr. Jörg Schäfer<br>
-        <em>Frankfurt University of Applied Sciences</em>
+      <span class="sidebar-label">Course Info</span>
+      <p style="font-size: 0.85rem; color: var(--text-muted); margin: 0 0 0.5rem; line-height: 1.5;">
+        <strong>Prof. Dr. Jörg Schäfer</strong><br>
+        Frankfurt University of Applied Sciences<br>
+        Fachbereich 2: Informatik
       </p>
+      <div style="display:inline-block; font-size:0.75rem; font-weight:700; background:var(--code-bg); padding:0.25rem 0.5rem; border-radius:4px;">⏱️ 40 Min Read · 15 Pts</div>
     </div>
   </aside>
 
   <div class="page">
-    <div class="masthead">
+    
+    <!-- Masthead -->
+    <header class="masthead">
       <div>
-        <div class="eyebrow">Unit 2 · Behavioral Patterns</div>
-        <h1 class="title">Template Method &amp; Command Pattern</h1>
+        <div class="eyebrow">Unit 2 · Behavioral Architectures</div>
+        <h1 class="title">Template Method &amp; Command Patterns</h1>
+        <p class="dek">
+          Mastering algorithm skeletons, Inversion of Control (The Hollywood Principle), encapsulating requests as first-class objects, and universal multi-level Undo/Redo.
+        </p>
       </div>
-    </div>
-
-    <div class="quote-card">
-      “But once again, the difficulty of believing it may have to do with the fact that we tend to think of patterns as ‘things’, and keep forgetting that they are complex and potent fields.”
-      <span class="quote-author">— Christopher Alexander</span>
-    </div>
-
-    <p class="dek">
-      How to capture algorithmic skeletons in superclasses and package executable actions into standalone first-class objects. Moving beyond “Noun-Land” into behavioral abstractions.
-    </p>
+    </header>
 
     <!-- Section 1: Template Method -->
     <section class="chapter" id="template-method">
       <div class="chapter-head">
         <span class="chapter-num">1</span>
-        <h2>2.3 &amp; 2.5 The Template Method Pattern</h2>
+        <h2>2.1 The Template Method: Coffee &amp; Tea Evolution</h2>
       </div>
-      <p class="chapter-dek">Brewing Coffee and Tea: How factoring out common steps uncovers an algorithmic template.</p>
+      <p class="chapter-dek">Eliminating duplicate algorithmic workflows while keeping customization points flexible.</p>
 
-      <div class="compare-grid">
-        <div class="compare-col">
+      <div class="recipe-compare">
+        <div class="recipe-card">
           <h4>☕ Coffee Recipe</h4>
-          <ol style="font-size: 0.9rem; padding-left: 1.2rem; line-height: 1.6;">
-            <li><strong>Boil water</strong> <em>(identical)</em></li>
-            <li>Brew coffee in boiling water</li>
-            <li><strong>Pour in cup</strong> <em>(identical)</em></li>
-            <li>Add sugar and milk</li>
-          </ol>
+          <div class="recipe-step"><span>1. Boil Water</span><span class="step-badge-common">Invariant</span></div>
+          <div class="recipe-step"><span>2. Brew coffee grounds</span><span class="step-badge-variant">Variant</span></div>
+          <div class="recipe-step"><span>3. Pour into cup</span><span class="step-badge-common">Invariant</span></div>
+          <div class="recipe-step"><span>4. Add sugar and milk</span><span class="step-badge-variant">Variant</span></div>
         </div>
-        <div class="compare-col">
+
+        <div class="recipe-card">
           <h4>🍵 Tea Recipe</h4>
-          <ol style="font-size: 0.9rem; padding-left: 1.2rem; line-height: 1.6;">
-            <li><strong>Boil water</strong> <em>(identical)</em></li>
-            <li>Steep tea bag in boiling water</li>
-            <li><strong>Pour in cup</strong> <em>(identical)</em></li>
-            <li>Add lemon</li>
-          </ol>
+          <div class="recipe-step"><span>1. Boil Water</span><span class="step-badge-common">Invariant</span></div>
+          <div class="recipe-step"><span>2. Steep tea bag</span><span class="step-badge-variant">Variant</span></div>
+          <div class="recipe-step"><span>3. Pour into cup</span><span class="step-badge-common">Invariant</span></div>
+          <div class="recipe-step"><span>4. Add lemon wedge</span><span class="step-badge-variant">Variant</span></div>
         </div>
       </div>
 
       <p>
-        <strong>The Code Smell:</strong> Duplication violates the <strong>DRY Principle (Don't Repeat Yourself)</strong>. If the boiling procedure changes (e.g., waiting for optimal temperature), changes must be manually copied to every beverage class.
+        <strong>The Problem:</strong> The overall procedure (boil -> brew -> pour -> condiments) is identical! Duplicating the flow control violates DRY. If we decide to wait for water to cool to 92°C, we must duplicate changes in dozens of recipes.
       </p>
 
-      <h3 style="font-family: var(--font-display);">The Solution: CaffeineBeverage Template</h3>
-      <div class="arch-diagram-block">
-┌────────────────────────────────────────────────────────┐
-│             &lt;&lt;abstract&gt;&gt; CaffeineBeverage              │
-├────────────────────────────────────────────────────────┤
-│ + prepareRecipe() : final // THE TEMPLATE METHOD       │
-│   ├── boilWater()                                      │
-│   ├── brew()             // Abstract primitive step    │
-│   ├── pourInCup()                                      │
-│   └── addCondiments()    // Abstract primitive step    │
-│ + boilWater()            // Invariant concrete step    │
-│ + pourInCup()            // Invariant concrete step    │
-│ + customerWantsCondiments() : boolean // HOOK          │
-└───────────────────────────▲────────────────────────────┘
-                            │ extends
-              ┌─────────────┴─────────────┐
-┌─────────────┴─────────────┐ ┌───────────┴─────────────┐
-│          Coffee           │ │           Tea           │
-├───────────────────────────┤ ├─────────────────────────┤
-│ + brew()                  │ │ + brew()                │
-│ + addCondiments()         │ │ + addCondiments()       │
-└───────────────────────────┘ └─────────────────────────┘</div>
+      <div class="uml-visual-card">
+        <div class="uml-header">
+          <div class="uml-title">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
+            UML Architecture: The CaffeineBeverage Template
+          </div>
+        </div>
 
-      <div style="padding: 1.25rem; background: var(--bg-raised); border-radius: var(--radius-md); border: 1px solid var(--border); margin: 1.5rem 0;">
-        <h4 style="margin-top: 0; color: var(--accent);">🎣 Hooks in Template Method</h4>
-        <p style="font-size: 0.9rem; margin-bottom: 0.5rem; color: var(--text-muted);">
-          A <strong>Hook</strong> is a method declared in the abstract superclass that provides a default (often empty or boolean) implementation. Subclasses can override it to optionally "hook into" the algorithm at specific points without modifying the template skeleton.
-        </p>
-        <code style="font-size: 0.85rem; font-family: var(--font-mono); color: var(--accent-ink);">
-          if (customerWantsCondiments()) { addCondiments(); }
-        </code>
+        <div class="uml-svg-container">
+          <svg viewBox="0 0 820 350" width="100%" height="auto" xmlns="http://www.w3.org/2000/svg" style="font-family:'JetBrains Mono', 'SF Mono', monospace; font-size:12px;">
+            <defs>
+              <filter id="u2-shadow" x="-5%" y="-5%" width="110%" height="115%">
+                <feDropShadow dx="0" dy="2" stdDeviation="4" flood-opacity="0.08"/>
+              </filter>
+              <marker id="u2-triangle" viewBox="0 0 12 12" refX="12" refY="6" markerWidth="10" markerHeight="10" orient="auto-start-reverse">
+                <polygon points="0,0 12,6 0,12" fill="#ffffff" stroke="#0c7a73" stroke-width="1.8"/>
+              </marker>
+            </defs>
+
+            <!-- Superclass -->
+            <g filter="url(#u2-shadow)">
+              <rect x="180" y="20" width="460" height="170" rx="8" fill="var(--bg-raised, #ffffff)" stroke="#0c7a73" stroke-width="2"/>
+              <rect x="180" y="20" width="460" height="38" rx="8" fill="#0c7a73"/>
+              <rect x="180" y="50" width="460" height="8" fill="#0c7a73"/>
+              <text x="410" y="38" fill="#a7f3d0" font-size="10" text-anchor="middle">&lt;&lt;abstract&gt;&gt;</text>
+              <text x="410" y="52" fill="#ffffff" font-weight="700" text-anchor="middle" font-size="14">CaffeineBeverage</text>
+              <text x="195" y="80" fill="var(--text, #1e293b)" font-weight="700">+ prepareRecipe() : final  // THE TEMPLATE METHOD</text>
+              <text x="210" y="100" fill="var(--text-muted, #64748b)">├── boilWater()  [concrete invariant]</text>
+              <text x="210" y="118" fill="var(--text-muted, #64748b)">├── brew()       [abstract primitive]</text>
+              <text x="210" y="136" fill="var(--text-muted, #64748b)">├── pourInCup()  [concrete invariant]</text>
+              <text x="210" y="154" fill="var(--text-muted, #64748b)">└── addCondiments() [abstract primitive]</text>
+              <text x="195" y="174" fill="#0c7a73">+ customerWantsCondiments() : boolean // HOOK</text>
+            </g>
+
+            <!-- Inheritance lines -->
+            <line x1="410" y1="190" x2="410" y2="230" stroke="#0c7a73" stroke-width="1.8" marker-start="url(#u2-triangle)"/>
+            <line x1="260" y1="230" x2="560" y2="230" stroke="#0c7a73" stroke-width="1.8"/>
+            <line x1="260" y1="230" x2="260" y2="255" stroke="#0c7a73" stroke-width="1.8"/>
+            <line x1="560" y1="230" x2="560" y2="255" stroke="#0c7a73" stroke-width="1.8"/>
+
+            <!-- Coffee Subclass -->
+            <g filter="url(#u2-shadow)">
+              <rect x="160" y="255" width="200" height="80" rx="6" fill="var(--bg-raised, #ffffff)" stroke="#3b82f6" stroke-width="1.8"/>
+              <rect x="160" y="255" width="200" height="28" rx="6" fill="#3b82f6"/>
+              <rect x="160" y="277" width="200" height="6" fill="#3b82f6"/>
+              <text x="260" y="275" fill="#ffffff" font-weight="700" text-anchor="middle" font-size="13">Coffee</text>
+              <text x="175" y="302" fill="var(--text, #1e293b)">+ brew()</text>
+              <text x="175" y="322" fill="var(--text, #1e293b)">+ addCondiments()</text>
+            </g>
+
+            <!-- Tea Subclass -->
+            <g filter="url(#u2-shadow)">
+              <rect x="460" y="255" width="200" height="80" rx="6" fill="var(--bg-raised, #ffffff)" stroke="#3b82f6" stroke-width="1.8"/>
+              <rect x="460" y="255" width="200" height="28" rx="6" fill="#3b82f6"/>
+              <rect x="460" y="277" width="200" height="6" fill="#3b82f6"/>
+              <text x="560" y="275" fill="#ffffff" font-weight="700" text-anchor="middle" font-size="13">Tea</text>
+              <text x="475" y="302" fill="var(--text, #1e293b)">+ brew()</text>
+              <text x="475" y="322" fill="var(--text, #1e293b)">+ addCondiments()</text>
+            </g>
+          </svg>
+        </div>
       </div>
     </section>
 
@@ -211,115 +261,171 @@
     <section class="chapter" id="hollywood-principle">
       <div class="chapter-head">
         <span class="chapter-num">2</span>
-        <h2>2.5.4 The Hollywood Principle</h2>
+        <h2>2.2 The Hollywood Principle: Inversion of Control</h2>
       </div>
-      <div class="quote-card" style="margin-top: 1rem;">
+      <div class="quote-card">
         “Don’t call us, we’ll call you!”
         <span class="quote-author">— The Hollywood Principle</span>
       </div>
       <p>
-        In traditional imperative programming, low-level components call high-level library functions directly.
-        With the <strong>Hollywood Principle</strong>, the control flow is inverted (<strong>Inversion of Control - IoC</strong>):
-        The high-level abstract class dictates <em>when</em> and <em>how</em> the algorithm proceeds, and invokes the low-level subclass methods only when their specialized steps are needed.
+        In traditional top-down procedural programming, low-level modules call high-level utility functions. Under the Hollywood Principle, control flow is completely inverted (<strong>IoC</strong>):
       </p>
-
-      <div style="background: var(--bg-raised); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 1.25rem; margin: 1.5rem 0;">
-        <strong>Template Method vs. Strategy: Which to Choose?</strong>
-        <ul style="margin: 0.5rem 0 0; padding-left: 1.2rem; font-size: 0.9rem; line-height: 1.6;">
-          <li><strong>Template Method uses Inheritance:</strong> Subclasses alter specific algorithmic steps, but the overall skeleton is fixed. Compile-time binding.</li>
-          <li><strong>Strategy uses Composition &amp; Delegation:</strong> Entire algorithm is encapsulated in a separate object. Can be swapped dynamically at runtime.</li>
-        </ul>
-      </div>
+      <ul>
+        <li>The high-level abstract class dictates <em>when</em> the workflow proceeds.</li>
+        <li>Subclasses provide specific implementations, but never decide <em>when</em> they are called.</li>
+        <li>This prevents dependency rot (the "dependency spaghetti" where components call back and forth indiscriminately).</li>
+      </ul>
     </section>
 
-    <!-- Section 3: Command Pattern -->
+    <!-- Section 3: The Command Pattern -->
     <section class="chapter" id="command-pattern">
       <div class="chapter-head">
         <span class="chapter-num">3</span>
-        <h2>2.7 The Command Pattern: Modeling Verbs</h2>
+        <h2>2.3 The Command Pattern: Modeling Verbs as Objects</h2>
       </div>
-      <div class="quote-card" style="margin-top: 1rem;">
-        “In the Java Kingdom, the poor verbs (methods) are second-class citizens.”
-        <span class="quote-author">— Steve Yegge (“Execution in the Kingdom of Nouns”)</span>
-      </div>
-      <p>
-        In pure Object-Oriented programming, everything is expected to be a "noun" (an object). But real systems require handling requests, operations, transactions, and undo queues.
-      </p>
-      <p>
-        <strong>GoF Intent:</strong> Encapsulate a request as an object, thereby letting you parameterize clients with different requests, queue or log requests, and support undoable operations.
-      </p>
+      <p class="chapter-dek">Decoupling the sender of a request (Invoker) from the object that actually performs the action (Receiver).</p>
 
-      <h3 style="font-family: var(--font-display);">Command Pattern Architecture</h3>
-      <div class="arch-diagram-block">
-┌─────────────────┐             ┌─────────────────────────┐             ┌─────────────────────────┐
-│     Invoker     │             │      &lt;&lt;interface&gt;&gt;      │             │        Receiver         │
-│ (RemoteControl) │  invokes    │         Command         │  delegates  │         (Light)         │
-├─────────────────┤────────────&gt;├─────────────────────────┤────────────&gt;├─────────────────────────┤
-│ - slot: Command │             │ + execute()             │             │ + on()                  │
-│ + pressButton() │             │ + undo()                │             │ + off()                 │
-└─────────────────┘             └────────────▲────────────┘             └─────────────────────────┘
-                                             │ implements
-                                ┌────────────┴────────────┐
-                                │       LightOnCommand    │
-                                ├─────────────────────────┤
-                                │ - light: Light          │
-                                ├─────────────────────────┤
-                                │ + execute() {light.on()}│
-                                │ + undo() {light.off()}  │
-                                └─────────────────────────┘</div>
+      <div class="uml-visual-card">
+        <div class="uml-header">
+          <div class="uml-title">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect><rect x="9" y="9" width="6" height="6"></rect></svg>
+            UML Architecture: The Command Triad
+          </div>
+        </div>
 
-      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem; margin: 1.5rem 0;">
-        <div style="padding: 1rem; background: var(--bg-raised); border: 1px solid var(--border); border-radius: var(--radius-sm);">
-          <strong>🍽️ The Diner Analogy</strong>
-          <p style="font-size: 0.88rem; color: var(--text-muted); margin-top: 0.3rem;">
-            Customer (Client) gives order to Waitress (Invoker). Waitress writes order slip (Command) and places it on the rack. The Cook (Receiver) reads and prepares the meal.
-          </p>
-        </div>
-        <div style="padding: 1rem; background: var(--bg-raised); border: 1px solid var(--border); border-radius: var(--radius-sm);">
-          <strong>↩️ Universal Undo / Redo</strong>
-          <p style="font-size: 0.88rem; color: var(--text-muted); margin-top: 0.3rem;">
-            Each Command object records the prior state before execution. Invoking <code>undo()</code> restores state without the Invoker needing any internal domain knowledge.
-          </p>
-        </div>
-        <div style="padding: 1rem; background: var(--bg-raised); border: 1px solid var(--border); border-radius: var(--radius-sm);">
-          <strong>🧵 Thread Pool Queues</strong>
-          <p style="font-size: 0.88rem; color: var(--text-muted); margin-top: 0.3rem;">
-            In concurrent systems, worker threads pull Command objects (like <code>Runnable</code> or <code>Callable</code>) from a queue and call <code>execute()</code> asynchronously.
-          </p>
+        <div class="uml-svg-container">
+          <svg viewBox="0 0 840 280" width="100%" height="auto" xmlns="http://www.w3.org/2000/svg" style="font-family:'JetBrains Mono', 'SF Mono', monospace; font-size:12px;">
+            <defs>
+              <filter id="u2-cmd-shadow" x="-5%" y="-5%" width="110%" height="115%">
+                <feDropShadow dx="0" dy="2" stdDeviation="4" flood-opacity="0.08"/>
+              </filter>
+              <marker id="u2-cmd-arrow" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                <path d="M 0 1 L 10 5 L 0 9 z" fill="#0c7a73"/>
+              </marker>
+              <marker id="u2-cmd-tri" viewBox="0 0 12 12" refX="12" refY="6" markerWidth="10" markerHeight="10" orient="auto-start-reverse">
+                <polygon points="0,0 12,6 0,12" fill="#ffffff" stroke="#0c7a73" stroke-width="1.8"/>
+              </marker>
+            </defs>
+
+            <!-- Invoker -->
+            <g filter="url(#u2-cmd-shadow)">
+              <rect x="20" y="30" width="220" height="110" rx="8" fill="var(--bg-raised, #ffffff)" stroke="#0c7a73" stroke-width="2"/>
+              <rect x="20" y="30" width="220" height="34" rx="8" fill="#0c7a73"/>
+              <rect x="20" y="56" width="220" height="8" fill="#0c7a73"/>
+              <text x="130" y="52" fill="#ffffff" font-weight="700" text-anchor="middle" font-size="13">Invoker (RemoteControl)</text>
+              <text x="35" y="85" fill="var(--text, #1e293b)">- slot: Command</text>
+              <line x1="20" y1="96" x2="240" y2="96" stroke="var(--border, #e2e8f0)" stroke-width="1"/>
+              <text x="35" y="118" fill="var(--text, #1e293b)">+ pressButton()</text>
+              <text x="35" y="132" fill="var(--text, #1e293b)">+ pressUndo()</text>
+            </g>
+
+            <!-- Command Interface -->
+            <g filter="url(#u2-cmd-shadow)">
+              <rect x="330" y="30" width="200" height="100" rx="8" fill="var(--bg-raised, #ffffff)" stroke="#0c7a73" stroke-width="2"/>
+              <rect x="330" y="30" width="200" height="38" rx="8" fill="#0c7a73"/>
+              <rect x="330" y="60" width="200" height="8" fill="#0c7a73"/>
+              <text x="430" y="46" fill="#a7f3d0" font-size="10" text-anchor="middle">&lt;&lt;interface&gt;&gt;</text>
+              <text x="430" y="60" fill="#ffffff" font-weight="700" text-anchor="middle" font-size="13">Command</text>
+              <text x="345" y="90" fill="var(--text, #1e293b)">+ execute(): void</text>
+              <text x="345" y="112" fill="var(--text, #1e293b)">+ undo(): void</text>
+            </g>
+
+            <!-- Receiver -->
+            <g filter="url(#u2-cmd-shadow)">
+              <rect x="610" y="30" width="210" height="110" rx="8" fill="var(--bg-raised, #ffffff)" stroke="#0c7a73" stroke-width="2"/>
+              <rect x="610" y="30" width="210" height="34" rx="8" fill="#0c7a73"/>
+              <rect x="610" y="56" width="210" height="8" fill="#0c7a73"/>
+              <text x="715" y="52" fill="#ffffff" font-weight="700" text-anchor="middle" font-size="13">Receiver (LivingRoomLight)</text>
+              <text x="625" y="85" fill="var(--text, #1e293b)">- level: int</text>
+              <line x1="610" y1="96" x2="820" y2="96" stroke="var(--border, #e2e8f0)" stroke-width="1"/>
+              <text x="625" y="118" fill="var(--text, #1e293b)">+ on()</text>
+              <text x="625" y="132" fill="var(--text, #1e293b)">+ off()</text>
+            </g>
+
+            <!-- Arrows -->
+            <line x1="240" y1="80" x2="320" y2="80" stroke="#0c7a73" stroke-width="2" marker-end="url(#u2-cmd-arrow)"/>
+            <text x="280" y="72" fill="#0c7a73" font-size="10" text-anchor="middle">invokes</text>
+
+            <line x1="430" y1="130" x2="430" y2="185" stroke="#0c7a73" stroke-width="1.8" stroke-dasharray="4,4" marker-start="url(#u2-cmd-tri)"/>
+
+            <!-- Concrete Command -->
+            <g filter="url(#u2-cmd-shadow)">
+              <rect x="330" y="185" width="220" height="80" rx="6" fill="var(--bg-raised, #ffffff)" stroke="#6366f1" stroke-width="1.6"/>
+              <rect x="330" y="185" width="220" height="26" rx="6" fill="#6366f1"/>
+              <rect x="330" y="205" width="220" height="6" fill="#6366f1"/>
+              <text x="440" y="203" fill="#ffffff" font-weight="700" text-anchor="middle" font-size="12">LightOnCommand</text>
+              <text x="345" y="232" fill="var(--text, #1e293b)">- light: LivingRoomLight</text>
+              <text x="345" y="252" fill="var(--text, #1e293b)">+ execute() { light.on(); }</text>
+            </g>
+
+            <!-- Concrete Command to Receiver -->
+            <path d="M 550 225 L 715 225 L 715 150" fill="none" stroke="#6366f1" stroke-width="1.8" stroke-dasharray="4,4" marker-end="url(#u2-cmd-arrow)"/>
+            <text x="635" y="215" fill="#6366f1" font-size="10" text-anchor="middle">delegates to receiver</text>
+          </svg>
         </div>
       </div>
     </section>
 
-    <!-- Section 4: Macro Commands -->
-    <section class="chapter" id="macro-commands">
+    <!-- Section 4: Interactive Remote Demo -->
+    <section class="chapter" id="interactive-command">
       <div class="chapter-head">
         <span class="chapter-num">4</span>
-        <h2>2.7.4 Macro Command &amp; Composite Actions</h2>
+        <h2>2.4 Interactive Smart Home Remote Control Sandbox</h2>
       </div>
-      <p class="chapter-dek">Executing a batch of commands with a single button press.</p>
+      <p class="chapter-dek">Test the Command Pattern live. Execute commands, inspect receiver state, and test reversible Undo operations.</p>
+
+      <div class="smart-home-demo">
+        <div style="text-align:center;">
+          <div class="light-bulb-indicator" id="demoLight">💡</div>
+          <h4 id="demoLightStatus" style="margin:0 0 1rem; font-size:1.1rem;">Living Room Light: OFF</h4>
+        </div>
+
+        <div style="display:flex; justify-content:center; gap:0.75rem; flex-wrap:wrap; margin-bottom:1.5rem;">
+          <button type="button" class="sim-btn-primary" id="cmdOnBtn">
+            LightOnCommand.execute()
+          </button>
+          <button type="button" class="sim-btn-secondary" id="cmdOffBtn">
+            LightOffCommand.execute()
+          </button>
+          <button type="button" class="sim-btn-secondary" id="cmdUndoBtn" style="border-color:#f59e0b; color:#d97706;">
+            ↩️ RemoteControl.pressUndo()
+          </button>
+        </div>
+
+        <div class="sim-console" id="cmdConsole">> Smart Home Receiver initialized. Remote slots loaded with Command instances.</div>
+      </div>
+    </section>
+
+    <!-- Section 5: Macro Commands & Threads -->
+    <section class="chapter" id="macro-commands">
+      <div class="chapter-head">
+        <span class="chapter-num">5</span>
+        <h2>2.5 Macro Commands &amp; Thread Pool Scheduling</h2>
+      </div>
+      <p class="chapter-dek">Executing composite command sequences and decoupling work items in concurrent thread pools.</p>
 
       <div class="code-container">
         <div class="code-header">
           <span>MacroCommand.java</span>
-          <span>Party Mode Macro</span>
+          <span>Composite Pattern + Command Pattern</span>
         </div>
-        <pre class="code-body"><code>public class MacroCommand implements Command {
+        <pre class="code-body"><code class="language-java">public class MacroCommand implements Command {
     private final List&lt;Command&gt; commands;
 
     public MacroCommand(List&lt;Command&gt; commands) {
-        this.commands = commands;
+        this.commands = List.copyOf(commands);
     }
 
     @Override
     public void execute() {
-        for (Command c : commands) {
-            c.execute();
+        for (Command cmd : commands) {
+            cmd.execute();
         }
     }
 
     @Override
     public void undo() {
-        // Undo in reverse order!
+        // Crucial architectural detail: Undo MUST run in reverse order!
         ListIterator&lt;Command&gt; it = commands.listIterator(commands.size());
         while (it.hasPrevious()) {
             it.previous().undo();
@@ -329,83 +435,148 @@
       </div>
     </section>
 
-    <!-- Section 5: Questions for Self-Study -->
+    <!-- Section 6: Professor Gotchas & Self-Study -->
     <section class="chapter" id="self-study">
       <div class="chapter-head">
-        <span class="chapter-num">5</span>
-        <h2>2.10 Exercise: Questions for Self-Study (Exam Practice)</h2>
+        <span class="chapter-num">6</span>
+        <h2>2.6 Exercise: Questions for Self-Study (Prof. Dr. Schäfer)</h2>
       </div>
-      <p class="chapter-dek">Prof. Dr. Jörg Schäfer's official self-study questions with verified answers.</p>
+      <p class="chapter-dek">Official questions assigned by Prof. Dr. Jörg Schäfer with complete exam-ready solutions.</p>
 
-      <div class="drill-list">
-        
-        <details class="drill-item" open>
-          <summary>
-            <span class="drill-tag">Self-Study Q1</span>
-            <span class="drill-q">The Template Method relies on inheritance. Would it be possible to get the same functionality of a Template Method using object composition? What would some of the tradeoffs be?</span>
-            <span class="drill-reveal-hint"></span>
-          </summary>
-          <div class="drill-a">
-            <p><strong>Yes, by combining the Strategy Pattern with callbacks or delegate steps:</strong></p>
-            <p>Instead of having subclasses override protected abstract methods, the main class can hold references to multiple strategy objects (or lambda functions) for each customizable step.</p>
-            <p><strong>Trade-offs Comparison:</strong></p>
-            <ul>
-              <li>
-                <strong>Composition Advantage (Flexibility):</strong> Individual steps can be swapped dynamically at runtime without instantiating an entirely new subclass. Avoids class explosion.
-              </li>
-              <li>
-                <strong>Composition Disadvantage (Object Overhead &amp; Boilerplate):</strong> Passing multiple fine-grained strategy delegates increases configuration complexity and object allocations.
-              </li>
-              <li>
-                <strong>Inheritance Advantage (Simplicity &amp; State Access):</strong> Subclasses directly access protected state in the superclass without exposing getters or passing context references.
-              </li>
-            </ul>
-          </div>
-        </details>
+      <div class="prof-gotcha">
+        <div class="prof-gotcha-title">
+          <span>🎯 Self-Study Q1: Template Method vs. Composition</span>
+        </div>
+        <p style="margin:0 0 0.5rem; font-weight:600; color:var(--text);">
+          "The Template Method relies on inheritance. Would it be possible to get the same functionality of a Template Method using object composition? What would some of the trade-offs be?"
+        </p>
+        <div style="background:var(--bg-raised); border:1px solid var(--border); padding:1rem; border-radius:var(--radius-sm); font-size:0.9rem; line-height:1.6; color:var(--text);">
+          <p><strong>Yes, by combining the Strategy Pattern with callbacks:</strong> Instead of subclassing, the workflow class holds references to functional interfaces for each variant step (e.g. <code>brewStep</code> and <code>condimentStep</code>).</p>
+          <p><strong>Trade-offs:</strong></p>
+          <ul style="margin:0; padding-left:1.2rem;">
+            <li><strong>Composition Advantages:</strong> You can swap individual steps dynamically at runtime and avoid fragile base-class hierarchy lock-in.</li>
+            <li><strong>Composition Disadvantages:</strong> Requires managing multiple delegate objects, increases parameter plumbing, and sacrifices the simplicity of a single abstract class skeleton.</li>
+          </ul>
+        </div>
+      </div>
 
-        <details class="drill-item" open>
-          <summary>
-            <span class="drill-tag">Self-Study Q2</span>
-            <span class="drill-q">How does the Command Object get access to the data it needs to perform its job? How does one guarantee that this does not create a strong coupling?</span>
-            <span class="drill-reveal-hint"></span>
-          </summary>
-          <div class="drill-a">
-            <p><strong>Access Mechanism:</strong></p>
-            <ol>
-              <li>
-                <strong>Constructor Dependency Injection:</strong> The specific <code>Receiver</code> and any static parameters are passed into the ConcreteCommand constructor at instantiation time.
-              </li>
-              <li>
-                <strong>Execution Parameters:</strong> Alternatively, transient context data can be passed to <code>execute(ExecutionContext ctx)</code>.
-              </li>
-            </ol>
-            <p><strong>Preventing Tight Coupling:</strong></p>
-            <ul>
-              <li>
-                The <strong>Invoker</strong> only knows the generic <code>Command</code> interface (<code>execute()</code>, <code>undo()</code>). It has <strong>zero coupling</strong> to the Receiver or the parameters.
-              </li>
-              <li>
-                The <strong>ConcreteCommand</strong> binds to a Receiver interface (not necessarily a concrete class).
-              </li>
-              <li>
-                The Receiver remains entirely unaware of the Command pattern; it simply exposes natural domain methods (e.g. <code>turnOn()</code>, <code>deposit()</code>).
-              </li>
-            </ul>
-          </div>
-        </details>
-
+      <div class="prof-gotcha" style="margin-top:1.5rem;">
+        <div class="prof-gotcha-title">
+          <span>🎯 Self-Study Q2: Command Coupling &amp; Dumb vs. Smart Commands</span>
+        </div>
+        <p style="margin:0 0 0.5rem; font-weight:600; color:var(--text);">
+          "How tightly coupled is a concrete Command to its Receiver? Can a Command execute logic itself without any Receiver?"
+        </p>
+        <div style="background:var(--bg-raised); border:1px solid var(--border); padding:1rem; border-radius:var(--radius-sm); font-size:0.9rem; line-height:1.6; color:var(--text);">
+          <p><strong>Two Architectural Styles exist:</strong></p>
+          <ol style="margin:0; padding-left:1.2rem;">
+            <li><strong>Dumb Commands (Standard GoF):</strong> The command holds only a reference to Receiver and delegates execution (<code>receiver.action()</code>). Coupling between Command and Receiver is tight, but the Invoker remains 100% decoupled from Receiver.</li>
+            <li><strong>Smart / Self-Contained Commands:</strong> The command implements the full business logic directly without delegating to any Receiver. Useful when tasks are standalone calculations, or in distributed RPC queues.</li>
+          </ol>
+        </div>
       </div>
     </section>
 
-    <!-- Navigation footer -->
-    <footer class="page-footer" style="margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--border); display: flex; justify-content: space-between;">
-      <span><a href="unit-1-strategy.html">← Previous: Unit 1 Strategy</a></span>
-      <span><a href="index.html">Course Hub →</a></span>
+    <!-- Section 7: Self-Assessment Quiz -->
+    <section class="chapter" id="quiz">
+      <div class="chapter-head">
+        <span class="chapter-num">7</span>
+        <h2>2.7 Self-Assessment Mastery Quiz</h2>
+      </div>
+
+      <div class="quiz-widget">
+        <div class="quiz-q-title">Q1: Why should the template method itself in the abstract class usually be declared `final` in Java?</div>
+        <div class="quiz-options">
+          <button type="button" class="quiz-opt" data-correct="true" data-reason="Marking it final guarantees that subclasses cannot override the algorithm skeleton, protecting the invariant workflow from tampering.">
+            A) To prevent subclasses from altering the invariant sequence of algorithm steps.
+          </button>
+          <button type="button" class="quiz-opt" data-correct="false" data-reason="Final methods can still invoke abstract or overridden primitive steps.">
+            B) To ensure the JVM inlines every primitive step into machine code.
+          </button>
+          <button type="button" class="quiz-opt" data-correct="false" data-reason="Final prevents overriding, not inheritance.">
+            C) Because abstract classes cannot contain non-final methods.
+          </button>
+        </div>
+        <div class="quiz-feedback"></div>
+      </div>
+
+      <div class="quiz-widget">
+        <div class="quiz-q-title">Q2: In what order must a MacroCommand execute `undo()` operations?</div>
+        <div class="quiz-options">
+          <button type="button" class="quiz-opt" data-correct="false" data-reason="Executing in the same order would re-apply dependencies backwards.">
+            A) In the exact same chronological order as execute().
+          </button>
+          <button type="button" class="quiz-opt" data-correct="true" data-reason="LIFO (Last-In, First-Out) reverse ordering is strictly required to restore dependencies and state correctly.">
+            B) In reverse chronological order (LIFO - Last-In, First-Out).
+          </button>
+          <button type="button" class="quiz-opt" data-correct="false" data-reason="Arbitrary order will corrupt dependent system state.">
+            C) In random parallel threads.
+          </button>
+        </div>
+        <div class="quiz-feedback"></div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="page-footer" style="margin-top: 4rem; padding-top: 2rem; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+      <a href="unit-1-strategy.html" class="sim-btn-secondary" style="text-decoration:none;">
+        ← Previous: Unit 1 · Strategy
+      </a>
+      <a href="unit-3-structural.html" class="sim-btn-primary" style="text-decoration:none;">
+        Next: Unit 3 · Structural Patterns →
+      </a>
     </footer>
 
   </div>
 </div>
 
 <script src="assets/site.js" defer></script>
+<script>
+  // Unit 2 Smart Home Interactive Demo Script
+  (function() {
+    var light = document.getElementById("demoLight");
+    var status = document.getElementById("demoLightStatus");
+    var consoleEl = document.getElementById("cmdConsole");
+    var history = [];
+
+    var onBtn = document.getElementById("cmdOnBtn");
+    var offBtn = document.getElementById("cmdOffBtn");
+    var undoBtn = document.getElementById("cmdUndoBtn");
+
+    if (onBtn && light && status && consoleEl) {
+      onBtn.addEventListener("click", function() {
+        history.push(light.classList.contains("on") ? "on" : "off");
+        light.classList.add("on");
+        status.textContent = "Living Room Light: ON (100% Brightness)";
+        log(">> Invocator invoked LightOnCommand.execute() -> LivingRoomLight.on() dispatched.");
+      });
+      offBtn.addEventListener("click", function() {
+        history.push(light.classList.contains("on") ? "on" : "off");
+        light.classList.remove("on");
+        status.textContent = "Living Room Light: OFF";
+        log(">> Invocator invoked LightOffCommand.execute() -> LivingRoomLight.off() dispatched.");
+      });
+      undoBtn.addEventListener("click", function() {
+        if (history.length === 0) {
+          log("⚠️ [UNDO STACK EMPTY] No previous commands recorded in undo history.");
+          return;
+        }
+        var prev = history.pop();
+        if (prev === "on") {
+          light.classList.add("on");
+          status.textContent = "Living Room Light: ON (Restored via Undo)";
+        } else {
+          light.classList.remove("on");
+          status.textContent = "Living Room Light: OFF (Restored via Undo)";
+        }
+        log("⚡ [UNDO EXECUTED] Command.undo() called. Prior state successfully restored.");
+      });
+    }
+
+    function log(msg) {
+      consoleEl.textContent = msg + "\n" + consoleEl.textContent;
+    }
+  })();
+</script>
 </body>
 </html>
