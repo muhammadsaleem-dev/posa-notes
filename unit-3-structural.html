@@ -1,0 +1,288 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Unit 3: Structural Patterns (Iterator &amp; Composite) | POSA 2026</title>
+<meta name="description" content="Unit 3 of Pattern-Oriented Software Architecture by Prof. Dr. Jörg Schäfer: Iterator, Composite, uniform client handling, and self-study questions.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230c7a73'/%3E%3Cpath d='M8 10h16M8 16h16M8 22h10' stroke='%23fff' stroke-width='2.2' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+<style>
+  .quote-card {
+    margin: 1.5rem 0 2rem;
+    padding: 1.25rem 1.5rem;
+    background: var(--accent-soft);
+    border-left: 4px solid var(--accent);
+    border-radius: 0 var(--radius-md) var(--radius-md) 0;
+    font-style: italic;
+    color: var(--accent-ink);
+  }
+  .quote-author {
+    display: block;
+    margin-top: 0.5rem;
+    font-style: normal;
+    font-weight: 700;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .code-container {
+    margin: 1.5rem 0;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+  }
+  .code-header {
+    background: rgba(0,0,0,0.05);
+    padding: 0.5rem 1rem;
+    display: flex;
+    justify-content: space-between;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--text-muted);
+  }
+  .code-body {
+    padding: 1rem;
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: 0.88rem;
+    overflow-x: auto;
+    line-height: 1.5;
+  }
+</style>
+<script>(function(){try{var t=localStorage.getItem('posa-theme')||'light';document.documentElement.setAttribute('data-theme',t);var m=localStorage.getItem('posa-mode')||'concept';document.documentElement.setAttribute('data-mode',m);}catch(e){}})();</script>
+</head>
+<body>
+
+<nav class="sitenav">
+  <div class="sitenav-inner">
+    <a class="sitenav-home" href="index.html">POSA 2026</a>
+    <div class="sitenav-links">
+      <a href="index.html">Overview</a>
+      <a href="unit-1-strategy.html">1 · Strategy</a>
+      <a href="unit-2-behavioral.html">2 · Behavioral</a>
+      <a href="unit-3-structural.html" class="active">3 · Structural</a>
+      <a href="mock-1.html">📝 Mock 1</a>
+    </div>
+    <button class="nav-toggle" id="navToggle" type="button" aria-expanded="false" aria-controls="navPanel">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+      Menu
+    </button>
+    <button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle color theme">
+      <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path></svg>
+      <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+    </button>
+    <button class="mode-toggle" id="modeToggle" type="button" aria-label="Toggle technical mode" style="font-size: 1.1rem; line-height: 1;">🎓</button>
+  </div>
+  <div class="nav-panel" id="navPanel">
+    <div class="nav-panel-section">
+      <span class="nav-panel-label">Course Navigation</span>
+      <a href="index.html">Overview</a>
+      <a href="unit-1-strategy.html">Unit 1 · Strategy</a>
+      <a href="unit-2-behavioral.html">Unit 2 · Behavioral</a>
+      <a href="unit-3-structural.html" class="active">Unit 3 · Structural Patterns</a>
+      <a href="mock-1.html">📝 Mock Exam 1</a>
+    </div>
+  </div>
+</nav>
+
+<div class="page-shell">
+  <aside class="sidebar-toc">
+    <div class="sidebar-block">
+      <span class="sidebar-label">On This Page</span>
+      <a href="#iterator-pattern"><span class="toc-num">1</span>Iterator: Walking Structures</a>
+      <a href="#composite-pattern"><span class="toc-num">2</span>Composite: Part-Whole Trees</a>
+      <a href="#eliminating-conditionals"><span class="toc-num">3</span>Eliminating Conditionals</a>
+      <a href="#self-study"><span class="toc-num">4</span>Self-Study Exam Questions</a>
+    </div>
+    <div class="sidebar-block">
+      <span class="sidebar-label">Instructor</span>
+      <p style="font-size: 0.85rem; color: var(--text-muted); margin: 0;">
+        Prof. Dr. Jörg Schäfer<br>
+        <em>Frankfurt University of Applied Sciences</em>
+      </p>
+    </div>
+  </aside>
+
+  <div class="page">
+    <div class="masthead">
+      <div>
+        <div class="eyebrow">Unit 3 · Structural Patterns</div>
+        <h1 class="title">Iterator &amp; Composite Pattern</h1>
+      </div>
+    </div>
+
+    <div class="quote-card">
+      “Evidently, then, a larger part of the ‘structure’ of a building or town consists of patterns of relationships.”
+      <span class="quote-author">— Christopher Alexander</span>
+    </div>
+
+    <p class="dek">
+      Building robust tree hierarchies and separating traversal mechanics from underlying collection data structures.
+    </p>
+
+    <!-- Section 1: Iterator -->
+    <section class="chapter" id="iterator-pattern">
+      <div class="chapter-head">
+        <span class="chapter-num">1</span>
+        <h2>3.3 The Iterator Pattern</h2>
+      </div>
+      <p class="chapter-dek">Sequential access without exposing internal memory representations.</p>
+
+      <div style="background: var(--bg-raised); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 1.5rem; margin-bottom: 1.5rem;">
+        <p><strong>GoF Intent:</strong> Provide a way to access the elements of an aggregate object sequentially without exposing its underlying representation.</p>
+        <p><strong>Problem:</strong> Lou’s Diner stores menu items in an <code>ArrayList</code>, while Mel’s Diner stores menu items in a fixed-size <code>MenuItem[]</code> array. The client waitress has to write two completely different, tightly-coupled loops to print the menus!</p>
+        <p><strong>Solution:</strong> Encapsulate traversal inside an <code>Iterator</code> interface (<code>hasNext()</code>, <code>next()</code>). The aggregate implements <code>createIterator()</code>. Client code only iterates through the abstraction.</p>
+      </div>
+
+      <div class="arch-diagram-block">
+┌───────────────────────────┐                ┌───────────────────────────────┐
+│       &lt;&lt;interface&gt;&gt;       │                │         &lt;&lt;interface&gt;&gt;         │
+│         Aggregate         │                │           Iterator            │
+├───────────────────────────┤ creates        ├───────────────────────────────┤
+│ + createIterator()        │───────────────&gt;│ + hasNext() : boolean         │
+└─────────────▲─────────────┘                │ + next() : Object             │
+              │                              └───────────────▲───────────────┘
+              │ implements                                   │ implements
+┌─────────────┴─────────────┐                ┌───────────────┴───────────────┐
+│     ConcreteAggregate     │                │       ConcreteIterator        │
+├───────────────────────────┤ creates        ├───────────────────────────────┤
+│ + createIterator()        │───────────────&gt;│ - aggregate: ConcreteAggregate│
+└───────────────────────────┘                └───────────────────────────────┘</div>
+
+      <div style="padding: 1.25rem; background: var(--bg-raised); border-radius: var(--radius-sm); border: 1px solid var(--border); margin: 1.5rem 0;">
+        <strong style="color: var(--accent);">Single Responsibility Principle (SRP) Connection:</strong>
+        <p style="font-size: 0.9rem; color: var(--text-muted); margin-top: 0.3rem;">
+          A collection should only have <strong>one responsibility</strong>: storing and managing elements. Managing traversal state (current index, filtering) is an orthogonal responsibility delegated to the <code>Iterator</code>.
+        </p>
+      </div>
+    </section>
+
+    <!-- Section 2: Composite Pattern -->
+    <section class="chapter" id="composite-pattern">
+      <div class="chapter-head">
+        <span class="chapter-num">2</span>
+        <h2>3.4 The Composite Pattern</h2>
+      </div>
+      <p class="chapter-dek">Treating individual leaf objects and nested composite structures uniformly.</p>
+
+      <div style="background: var(--bg-raised); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 1.5rem; margin-bottom: 1.5rem;">
+        <p><strong>GoF Intent:</strong> Compose objects into tree structures to represent part-whole hierarchies. Composite lets clients treat individual objects and compositions of objects uniformly.</p>
+        <p><strong>Problem:</strong> What if a Menu contains Sub-Menus (e.g. Dessert Menu inside Dinner Menu)? Treating leaves and branches with separate classes forces clients to write recursive type-checking checks (<code>instanceof</code>).</p>
+      </div>
+
+      <h3 style="font-family: var(--font-display);">Composite Structure</h3>
+      <div class="arch-diagram-block">
+                             ┌───────────────────────────────┐
+                             │       &lt;&lt;Component&gt;&gt;           │
+                             │         MenuComponent         │
+                             ├───────────────────────────────┤
+                             │ + getName()                   │
+                             │ + getPrice()                  │
+                             │ + print()                     │
+                             │ + add(MenuComponent)          │
+                             │ + remove(MenuComponent)       │
+                             └───────────────▲───────────────┘
+                                             │
+                       ┌─────────────────────┴─────────────────────┐
+                       │                                           │
+        ┌──────────────┴──────────────┐             ┌──────────────┴──────────────┐
+        │          &lt;&lt;Leaf&gt;&gt;           │             │        &lt;&lt;Composite&gt;&gt;        │
+        │          MenuItem           │             │            Menu             │
+        ├─────────────────────────────┤             ├─────────────────────────────┤
+        │ + getName()                 │             │ - menuComponents: List      │
+        │ + getPrice()                │             ├─────────────────────────────┤
+        │ + print()                   │             │ + add(MenuComponent c)      │
+        └─────────────────────────────┘             │ + remove(MenuComponent c)   │
+                                                    │ + print() // recursive!     │
+                                                    └──────────────┬──────────────┘
+                                                                   │ contains 0..*
+                                                                   └──────────────┘</div>
+    </section>
+
+    <!-- Section 3: Eliminating Conditionals -->
+    <section class="chapter" id="eliminating-conditionals">
+      <div class="chapter-head">
+        <span class="chapter-num">3</span>
+        <h2>How Composite Eliminates Conditionals</h2>
+      </div>
+      <p>
+        In naive code, traversing a tree structure requires ugly type checks:
+      </p>
+      <div class="code-container">
+        <div class="code-header"><span>BadCode.java (Anti-pattern)</span><span>Without Composite</span></div>
+        <pre class="code-body"><code>for (Object item : items) {
+    if (item instanceof MenuItem) {
+        ((MenuItem) item).printDetails();
+    } else if (item instanceof SubMenu) {
+        ((SubMenu) item).displaySubMenu(); // UGLY CONDITIONALS!
+    }
+}</code></pre>
+      </div>
+
+      <p>With the <strong>Composite Pattern</strong>, polymorphism handles the recursion natively:</p>
+      <div class="code-container">
+        <div class="code-header"><span>GoodCode.java (Clean Architecture)</span><span>With Composite</span></div>
+        <pre class="code-body"><code>// The client simply calls print() on the root component!
+menuComponent.print();
+
+// Inside Menu (Composite):
+public void print() {
+    System.out.println(getName() + " -- " + getDescription());
+    for (MenuComponent component : menuComponents) {
+        component.print(); // Recursive polymorphic dispatch!
+    }
+}</code></pre>
+      </div>
+    </section>
+
+    <!-- Section 4: Self Study Questions -->
+    <section class="chapter" id="self-study">
+      <div class="chapter-head">
+        <span class="chapter-num">4</span>
+        <h2>3.6 Exercise: Questions for Self-Study (Exam Practice)</h2>
+      </div>
+
+      <div class="drill-list">
+        <details class="drill-item" open>
+          <summary>
+            <span class="drill-tag">Self-Study Q1</span>
+            <span class="drill-q">What are the trade-offs between "Transparency" and "Safety" in the Composite Pattern?</span>
+            <span class="drill-reveal-hint"></span>
+          </summary>
+          <div class="drill-a">
+            <p><strong>The Core Tension:</strong></p>
+            <ul>
+              <li>
+                <strong>Transparency (GoF Default):</strong>
+                Define child-management methods (<code>add()</code>, <code>remove()</code>, <code>getChild()</code>) in the root <code>Component</code> interface.
+                <br><em>Advantage:</em> 100% uniformity. Clients treat Leaf and Composite identically without casting.
+                <br><em>Disadvantage (Loss of Type Safety):</em> Calling <code>add()</code> on a Leaf is semantically invalid at runtime (throws <code>UnsupportedOperationException</code>).
+              </li>
+              <li>
+                <strong>Safety:</strong>
+                Declare <code>add()</code> and <code>remove()</code> ONLY in the <code>Composite</code> class.
+                <br><em>Advantage:</em> Compile-time type safety; impossible to call <code>add()</code> on a Leaf.
+                <br><em>Disadvantage (Loss of Transparency):</em> Clients must check types and cast before managing children, reintroducing conditionals.
+              </li>
+            </ul>
+          </div>
+        </details>
+      </div>
+    </section>
+
+    <footer class="page-footer" style="margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--border); display: flex; justify-content: space-between;">
+      <span><a href="unit-2-behavioral.html">← Previous: Unit 2 Behavioral</a></span>
+      <span><a href="unit-6-solid.html">Next: Unit 6 SOLID Principles →</a></span>
+    </footer>
+
+  </div>
+</div>
+
+<script src="assets/site.js" defer></script>
+</body>
+</html>

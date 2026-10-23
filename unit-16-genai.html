@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Unit 16: Patterns and Generative AI | POSA 2026</title>
+<meta name="description" content="Unit 16 of Pattern-Oriented Software Architecture by Prof. Dr. Jörg Schäfer: Do patterns matter in the age of AI? Weather station case study with GenAI.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230c7a73'/%3E%3Cpath d='M8 10h16M8 16h16M8 22h10' stroke='%23fff' stroke-width='2.2' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+<style>
+  .quote-card {
+    margin: 1.5rem 0 2rem;
+    padding: 1.25rem 1.5rem;
+    background: var(--accent-soft);
+    border-left: 4px solid var(--accent);
+    border-radius: 0 var(--radius-md) var(--radius-md) 0;
+    font-style: italic;
+    color: var(--accent-ink);
+  }
+  .quote-author {
+    display: block;
+    margin-top: 0.5rem;
+    font-style: normal;
+    font-weight: 700;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+</style>
+<script>(function(){try{var t=localStorage.getItem('posa-theme')||'light';document.documentElement.setAttribute('data-theme',t);var m=localStorage.getItem('posa-mode')||'concept';document.documentElement.setAttribute('data-mode',m);}catch(e){}})();</script>
+</head>
+<body>
+
+<nav class="sitenav">
+  <div class="sitenav-inner">
+    <a class="sitenav-home" href="index.html">POSA 2026</a>
+    <div class="sitenav-links">
+      <a href="index.html">Overview</a>
+      <a href="unit-15-criticism.html">15 · Criticism</a>
+      <a href="unit-16-genai.html" class="active">16 · GenAI</a>
+      <a href="mock-1.html">📝 Mock 1</a>
+    </div>
+    <button class="nav-toggle" id="navToggle" type="button" aria-expanded="false" aria-controls="navPanel">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+      Menu
+    </button>
+    <button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle color theme">
+      <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path></svg>
+      <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+    </button>
+    <button class="mode-toggle" id="modeToggle" type="button" aria-label="Toggle technical mode" style="font-size: 1.1rem; line-height: 1;">🎓</button>
+  </div>
+  <div class="nav-panel" id="navPanel">
+    <div class="nav-panel-section">
+      <span class="nav-panel-label">Course Navigation</span>
+      <a href="index.html">Overview</a>
+      <a href="unit-15-criticism.html">Unit 15 · Pattern Criticism</a>
+      <a href="unit-16-genai.html" class="active">Unit 16 · Patterns &amp; GenAI</a>
+      <a href="mock-1.html">📝 Mock Exam 1</a>
+    </div>
+  </div>
+</nav>
+
+<div class="page-shell">
+  <aside class="sidebar-toc">
+    <div class="sidebar-block">
+      <span class="sidebar-label">On This Page</span>
+      <a href="#patterns-in-ai-age"><span class="toc-num">1</span>Do Patterns Still Matter?</a>
+      <a href="#weather-station"><span class="toc-num">2</span>Weather Station Case Study</a>
+      <a href="#self-study"><span class="toc-num">3</span>Self-Study Exam Questions</a>
+    </div>
+    <div class="sidebar-block">
+      <span class="sidebar-label">Instructor</span>
+      <p style="font-size: 0.85rem; color: var(--text-muted); margin: 0;">
+        Prof. Dr. Jörg Schäfer<br>
+        <em>Frankfurt University of Applied Sciences</em>
+      </p>
+    </div>
+  </aside>
+
+  <div class="page">
+    <div class="masthead">
+      <div>
+        <div class="eyebrow">Unit 16 · Modern Frontiers (2025/2026)</div>
+        <h1 class="title">Patterns and Generative AI</h1>
+      </div>
+    </div>
+
+    <div class="quote-card">
+      “At this final stage, the patterns are no longer seen as recipes for creating artifacts, but as signs of human intelligence.”
+      <span class="quote-author">— Christopher Alexander</span>
+    </div>
+
+    <p class="dek">
+      As Large Language Models and AI coding assistants generate software at scale, do software design patterns still matter? Prof. Schäfer’s perspective on architectural guardrails and prompt engineering.
+    </p>
+
+    <!-- Section 1: AI Age -->
+    <section class="chapter" id="patterns-in-ai-age">
+      <div class="chapter-head">
+        <span class="chapter-num">1</span>
+        <h2>16.3 Do Patterns Still Matter in the Age of GenAI?</h2>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 1rem; margin: 1.5rem 0;">
+        <div style="padding: 1.25rem; background: var(--bg-raised); border: 1px solid var(--border); border-radius: var(--radius-sm);">
+          <strong style="color: var(--accent);">1. High-Density Prompts for LLMs</strong>
+          <p style="font-size: 0.9rem; color: var(--text-muted); margin: 0.3rem 0 0;">
+            Prompting an LLM with <em>“Implement a payment processor using Strategy and Factory Method with bounded queues”</em> yields modular, production-ready code. Without pattern vocabulary, LLMs generate monolithic, spaghetti procedural code.
+          </p>
+        </div>
+        <div style="padding: 1.25rem; background: var(--bg-raised); border: 1px solid var(--border); border-radius: var(--radius-sm);">
+          <strong style="color: var(--accent);">2. Architectural Guardrails Against AI Hallucinations</strong>
+          <p style="font-size: 0.9rem; color: var(--text-muted); margin: 0.3rem 0 0;">
+            AI can generate syntax rapidly, but it lacks spatial systemic awareness. Patterns provide structural boundaries that prevent AI-generated code from violating the Open-Closed and Single Responsibility principles.
+          </p>
+        </div>
+        <div style="padding: 1.25rem; background: var(--bg-raised); border: 1px solid var(--border); border-radius: var(--radius-sm);">
+          <strong style="color: var(--accent);">3. Humans Still Own Architecture &amp; Review</strong>
+          <p style="font-size: 0.9rem; color: var(--text-muted); margin: 0.3rem 0 0;">
+            Engineers in the AI era spend less time typing boilerplate syntax and much more time conducting architectural reviews, evaluating trade-offs, and enforcing package stability metrics ($I, A, D$).
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 2: Weather Station -->
+    <section class="chapter" id="weather-station">
+      <div class="chapter-head">
+        <span class="chapter-num">2</span>
+        <h2>16.3.1 Case Study: Weather Station with GenAI</h2>
+      </div>
+      <p style="font-size: 0.92rem; color: var(--text-muted); line-height: 1.6;">
+        Prof. Schäfer demonstrates designing an IoT Weather Station by composing <strong>Quantity</strong> (for metric/imperial units), <strong>Observer</strong> (for display feeds), <strong>Model-View-Controller</strong>, and REST endpoints using AI code generation as an accelerator.
+      </p>
+    </section>
+
+    <!-- Section 3: Self Study -->
+    <section class="chapter" id="self-study">
+      <div class="chapter-head">
+        <span class="chapter-num">3</span>
+        <h2>16.5 Questions for Self-Study</h2>
+      </div>
+
+      <div class="drill-list">
+        <details class="drill-item" open>
+          <summary>
+            <span class="drill-tag">Exam Reflection</span>
+            <span class="drill-q">How does knowledge of architectural patterns change the role of a software engineer when using AI coding assistants?</span>
+            <span class="drill-reveal-hint"></span>
+          </summary>
+          <div class="drill-a">
+            <p>
+              The engineer shifts from a "code typist" to a <strong>system architect and auditor</strong>.
+            </p>
+            <p>
+              Instead of manually implementing boilerplate loops and getters, the engineer specifies the system decomposition, selects the appropriate patterns to balance conflicting forces, and audits the AI's output to ensure it does not introduce design smells (rigidity, fragility, cycles). Patterns become the high-level specification language between humans and AI.
+            </p>
+          </div>
+        </details>
+      </div>
+    </section>
+
+    <footer class="page-footer" style="margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--border); display: flex; justify-content: space-between;">
+      <span><a href="unit-15-criticism.html">← Previous: Unit 15 Criticism</a></span>
+      <span><a href="mock-1.html">Take Mock Exam 1 →</a></span>
+    </footer>
+
+  </div>
+</div>
+
+<script src="assets/site.js" defer></script>
+</body>
+</html>

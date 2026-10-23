@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Unit 15: Pattern Criticism &amp; Dynamic Languages | POSA 2026</title>
+<meta name="description" content="Unit 15 of Pattern-Oriented Software Architecture by Prof. Dr. Jörg Schäfer: Peter Norvig's critique, missing language features, and functional alternatives.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230c7a73'/%3E%3Cpath d='M8 10h16M8 16h16M8 22h10' stroke='%23fff' stroke-width='2.2' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+<style>
+  .quote-card {
+    margin: 1.5rem 0 2rem;
+    padding: 1.25rem 1.5rem;
+    background: var(--accent-soft);
+    border-left: 4px solid var(--accent);
+    border-radius: 0 var(--radius-md) var(--radius-md) 0;
+    font-style: italic;
+    color: var(--accent-ink);
+  }
+  .quote-author {
+    display: block;
+    margin-top: 0.5rem;
+    font-style: normal;
+    font-weight: 700;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+</style>
+<script>(function(){try{var t=localStorage.getItem('posa-theme')||'light';document.documentElement.setAttribute('data-theme',t);var m=localStorage.getItem('posa-mode')||'concept';document.documentElement.setAttribute('data-mode',m);}catch(e){}})();</script>
+</head>
+<body>
+
+<nav class="sitenav">
+  <div class="sitenav-inner">
+    <a class="sitenav-home" href="index.html">POSA 2026</a>
+    <div class="sitenav-links">
+      <a href="index.html">Overview</a>
+      <a href="unit-14-testing.html">14 · Testing</a>
+      <a href="unit-15-criticism.html" class="active">15 · Criticism</a>
+      <a href="unit-16-genai.html">16 · GenAI</a>
+      <a href="mock-1.html">📝 Mock 1</a>
+    </div>
+    <button class="nav-toggle" id="navToggle" type="button" aria-expanded="false" aria-controls="navPanel">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+      Menu
+    </button>
+    <button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle color theme">
+      <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path></svg>
+      <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+    </button>
+    <button class="mode-toggle" id="modeToggle" type="button" aria-label="Toggle technical mode" style="font-size: 1.1rem; line-height: 1;">🎓</button>
+  </div>
+  <div class="nav-panel" id="navPanel">
+    <div class="nav-panel-section">
+      <span class="nav-panel-label">Course Navigation</span>
+      <a href="index.html">Overview</a>
+      <a href="unit-14-testing.html">Unit 14 · Testing Patterns</a>
+      <a href="unit-15-criticism.html" class="active">Unit 15 · Pattern Criticism</a>
+      <a href="unit-16-genai.html">Unit 16 · Patterns &amp; GenAI</a>
+      <a href="mock-1.html">📝 Mock Exam 1</a>
+    </div>
+  </div>
+</nav>
+
+<div class="page-shell">
+  <aside class="sidebar-toc">
+    <div class="sidebar-block">
+      <span class="sidebar-label">On This Page</span>
+      <a href="#norvig-critique"><span class="toc-num">1</span>Peter Norvig: 16 of 23 Patterns</a>
+      <a href="#missing-features"><span class="toc-num">2</span>Patterns as Missing Language Features</a>
+      <a href="#self-study"><span class="toc-num">3</span>Self-Study Exam Questions</a>
+    </div>
+    <div class="sidebar-block">
+      <span class="sidebar-label">Instructor</span>
+      <p style="font-size: 0.85rem; color: var(--text-muted); margin: 0;">
+        Prof. Dr. Jörg Schäfer<br>
+        <em>Frankfurt University of Applied Sciences</em>
+      </p>
+    </div>
+  </aside>
+
+  <div class="page">
+    <div class="masthead">
+      <div>
+        <div class="eyebrow">Unit 15 · Critical Perspectives &amp; Evolution</div>
+        <h1 class="title">Pattern Criticism: Language Deficiencies &amp; Alternatives</h1>
+      </div>
+    </div>
+
+    <div class="quote-card">
+      “At this final stage, the patterns are no longer seen as recipes for creating artifacts, but as signs of human intelligence.”
+      <span class="quote-author">— Christopher Alexander</span>
+    </div>
+
+    <p class="dek">
+      Are design patterns a testament to good software architecture, or simply boilerplate workarounds for limitations in legacy programming languages?
+    </p>
+
+    <!-- Section 1: Norvig -->
+    <section class="chapter" id="norvig-critique">
+      <div class="chapter-head">
+        <span class="chapter-num">1</span>
+        <h2>15.3 Peter Norvig: 16 of 23 Patterns Disappear</h2>
+      </div>
+      <p class="chapter-dek">Why dynamic languages need patterns far less often.</p>
+
+      <p style="font-size: 0.95rem; line-height: 1.6; color: var(--text);">
+        In 1996, <strong>Peter Norvig</strong> (Director of Research at Google) published his famous study demonstrating that in languages with first-class functions and expressive macro systems (like Lisp or Python), <strong>16 out of the 23 GoF patterns</strong> are either invisible or dissolve into standard language constructs:
+      </p>
+
+      <div style="background: var(--bg-raised); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 1.25rem; margin: 1.5rem 0;">
+        <table style="width: 100%; border-collapse: collapse; font-size: 0.9rem;">
+          <thead>
+            <tr style="border-bottom: 2px solid var(--border); text-align: left;">
+              <th style="padding: 0.5rem;">GoF Pattern</th>
+              <th style="padding: 0.5rem;">C++ / Java 1.0 Need</th>
+              <th style="padding: 0.5rem;">Dynamic / Modern Equivalent</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 0.5rem; font-weight: 700;">Strategy</td>
+              <td style="padding: 0.5rem;">Interface + 5 concrete classes</td>
+              <td style="padding: 0.5rem;">Pass a first-class lambda function</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 0.5rem; font-weight: 700;">Command</td>
+              <td style="padding: 0.5rem;">Command interface with <code>execute()</code></td>
+              <td style="padding: 0.5rem;">Higher-order function / Closure</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 0.5rem; font-weight: 700;">Iterator</td>
+              <td style="padding: 0.5rem;">Dedicated Iterator class + cursor state</td>
+              <td style="padding: 0.5rem;">Generators (<code>yield</code>) &amp; list comprehensions</td>
+            </tr>
+            <tr>
+              <td style="padding: 0.5rem; font-weight: 700;">Decorator</td>
+              <td style="padding: 0.5rem;">Wrapping class + delegate boilerplate</td>
+              <td style="padding: 0.5rem;">Function decorators (<code>@decorator</code>)</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Section 2: Missing Language Features -->
+    <section class="chapter" id="missing-features">
+      <div class="chapter-head">
+        <span class="chapter-num">2</span>
+        <h2>15.3.1 Patterns as Missing Language Features</h2>
+      </div>
+      <p style="font-size: 0.92rem; color: var(--text-muted); line-height: 1.6;">
+        Paul Graham noted that when an engineer repeatedly writes the same structural boilerplate across a codebase, it is often a sign of a <strong>weakness in the programming language</strong>.
+        As languages evolve (e.g. Java adopting lambdas in Java 8, records in Java 14, and pattern matching in Java 21), patterns that once required hundreds of lines of boilerplate naturally become first-class language features.
+      </p>
+    </section>
+
+    <!-- Section 3: Self Study -->
+    <section class="chapter" id="self-study">
+      <div class="chapter-head">
+        <span class="chapter-num">3</span>
+        <h2>15.7 Questions for Self-Study</h2>
+      </div>
+
+      <div class="drill-list">
+        <details class="drill-item" open>
+          <summary>
+            <span class="drill-tag">Exam Drill</span>
+            <span class="drill-q">Does the existence of modern functional programming language features render the study of design patterns obsolete?</span>
+            <span class="drill-reveal-hint"></span>
+          </summary>
+          <div class="drill-a">
+            <p><strong>No, for three foundational reasons:</strong></p>
+            <ol>
+              <li><strong>Architectural Shared Vocabulary:</strong> Even if a Strategy is implemented with a lambda, saying <em>“We use a Strategy pattern for payment processing”</em> communicates intent, trade-offs, and extensibility to team members immediately.</li>
+              <li><strong>Forces Remain the Same:</strong> Higher-level patterns (Layers, Broker, Blackboard, Model-View-Controller) deal with distributed systems, concurrency, and modularity, which no language syntax can automatically solve.</li>
+              <li><strong>Understanding Principles:</strong> Patterns teach core software engineering instincts: high cohesion, loose coupling, information hiding, and dependency inversion.</li>
+            </ol>
+          </div>
+        </details>
+      </div>
+    </section>
+
+    <footer class="page-footer" style="margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--border); display: flex; justify-content: space-between;">
+      <span><a href="unit-14-testing.html">← Previous: Unit 14 Testing</a></span>
+      <span><a href="unit-16-genai.html">Next: Unit 16 Patterns &amp; GenAI →</a></span>
+    </footer>
+
+  </div>
+</div>
+
+<script src="assets/site.js" defer></script>
+</body>
+</html>

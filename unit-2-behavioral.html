@@ -1,0 +1,411 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Unit 2: Behavioral Patterns (Template &amp; Command) | POSA 2026</title>
+<meta name="description" content="Unit 2 of Pattern-Oriented Software Architecture by Prof. Dr. Jörg Schäfer: Template Method, Hollywood Principle, Command Pattern, Macro commands, and self-study questions.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230c7a73'/%3E%3Cpath d='M8 10h16M8 16h16M8 22h10' stroke='%23fff' stroke-width='2.2' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+<style>
+  .quote-card {
+    margin: 1.5rem 0 2rem;
+    padding: 1.25rem 1.5rem;
+    background: var(--accent-soft);
+    border-left: 4px solid var(--accent);
+    border-radius: 0 var(--radius-md) var(--radius-md) 0;
+    font-style: italic;
+    color: var(--accent-ink);
+  }
+  .quote-author {
+    display: block;
+    margin-top: 0.5rem;
+    font-style: normal;
+    font-weight: 700;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .compare-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin: 1.5rem 0;
+  }
+  @media (max-width: 768px) {
+    .compare-grid { grid-template-columns: 1fr; }
+  }
+  .compare-col {
+    background: var(--bg-raised);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 1.25rem;
+  }
+  .compare-col h4 { margin-top: 0; color: var(--accent); }
+  .code-container {
+    margin: 1.5rem 0;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+  }
+  .code-header {
+    background: rgba(0,0,0,0.05);
+    padding: 0.5rem 1rem;
+    display: flex;
+    justify-content: space-between;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--text-muted);
+  }
+  .code-body {
+    padding: 1rem;
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: 0.88rem;
+    overflow-x: auto;
+    line-height: 1.5;
+  }
+</style>
+<script>(function(){try{var t=localStorage.getItem('posa-theme')||'light';document.documentElement.setAttribute('data-theme',t);var m=localStorage.getItem('posa-mode')||'concept';document.documentElement.setAttribute('data-mode',m);}catch(e){}})();</script>
+</head>
+<body>
+
+<nav class="sitenav">
+  <div class="sitenav-inner">
+    <a class="sitenav-home" href="index.html">POSA 2026</a>
+    <div class="sitenav-links">
+      <a href="index.html">Overview</a>
+      <a href="unit-1-strategy.html">Unit 1 · Strategy</a>
+      <a href="unit-2-behavioral.html" class="active">Unit 2 · Behavioral</a>
+      <a href="mock-1.html">📝 Mock 1 (75 pts)</a>
+    </div>
+    <button class="nav-toggle" id="navToggle" type="button" aria-expanded="false" aria-controls="navPanel">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+      Menu
+    </button>
+    <button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle color theme">
+      <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path></svg>
+      <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+    </button>
+    <button class="mode-toggle" id="modeToggle" type="button" aria-label="Toggle technical mode" style="font-size: 1.1rem; line-height: 1;">🎓</button>
+  </div>
+  <div class="nav-panel" id="navPanel">
+    <div class="nav-panel-section">
+      <span class="nav-panel-label">Course Navigation</span>
+      <a href="index.html">Course Overview</a>
+      <a href="unit-1-strategy.html">Unit 1 · Strategy Pattern</a>
+      <a href="unit-2-behavioral.html" class="active">Unit 2 · Template &amp; Command</a>
+      <a href="mock-1.html">📝 Mock Exam 1</a>
+    </div>
+  </div>
+</nav>
+
+<div class="page-shell">
+  <aside class="sidebar-toc">
+    <div class="sidebar-block">
+      <span class="sidebar-label">On This Page</span>
+      <a href="#template-method"><span class="toc-num">1</span>Template Method: Coffee &amp; Tea</a>
+      <a href="#hollywood-principle"><span class="toc-num">2</span>The Hollywood Principle</a>
+      <a href="#command-pattern"><span class="toc-num">3</span>Command Pattern: Modeling Verbs</a>
+      <a href="#macro-commands"><span class="toc-num">4</span>Macro Commands &amp; Threads</a>
+      <a href="#self-study"><span class="toc-num">5</span>Self-Study Exam Questions</a>
+    </div>
+    <div class="sidebar-block">
+      <span class="sidebar-label">Instructor</span>
+      <p style="font-size: 0.85rem; color: var(--text-muted); margin: 0;">
+        Prof. Dr. Jörg Schäfer<br>
+        <em>Frankfurt University of Applied Sciences</em>
+      </p>
+    </div>
+  </aside>
+
+  <div class="page">
+    <div class="masthead">
+      <div>
+        <div class="eyebrow">Unit 2 · Behavioral Patterns</div>
+        <h1 class="title">Template Method &amp; Command Pattern</h1>
+      </div>
+    </div>
+
+    <div class="quote-card">
+      “But once again, the difficulty of believing it may have to do with the fact that we tend to think of patterns as ‘things’, and keep forgetting that they are complex and potent fields.”
+      <span class="quote-author">— Christopher Alexander</span>
+    </div>
+
+    <p class="dek">
+      How to capture algorithmic skeletons in superclasses and package executable actions into standalone first-class objects. Moving beyond “Noun-Land” into behavioral abstractions.
+    </p>
+
+    <!-- Section 1: Template Method -->
+    <section class="chapter" id="template-method">
+      <div class="chapter-head">
+        <span class="chapter-num">1</span>
+        <h2>2.3 &amp; 2.5 The Template Method Pattern</h2>
+      </div>
+      <p class="chapter-dek">Brewing Coffee and Tea: How factoring out common steps uncovers an algorithmic template.</p>
+
+      <div class="compare-grid">
+        <div class="compare-col">
+          <h4>☕ Coffee Recipe</h4>
+          <ol style="font-size: 0.9rem; padding-left: 1.2rem; line-height: 1.6;">
+            <li><strong>Boil water</strong> <em>(identical)</em></li>
+            <li>Brew coffee in boiling water</li>
+            <li><strong>Pour in cup</strong> <em>(identical)</em></li>
+            <li>Add sugar and milk</li>
+          </ol>
+        </div>
+        <div class="compare-col">
+          <h4>🍵 Tea Recipe</h4>
+          <ol style="font-size: 0.9rem; padding-left: 1.2rem; line-height: 1.6;">
+            <li><strong>Boil water</strong> <em>(identical)</em></li>
+            <li>Steep tea bag in boiling water</li>
+            <li><strong>Pour in cup</strong> <em>(identical)</em></li>
+            <li>Add lemon</li>
+          </ol>
+        </div>
+      </div>
+
+      <p>
+        <strong>The Code Smell:</strong> Duplication violates the <strong>DRY Principle (Don't Repeat Yourself)</strong>. If the boiling procedure changes (e.g., waiting for optimal temperature), changes must be manually copied to every beverage class.
+      </p>
+
+      <h3 style="font-family: var(--font-display);">The Solution: CaffeineBeverage Template</h3>
+      <div class="arch-diagram-block">
+┌────────────────────────────────────────────────────────┐
+│             &lt;&lt;abstract&gt;&gt; CaffeineBeverage              │
+├────────────────────────────────────────────────────────┤
+│ + prepareRecipe() : final // THE TEMPLATE METHOD       │
+│   ├── boilWater()                                      │
+│   ├── brew()             // Abstract primitive step    │
+│   ├── pourInCup()                                      │
+│   └── addCondiments()    // Abstract primitive step    │
+│ + boilWater()            // Invariant concrete step    │
+│ + pourInCup()            // Invariant concrete step    │
+│ + customerWantsCondiments() : boolean // HOOK          │
+└───────────────────────────▲────────────────────────────┘
+                            │ extends
+              ┌─────────────┴─────────────┐
+┌─────────────┴─────────────┐ ┌───────────┴─────────────┐
+│          Coffee           │ │           Tea           │
+├───────────────────────────┤ ├─────────────────────────┤
+│ + brew()                  │ │ + brew()                │
+│ + addCondiments()         │ │ + addCondiments()       │
+└───────────────────────────┘ └─────────────────────────┘</div>
+
+      <div style="padding: 1.25rem; background: var(--bg-raised); border-radius: var(--radius-md); border: 1px solid var(--border); margin: 1.5rem 0;">
+        <h4 style="margin-top: 0; color: var(--accent);">🎣 Hooks in Template Method</h4>
+        <p style="font-size: 0.9rem; margin-bottom: 0.5rem; color: var(--text-muted);">
+          A <strong>Hook</strong> is a method declared in the abstract superclass that provides a default (often empty or boolean) implementation. Subclasses can override it to optionally "hook into" the algorithm at specific points without modifying the template skeleton.
+        </p>
+        <code style="font-size: 0.85rem; font-family: var(--font-mono); color: var(--accent-ink);">
+          if (customerWantsCondiments()) { addCondiments(); }
+        </code>
+      </div>
+    </section>
+
+    <!-- Section 2: Hollywood Principle -->
+    <section class="chapter" id="hollywood-principle">
+      <div class="chapter-head">
+        <span class="chapter-num">2</span>
+        <h2>2.5.4 The Hollywood Principle</h2>
+      </div>
+      <div class="quote-card" style="margin-top: 1rem;">
+        “Don’t call us, we’ll call you!”
+        <span class="quote-author">— The Hollywood Principle</span>
+      </div>
+      <p>
+        In traditional imperative programming, low-level components call high-level library functions directly.
+        With the <strong>Hollywood Principle</strong>, the control flow is inverted (<strong>Inversion of Control - IoC</strong>):
+        The high-level abstract class dictates <em>when</em> and <em>how</em> the algorithm proceeds, and invokes the low-level subclass methods only when their specialized steps are needed.
+      </p>
+
+      <div style="background: var(--bg-raised); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 1.25rem; margin: 1.5rem 0;">
+        <strong>Template Method vs. Strategy: Which to Choose?</strong>
+        <ul style="margin: 0.5rem 0 0; padding-left: 1.2rem; font-size: 0.9rem; line-height: 1.6;">
+          <li><strong>Template Method uses Inheritance:</strong> Subclasses alter specific algorithmic steps, but the overall skeleton is fixed. Compile-time binding.</li>
+          <li><strong>Strategy uses Composition &amp; Delegation:</strong> Entire algorithm is encapsulated in a separate object. Can be swapped dynamically at runtime.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Section 3: Command Pattern -->
+    <section class="chapter" id="command-pattern">
+      <div class="chapter-head">
+        <span class="chapter-num">3</span>
+        <h2>2.7 The Command Pattern: Modeling Verbs</h2>
+      </div>
+      <div class="quote-card" style="margin-top: 1rem;">
+        “In the Java Kingdom, the poor verbs (methods) are second-class citizens.”
+        <span class="quote-author">— Steve Yegge (“Execution in the Kingdom of Nouns”)</span>
+      </div>
+      <p>
+        In pure Object-Oriented programming, everything is expected to be a "noun" (an object). But real systems require handling requests, operations, transactions, and undo queues.
+      </p>
+      <p>
+        <strong>GoF Intent:</strong> Encapsulate a request as an object, thereby letting you parameterize clients with different requests, queue or log requests, and support undoable operations.
+      </p>
+
+      <h3 style="font-family: var(--font-display);">Command Pattern Architecture</h3>
+      <div class="arch-diagram-block">
+┌─────────────────┐             ┌─────────────────────────┐             ┌─────────────────────────┐
+│     Invoker     │             │      &lt;&lt;interface&gt;&gt;      │             │        Receiver         │
+│ (RemoteControl) │  invokes    │         Command         │  delegates  │         (Light)         │
+├─────────────────┤────────────&gt;├─────────────────────────┤────────────&gt;├─────────────────────────┤
+│ - slot: Command │             │ + execute()             │             │ + on()                  │
+│ + pressButton() │             │ + undo()                │             │ + off()                 │
+└─────────────────┘             └────────────▲────────────┘             └─────────────────────────┘
+                                             │ implements
+                                ┌────────────┴────────────┐
+                                │       LightOnCommand    │
+                                ├─────────────────────────┤
+                                │ - light: Light          │
+                                ├─────────────────────────┤
+                                │ + execute() {light.on()}│
+                                │ + undo() {light.off()}  │
+                                └─────────────────────────┘</div>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem; margin: 1.5rem 0;">
+        <div style="padding: 1rem; background: var(--bg-raised); border: 1px solid var(--border); border-radius: var(--radius-sm);">
+          <strong>🍽️ The Diner Analogy</strong>
+          <p style="font-size: 0.88rem; color: var(--text-muted); margin-top: 0.3rem;">
+            Customer (Client) gives order to Waitress (Invoker). Waitress writes order slip (Command) and places it on the rack. The Cook (Receiver) reads and prepares the meal.
+          </p>
+        </div>
+        <div style="padding: 1rem; background: var(--bg-raised); border: 1px solid var(--border); border-radius: var(--radius-sm);">
+          <strong>↩️ Universal Undo / Redo</strong>
+          <p style="font-size: 0.88rem; color: var(--text-muted); margin-top: 0.3rem;">
+            Each Command object records the prior state before execution. Invoking <code>undo()</code> restores state without the Invoker needing any internal domain knowledge.
+          </p>
+        </div>
+        <div style="padding: 1rem; background: var(--bg-raised); border: 1px solid var(--border); border-radius: var(--radius-sm);">
+          <strong>🧵 Thread Pool Queues</strong>
+          <p style="font-size: 0.88rem; color: var(--text-muted); margin-top: 0.3rem;">
+            In concurrent systems, worker threads pull Command objects (like <code>Runnable</code> or <code>Callable</code>) from a queue and call <code>execute()</code> asynchronously.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 4: Macro Commands -->
+    <section class="chapter" id="macro-commands">
+      <div class="chapter-head">
+        <span class="chapter-num">4</span>
+        <h2>2.7.4 Macro Command &amp; Composite Actions</h2>
+      </div>
+      <p class="chapter-dek">Executing a batch of commands with a single button press.</p>
+
+      <div class="code-container">
+        <div class="code-header">
+          <span>MacroCommand.java</span>
+          <span>Party Mode Macro</span>
+        </div>
+        <pre class="code-body"><code>public class MacroCommand implements Command {
+    private final List&lt;Command&gt; commands;
+
+    public MacroCommand(List&lt;Command&gt; commands) {
+        this.commands = commands;
+    }
+
+    @Override
+    public void execute() {
+        for (Command c : commands) {
+            c.execute();
+        }
+    }
+
+    @Override
+    public void undo() {
+        // Undo in reverse order!
+        ListIterator&lt;Command&gt; it = commands.listIterator(commands.size());
+        while (it.hasPrevious()) {
+            it.previous().undo();
+        }
+    }
+}</code></pre>
+      </div>
+    </section>
+
+    <!-- Section 5: Questions for Self-Study -->
+    <section class="chapter" id="self-study">
+      <div class="chapter-head">
+        <span class="chapter-num">5</span>
+        <h2>2.10 Exercise: Questions for Self-Study (Exam Practice)</h2>
+      </div>
+      <p class="chapter-dek">Prof. Dr. Jörg Schäfer's official self-study questions with verified answers.</p>
+
+      <div class="drill-list">
+        
+        <details class="drill-item" open>
+          <summary>
+            <span class="drill-tag">Self-Study Q1</span>
+            <span class="drill-q">The Template Method relies on inheritance. Would it be possible to get the same functionality of a Template Method using object composition? What would some of the tradeoffs be?</span>
+            <span class="drill-reveal-hint"></span>
+          </summary>
+          <div class="drill-a">
+            <p><strong>Yes, by combining the Strategy Pattern with callbacks or delegate steps:</strong></p>
+            <p>Instead of having subclasses override protected abstract methods, the main class can hold references to multiple strategy objects (or lambda functions) for each customizable step.</p>
+            <p><strong>Trade-offs Comparison:</strong></p>
+            <ul>
+              <li>
+                <strong>Composition Advantage (Flexibility):</strong> Individual steps can be swapped dynamically at runtime without instantiating an entirely new subclass. Avoids class explosion.
+              </li>
+              <li>
+                <strong>Composition Disadvantage (Object Overhead &amp; Boilerplate):</strong> Passing multiple fine-grained strategy delegates increases configuration complexity and object allocations.
+              </li>
+              <li>
+                <strong>Inheritance Advantage (Simplicity &amp; State Access):</strong> Subclasses directly access protected state in the superclass without exposing getters or passing context references.
+              </li>
+            </ul>
+          </div>
+        </details>
+
+        <details class="drill-item" open>
+          <summary>
+            <span class="drill-tag">Self-Study Q2</span>
+            <span class="drill-q">How does the Command Object get access to the data it needs to perform its job? How does one guarantee that this does not create a strong coupling?</span>
+            <span class="drill-reveal-hint"></span>
+          </summary>
+          <div class="drill-a">
+            <p><strong>Access Mechanism:</strong></p>
+            <ol>
+              <li>
+                <strong>Constructor Dependency Injection:</strong> The specific <code>Receiver</code> and any static parameters are passed into the ConcreteCommand constructor at instantiation time.
+              </li>
+              <li>
+                <strong>Execution Parameters:</strong> Alternatively, transient context data can be passed to <code>execute(ExecutionContext ctx)</code>.
+              </li>
+            </ol>
+            <p><strong>Preventing Tight Coupling:</strong></p>
+            <ul>
+              <li>
+                The <strong>Invoker</strong> only knows the generic <code>Command</code> interface (<code>execute()</code>, <code>undo()</code>). It has <strong>zero coupling</strong> to the Receiver or the parameters.
+              </li>
+              <li>
+                The <strong>ConcreteCommand</strong> binds to a Receiver interface (not necessarily a concrete class).
+              </li>
+              <li>
+                The Receiver remains entirely unaware of the Command pattern; it simply exposes natural domain methods (e.g. <code>turnOn()</code>, <code>deposit()</code>).
+              </li>
+            </ul>
+          </div>
+        </details>
+
+      </div>
+    </section>
+
+    <!-- Navigation footer -->
+    <footer class="page-footer" style="margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--border); display: flex; justify-content: space-between;">
+      <span><a href="unit-1-strategy.html">← Previous: Unit 1 Strategy</a></span>
+      <span><a href="index.html">Course Hub →</a></span>
+    </footer>
+
+  </div>
+</div>
+
+<script src="assets/site.js" defer></script>
+</body>
+</html>

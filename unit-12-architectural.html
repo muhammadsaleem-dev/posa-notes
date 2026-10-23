@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Unit 12: Architectural Patterns (Pipes &amp; Filters, Blackboard) | POSA 2026</title>
+<meta name="description" content="Unit 12 of Pattern-Oriented Software Architecture by Prof. Dr. Jörg Schäfer: Pipes & Filters, Blackboard pattern, Apache web server case study, and exam questions.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230c7a73'/%3E%3Cpath d='M8 10h16M8 16h16M8 22h10' stroke='%23fff' stroke-width='2.2' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+<style>
+  .quote-card {
+    margin: 1.5rem 0 2rem;
+    padding: 1.25rem 1.5rem;
+    background: var(--accent-soft);
+    border-left: 4px solid var(--accent);
+    border-radius: 0 var(--radius-md) var(--radius-md) 0;
+    font-style: italic;
+    color: var(--accent-ink);
+  }
+  .quote-author {
+    display: block;
+    margin-top: 0.5rem;
+    font-style: normal;
+    font-weight: 700;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .arch-box {
+    background: var(--bg-raised);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 1.5rem;
+    margin: 1.5rem 0;
+  }
+</style>
+<script>(function(){try{var t=localStorage.getItem('posa-theme')||'light';document.documentElement.setAttribute('data-theme',t);var m=localStorage.getItem('posa-mode')||'concept';document.documentElement.setAttribute('data-mode',m);}catch(e){}})();</script>
+</head>
+<body>
+
+<nav class="sitenav">
+  <div class="sitenav-inner">
+    <a class="sitenav-home" href="index.html">POSA 2026</a>
+    <div class="sitenav-links">
+      <a href="index.html">Overview</a>
+      <a href="unit-11-mvc.html">11 · MVC</a>
+      <a href="unit-12-architectural.html" class="active">12 · Architecture</a>
+      <a href="unit-13-analysis.html">13 · Analysis</a>
+      <a href="mock-1.html">📝 Mock 1</a>
+    </div>
+    <button class="nav-toggle" id="navToggle" type="button" aria-expanded="false" aria-controls="navPanel">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+      Menu
+    </button>
+    <button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle color theme">
+      <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path></svg>
+      <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+    </button>
+    <button class="mode-toggle" id="modeToggle" type="button" aria-label="Toggle technical mode" style="font-size: 1.1rem; line-height: 1;">🎓</button>
+  </div>
+  <div class="nav-panel" id="navPanel">
+    <div class="nav-panel-section">
+      <span class="nav-panel-label">Course Navigation</span>
+      <a href="index.html">Overview</a>
+      <a href="unit-11-mvc.html">Unit 11 · Case Study MVC</a>
+      <a href="unit-12-architectural.html" class="active">Unit 12 · Architectural Patterns</a>
+      <a href="unit-13-analysis.html">Unit 13 · Analysis &amp; Enterprise</a>
+      <a href="mock-1.html">📝 Mock Exam 1</a>
+    </div>
+  </div>
+</nav>
+
+<div class="page-shell">
+  <aside class="sidebar-toc">
+    <div class="sidebar-block">
+      <span class="sidebar-label">On This Page</span>
+      <a href="#pipes-and-filters"><span class="toc-num">1</span>Pipes and Filters</a>
+      <a href="#blackboard-pattern"><span class="toc-num">2</span>The Blackboard Pattern</a>
+      <a href="#apache-case-study"><span class="toc-num">3</span>Case Study: Apache Server</a>
+      <a href="#self-study"><span class="toc-num">4</span>Self-Study Exam Questions</a>
+    </div>
+    <div class="sidebar-block">
+      <span class="sidebar-label">Instructor</span>
+      <p style="font-size: 0.85rem; color: var(--text-muted); margin: 0;">
+        Prof. Dr. Jörg Schäfer<br>
+        <em>Frankfurt University of Applied Sciences</em>
+      </p>
+    </div>
+  </aside>
+
+  <div class="page">
+    <div class="masthead">
+      <div>
+        <div class="eyebrow">Unit 12 · Macro-Architectural Patterns (POSA 1)</div>
+        <h1 class="title">Pipes &amp; Filters and The Blackboard Pattern</h1>
+      </div>
+    </div>
+
+    <div class="quote-card">
+      “Each pattern depends both on the smaller patterns it contains, and on the larger patterns within which it is contained.”
+      <span class="quote-author">— Christopher Alexander</span>
+    </div>
+
+    <p class="dek">
+      System-level macro structures for data processing: streaming pipelines without feedback versus centralized opportunistic blackboard systems for non-deterministic AI problem solving.
+    </p>
+
+    <!-- Section 1: Pipes and Filters -->
+    <section class="chapter" id="pipes-and-filters">
+      <div class="chapter-head">
+        <span class="chapter-num">1</span>
+        <h2>12.3 Pipes and Filters Architecture</h2>
+      </div>
+      <p class="chapter-dek">Sequential streaming transformations with independent processing stages.</p>
+
+      <div class="arch-box">
+        <p><strong>POSA Intent:</strong> Provide a structure for systems that process a stream of data. Each processing step is encapsulated in a filter component. Data is passed through pipes between adjacent filters.</p>
+        <p><strong>Ingredients:</strong></p>
+        <ul>
+          <li><strong>Data Source:</strong> Generates initial stream (e.g. file, network socket, sensors).</li>
+          <li><strong>Pipe:</strong> Directional conduit transferring data from one filter to another, managing buffering and backpressure.</li>
+          <li><strong>Filter:</strong> Enriches, refines, or transforms data. Can be <em>active</em> (runs its own thread, pulls/pushes) or <em>passive</em>.</li>
+          <li><strong>Data Sink:</strong> Target consumer (database, display, output file).</li>
+        </ul>
+      </div>
+
+      <div class="arch-diagram-block">
+┌──────────────┐          ┌──────────────┐          ┌──────────────┐          ┌──────────────┐
+│  Data Source │===Pipe==&gt;│   Filter 1   │===Pipe==&gt;│   Filter 2   │===Pipe==&gt;│  Data Sink   │
+│ (Raw Sensor) │          │ (Decompress) │          │  (Aggregate) │          │ (Analytics)  │
+└──────────────┘          └──────────────┘          └──────────────┘          └──────────────┘</div>
+    </section>
+
+    <!-- Section 2: Blackboard -->
+    <section class="chapter" id="blackboard-pattern">
+      <div class="chapter-head">
+        <span class="chapter-num">2</span>
+        <h2>12.4 The Blackboard Pattern</h2>
+      </div>
+      <p class="chapter-dek">Opportunistic problem-solving for non-deterministic domains.</p>
+
+      <div class="arch-box">
+        <p><strong>POSA Intent:</strong> Useful for problems where no deterministic algorithm exists (speech recognition, AI routing, protein folding). Multiple diverse specialized modules collaborate to discover a solution incrementally.</p>
+        <p><strong>The 3 Participants:</strong></p>
+        <ol>
+          <li><strong>Blackboard:</strong> The central global memory containing partial solutions, hypotheses, and problem state.</li>
+          <li><strong>Knowledge Sources (KS):</strong> Distinct, independent experts. Each KS evaluates the blackboard and adds new inferences when its preconditions are satisfied. <em>KS never talk to each other!</em></li>
+          <li><strong>Controller:</strong> An orchestrator that assesses the state of the blackboard and schedules which eligible Knowledge Source executes next.</li>
+        </ol>
+      </div>
+
+      <div class="arch-diagram-block">
+                          ┌───────────────────────────────┐
+                          │          Controller           │
+                          ├───────────────────────────────┤
+                          │ + loop()                      │
+                          └───────┬───────────────▲───────┘
+                                  │ selects       │ monitors
+                                  ▼               │
+┌─────────────────────────────────────────────────────────┴─────┐
+│                       Blackboard                              │
+│  • Hypothesis Levels: [Acoustic] -&gt; [Syllables] -&gt; [Words]    │
+└──────────────▲──────────────────────▲──────────────────▲──────┘
+               │ reads/writes         │ reads/writes     │ reads/writes
+┌──────────────┴────────┐ ┌───────────┴─────────┐ ┌──────┴──────────────┐
+│ Knowledge Source 1    │ │ Knowledge Source 2  │ │ Knowledge Source 3  │
+│ (Acoustic Phonetics)  │ │ (Dictionary Lookup) │ │ (Grammar/Syntax)    │
+└───────────────────────┘ └─────────────────────┘ └─────────────────────┘</div>
+    </section>
+
+    <!-- Section 3: Apache -->
+    <section class="chapter" id="apache-case-study">
+      <div class="chapter-head">
+        <span class="chapter-num">3</span>
+        <h2>12.7 Case Study: Apache Web Server Hooks</h2>
+      </div>
+      <p style="font-size: 0.92rem; color: var(--text-muted); line-height: 1.6;">
+        Apache HTTP Server organizes request servicing into a pipeline of processing phases:
+        <code>URI-to-filename translation</code> $\to$ <code>Header parsing</code> $\to$ <code>Authentication</code> $\to$ <code>Authorization</code> $\to$ <code>Content generation</code> $\to$ <code>Logging</code>.
+        Modules register hook functions with the core server, creating a flexible hybrid of Pipes &amp; Filters, Chain of Responsibility, and Component Configurator.
+      </p>
+    </section>
+
+    <!-- Section 4: Self Study -->
+    <section class="chapter" id="self-study">
+      <div class="chapter-head">
+        <span class="chapter-num">4</span>
+        <h2>12.8 Questions for Self-Study</h2>
+      </div>
+
+      <div class="drill-list">
+        <details class="drill-item" open>
+          <summary>
+            <span class="drill-tag">Exam Drill</span>
+            <span class="drill-q">Why is the Blackboard pattern considered non-deterministic, and how does its control loop differ fundamentally from Pipes and Filters?</span>
+            <span class="drill-reveal-hint"></span>
+          </summary>
+          <div class="drill-a">
+            <p>
+              In <strong>Pipes and Filters</strong>, the control and data flow is fixed, deterministic, and feed-forward: data flows from filter A directly to filter B in a predetermined pipeline.
+            </p>
+            <p>
+              In <strong>Blackboard</strong>, there is no predetermined sequence. Multiple Knowledge Sources evaluate the shared hypotheses simultaneously. The Controller opportunistically selects whichever Knowledge Source provides the highest confidence score based on the current state. The order of execution varies from run to run depending on partial inferences.
+            </p>
+          </div>
+        </details>
+      </div>
+    </section>
+
+    <footer class="page-footer" style="margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--border); display: flex; justify-content: space-between;">
+      <span><a href="unit-11-mvc.html">← Previous: Unit 11 MVC</a></span>
+      <span><a href="unit-13-analysis.html">Next: Unit 13 Analysis Patterns →</a></span>
+    </footer>
+
+  </div>
+</div>
+
+<script src="assets/site.js" defer></script>
+</body>
+</html>

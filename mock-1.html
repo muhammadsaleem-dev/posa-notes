@@ -1,0 +1,670 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>POSA Mock Exam 1 (75 pts) with Verified Solutions | POSA 2026</title>
+<meta name="description" content="Complete Pattern-Oriented Software Architecture Mock Exam 1 (75 pts) with collapsible questions, verified architectural solutions, starter templates, and critical exam pitfalls.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230c7a73'/%3E%3Cpath d='M8 10h16M8 16h16M8 22h10' stroke='%23fff' stroke-width='2.2' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+<style>
+  /* Mock Exam Specific Additions */
+  .exam-meta-banner {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 1rem;
+    margin: 1.5rem 0 2.5rem;
+    padding: 1.25rem 1.5rem;
+    background: var(--bg-raised);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+  }
+  .exam-meta-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+  .exam-meta-label {
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+    font-weight: 600;
+  }
+  .exam-meta-val {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--accent);
+    font-family: var(--font-mono);
+  }
+  .exam-actions-bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1rem 1.25rem;
+    background: var(--accent-soft);
+    border-radius: var(--radius-md);
+    margin-bottom: 2rem;
+    border: 1px solid rgba(12, 122, 115, 0.2);
+  }
+  .exam-timer-wrap {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-weight: 600;
+    font-family: var(--font-mono);
+  }
+  .btn-exam {
+    background: var(--accent);
+    color: #ffffff;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: var(--radius-sm);
+    font-weight: 600;
+    font-size: 0.88rem;
+    cursor: pointer;
+    transition: opacity 0.2s;
+  }
+  .btn-exam:hover { opacity: 0.9; }
+  .btn-outline {
+    background: transparent;
+    border: 1px solid var(--accent);
+    color: var(--accent-ink);
+  }
+  .points-badge {
+    display: inline-block;
+    padding: 0.2rem 0.6rem;
+    background: var(--accent-soft);
+    color: var(--accent-ink);
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    font-family: var(--font-mono);
+    margin-left: 0.5rem;
+  }
+  .gotcha-box {
+    margin-top: 1rem;
+    padding: 0.85rem 1.1rem;
+    background: var(--warn-soft);
+    border-left: 3px solid var(--warn);
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    font-size: 0.9rem;
+    color: var(--text);
+  }
+  .gotcha-box strong { color: var(--warn); }
+  .arch-diagram-block {
+    margin: 1.2rem 0;
+    padding: 1.2rem;
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    overflow-x: auto;
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    line-height: 1.45;
+  }
+</style>
+<script>(function(){try{var t=localStorage.getItem('posa-theme')||localStorage.getItem('dm2026-theme')||'light';document.documentElement.setAttribute('data-theme',t);var m=localStorage.getItem('posa-mode')||'concept';document.documentElement.setAttribute('data-mode',m);}catch(e){}})();</script>
+</head>
+<body>
+
+<nav class="sitenav">
+  <div class="sitenav-inner">
+    <a class="sitenav-home" href="index.html">POSA 2026</a>
+    <div class="sitenav-links">
+      <a href="index.html">Overview</a>
+      <a href="#section-1">1 · Architecture (POSA 1)</a>
+      <a href="#section-2">2 · Concurrency (POSA 2)</a>
+      <a href="#section-3">3 · Synchronization &amp; Access</a>
+      <a href="#section-4">4 · System Design &amp; Traps</a>
+      <a href="mock-1.html" class="active">📝 Mock 1 (75 pts)</a>
+    </div>
+    <button class="nav-toggle" id="navToggle" type="button" aria-expanded="false" aria-controls="navPanel">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+      Menu
+    </button>
+    <button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle color theme">
+      <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path></svg>
+      <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+    </button>
+    <button class="mode-toggle" id="modeToggle" type="button" aria-label="Toggle technical mode" style="font-size: 1.1rem; line-height: 1;">🎓</button>
+  </div>
+  <div class="nav-panel" id="navPanel">
+    <div class="nav-panel-section">
+      <span class="nav-panel-label">Mock 1 Sections</span>
+      <a href="#section-1">1 · Architectural Patterns (20 pts)</a>
+      <a href="#section-2">2 · Concurrency &amp; Networking (25 pts)</a>
+      <a href="#section-3">3 · Synchronization &amp; Service Access (15 pts)</a>
+      <a href="#section-4">4 · System Design Scenario &amp; Traps (15 pts)</a>
+    </div>
+  </div>
+</nav>
+
+<div class="page-shell">
+  <aside class="sidebar-toc">
+    <div class="sidebar-block">
+      <span class="sidebar-label">Navigation</span>
+      <a href="index.html">← Course Overview</a>
+    </div>
+    <div class="sidebar-block">
+      <span class="sidebar-label">Exam Questions</span>
+      <a href="#section-1"><span class="toc-num">1</span>POSA 1: Architecture (20 pts)</a>
+      <a href="#section-2"><span class="toc-num">2</span>POSA 2: Concurrency (25 pts)</a>
+      <a href="#section-3"><span class="toc-num">3</span>Synchronization &amp; Access (15 pts)</a>
+      <a href="#section-4"><span class="toc-num">4</span>Scenario &amp; Traps (15 pts)</a>
+    </div>
+    <div class="sidebar-block">
+      <span class="sidebar-label">Practice Strategy</span>
+      <p style="font-size: 0.82rem; color: var(--text-muted); line-height: 1.5;">
+        Test yourself by answering before revealing. Pay special attention to <strong>Gotcha Boxes</strong> which highlight common professor deductions.
+      </p>
+    </div>
+  </aside>
+
+  <div class="page">
+    <div class="masthead">
+      <div>
+        <div class="eyebrow">Pattern-Oriented Software Architecture · Mock Examination</div>
+        <h1 class="title">POSA Mock Exam 1 with Verified Solutions</h1>
+      </div>
+    </div>
+    <p class="dek">
+      A comprehensive 75-point simulation of standard university and graduate-level POSA past papers. Covers structural styles, concurrent event demultiplexing, thread pools, synchronization idioms, and real-world trade-off analyses.
+    </p>
+
+    <!-- Exam Meta Bar -->
+    <div class="exam-meta-banner">
+      <div class="exam-meta-item">
+        <span class="exam-meta-label">Total Points</span>
+        <span class="exam-meta-val">75 Points</span>
+      </div>
+      <div class="exam-meta-item">
+        <span class="exam-meta-label">Time Limit</span>
+        <span class="exam-meta-val">120 Mins</span>
+      </div>
+      <div class="exam-meta-item">
+        <span class="exam-meta-label">Pass Threshold</span>
+        <span class="exam-meta-val">50 / 75 (66%)</span>
+      </div>
+      <div class="exam-meta-item">
+        <span class="exam-meta-label">Format</span>
+        <span class="exam-meta-val">Open + Verified</span>
+      </div>
+    </div>
+
+    <!-- Interactive Timer & Toggle Bar -->
+    <div class="exam-actions-bar">
+      <div class="exam-timer-wrap">
+        <span>⏱️ Time Remaining:</span>
+        <span id="examTimerDisplay">120:00</span>
+      </div>
+      <div style="display: flex; gap: 0.5rem;">
+        <button type="button" class="btn-exam" id="timerStartBtn" onclick="toggleTimer()">Start Timer</button>
+        <button type="button" class="btn-exam btn-outline" onclick="expandAllSolutions()">Expand All</button>
+        <button type="button" class="btn-exam btn-outline" onclick="collapseAllSolutions()">Collapse All</button>
+      </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- SECTION 1: ARCHITECTURAL PATTERNS (20 PTS) -->
+    <!-- ========================================== -->
+    <section class="chapter" id="section-1">
+      <div class="chapter-head">
+        <span class="chapter-num">1</span>
+        <h2>Architectural Patterns (POSA 1) <span class="points-badge">20 Points</span></h2>
+      </div>
+      <p class="chapter-dek">Foundational structural patterns from Buschmann et al. Volume 1: decomposition, communication, and control.</p>
+
+      <div class="drill-list">
+
+        <!-- Q1.1 -->
+        <details class="drill-item" id="q1">
+          <summary>
+            <span class="drill-tag">Name it · 4 pts</span>
+            <span class="drill-q">An architectural pattern structures distributed software systems by decoupling clients from remote servers via an intermediary service registry and marshaling layer. Clients invoke methods as if they were local, while the pattern handles binding, message serialization, and location transparency. In ≤2 words, name it.</span>
+            <span class="drill-reveal-hint"></span>
+          </summary>
+          <div class="drill-a">
+            <p><strong>Broker</strong> pattern (POSA 1, Chapter 2).</p>
+            <p>
+              <strong>Key Components:</strong>
+              <code>Client</code>, <code>Client-Proxy</code>, <code>Broker</code>, <code>Server-Proxy</code>, and <code>Server</code>. 
+              The Client-Proxy encapsulates IPC/network protocols and marshals parameters, while the Broker coordinates communications and resolves location transparency.
+            </p>
+            <div class="gotcha-box">
+              <strong>⚠️ Professor's Trap:</strong> Do not confuse <em>Broker</em> with <em>Proxy</em> or <em>Mediator</em>. Proxy works at the design pattern level for an individual object; Broker is an <strong>architectural pattern</strong> governing entire distributed subsystem lifecycles and registration.
+            </div>
+          </div>
+        </details>
+
+        <!-- Q1.2 -->
+        <details class="drill-item" id="q2">
+          <summary>
+            <span class="drill-tag">Select all · 5 pts</span>
+            <span class="drill-q">Which of the following statements are TRUE regarding the <strong>Layers</strong> architectural pattern?</span>
+            <ul class="drill-options">
+              <li>(a) In a "Strictly Layered" system, Layer J may call any Layer K as long as K &lt; J.</li>
+              <li>(b) In a "Strictly Layered" architecture, Layer J may only call Layer J-1 immediately below it.</li>
+              <li>(c) "Relaxed Layering" improves runtime efficiency by allowing layers to bypass intermediate layers to access lower services directly.</li>
+              <li>(d) Cross-cutting concerns such as logging, tracing, or security always neatly fit into a single distinct horizontal layer.</li>
+              <li>(e) The Layers pattern makes it trivial to replace a layer implementation with another as long as the interface contract is preserved.</li>
+            </ul>
+            <span class="drill-reveal-hint"></span>
+          </summary>
+          <div class="drill-a">
+            <p><strong>Correct: (b), (c), (e).</strong></p>
+            <ul>
+              <li><strong>(a) is False:</strong> That describes <em>Relaxed</em> layering, not Strict layering.</li>
+              <li><strong>(b) is True:</strong> Strict layering enforces that each layer only interacts with the layer immediately adjacent beneath it.</li>
+              <li><strong>(c) is True:</strong> Relaxed layering avoids the performance overhead of pass-through "data forwarding" boilerplate.</li>
+              <li><strong>(d) is False:</strong> Cross-cutting concerns (orthogonal services) notoriously violate pure horizontal layering; they are often handled via sidecars, aspects, or utilities.</li>
+              <li><strong>(e) is True:</strong> High cohesion and low coupling between adjacent layers permit drop-in substitution.</li>
+            </ul>
+          </div>
+        </details>
+
+        <!-- Q1.3 -->
+        <details class="drill-item" id="q3">
+          <summary>
+            <span class="drill-tag">Architecture · 6 pts</span>
+            <span class="drill-q">Compare the <strong>Pipes and Filters</strong> pattern with the <strong>Blackboard</strong> pattern. Fill in the structural comparison table below by describing their control mechanisms, data flow direction, and best-fit problem domains.</span>
+            <span class="drill-reveal-hint"></span>
+          </summary>
+          <div class="drill-a">
+            <p><strong>Structural Comparison:</strong></p>
+            <div class="arch-diagram-block">
+┌──────────────────┬─────────────────────────────┬──────────────────────────────┐
+│ Attribute        │ Pipes and Filters           │ Blackboard                   │
+├──────────────────┼─────────────────────────────┼──────────────────────────────┤
+│ Control Flow     │ Data-driven (push/pull      │ Centralized Controller       │
+│                  │ through passive/active pipe)│ evaluates Knowledge Sources  │
+├──────────────────┼─────────────────────────────┼──────────────────────────────┤
+│ Data Flow        │ Unidirectional stream       │ Shared central repository    │
+│                  │ without feedback loops      │ with iterative modifications │
+├──────────────────┼─────────────────────────────┼──────────────────────────────┤
+│ Problem Domain   │ Deterministic data trans-   │ Non-deterministic, heuristic │
+│                  │ forms (compilers, ETL, image│ search (speech recognition,  │
+│                  │ pipelines)                  │ robotic path planning, AI)   │
+└──────────────────┴─────────────────────────────┴──────────────────────────────┘</div>
+            <div class="gotcha-box">
+              <strong>⚠️ Critical Exam Gotcha:</strong> When asked how Knowledge Sources interact in Blackboard, note that <em>Knowledge Sources NEVER communicate directly with one another</em>. All communication is strictly mediated via reads and writes to the shared Blackboard state.
+            </div>
+          </div>
+        </details>
+
+        <!-- Q1.4 -->
+        <details class="drill-item" id="q4">
+          <summary>
+            <span class="drill-tag">Reorder · 5 pts</span>
+            <span class="drill-q">Put the execution steps of a remote invocation in the <strong>Broker</strong> pattern in chronological order from first to last:</span>
+            <ol class="drill-scramble">
+              <li>A. Server-Proxy unmarshals arguments and calls the actual implementation method on the Server.</li>
+              <li>B. Client invokes a method on the local Client-Proxy.</li>
+              <li>C. Client-Proxy marshals the method identifier and parameters into a byte message and hands it to the Broker.</li>
+              <li>D. Server computes the result, which is marshaled by Server-Proxy and sent back through the Broker to Client-Proxy.</li>
+              <li>E. Broker resolves the physical network address of the target Server and forwards the payload across the network.</li>
+            </ol>
+            <span class="drill-reveal-hint"></span>
+          </summary>
+          <div class="drill-a">
+            <p><strong>Correct Sequence: B → C → E → A → D</strong></p>
+            <ol>
+              <li><strong>B:</strong> Client initiates transparent local call on <code>Client-Proxy</code>.</li>
+              <li><strong>C:</strong> <code>Client-Proxy</code> marshals invocation into an IPC/network packet.</li>
+              <li><strong>E:</strong> <code>Broker</code> locates server binding via registry and routes packet.</li>
+              <li><strong>A:</strong> <code>Server-Proxy</code> decodes packet and dispatches to concrete <code>Server</code>.</li>
+              <li><strong>D:</strong> Result traverses backward: Server → Server-Proxy → Broker → Client-Proxy → Client.</li>
+            </ol>
+          </div>
+        </details>
+
+      </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- SECTION 2: CONCURRENCY PATTERNS (25 PTS)   -->
+    <!-- ========================================== -->
+    <section class="chapter" id="section-2">
+      <div class="chapter-head">
+        <span class="chapter-num">2</span>
+        <h2>Concurrency &amp; Networking Patterns (POSA 2) <span class="points-badge">25 Points</span></h2>
+      </div>
+      <p class="chapter-dek">Patterns for concurrent, networked, and real-time systems by Schmidt, Stal, Rohnert, and Buschmann.</p>
+
+      <div class="drill-list">
+
+        <!-- Q2.1 -->
+        <details class="drill-item" id="q5">
+          <summary>
+            <span class="drill-tag">Name it · 5 pts</span>
+            <span class="drill-q">An event-handling pattern demultiplexes and dispatches service requests delivered concurrently to an application by one or more clients. It uses a synchronous event demultiplexer (e.g., <code>select</code>, <code>poll</code>, or <code>epoll</code>) running on a single thread to wait for incoming I/O events, then synchronously dispatches each event to its associated concrete Event Handler. Name it.</span>
+            <span class="drill-reveal-hint"></span>
+          </summary>
+          <div class="drill-a">
+            <p><strong>Reactor</strong> pattern (POSA 2, Chapter 3).</p>
+            <p>
+              <strong>Participants:</strong> <code>Initiation Dispatcher / Reactor</code>, <code>Synchronous Event Demultiplexer</code>, <code>Handle</code>, and <code>Event Handler</code>.
+            </p>
+            <div class="gotcha-box">
+              <strong>⚠️ Crucial Exam Distinction:</strong> Contrast <em>Reactor</em> with <em>Proactor</em>!
+              <br>• <strong>Reactor</strong> dispatches when a handle is <em>ready for I/O</em> (synchronous demux + synchronous read/write).
+              <br>• <strong>Proactor</strong> dispatches when an asynchronous I/O operation <em>has already completed</em> (asynchronous operation initiated via OS kernel completion ports).
+            </div>
+          </div>
+        </details>
+
+        <!-- Q2.2 -->
+        <details class="drill-item" id="q6">
+          <summary>
+            <span class="drill-tag">Architecture &amp; Trade-off · 7 pts</span>
+            <span class="drill-q">Explain the three layers of the <strong>Half-Sync / Half-Async</strong> architectural pattern. Why does it include a queueing layer between the synchronous and asynchronous layers, and what catastrophic failure occurs if this queue is unconstrained?</span>
+            <span class="drill-reveal-hint"></span>
+          </summary>
+          <div class="drill-a">
+            <p><strong>The Three Layers:</strong></p>
+            <ol>
+              <li><strong>Asynchronous Layer:</strong> Handles low-level, interrupt-driven, or asynchronous I/O events without blocking (e.g., OS network driver or Reactor dispatching packet arrivals).</li>
+              <li><strong>Queueing Layer:</strong> An intermediary thread-safe buffer (message queue) that synchronizes and stages incoming requests between async producers and sync consumers.</li>
+              <li><strong>Synchronous Layer:</strong> A pool of worker threads or processes executing long-running, blocking business logic (database transactions, business rules) safely without starving the async layer.</li>
+            </ol>
+            <p><strong>Purpose of the Queue:</strong> It decouples the timing, rates, and execution models of low-level async hardware/network notifications from high-level application processing.</p>
+            <div class="gotcha-box">
+              <strong>⚠️ Catastrophic Failure Mode (Out of Memory):</strong> If producer arrival rate &gt; consumer processing rate over sustained intervals with an <em>unbounded queue</em>, the queue will grow indefinitely until the JVM/OS crashes with <strong>OutOfMemoryError</strong>. The remedy is <em>bounded queueing with backpressure</em> or proactive shedding.
+            </div>
+          </div>
+        </details>
+
+        <!-- Q2.3 -->
+        <details class="drill-item" id="q7">
+          <summary>
+            <span class="drill-tag">Compute &amp; Compare · 7 pts</span>
+            <span class="drill-q">Compare <strong>Leader/Followers</strong> against <strong>Half-Sync/Half-Async</strong> for a high-frequency trading server receiving 50,000 requests/sec. Which pattern yields lower dispatch latency, and why? Under what condition does Leader/Followers degrade severely?</span>
+            <span class="drill-reveal-hint"></span>
+          </summary>
+          <div class="drill-a">
+            <p><strong>Winner for Lowest Latency: Leader/Followers.</strong></p>
+            <p><strong>Reasoning:</strong></p>
+            <ul>
+              <li><strong>Zero Buffer &amp; Allocation Overhead:</strong> Leader/Followers eliminates the intermediary queue and thread context-switch penalty. The Leader thread that detects the event on the handle directly transitions to processing the request herself after promoting a Follower to become the new Leader.</li>
+              <li><strong>Cache Affinity:</strong> Memory structures and socket buffers read during demux stay hot in the thread's CPU cache.</li>
+            </ul>
+            <div class="gotcha-box">
+              <strong>⚠️ Degradation Condition (Chain Starvation):</strong> Leader/Followers degrades severely when request handling involves <em>long-running blocking calls</em> or when all threads in the thread pool become busy with prior requests before a new leader can be promoted. If no follower is available to assume leadership, arriving I/O events wait unserviced in the OS socket backlog.
+            </div>
+          </div>
+        </details>
+
+        <!-- Q2.4 -->
+        <details class="drill-item" id="q8">
+          <summary>
+            <span class="drill-tag">Code &amp; Structure · 6 pts</span>
+            <span class="drill-q">The <strong>Active Object</strong> pattern decouples method execution from method invocation. Complete the missing participant names and method signature blanks in the Java conceptual structure below:</span>
+            <div class="arch-diagram-block">
+public class StockTradingProxy {
+    private Scheduler scheduler;
+    private Servant servant;
+
+    public <span class="drill-blank">___________</span> submitOrder(Order order) {
+        // 1. Create a concrete Method Request object
+        MethodRequest request = new SubmitOrderRequest(servant, order);
+        // 2. Enqueue in the Activation List via the Scheduler
+        scheduler.enqueue(request);
+        // 3. Return immediately without blocking
+        return request.get<span class="drill-blank">___________</span>();
+    }
+}</div>
+            <span class="drill-reveal-hint"></span>
+          </summary>
+          <div class="drill-a">
+            <p><strong>Filled Blanks:</strong></p>
+            <ol>
+              <li>Return Type: <code>Future&lt;OrderResult&gt;</code> (or <code>CompletableFuture&lt;OrderResult&gt;</code>).</li>
+              <li>Getter: <code>getFuture()</code>.</li>
+            </ol>
+            <p><strong>Participants in Active Object:</strong></p>
+            <ul>
+              <li><code>Proxy</code>: Provides the client-facing synchronous interface.</li>
+              <li><code>MethodRequest</code>: Encapsulates method parameters and the target servant.</li>
+              <li><code>Activation List</code>: Priority queue holding pending MethodRequests.</li>
+              <li><code>Scheduler</code>: Runs on its own thread, deciding which MethodRequest to execute next.</li>
+              <li><code>Servant</code>: Implements the actual business logic.</li>
+              <li><code>Future</code>: Allows client to poll or block later to obtain the asynchronous result.</li>
+            </ul>
+          </div>
+        </details>
+
+      </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- SECTION 3: SYNCHRONIZATION & ACCESS (15)   -->
+    <!-- ========================================== -->
+    <section class="chapter" id="section-3">
+      <div class="chapter-head">
+        <span class="chapter-num">3</span>
+        <h2>Synchronization, Service Access &amp; Configuration <span class="points-badge">15 Points</span></h2>
+      </div>
+      <p class="chapter-dek">Patterns for safe multi-threading, dynamic plugin configuration, and factory decoupling.</p>
+
+      <div class="drill-list">
+
+        <!-- Q3.1 -->
+        <details class="drill-item" id="q9">
+          <summary>
+            <span class="drill-tag">Name it · 5 pts</span>
+            <span class="drill-q">A concurrency pattern solves the problem of <em>nested self-deadlock</em> in multi-threaded classes. It structures methods into two distinct categories: public "Interface" methods that acquire a lock and delegate to private/protected "Implementation" methods, while internal methods assume the lock is already held and never re-acquire it. In ≤3 words, name it.</span>
+            <span class="drill-reveal-hint"></span>
+          </summary>
+          <div class="drill-a">
+            <p><strong>Thread-Safe Interface</strong> pattern (POSA 2, Chapter 4).</p>
+            <p>
+              <strong>How it works:</strong>
+            </p>
+            <div class="arch-diagram-block">
+public class SafeBuffer {
+    private final Lock lock = new ReentrantLock();
+
+    // INTERFACE METHOD: acquires lock, delegates, unlocks in finally
+    public void put(Object item) {
+        lock.lock();
+        try {
+            put_i(item); // Call internal implementation
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    // IMPLEMENTATION METHOD: assumes lock is already held by caller!
+    protected void put_i(Object item) {
+        // Direct state manipulation without re-locking
+    }
+}</div>
+            <div class="gotcha-box">
+              <strong>⚠️ Common Pitfall:</strong> Do not say <em>Scoped Locking</em> or <em>Monitor Object</em>. Monitor Object defines the whole class synchronization via condition variables; Thread-Safe Interface specifically deals with <em>method-to-method internal locking boundaries</em> without deadlock or non-recursive mutex re-entry.
+            </div>
+          </div>
+        </details>
+
+        <!-- Q3.2 -->
+        <details class="drill-item" id="q10">
+          <summary>
+            <span class="drill-tag">Architecture · 5 pts</span>
+            <span class="drill-q">Explain the distinction between the <strong>Acceptor</strong> and <strong>Connector</strong> roles in the Acceptor-Connector pattern. Which role acts as the passive connection factory, and which acts as the active connection initiator?</span>
+            <span class="drill-reveal-hint"></span>
+          </summary>
+          <div class="drill-a">
+            <p><strong>The Two Roles:</strong></p>
+            <ul>
+              <li><strong>Acceptor (Passive Connection Factory):</strong> Waits for incoming connection requests from remote peers (e.g. listening on a server socket), accepts the connection, and instantiates/activates a concrete <code>Service Handler</code> to interact with the peer.</li>
+              <li><strong>Connector (Active Connection Factory):</strong> Initiates an outgoing connection to a remote acceptor peer asynchronously or synchronously, and instantiates/activates a <code>Service Handler</code> once the connection is established.</li>
+            </ul>
+            <p><strong>Key Benefit:</strong> Decouples the low-level connection mechanisms (TCP, SSL, IPC) from the higher-level service processing logic encapsulated in the <code>Service Handler</code>.</p>
+          </div>
+        </details>
+
+        <!-- Q3.3 -->
+        <details class="drill-item" id="q11">
+          <summary>
+            <span class="drill-tag">Select all · 5 pts</span>
+            <span class="drill-q">Which statements accurately describe the <strong>Component Configurator</strong> pattern?</span>
+            <ul class="drill-options">
+              <li>(a) It enables an application to link and unlink its component implementations dynamically at runtime without recompiling or restarting.</li>
+              <li>(b) It is used by operating system kernels to load dynamic device drivers and Web servers (e.g. Apache/Nginx modules).</li>
+              <li>(c) It guarantees compile-time type safety across all dynamically loaded module interfaces.</li>
+              <li>(d) It uses a Component Repository to maintain references to all currently configured components.</li>
+              <li>(e) Dynamic reconfiguration can introduce security risks if shared library signatures are not verified prior to execution.</li>
+            </ul>
+            <span class="drill-reveal-hint"></span>
+          </summary>
+          <div class="drill-a">
+            <p><strong>Correct: (a), (b), (d), (e).</strong></p>
+            <ul>
+              <li><strong>(a) is True:</strong> This is the exact intent of Component Configurator.</li>
+              <li><strong>(b) is True:</strong> Standard practical examples include Linux kernel modules (<code>insmod</code>), Apache DSO modules, and JVM plugins.</li>
+              <li><strong>(c) is False:</strong> Dynamic runtime linking bypasses compile-time checks and relies on runtime interface casting / symbol resolution (<code>dlopen</code>/<code>dlsym</code>).</li>
+              <li><strong>(d) is True:</strong> The Component Repository tracks active component instances and lifecycle hooks (<code>init</code>, <code>suspend</code>, <code>resume</code>, <code>fini</code>).</li>
+              <li><strong>(e) is True:</strong> Malicious dynamically loaded shared objects represent arbitrary code execution vulnerabilities.</li>
+            </ul>
+          </div>
+        </details>
+
+      </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- SECTION 4: SYSTEM DESIGN & TRAPS (15 PTS)  -->
+    <!-- ========================================== -->
+    <section class="chapter" id="section-4">
+      <div class="chapter-head">
+        <span class="chapter-num">4</span>
+        <h2>Comprehensive System Design Scenario &amp; Traps <span class="points-badge">15 Points</span></h2>
+      </div>
+      <p class="chapter-dek">A real-world architectural synthesis question testing pattern composition and trade-off evaluation.</p>
+
+      <div class="drill-list">
+
+        <!-- Q4.1 -->
+        <details class="drill-item" id="q12" open>
+          <summary>
+            <span class="drill-tag">Synthesis &amp; Case Study · 15 pts</span>
+            <span class="drill-q"><strong>Architectural Challenge: Ultra-Low-Latency Crypto Gateway.</strong> You are tasked with architecting a crypto exchange gateway that must sustain 80,000 concurrent WebSocket client connections, achieve sub-millisecond p99 request dispatch, and perform disk persistence without blocking incoming event streams.
+            <br><br>
+            Synthesize a cohesive architecture combining <strong>Reactor</strong>, <strong>Half-Sync/Half-Async</strong>, and <strong>Active Object</strong>. Provide the responsibilities of each pattern in your design and identify 3 critical architectural gotchas that would cause immediate grading deductions.</span>
+            <span class="drill-reveal-hint"></span>
+          </summary>
+          <div class="drill-a">
+            <p><strong>1. Architectural Pattern Composition:</strong></p>
+            <div class="arch-diagram-block">
+[ 80,000 WebSockets ]
+         │ (I/O Events)
+         ▼
+┌─────────────────────────────────────────────────────────────┐
+│ 1. REACTOR LAYER (Async Network Demux)                      │
+│    • epoll() on single/small thread pool                    │
+│    • Non-blocking read of order packets                     │
+└──────────────────────────┬──────────────────────────────────┘
+                           │ Enqueues Order Events
+                           ▼
+┌─────────────────────────────────────────────────────────────┐
+│ 2. HALF-SYNC / HALF-ASYNC QUEUEING BUFFER                    │
+│    • Bounded lock-free ring buffer (Disruptor / LMAX)       │
+│    • Enforces backpressure if downstream consumers lag      │
+└──────────────────────────┬──────────────────────────────────┘
+                           │ Worker Thread Pool Dequeues
+                           ▼
+┌─────────────────────────────────────────────────────────────┐
+│ 3. ACTIVE OBJECT (Persistence & Matching Engine)            │
+│    • Client Proxy immediately returns OrderFuture           │
+│    • Activation List stages disk journaling                 │
+│    • Servant executes matching logic on dedicated thread    │
+└─────────────────────────────────────────────────────────────┘</div>
+
+            <p><strong>Responsibilities Breakdown:</strong></p>
+            <ul>
+              <li><strong>Reactor Layer (Non-blocking I/O):</strong> Uses OS-level event demultiplexing (e.g. <code>epoll</code> in Linux) to manage all 80k connections across a minimal core-pinned thread pool. It only reads bytes into memory and never executes blocking logic.</li>
+              <li><strong>Half-Sync/Half-Async Queue:</strong> Acts as the shock absorber, translating high-speed asynchronous network reads into organized batches for synchronous worker execution.</li>
+              <li><strong>Active Object:</strong> Decouples the order submission from disk write-ahead-logging (WAL). The order gets submitted immediately, returns a <code>Future</code> to the client, and disk I/O occurs on a segregated background servant thread.</li>
+            </ul>
+
+            <div class="gotcha-box">
+              <strong>⚠️ 3 Critical Deductions (Grading Traps):</strong>
+              <ol style="margin: 0.5rem 0 0 1rem; padding: 0;">
+                <li><strong>Blocking inside the Reactor Thread:</strong> If any database call, synchronous file logging, or complex parsing is placed inside the Reactor event handler, the entire demultiplexer freezes, halting packet receipt across tens of thousands of connections.</li>
+                <li><strong>Thread-per-Connection for 80,000 connections:</strong> Recommending Thread-per-Connection creates 80k OS threads. At standard 1MB stack size, this requires 80 GB of RAM solely for thread stacks, triggering instantaneous OutOfMemory crashes.</li>
+                <li><strong>Unbounded Inter-Layer Queue:</strong> Using an unbounded queue in the Half-Sync/Half-Async layer allows fast bursts to consume entire heap memory before worker threads can catch up. A bounded queue with explicit TCP window shrink or client backpressure is mandatory.</li>
+              </ol>
+            </div>
+          </div>
+        </details>
+
+      </div>
+    </section>
+
+    <!-- Footer Navigation -->
+    <footer class="page-footer" style="margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--border); display: flex; justify-content: space-between;">
+      <span><a href="index.html">← Back to Course Hub</a></span>
+      <span><a href="#section-1" onclick="window.scrollTo({top:0, behavior:'smooth'})">Back to Top ↑</a></span>
+    </footer>
+
+  </div>
+</div>
+
+<script src="assets/site.js" defer></script>
+<script>
+// Mock Exam Interactive Timer Script
+var timerInterval = null;
+var secondsRemaining = 120 * 60; // 120 minutes
+
+function updateTimerDisplay() {
+  var minutes = Math.floor(secondsRemaining / 60);
+  var seconds = secondsRemaining % 60;
+  var formatted = (minutes < 10 ? "0" : "") + minutes + ":" + (seconds < 10 ? "0" : "") + seconds;
+  var display = document.getElementById("examTimerDisplay");
+  if (display) display.textContent = formatted;
+}
+
+function toggleTimer() {
+  var btn = document.getElementById("timerStartBtn");
+  if (timerInterval) {
+    clearInterval(timerInterval);
+    timerInterval = null;
+    if (btn) btn.textContent = "Resume Timer";
+    showToast("Exam timer paused");
+  } else {
+    timerInterval = setInterval(function() {
+      if (secondsRemaining > 0) {
+        secondsRemaining--;
+        updateTimerDisplay();
+      } else {
+        clearInterval(timerInterval);
+        timerInterval = null;
+        alert("Time is up! Please review your answers against the verified solutions.");
+      }
+    }, 1000);
+    if (btn) btn.textContent = "Pause Timer";
+    showToast("Exam timer started (120 mins)");
+  }
+}
+
+function expandAllSolutions() {
+  document.querySelectorAll("details.drill-item").forEach(function(d) {
+    d.open = true;
+  });
+  showToast("All verified solutions expanded");
+}
+
+function collapseAllSolutions() {
+  document.querySelectorAll("details.drill-item").forEach(function(d) {
+    d.open = false;
+  });
+  showToast("All solutions collapsed for self-testing");
+}
+</script>
+</body>
+</html>

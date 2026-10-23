@@ -1,0 +1,15 @@
+# Dependencies
+node_modules/
+package-lock.json
+
+# Local heavy course source PDFs & audio
+materials/
+*.m4a
+*.zip
+
+# Operating System
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log

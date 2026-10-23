@@ -1,0 +1,389 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pattern-Oriented Software Architecture | POSA 2026 Course Portal</title>
+<meta name="description" content="Modern, interactive course portal for Pattern-Oriented Software Architecture based on Prof. Dr. Jörg Schäfer's curriculum at Frankfurt University of Applied Sciences.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230c7a73'/%3E%3Cpath d='M8 10h16M8 16h16M8 22h10' stroke='%23fff' stroke-width='2.2' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+<style>
+  .module-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 1.5rem;
+    margin: 2.5rem 0;
+  }
+  .module-card {
+    background: var(--bg-raised);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 1.5rem;
+    transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .module-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+    border-color: var(--accent);
+  }
+  .card-badge {
+    align-self: flex-start;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    padding: 0.2rem 0.5rem;
+    background: var(--accent-soft);
+    color: var(--accent-ink);
+    border-radius: var(--radius-sm);
+    margin-bottom: 0.8rem;
+    font-family: var(--font-mono);
+  }
+  .card-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    color: var(--text);
+    font-family: var(--font-display);
+  }
+  .card-desc {
+    font-size: 0.92rem;
+    color: var(--text-muted);
+    line-height: 1.55;
+    margin-bottom: 1.25rem;
+  }
+  .card-link {
+    font-weight: 600;
+    color: var(--accent);
+    font-size: 0.9rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+  }
+  .hero-banner {
+    background: linear-gradient(135deg, var(--bg-raised) 0%, var(--accent-soft) 100%);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 2.5rem 2rem;
+    margin: 2rem 0;
+  }
+</style>
+<script>(function(){try{var t=localStorage.getItem('posa-theme')||'light';document.documentElement.setAttribute('data-theme',t);var m=localStorage.getItem('posa-mode')||'concept';document.documentElement.setAttribute('data-mode',m);}catch(e){}})();</script>
+</head>
+<body>
+
+<nav class="sitenav">
+  <div class="sitenav-inner">
+    <a class="sitenav-home" href="index.html">POSA 2026</a>
+    <div class="sitenav-links">
+      <a href="index.html" class="active">Overview</a>
+      <a href="unit-1-strategy.html">1 · Strategy</a>
+      <a href="unit-6-solid.html">6 · SOLID</a>
+      <a href="unit-7-packaging.html">7 · Packaging</a>
+      <a href="unit-12-architectural.html">12 · Architecture</a>
+      <a href="past-papers.html">📝 Past Papers</a>
+      <a href="mock-1.html">Mock 1</a>
+      <a href="mock-2.html">Mock 2</a>
+    </div>
+    <button class="nav-toggle" id="navToggle" type="button" aria-expanded="false" aria-controls="navPanel">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+      Menu
+    </button>
+    <button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle color theme">
+      <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path></svg>
+      <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+    </button>
+    <button class="mode-toggle" id="modeToggle" type="button" aria-label="Toggle technical mode" style="font-size: 1.1rem; line-height: 1;">🎓</button>
+  </div>
+  <div class="nav-panel" id="navPanel">
+    <div class="nav-panel-section">
+      <span class="nav-panel-label">Course Navigation</span>
+      <a href="index.html" class="active">Course Overview</a>
+      <a href="past-papers.html">📝 Past Papers &amp; Mocks Hub</a>
+      <a href="mock-1.html">Mock Exam 1 (75 pts)</a>
+      <a href="mock-2.html">Mock Exam 2 (95 pts)</a>
+      <a href="unit-1-strategy.html">Unit 1 · Strategy Pattern</a>
+      <a href="unit-2-behavioral.html">Unit 2 · Behavioral Patterns</a>
+      <a href="unit-3-structural.html">Unit 3 · Structural Patterns</a>
+      <a href="unit-4-junit.html">Unit 4 · Case Study JUnit</a>
+      <a href="unit-5-theory.html">Unit 5 · Pattern Theory</a>
+      <a href="unit-6-solid.html">Unit 6 · SOLID Principles</a>
+      <a href="unit-7-packaging.html">Unit 7 · Packaging Principles &amp; Metrics</a>
+      <a href="unit-8-creational.html">Unit 8 · Creational Patterns</a>
+      <a href="unit-9-flexibility.html">Unit 9 · Flexibility Patterns</a>
+      <a href="unit-10-decoupling.html">Unit 10 · Decoupling Patterns</a>
+      <a href="unit-11-mvc.html">Unit 11 · Case Study MVC</a>
+      <a href="unit-12-architectural.html">Unit 12 · Architectural Patterns</a>
+      <a href="unit-13-analysis.html">Unit 13 · Analysis &amp; Enterprise</a>
+      <a href="unit-14-testing.html">Unit 14 · Testing Patterns</a>
+      <a href="unit-15-criticism.html">Unit 15 · Pattern Criticism</a>
+      <a href="unit-16-genai.html">Unit 16 · Patterns &amp; GenAI</a>
+    </div>
+  </div>
+</nav>
+
+<div class="page-shell">
+  <aside class="sidebar-toc">
+    <div class="sidebar-block">
+      <span class="sidebar-label">Curriculum</span>
+      <a href="#featured"><span class="toc-num">1</span>Interactive Modules</a>
+      <a href="#curriculum-roadmap"><span class="toc-num">2</span>All 16 Units Roadmap</a>
+      <a href="#exam-hub"><span class="toc-num">3</span>Mock Exams Hub</a>
+    </div>
+    <div class="sidebar-block">
+      <span class="sidebar-label">Course Origin</span>
+      <p style="font-size: 0.85rem; color: var(--text-muted); margin: 0; line-height: 1.5;">
+        <strong>Prof. Dr. Jörg Schäfer</strong><br>
+        Frankfurt University of Applied Sciences<br>
+        <em>Computer Science &amp; Engineering</em>
+      </p>
+    </div>
+  </aside>
+
+  <div class="page">
+    <div class="masthead">
+      <div>
+        <div class="eyebrow">Advanced Software Engineering · POSA 2026</div>
+        <h1 class="title">Pattern-Oriented Software Architecture</h1>
+      </div>
+    </div>
+    
+    <div class="hero-banner">
+      <h2 style="margin-top: 0; font-family: var(--font-display); color: var(--accent-ink);">Welcome to the POSA Interactive Portal</h2>
+      <p style="font-size: 1.05rem; line-height: 1.6; color: var(--text); margin-bottom: 1.5rem;">
+        Transformed from Prof. Dr. Jörg Schäfer’s 96-page course manuscript into an interactive, visual, and practice-oriented learning system. Every unit features architecture diagrams, runnable code, and verified self-study exam solutions.
+      </p>
+      <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+        <a href="unit-1-strategy.html" class="btn-exam" style="text-decoration: none; padding: 0.6rem 1.25rem;">Start Unit 1: Strategy</a>
+        <a href="past-papers.html" class="btn-exam btn-outline" style="text-decoration: none; padding: 0.6rem 1.25rem;">📝 Past Papers &amp; Mocks</a>
+      </div>
+    </div>
+
+    <!-- Featured Modules -->
+    <h2 id="featured" style="font-family: var(--font-display); margin-top: 3rem;">Featured Modern Units</h2>
+    <div class="module-grid">
+      
+      <!-- Unit 1 -->
+      <div class="module-card">
+        <div>
+          <span class="card-badge">Unit 1 · Behavioral</span>
+          <h3 class="card-title">Strategy Pattern</h3>
+          <p class="card-desc">
+            The SimUDuck evolution: why inheritance breaks when requirements change. Program to interfaces, favor composition over inheritance, and dynamic runtime sorters.
+          </p>
+        </div>
+        <a href="unit-1-strategy.html" class="card-link">Explore Unit 1 &rarr;</a>
+      </div>
+
+      <!-- Unit 2 -->
+      <div class="module-card">
+        <div>
+          <span class="card-badge">Unit 2 · Behavioral</span>
+          <h3 class="card-title">Template &amp; Command</h3>
+          <p class="card-desc">
+            Brewing Coffee &amp; Tea: abstracting common algorithmic skeletons. The Hollywood Principle (“Don’t call us, we’ll call you!”), Macro Commands, and undo/redo stacks.
+          </p>
+        </div>
+        <a href="unit-2-behavioral.html" class="card-link">Explore Unit 2 &rarr;</a>
+      </div>
+
+      <!-- Unit 3 -->
+      <div class="module-card">
+        <div>
+          <span class="card-badge">Unit 3 · Structural</span>
+          <h3 class="card-title">Iterator &amp; Composite</h3>
+          <p class="card-desc">
+            Walking composite structures without exposing internal arrays. Representing nested menus and part-whole trees uniformly while eliminating recursive conditionals.
+          </p>
+        </div>
+        <a href="unit-3-structural.html" class="card-link">Explore Unit 3 &rarr;</a>
+      </div>
+
+      <!-- Unit 6 -->
+      <div class="module-card">
+        <div>
+          <span class="card-badge">Unit 6 · Principles</span>
+          <h3 class="card-title">SOLID &amp; Design Smells</h3>
+          <p class="card-desc">
+            The 7 fatal design smells (Rigidity, Fragility, Viscosity, Immobility). The 5 SOLID principles (SRP, OCP, LSP, ISP, DIP) and why Square is NOT a Rectangle in OO.
+          </p>
+        </div>
+        <a href="unit-6-solid.html" class="card-link">Explore Unit 6 &rarr;</a>
+      </div>
+
+      <!-- Unit 7 -->
+      <div class="module-card">
+        <div>
+          <span class="card-badge">Unit 7 · Principles &amp; Metrics</span>
+          <h3 class="card-title">Packaging &amp; Metrics</h3>
+          <p class="card-desc">
+            Package Cohesion (REP, CRP, CCP) and Coupling (ADP, SDP, SAP). Mathematical metrics: Instability ($I$), Abstractness ($A$), and Normalized Distance ($D$) from the Main Sequence.
+          </p>
+        </div>
+        <a href="unit-7-packaging.html" class="card-link">Explore Unit 7 &rarr;</a>
+      </div>
+
+      <!-- Unit 12 -->
+      <div class="module-card">
+        <div>
+          <span class="card-badge">Unit 12 · Architecture</span>
+          <h3 class="card-title">Pipes &amp; Filters &amp; Blackboard</h3>
+          <p class="card-desc">
+            Macro-level streaming pipelines versus centralized opportunistic AI blackboards for non-deterministic speech and sensor processing. Apache hooks case study.
+          </p>
+        </div>
+        <a href="unit-12-architectural.html" class="card-link">Explore Unit 12 &rarr;</a>
+      </div>
+
+    </div>
+
+    <!-- Complete 16-Unit Roadmap -->
+    <h2 id="curriculum-roadmap" style="font-family: var(--font-display); margin-top: 3rem;">Complete 16-Unit Course Roadmap</h2>
+    <div style="background: var(--bg-raised); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 1.5rem; margin-top: 1rem;">
+      <table style="width: 100%; border-collapse: collapse; font-size: 0.92rem;">
+        <thead>
+          <tr style="border-bottom: 2px solid var(--border); text-align: left;">
+            <th style="padding: 0.75rem 0.5rem;">Unit</th>
+            <th style="padding: 0.75rem 0.5rem;">Title &amp; Core Patterns</th>
+            <th style="padding: 0.75rem 0.5rem;">Key Takeaway</th>
+            <th style="padding: 0.75rem 0.5rem;">Interactive Link</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="border-bottom: 1px solid var(--border);">
+            <td style="padding: 0.75rem 0.5rem; font-weight: 700;"><a href="unit-1-strategy.html">Unit 1</a></td>
+            <td style="padding: 0.75rem 0.5rem;">Introduction &amp; Strategy Pattern</td>
+            <td style="padding: 0.75rem 0.5rem; color: var(--text-muted);">Encapsulate what varies; delegate instead of inherit</td>
+            <td style="padding: 0.75rem 0.5rem;"><a href="unit-1-strategy.html" class="card-link">View Notes &rarr;</a></td>
+          </tr>
+          <tr style="border-bottom: 1px solid var(--border);">
+            <td style="padding: 0.75rem 0.5rem; font-weight: 700;"><a href="unit-2-behavioral.html">Unit 2</a></td>
+            <td style="padding: 0.75rem 0.5rem;">Behavioral: Template Method &amp; Command</td>
+            <td style="padding: 0.75rem 0.5rem; color: var(--text-muted);">Hollywood Principle &amp; Modeling verbs as first-class objects</td>
+            <td style="padding: 0.75rem 0.5rem;"><a href="unit-2-behavioral.html" class="card-link">View Notes &rarr;</a></td>
+          </tr>
+          <tr style="border-bottom: 1px solid var(--border);">
+            <td style="padding: 0.75rem 0.5rem; font-weight: 700;"><a href="unit-3-structural.html">Unit 3</a></td>
+            <td style="padding: 0.75rem 0.5rem;">Structural: Iterator &amp; Composite</td>
+            <td style="padding: 0.75rem 0.5rem; color: var(--text-muted);">Uniform client handling of leaf and tree hierarchies</td>
+            <td style="padding: 0.75rem 0.5rem;"><a href="unit-3-structural.html" class="card-link">View Notes &rarr;</a></td>
+          </tr>
+          <tr style="border-bottom: 1px solid var(--border);">
+            <td style="padding: 0.75rem 0.5rem; font-weight: 700;"><a href="unit-4-junit.html">Unit 4</a></td>
+            <td style="padding: 0.75rem 0.5rem;">Case Study: JUnit Architecture (Cook’s Tour)</td>
+            <td style="padding: 0.75rem 0.5rem; color: var(--text-muted);">Composite, Command, and Template working in harmony</td>
+            <td style="padding: 0.75rem 0.5rem;"><a href="unit-4-junit.html" class="card-link">View Notes &rarr;</a></td>
+          </tr>
+          <tr style="border-bottom: 1px solid var(--border);">
+            <td style="padding: 0.75rem 0.5rem; font-weight: 700;"><a href="unit-5-theory.html">Unit 5</a></td>
+            <td style="padding: 0.75rem 0.5rem;">Pattern Theory (Christopher Alexander &amp; GoF)</td>
+            <td style="padding: 0.75rem 0.5rem; color: var(--text-muted);">Pattern languages, categories, and pattern criticisms</td>
+            <td style="padding: 0.75rem 0.5rem;"><a href="unit-5-theory.html" class="card-link">View Notes &rarr;</a></td>
+          </tr>
+          <tr style="border-bottom: 1px solid var(--border);">
+            <td style="padding: 0.75rem 0.5rem; font-weight: 700;"><a href="unit-6-solid.html">Unit 6</a></td>
+            <td style="padding: 0.75rem 0.5rem;">OO Principles I: SOLID &amp; Design Smells</td>
+            <td style="padding: 0.75rem 0.5rem; color: var(--text-muted);">The 7 architectural smells &amp; Uncle Bob’s SOLID rules</td>
+            <td style="padding: 0.75rem 0.5rem;"><a href="unit-6-solid.html" class="card-link">View Notes &rarr;</a></td>
+          </tr>
+          <tr style="border-bottom: 1px solid var(--border);">
+            <td style="padding: 0.75rem 0.5rem; font-weight: 700;"><a href="unit-7-packaging.html">Unit 7</a></td>
+            <td style="padding: 0.75rem 0.5rem;">OO Principles II: Packaging &amp; Metrics</td>
+            <td style="padding: 0.75rem 0.5rem; color: var(--text-muted);">REP, CRP, CCP, ADP, SDP, SAP &amp; Main Sequence calculations</td>
+            <td style="padding: 0.75rem 0.5rem;"><a href="unit-7-packaging.html" class="card-link">View Notes &rarr;</a></td>
+          </tr>
+          <tr style="border-bottom: 1px solid var(--border);">
+            <td style="padding: 0.75rem 0.5rem; font-weight: 700;"><a href="unit-8-creational.html">Unit 8</a></td>
+            <td style="padding: 0.75rem 0.5rem;">Creational Patterns: Abstract Factory &amp; Singleton</td>
+            <td style="padding: 0.75rem 0.5rem; color: var(--text-muted);">Pizza factories, families of products, and thread safety</td>
+            <td style="padding: 0.75rem 0.5rem;"><a href="unit-8-creational.html" class="card-link">View Notes &rarr;</a></td>
+          </tr>
+          <tr style="border-bottom: 1px solid var(--border);">
+            <td style="padding: 0.75rem 0.5rem; font-weight: 700;"><a href="unit-9-flexibility.html">Unit 9</a></td>
+            <td style="padding: 0.75rem 0.5rem;">Flexibility Patterns: Decorator &amp; Adapter</td>
+            <td style="padding: 0.75rem 0.5rem; color: var(--text-muted);">Dynamic runtime wrapping vs interface translation</td>
+            <td style="padding: 0.75rem 0.5rem;"><a href="unit-9-flexibility.html" class="card-link">View Notes &rarr;</a></td>
+          </tr>
+          <tr style="border-bottom: 1px solid var(--border);">
+            <td style="padding: 0.75rem 0.5rem; font-weight: 700;"><a href="unit-10-decoupling.html">Unit 10</a></td>
+            <td style="padding: 0.75rem 0.5rem;">Decoupling: Observer &amp; Chain of Responsibility</td>
+            <td style="padding: 0.75rem 0.5rem; color: var(--text-muted);">Event publishers, subscriber models, and Servlet filter pipelines</td>
+            <td style="padding: 0.75rem 0.5rem;"><a href="unit-10-decoupling.html" class="card-link">View Notes &rarr;</a></td>
+          </tr>
+          <tr style="border-bottom: 1px solid var(--border);">
+            <td style="padding: 0.75rem 0.5rem; font-weight: 700;"><a href="unit-11-mvc.html">Unit 11</a></td>
+            <td style="padding: 0.75rem 0.5rem;">Case Study: Model-View-Controller (MVC)</td>
+            <td style="padding: 0.75rem 0.5rem; color: var(--text-muted);">Triad pattern composition in desktop, web, and enterprise</td>
+            <td style="padding: 0.75rem 0.5rem;"><a href="unit-11-mvc.html" class="card-link">View Notes &rarr;</a></td>
+          </tr>
+          <tr style="border-bottom: 1px solid var(--border);">
+            <td style="padding: 0.75rem 0.5rem; font-weight: 700;"><a href="unit-12-architectural.html">Unit 12</a></td>
+            <td style="padding: 0.75rem 0.5rem;">Architectural Patterns: Pipes &amp; Filters, Blackboard</td>
+            <td style="padding: 0.75rem 0.5rem; color: var(--text-muted);">Streaming data pipelines vs centralized opportunistic AI blackboard</td>
+            <td style="padding: 0.75rem 0.5rem;"><a href="unit-12-architectural.html" class="card-link">View Notes &rarr;</a></td>
+          </tr>
+          <tr style="border-bottom: 1px solid var(--border);">
+            <td style="padding: 0.75rem 0.5rem; font-weight: 700;"><a href="unit-13-analysis.html">Unit 13</a></td>
+            <td style="padding: 0.75rem 0.5rem;">Analysis &amp; Enterprise Patterns (Martin Fowler)</td>
+            <td style="padding: 0.75rem 0.5rem; color: var(--text-muted);">Quantity, Measurement, Observation &amp; Language Idioms</td>
+            <td style="padding: 0.75rem 0.5rem;"><a href="unit-13-analysis.html" class="card-link">View Notes &rarr;</a></td>
+          </tr>
+          <tr style="border-bottom: 1px solid var(--border);">
+            <td style="padding: 0.75rem 0.5rem; font-weight: 700;"><a href="unit-14-testing.html">Unit 14</a></td>
+            <td style="padding: 0.75rem 0.5rem;">Testing Patterns &amp; Test Doubles</td>
+            <td style="padding: 0.75rem 0.5rem; color: var(--text-muted);">Mocks, Stubs, Dummies, Fakes, and Spies</td>
+            <td style="padding: 0.75rem 0.5rem;"><a href="unit-14-testing.html" class="card-link">View Notes &rarr;</a></td>
+          </tr>
+          <tr style="border-bottom: 1px solid var(--border);">
+            <td style="padding: 0.75rem 0.5rem; font-weight: 700;"><a href="unit-15-criticism.html">Unit 15</a></td>
+            <td style="padding: 0.75rem 0.5rem;">Criticism &amp; Dynamic Languages</td>
+            <td style="padding: 0.75rem 0.5rem; color: var(--text-muted);">Peter Norvig: 16 of 23 patterns disappear in dynamic languages</td>
+            <td style="padding: 0.75rem 0.5rem;"><a href="unit-15-criticism.html" class="card-link">View Notes &rarr;</a></td>
+          </tr>
+          <tr>
+            <td style="padding: 0.75rem 0.5rem; font-weight: 700;"><a href="unit-16-genai.html">Unit 16</a></td>
+            <td style="padding: 0.75rem 0.5rem;">Patterns and Generative AI</td>
+            <td style="padding: 0.75rem 0.5rem; color: var(--text-muted);">Do patterns still matter in the age of LLMs? Weather station case study</td>
+            <td style="padding: 0.75rem 0.5rem;"><a href="unit-16-genai.html" class="card-link">View Notes &rarr;</a></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Exam Hub -->
+    <h2 id="exam-hub" style="font-family: var(--font-display); margin-top: 3rem;">Past Papers &amp; Practice Mocks</h2>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 1rem;">
+      <div style="padding: 1.5rem; background: var(--bg-raised); border: 1px solid var(--border); border-radius: var(--radius-md);">
+        <span class="card-badge">Simulation · 75 Pts</span>
+        <h3 style="margin: 0.5rem 0; font-family: var(--font-display);">Mock Exam 1: Core POSA &amp; Concurrency</h3>
+        <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 1rem;">
+          Broker, Layers, Blackboard, Reactor, Proactor, Half-Sync/Half-Async, and 80k-connection Crypto Gateway.
+        </p>
+        <a href="mock-1.html" class="btn-exam" style="text-decoration: none; display: inline-block;">Take Mock 1 &rarr;</a>
+      </div>
+      <div style="padding: 1.5rem; background: var(--accent-soft); border: 1px solid var(--accent); border-radius: var(--radius-md);">
+        <span class="card-badge" style="background: var(--accent); color: #fff;">Comprehensive · 95 Pts</span>
+        <h3 style="margin: 0.5rem 0; font-family: var(--font-display);">Mock Exam 2: Frankfurt UAS Past Paper</h3>
+        <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 1rem;">
+          Strategy, Template, Command, Composite, SOLID, Package Metrics ($I, A, D$), Factories, Decorators, and GenAI.
+        </p>
+        <a href="mock-2.html" class="btn-exam" style="text-decoration: none; display: inline-block;">Take Mock 2 &rarr;</a>
+      </div>
+    </div>
+
+    <footer class="page-footer" style="margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--border);">
+      <span>Pattern-Oriented Software Architecture · Frankfurt University of Applied Sciences</span>
+    </footer>
+
+  </div>
+</div>
+
+<script src="assets/site.js" defer></script>
+</body>
+</html>

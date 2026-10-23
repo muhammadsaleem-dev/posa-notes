@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Unit 10: Decoupling Patterns (Observer &amp; Chain of Responsibility) | POSA 2026</title>
+<meta name="description" content="Unit 10 of Pattern-Oriented Software Architecture by Prof. Dr. Jörg Schäfer: Observer (Push vs Pull, Lapsed Listener), Chain of Responsibility (Servlet Filters), and self-study questions.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230c7a73'/%3E%3Cpath d='M8 10h16M8 16h16M8 22h10' stroke='%23fff' stroke-width='2.2' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+<style>
+  .quote-card {
+    margin: 1.5rem 0 2rem;
+    padding: 1.25rem 1.5rem;
+    background: var(--accent-soft);
+    border-left: 4px solid var(--accent);
+    border-radius: 0 var(--radius-md) var(--radius-md) 0;
+    font-style: italic;
+    color: var(--accent-ink);
+  }
+  .quote-author {
+    display: block;
+    margin-top: 0.5rem;
+    font-style: normal;
+    font-weight: 700;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .pipeline-step {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0.75rem 0;
+    flex-wrap: wrap;
+  }
+  .pipeline-node {
+    padding: 0.6rem 1rem;
+    background: var(--bg-raised);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    font-weight: 600;
+    font-size: 0.88rem;
+    font-family: var(--font-mono);
+  }
+</style>
+<script>(function(){try{var t=localStorage.getItem('posa-theme')||'light';document.documentElement.setAttribute('data-theme',t);var m=localStorage.getItem('posa-mode')||'concept';document.documentElement.setAttribute('data-mode',m);}catch(e){}})();</script>
+</head>
+<body>
+
+<nav class="sitenav">
+  <div class="sitenav-inner">
+    <a class="sitenav-home" href="index.html">POSA 2026</a>
+    <div class="sitenav-links">
+      <a href="index.html">Overview</a>
+      <a href="unit-9-flexibility.html">9 · Flexibility</a>
+      <a href="unit-10-decoupling.html" class="active">10 · Decoupling</a>
+      <a href="unit-11-mvc.html">11 · MVC</a>
+      <a href="mock-1.html">📝 Mock 1</a>
+    </div>
+    <button class="nav-toggle" id="navToggle" type="button" aria-expanded="false" aria-controls="navPanel">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+      Menu
+    </button>
+    <button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle color theme">
+      <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path></svg>
+      <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+    </button>
+    <button class="mode-toggle" id="modeToggle" type="button" aria-label="Toggle technical mode" style="font-size: 1.1rem; line-height: 1;">🎓</button>
+  </div>
+  <div class="nav-panel" id="navPanel">
+    <div class="nav-panel-section">
+      <span class="nav-panel-label">Course Navigation</span>
+      <a href="index.html">Overview</a>
+      <a href="unit-9-flexibility.html">Unit 9 · Flexibility Patterns</a>
+      <a href="unit-10-decoupling.html" class="active">Unit 10 · Decoupling Patterns</a>
+      <a href="unit-11-mvc.html">Unit 11 · Case Study MVC</a>
+      <a href="mock-1.html">📝 Mock Exam 1</a>
+    </div>
+  </div>
+</nav>
+
+<div class="page-shell">
+  <aside class="sidebar-toc">
+    <div class="sidebar-block">
+      <span class="sidebar-label">On This Page</span>
+      <a href="#observer-pattern"><span class="toc-num">1</span>Observer: Publisher-Subscriber</a>
+      <a href="#lapsed-listener"><span class="toc-num">2</span>The Lapsed Listener Memory Leak</a>
+      <a href="#chain-of-responsibility"><span class="toc-num">3</span>Chain of Responsibility &amp; Filters</a>
+      <a href="#self-study"><span class="toc-num">4</span>Self-Study Exam Questions</a>
+    </div>
+    <div class="sidebar-block">
+      <span class="sidebar-label">Instructor</span>
+      <p style="font-size: 0.85rem; color: var(--text-muted); margin: 0;">
+        Prof. Dr. Jörg Schäfer<br>
+        <em>Frankfurt University of Applied Sciences</em>
+      </p>
+    </div>
+  </aside>
+
+  <div class="page">
+    <div class="masthead">
+      <div>
+        <div class="eyebrow">Unit 10 · Decoupling &amp; Event Handling</div>
+        <h1 class="title">Observer &amp; Chain of Responsibility</h1>
+      </div>
+    </div>
+
+    <div class="quote-card">
+      “Don’t call us, we’ll call you.”
+      <span class="quote-author">— The Hollywood Principle</span>
+    </div>
+
+    <p class="dek">
+      Decoupling producers of information from consumers through clean publisher-subscriber relationships, and passing requests through a sequential pipeline of handlers.
+    </p>
+
+    <!-- Section 1: Observer -->
+    <section class="chapter" id="observer-pattern">
+      <div class="chapter-head">
+        <span class="chapter-num">1</span>
+        <h2>10.3 The Observer Pattern</h2>
+      </div>
+      <p class="chapter-dek">Publish-Subscribe architecture for state change broadcasting.</p>
+
+      <div style="background: var(--bg-raised); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 1.5rem; margin-bottom: 1.5rem;">
+        <p><strong>GoF Intent:</strong> Define a one-to-many dependency between objects so that when one object changes state, all its dependents are notified and updated automatically.</p>
+        <p><strong>Push vs. Pull Notification Models:</strong></p>
+        <ul>
+          <li><strong>Push Model:</strong> The Subject broadcasts detailed data bundles to every observer in <code>update(temp, humidity, pressure)</code>.
+            <br><em>Pros:</em> Immediate access. <em>Cons:</em> Inflexible if some observers only care about temperature.</li>
+          <li><strong>Pull Model:</strong> The Subject simply notifies <code>update(this)</code> or <code>update()</code>, and observers call specific getters to retrieve only what they require.
+            <br><em>Pros:</em> Maximum flexibility and evolution. <em>Cons:</em> Multiple subsequent method calls.</li>
+        </ul>
+      </div>
+
+      <div class="arch-diagram-block">
+┌────────────────────────────────────────┐               ┌───────────────────────────────┐
+│              &lt;&lt;interface&gt;&gt;             │               │         &lt;&lt;interface&gt;&gt;         │
+│                 Subject                │  notifies 0..*│            Observer           │
+├────────────────────────────────────────┤──────────────&gt;├───────────────────────────────┤
+│ + registerObserver(Observer o)         │               │ + update(float temp, ...)     │
+│ + removeObserver(Observer o)           │               └───────────────▲───────────────┘
+│ + notifyObservers()                    │                               │
+└───────────────────▲────────────────────┘                               │ implements
+                    │ implements                          ┌──────────────┴──────────────┐
+┌───────────────────┴────────────────────┐                ┌──────────────┴──────────────┐
+│              WeatherData               │                │     CurrentConditionsDisplay │
+├────────────────────────────────────────┤                ├─────────────────────────────┤
+│ - observers: List&lt;Observer&gt;            │                │ + update(...)               │
+│ - temperature, humidity, pressure      │                │ + display()                 │
+└────────────────────────────────────────┘                └─────────────────────────────┘</div>
+    </section>
+
+    <!-- Section 2: Memory Leak -->
+    <section class="chapter" id="lapsed-listener">
+      <div class="chapter-head">
+        <span class="chapter-num">2</span>
+        <h2>The "Lapsed Listener" Memory Leak</h2>
+      </div>
+      
+      <div style="padding: 1.25rem; background: var(--warn-soft); border-left: 3px solid var(--warn); border-radius: 0 var(--radius-sm) var(--radius-sm) 0; margin: 1rem 0;">
+        <strong style="color: var(--warn);">⚠️ Critical Production Pitfall:</strong>
+        <p style="font-size: 0.9rem; margin: 0.5rem 0 0; line-height: 1.6;">
+          When an Observer registers with a long-lived Subject, the Subject holds a strong reference in its listener list. If the client forgets to call <code>removeObserver()</code> when discarding the observer, the Garbage Collector <strong>cannot reclaim the observer</strong>!
+          <br><br>
+          <strong>Remedies:</strong> (1) Strict lifecycle cleanup, or (2) Store observers using <code>WeakReference</code> (or <code>WeakHashMap</code>) so the observer can be collected when no other strong references exist.
+        </p>
+      </div>
+    </section>
+
+    <!-- Section 3: Chain of Responsibility -->
+    <section class="chapter" id="chain-of-responsibility">
+      <div class="chapter-head">
+        <span class="chapter-num">3</span>
+        <h2>10.6 The Chain of Responsibility Pattern</h2>
+      </div>
+      <p class="chapter-dek">Decoupling request senders from concrete receiver chains.</p>
+
+      <p><strong>Intent:</strong> Avoid coupling the sender of a request to its receiver by giving more than one object a chance to handle the request. Chain the receiving objects and pass the request along the chain until an object handles it.</p>
+
+      <h3 style="font-family: var(--font-display);">Servlet Filter Pipelines</h3>
+      <div class="pipeline-step">
+        <div class="pipeline-node">[HTTP Request]</div>
+        <span>&rarr;</span>
+        <div class="pipeline-node">LoggingFilter</div>
+        <span>&rarr;</span>
+        <div class="pipeline-node">AuthenticationFilter</div>
+        <span>&rarr;</span>
+        <div class="pipeline-node">CompressionFilter</div>
+        <span>&rarr;</span>
+        <div class="pipeline-node">[Servlet]</div>
+      </div>
+      <p style="font-size: 0.9rem; color: var(--text-muted);">
+        Each filter in Java EE / Spring calls <code>chain.doFilter(request, response)</code> to forward down the chain, or short-circuits the pipeline (e.g., if authentication fails, returning HTTP 401 immediately).
+      </p>
+    </section>
+
+    <!-- Section 4: Self Study -->
+    <section class="chapter" id="self-study">
+      <div class="chapter-head">
+        <span class="chapter-num">4</span>
+        <h2>10.11 Questions for Self-Study</h2>
+      </div>
+
+      <div class="drill-list">
+        <details class="drill-item" open>
+          <summary>
+            <span class="drill-tag">Exam Drill</span>
+            <span class="drill-q">Compare Chain of Responsibility with the Decorator pattern. How are their structural chains similar, yet their semantic intents completely different?</span>
+            <span class="drill-reveal-hint"></span>
+          </summary>
+          <div class="drill-a">
+            <p><strong>Structural Similarity:</strong></p>
+            <p>Both patterns rely on recursively linked object chains implementing a common interface, where an object receives an invocation and delegates to the next node.</p>
+            <p><strong>Intent Differences:</strong></p>
+            <ul>
+              <li><strong>Decorator:</strong> Focuses on <em>additive composition</em>. Every decorator executes its own behavior and passes execution down to the core object. The entire chain always executes to augment responsibilities.</li>
+              <li><strong>Chain of Responsibility:</strong> Focuses on <em>handling or delegating</em>. A handler in the chain may handle the request and <strong>terminate the chain</strong>, or choose to pass it forward. Senders do not know which concrete node (if any) will service the request.</li>
+            </ul>
+          </div>
+        </details>
+      </div>
+    </section>
+
+    <footer class="page-footer" style="margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--border); display: flex; justify-content: space-between;">
+      <span><a href="unit-9-flexibility.html">← Previous: Unit 9 Flexibility</a></span>
+      <span><a href="unit-11-mvc.html">Next: Unit 11 Case Study MVC →</a></span>
+    </footer>
+
+  </div>
+</div>
+
+<script src="assets/site.js" defer></script>
+</body>
+</html>

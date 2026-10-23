@@ -1,0 +1,246 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Unit 11: Case Study Model-View-Controller (MVC) | POSA 2026</title>
+<meta name="description" content="Unit 11 of Pattern-Oriented Software Architecture by Prof. Dr. Jörg Schäfer: Model-View-Controller (MVC), composite views, observer models, web MVC, and self-study questions.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230c7a73'/%3E%3Cpath d='M8 10h16M8 16h16M8 22h10' stroke='%23fff' stroke-width='2.2' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+<style>
+  .quote-card {
+    margin: 1.5rem 0 2rem;
+    padding: 1.25rem 1.5rem;
+    background: var(--accent-soft);
+    border-left: 4px solid var(--accent);
+    border-radius: 0 var(--radius-md) var(--radius-md) 0;
+    font-style: italic;
+    color: var(--accent-ink);
+  }
+  .quote-author {
+    display: block;
+    margin-top: 0.5rem;
+    font-style: normal;
+    font-weight: 700;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .triad-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1.25rem;
+    margin: 1.5rem 0;
+  }
+  .triad-card {
+    background: var(--bg-raised);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 1.25rem;
+  }
+  .triad-card h4 {
+    margin-top: 0;
+    color: var(--accent);
+    font-family: var(--font-display);
+  }
+</style>
+<script>(function(){try{var t=localStorage.getItem('posa-theme')||'light';document.documentElement.setAttribute('data-theme',t);var m=localStorage.getItem('posa-mode')||'concept';document.documentElement.setAttribute('data-mode',m);}catch(e){}})();</script>
+</head>
+<body>
+
+<nav class="sitenav">
+  <div class="sitenav-inner">
+    <a class="sitenav-home" href="index.html">POSA 2026</a>
+    <div class="sitenav-links">
+      <a href="index.html">Overview</a>
+      <a href="unit-10-decoupling.html">10 · Decoupling</a>
+      <a href="unit-11-mvc.html" class="active">11 · MVC</a>
+      <a href="unit-12-architectural.html">12 · Architecture</a>
+      <a href="mock-1.html">📝 Mock 1</a>
+    </div>
+    <button class="nav-toggle" id="navToggle" type="button" aria-expanded="false" aria-controls="navPanel">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+      Menu
+    </button>
+    <button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle color theme">
+      <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path></svg>
+      <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+    </button>
+    <button class="mode-toggle" id="modeToggle" type="button" aria-label="Toggle technical mode" style="font-size: 1.1rem; line-height: 1;">🎓</button>
+  </div>
+  <div class="nav-panel" id="navPanel">
+    <div class="nav-panel-section">
+      <span class="nav-panel-label">Course Navigation</span>
+      <a href="index.html">Overview</a>
+      <a href="unit-10-decoupling.html">Unit 10 · Decoupling Patterns</a>
+      <a href="unit-11-mvc.html" class="active">Unit 11 · Case Study MVC</a>
+      <a href="unit-12-architectural.html">Unit 12 · Architectural Patterns</a>
+      <a href="mock-1.html">📝 Mock Exam 1</a>
+    </div>
+  </div>
+</nav>
+
+<div class="page-shell">
+  <aside class="sidebar-toc">
+    <div class="sidebar-block">
+      <span class="sidebar-label">On This Page</span>
+      <a href="#mvc-triad"><span class="toc-num">1</span>The MVC Compound Pattern</a>
+      <a href="#pattern-composition"><span class="toc-num">2</span>Patterns Inside MVC</a>
+      <a href="#web-mvc"><span class="toc-num">3</span>Evolution to Web &amp; Enterprise</a>
+      <a href="#self-study"><span class="toc-num">4</span>Self-Study Exam Questions</a>
+    </div>
+    <div class="sidebar-block">
+      <span class="sidebar-label">Instructor</span>
+      <p style="font-size: 0.85rem; color: var(--text-muted); margin: 0;">
+        Prof. Dr. Jörg Schäfer<br>
+        <em>Frankfurt University of Applied Sciences</em>
+      </p>
+    </div>
+  </aside>
+
+  <div class="page">
+    <div class="masthead">
+      <div>
+        <div class="eyebrow">Unit 11 · Compound Architectural Patterns</div>
+        <h1 class="title">Case Study: Model-View-Controller (MVC)</h1>
+      </div>
+    </div>
+
+    <div class="quote-card">
+      “A pattern only works, fully, when it deals with all the forces that are present in the system.”
+      <span class="quote-author">— Christopher Alexander</span>
+    </div>
+
+    <p class="dek">
+      Invented by Trygve Reenskaug for Smalltalk-80, MVC is the mother of all compound patterns. Learn how Observer, Composite, and Strategy collaborate to create clean user interfaces.
+    </p>
+
+    <!-- Section 1: Triad -->
+    <section class="chapter" id="mvc-triad">
+      <div class="chapter-head">
+        <span class="chapter-num">1</span>
+        <h2>11.3 The MVC Triad</h2>
+      </div>
+
+      <div class="triad-grid">
+        <div class="triad-card">
+          <h4>1. The Model</h4>
+          <p style="font-size: 0.9rem; color: var(--text-muted); margin: 0;">
+            Holds all domain data, business logic, state rules, and persistence. The Model has <strong>zero knowledge of the user interface</strong>. It broadcasts state changes via the Observer pattern.
+          </p>
+        </div>
+        <div class="triad-card">
+          <h4>2. The View</h4>
+          <p style="font-size: 0.9rem; color: var(--text-muted); margin: 0;">
+            The visual representation of the Model. Observes the Model for updates and renders elements. Delegates user input events (button clicks, keystrokes) to the Controller.
+          </p>
+        </div>
+        <div class="triad-card">
+          <h4>3. The Controller</h4>
+          <p style="font-size: 0.9rem; color: var(--text-muted); margin: 0;">
+            Translates user gestures into actions on the Model. It serves as the <strong>Strategy</strong> for the View, dictating how inputs are interpreted into domain operations.
+          </p>
+        </div>
+      </div>
+
+      <div class="arch-diagram-block">
+                     ┌───────────────────────────────┐
+                     │          Controller           │
+                     ├───────────────────────────────┤
+                     │ - model: Model                │
+                     │ - view: View                  │
+                     └───────┬───────────────▲───────┘
+                             │               │
+            updates / calls  │               │ delegates user actions
+                             ▼               │
+┌───────────────────────────────┐         ┌──┴────────────────────────────┐
+│             Model             │         │             View              │
+├───────────────────────────────┤         ├───────────────────────────────┤
+│ - state: DomainData           │         │ - controller: Controller      │
+│ - observers: List&lt;Observer&gt;   │         ├───────────────────────────────┤
+├───────────────────────────────┤         │ + update() // Observer hook   │
+│ + notifyObservers()           │────────&gt;│ + display()                   │
+└───────────────────────────────┘notifies └───────────────────────────────┘</div>
+    </section>
+
+    <!-- Section 2: Patterns Inside MVC -->
+    <section class="chapter" id="pattern-composition">
+      <div class="chapter-head">
+        <span class="chapter-num">2</span>
+        <h2>The 3 Patterns Inside MVC</h2>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 1rem; margin: 1.5rem 0;">
+        <div style="padding: 1rem 1.25rem; background: var(--bg-raised); border: 1px solid var(--border); border-radius: var(--radius-sm);">
+          <strong>1. Observer Pattern (Model $\to$ View)</strong>
+          <p style="font-size: 0.88rem; color: var(--text-muted); margin: 0.3rem 0 0;">
+            Keeps the View decoupled from the Model. Multiple different views (graphs, text tables, mobile cards) can observe the same single Model simultaneously.
+          </p>
+        </div>
+        <div style="padding: 1rem 1.25rem; background: var(--bg-raised); border: 1px solid var(--border); border-radius: var(--radius-sm);">
+          <strong>2. Strategy Pattern (View $\to$ Controller)</strong>
+          <p style="font-size: 0.88rem; color: var(--text-muted); margin: 0.3rem 0 0;">
+            The Controller is the Strategy for the View. To change how the UI reacts to inputs (e.g., read-only mode vs editable mode), swap the View's Controller.
+          </p>
+        </div>
+        <div style="padding: 1rem 1.25rem; background: var(--bg-raised); border: 1px solid var(--border); border-radius: var(--radius-sm);">
+          <strong>3. Composite Pattern (Nested Views)</strong>
+          <p style="font-size: 0.88rem; color: var(--text-muted); margin: 0.3rem 0 0;">
+            GUI screens are composite trees of windows, panels, scroll-panes, and buttons. When the top-level View updates, render commands traverse the composite hierarchy.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 3: Web MVC -->
+    <section class="chapter" id="web-mvc">
+      <div class="chapter-head">
+        <span class="chapter-num">3</span>
+        <h2>11.5 MVC in Web &amp; Enterprise Architectures</h2>
+      </div>
+      <p style="font-size: 0.92rem; color: var(--text-muted); line-height: 1.6;">
+        On the Web (Spring MVC, Django, Rails), the HTTP request-response cycle slightly modifies classic desktop MVC:
+        The <strong>Controller</strong> intercepts HTTP requests via a DispatcherServlet, queries the database <strong>Model</strong>, and selects a template <strong>View</strong> to render HTML back across the wire.
+      </p>
+    </section>
+
+    <!-- Section 4: Self Study -->
+    <section class="chapter" id="self-study">
+      <div class="chapter-head">
+        <span class="chapter-num">4</span>
+        <h2>11.7 Questions for Self-Study</h2>
+      </div>
+
+      <div class="drill-list">
+        <details class="drill-item" open>
+          <summary>
+            <span class="drill-tag">Exam Drill</span>
+            <span class="drill-q">Why does the Model have zero knowledge of the View in a well-architected MVC system?</span>
+            <span class="drill-reveal-hint"></span>
+          </summary>
+          <div class="drill-a">
+            <p>
+              By ensuring the Model has no direct references to UI components, the Model achieves <strong>complete independence from presentation technologies</strong>.
+            </p>
+            <p>
+              The same business Model can be reused across a web app, a mobile app, a command-line interface, and automated unit test suites without any changes. Furthermore, the Model can be tested headlessly in CI/CD without spinning up GUI frameworks.
+            </p>
+          </div>
+        </details>
+      </div>
+    </section>
+
+    <footer class="page-footer" style="margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--border); display: flex; justify-content: space-between;">
+      <span><a href="unit-10-decoupling.html">← Previous: Unit 10 Decoupling</a></span>
+      <span><a href="unit-12-architectural.html">Next: Unit 12 Architectural Patterns →</a></span>
+    </footer>
+
+  </div>
+</div>
+
+<script src="assets/site.js" defer></script>
+</body>
+</html>

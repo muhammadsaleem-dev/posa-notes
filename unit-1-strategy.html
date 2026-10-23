@@ -1,0 +1,465 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Unit 1: Introduction &amp; Strategy Pattern | POSA 2026</title>
+<meta name="description" content="Unit 1 of Pattern-Oriented Software Architecture by Prof. Dr. Jörg Schäfer: Motivation, SimUDuck case study, Strategy pattern, and self-study questions.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230c7a73'/%3E%3Cpath d='M8 10h16M8 16h16M8 22h10' stroke='%23fff' stroke-width='2.2' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+<style>
+  .quote-card {
+    margin: 1.5rem 0 2rem;
+    padding: 1.25rem 1.5rem;
+    background: var(--accent-soft);
+    border-left: 4px solid var(--accent);
+    border-radius: 0 var(--radius-md) var(--radius-md) 0;
+    font-style: italic;
+    color: var(--accent-ink);
+  }
+  .quote-author {
+    display: block;
+    margin-top: 0.5rem;
+    font-style: normal;
+    font-weight: 700;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .step-diagram {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin: 1.5rem 0;
+  }
+  .step-node {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 1rem 1.25rem;
+    background: var(--bg-raised);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+  }
+  .step-num {
+    background: var(--accent);
+    color: #fff;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.85rem;
+    flex-shrink: 0;
+  }
+  .step-content h4 { margin: 0 0 0.25rem; font-size: 1rem; }
+  .step-content p { margin: 0; font-size: 0.9rem; color: var(--text-muted); }
+  .code-container {
+    margin: 1.5rem 0;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+  }
+  .code-header {
+    background: rgba(0,0,0,0.05);
+    padding: 0.5rem 1rem;
+    display: flex;
+    justify-content: space-between;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--text-muted);
+  }
+  .code-body {
+    padding: 1rem;
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: 0.88rem;
+    overflow-x: auto;
+    line-height: 1.5;
+  }
+  .pill-tag {
+    display: inline-block;
+    padding: 0.15rem 0.5rem;
+    background: var(--accent-soft);
+    color: var(--accent-ink);
+    border-radius: var(--radius-sm);
+    font-size: 0.75rem;
+    font-weight: 600;
+    margin-right: 0.4rem;
+    font-family: var(--font-mono);
+  }
+</style>
+<script>(function(){try{var t=localStorage.getItem('posa-theme')||'light';document.documentElement.setAttribute('data-theme',t);var m=localStorage.getItem('posa-mode')||'concept';document.documentElement.setAttribute('data-mode',m);}catch(e){}})();</script>
+</head>
+<body>
+
+<nav class="sitenav">
+  <div class="sitenav-inner">
+    <a class="sitenav-home" href="index.html">POSA 2026</a>
+    <div class="sitenav-links">
+      <a href="index.html">Overview</a>
+      <a href="unit-1-strategy.html" class="active">Unit 1 · Strategy</a>
+      <a href="mock-1.html">📝 Mock 1 (75 pts)</a>
+    </div>
+    <button class="nav-toggle" id="navToggle" type="button" aria-expanded="false" aria-controls="navPanel">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+      Menu
+    </button>
+    <button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle color theme">
+      <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path></svg>
+      <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+    </button>
+    <button class="mode-toggle" id="modeToggle" type="button" aria-label="Toggle technical mode" style="font-size: 1.1rem; line-height: 1;">🎓</button>
+  </div>
+  <div class="nav-panel" id="navPanel">
+    <div class="nav-panel-section">
+      <span class="nav-panel-label">Course Navigation</span>
+      <a href="index.html">Overview</a>
+      <a href="unit-1-strategy.html" class="active">Unit 1 · Strategy Pattern</a>
+      <a href="mock-1.html">📝 Mock Exam 1</a>
+    </div>
+  </div>
+</nav>
+
+<div class="page-shell">
+  <aside class="sidebar-toc">
+    <div class="sidebar-block">
+      <span class="sidebar-label">On This Page</span>
+      <a href="#motivation"><span class="toc-num">1</span>Motivation: SimUDuck</a>
+      <a href="#strategy-pattern"><span class="toc-num">2</span>The Strategy Pattern</a>
+      <a href="#dependencies"><span class="toc-num">3</span>Dependencies &amp; Examples</a>
+      <a href="#time-to-code"><span class="toc-num">4</span>Time to Code!</a>
+      <a href="#self-study"><span class="toc-num">5</span>Self-Study Exam Questions</a>
+    </div>
+    <div class="sidebar-block">
+      <span class="sidebar-label">Instructor</span>
+      <p style="font-size: 0.85rem; color: var(--text-muted); margin: 0;">
+        Prof. Dr. Jörg Schäfer<br>
+        <em>Frankfurt University of Applied Sciences</em>
+      </p>
+    </div>
+  </aside>
+
+  <div class="page">
+    <div class="masthead">
+      <div>
+        <div class="eyebrow">Unit 1 · Foundation &amp; Behavioral Patterns</div>
+        <h1 class="title">Introduction &amp; The Strategy Pattern</h1>
+      </div>
+    </div>
+
+    <div class="quote-card">
+      “To rely on rustics and not prepare is the greatest of crimes; to be prepared beforehand for any contingency is the greatest of Virtues.”
+      <span class="quote-author">— Sun Tzu</span>
+    </div>
+
+    <p class="dek">
+      Software architecture begins with anticipating change. Instead of letting changes break existing client code, patterns isolate what varies and decouple behavior from implementation.
+    </p>
+
+    <!-- Section 1: Motivation -->
+    <section class="chapter" id="motivation">
+      <div class="chapter-head">
+        <span class="chapter-num">1</span>
+        <h2>1.1 Lecture Motivation: The SimUDuck Evolution</h2>
+      </div>
+      <p class="chapter-dek">Why naive inheritance fails when requirements inevitably change.</p>
+
+      <div class="step-diagram">
+        <div class="step-node">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <h4>The Initial State: SimUDuck Simulator</h4>
+            <p>We start with a clean superclass <code>Duck</code> with <code>quack()</code>, <code>swim()</code>, and an abstract <code>display()</code>. Subclasses like <code>MallardDuck</code> and <code>RedheadDuck</code> inherit cleanly.</p>
+          </div>
+        </div>
+
+        <div class="step-node">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <h4>The New Requirement: Ducks Must Fly!</h4>
+            <p><strong>Naive Solution:</strong> Add a <code>fly()</code> method directly to the superclass <code>Duck</code>. All subclasses inherit it automatically.</p>
+          </div>
+        </div>
+
+        <div class="step-node">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <h4>The Catastrophic Bug: Rubber Ducks Flying!</h4>
+            <p>In the simulation, <code>RubberDuck</code> instances suddenly sprout wings and fly across the screen! Inanimate decoy ducks and rubber ducks now possess behaviors they should never have.</p>
+          </div>
+        </div>
+
+        <div class="step-node">
+          <div class="step-num">4</div>
+          <div class="step-content">
+            <h4>The Second Naive Fix: Override with No-Ops</h4>
+            <p>Override <code>fly()</code> in <code>RubberDuck</code> to do nothing: <code>fly() { /* do nothing */ }</code>. But as 50 new duck types are added, maintenance collapses and code duplication explodes (violating the <strong>DRY Principle</strong>).</p>
+          </div>
+        </div>
+
+        <div class="step-node" style="border-color: var(--accent); background: var(--accent-soft);">
+          <div class="step-num" style="background: var(--accent);">✓</div>
+          <div class="step-content">
+            <h4>The Architectural Breakthrough: Delegate, Don't Inherit!</h4>
+            <p><strong>Take what varies and encapsulate it:</strong> Separate <code>FlyBehavior</code> and <code>QuackBehavior</code> into interfaces. A <code>Duck</code> has-a behavior rather than is-a behavior. Behavior can now even be swapped dynamically at runtime!</p>
+          </div>
+        </div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1.5rem 0;">
+        <div style="padding: 1rem; background: var(--bg-raised); border: 1px solid var(--border); border-radius: var(--radius-sm);">
+          <strong style="color: var(--accent);">💡 Lesson 1: Program to Interfaces</strong>
+          <p style="font-size: 0.88rem; margin-top: 0.4rem; color: var(--text-muted);">
+            Clients should depend on abstractions (interfaces or abstract base classes), not concrete implementations.
+          </p>
+        </div>
+        <div style="padding: 1rem; background: var(--bg-raised); border: 1px solid var(--border); border-radius: var(--radius-sm);">
+          <strong style="color: var(--accent);">💡 Lesson 2: Favor Composition Over Inheritance</strong>
+          <p style="font-size: 0.88rem; margin-top: 0.4rem; color: var(--text-muted);">
+            Composition lets you change behavior dynamically at runtime and prevents rigid class hierarchy lock-in.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 2: Strategy Pattern -->
+    <section class="chapter" id="strategy-pattern">
+      <div class="chapter-head">
+        <span class="chapter-num">2</span>
+        <h2>1.3 The GoF Strategy Pattern</h2>
+      </div>
+      <p class="chapter-dek">The formal definition, intent, problem, and solution structure.</p>
+
+      <div style="background: var(--bg-raised); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 1.5rem; margin-bottom: 1.5rem;">
+        <h3 style="margin-top: 0; font-family: var(--font-display);">Pattern Passport</h3>
+        <p><strong>Also Known As:</strong> <code>Policy</code></p>
+        <p><strong>GoF Intent:</strong> Define a family of algorithms, encapsulate each one, and make them interchangeable. Strategy lets the algorithm vary independently from clients that use it.</p>
+        <p><strong>Problem:</strong> You must cope with anticipated and unanticipated changes to algorithms—even dynamically at runtime—without modifying or breaking existing client classes.</p>
+        <p><strong>Solution:</strong> Encapsulate algorithms into separate strategy classes implementing a common interface. The client context holds a reference to the strategy interface and delegates execution.</p>
+      </div>
+
+      <h3 style="font-family: var(--font-display);">Structural Architecture</h3>
+      <div class="arch-diagram-block">
+┌───────────────────────────┐                ┌───────────────────────────────┐
+│          Context          │                │       &lt;&lt;interface&gt;&gt;           │
+├───────────────────────────┤  has-a / uses  │           Strategy            │
+│ - strategy: Strategy      │───────────────&gt;├───────────────────────────────┤
+├───────────────────────────┤                │ + algorithmInterface()        │
+│ + contextInterface()      │                └───────────────▲───────────────┘
+│ + setStrategy(Strategy s) │                                │
+└───────────────────────────┘                                │ implements
+                                        ┌────────────────────┴────────────────────┐
+                                        │                                         │
+                         ┌──────────────┴──────────────┐           ┌──────────────┴──────────────┐
+                         │      ConcreteStrategyA      │           │      ConcreteStrategyB      │
+                         ├─────────────────────────────┤           ├─────────────────────────────┤
+                         │ + algorithmInterface()      │           │ + algorithmInterface()      │
+                         └─────────────────────────────┘           └─────────────────────────────┘</div>
+
+      <h3 style="font-family: var(--font-display);">Application Example: Flexible Sorting</h3>
+      <div class="arch-diagram-block">
+┌──────────────────────────────┐                ┌───────────────────────────────┐
+│            Sorter            │                │       &lt;&lt;interface&gt;&gt;           │
+├──────────────────────────────┤                │          SortStrategy         │
+│ - sortMethod: SortStrategy   │───────────────&gt;├───────────────────────────────┤
+├──────────────────────────────┤                │ + sort(List&lt;T&gt; list)          │
+│ + sortData(List&lt;T&gt; list)     │                └───────────────▲───────────────┘
+│ + setSorter(SortStrategy s)  │                                │
+└──────────────────────────────┘                                │
+                                       ┌────────────────────────┼────────────────────────┐
+                        ┌──────────────┴────────┐ ┌─────────────┴────────┐ ┌─────────────┴────────┐
+                        │       QuickSort       │ │       HeapSort       │ │      TimSort         │
+                        └───────────────────────┘ └──────────────────────┘ └──────────────────────┘</div>
+    </section>
+
+    <!-- Section 3: Dependencies & Real-World -->
+    <section class="chapter" id="dependencies">
+      <div class="chapter-head">
+        <span class="chapter-num">3</span>
+        <h2>1.4 Dependencies, Real-World Examples &amp; Principles</h2>
+      </div>
+      
+      <p><strong>Dependencies Created:</strong></p>
+      <ul>
+        <li><code>Context</code> depends on the abstraction <code>Strategy</code> (Loose Coupling).</li>
+        <li><code>Context</code> has <strong>zero dependency</strong> on concrete strategy classes.</li>
+        <li><code>ConcreteStrategies</code> implement <code>Strategy</code> and do not necessarily know about the <code>Context</code> (unless passed as a parameter).</li>
+      </ul>
+
+      <h3 style="font-family: var(--font-display);">Real-World Examples in Production:</h3>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1rem; margin: 1rem 0 2rem;">
+        <div style="padding: 1rem; background: var(--bg-raised); border: 1px solid var(--border); border-radius: var(--radius-sm);">
+          <strong>🔌 Hardware Drivers</strong>
+          <p style="font-size: 0.88rem; color: var(--text-muted); margin-top: 0.3rem;">
+            OS kernel treats display, storage, and networking through generic driver interfaces, swapping concrete implementations per vendor.
+          </p>
+        </div>
+        <div style="padding: 1rem; background: var(--bg-raised); border: 1px solid var(--border); border-radius: var(--radius-sm);">
+          <strong>🚗 Route Navigation</strong>
+          <p style="font-size: 0.88rem; color: var(--text-muted); margin-top: 0.3rem;">
+            Travel app computes directions: walking, public transit, driving, or cycling. The client route remains unchanged while algorithm switches.
+          </p>
+        </div>
+        <div style="padding: 1rem; background: var(--bg-raised); border: 1px solid var(--border); border-radius: var(--radius-sm);">
+          <strong>⚙️ UNIX qsort / Java Comparator</strong>
+          <p style="font-size: 0.88rem; color: var(--text-muted); margin-top: 0.3rem;">
+            <code>qsort(..., cmp)</code> accepts a comparator function pointer. In Java, <code>Collections.sort(list, comparator)</code> is the canonical Strategy pattern.
+          </p>
+        </div>
+      </div>
+
+      <div style="padding: 1.25rem; background: var(--bg-raised); border-left: 3px solid var(--accent); border-radius: 0 var(--radius-sm) var(--radius-sm) 0;">
+        <strong style="color: var(--accent);">Architectural Links to Future Units:</strong>
+        <ul style="margin: 0.5rem 0 0; padding-left: 1.2rem; font-size: 0.9rem; line-height: 1.6;">
+          <li><strong>Open-Closed Principle (OCP · Unit 6):</strong> Context is closed for modification but open for extension by writing new strategy classes.</li>
+          <li><strong>Liskov Substitution Principle (LSP · Unit 6):</strong> Any concrete strategy must seamlessly fulfill the interface contract without unexpected side effects.</li>
+          <li><strong>Template Method (Unit 2):</strong> Strategy alters an entire algorithm via delegation, whereas Template Method alters individual steps via inheritance.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Section 4: Time to Code -->
+    <section class="chapter" id="time-to-code">
+      <div class="chapter-head">
+        <span class="chapter-num">4</span>
+        <h2>1.6 Time to Code! Interactive Sorter Implementation</h2>
+      </div>
+      <p class="chapter-dek">A clean, production-grade implementation of the Sorter Strategy in modern Java / Python.</p>
+
+      <div class="code-container">
+        <div class="code-header">
+          <span>SortContext.java</span>
+          <span>Java 17+</span>
+        </div>
+        <pre class="code-body"><code>// 1. The Strategy Abstraction
+@FunctionalInterface
+public interface SortStrategy&lt;T extends Comparable&lt;T&gt;&gt; {
+    void sort(List&lt;T&gt; dataset);
+}
+
+// 2. Concrete Strategy: QuickSort
+public class QuickSortStrategy&lt;T extends Comparable&lt;T&gt;&gt; implements SortStrategy&lt;T&gt; {
+    @Override
+    public void sort(List&lt;T&gt; dataset) {
+        System.out.println("Executing O(N log N) in-place QuickSort...");
+        Collections.sort(dataset);
+    }
+}
+
+// 3. Concrete Strategy: Custom InsertionSort for small arrays
+public class InsertionSortStrategy&lt;T extends Comparable&lt;T&gt;&gt; implements SortStrategy&lt;T&gt; {
+    @Override
+    public void sort(List&lt;T&gt; dataset) {
+        System.out.println("Executing O(N^2) InsertionSort (low overhead for small lists)...");
+        // Insertion sort implementation...
+    }
+}
+
+// 4. The Context
+public class DatasetSorter&lt;T extends Comparable&lt;T&gt;&gt; {
+    private SortStrategy&lt;T&gt; strategy;
+
+    public DatasetSorter(SortStrategy&lt;T&gt; strategy) {
+        this.strategy = strategy;
+    }
+
+    // Dynamic runtime strategy switching!
+    public void setStrategy(SortStrategy&lt;T&gt; strategy) {
+        this.strategy = strategy;
+    }
+
+    public void executeSort(List&lt;T&gt; data) {
+        strategy.sort(data);
+    }
+}</code></pre>
+      </div>
+    </section>
+
+    <!-- Section 5: Questions for Self-Study -->
+    <section class="chapter" id="self-study">
+      <div class="chapter-head">
+        <span class="chapter-num">5</span>
+        <h2>1.7 Exercise: Questions for Self-Study (Exam Practice)</h2>
+      </div>
+      <p class="chapter-dek">Official questions assigned by Prof. Dr. Jörg Schäfer with comprehensive verified answers.</p>
+
+      <div class="drill-list">
+        
+        <!-- Question 1 -->
+        <details class="drill-item" open>
+          <summary>
+            <span class="drill-tag">Self-Study Q1</span>
+            <span class="drill-q">What happens when a system has an explosion of Strategy objects? Is there some way to better manage these strategies?</span>
+            <span class="drill-reveal-hint"></span>
+          </summary>
+          <div class="drill-a">
+            <p><strong>The Problem (Memory &amp; Object Overhead):</strong></p>
+            <p>If each Context instance creates its own new Strategy instance, or if there are hundreds of fine-grained strategies, memory consumption and garbage collection pressure increase significantly.</p>
+            <p><strong>The Solutions:</strong></p>
+            <ol>
+              <li>
+                <strong>Stateless Strategies via Flyweight Pattern:</strong>
+                If a concrete Strategy has no internal mutable state (it only takes parameters and operates on the passed Context data), it can be made a <em>stateless singleton</em> and shared across thousands of Contexts simultaneously using the <strong>Flyweight</strong> pattern.
+              </li>
+              <li>
+                <strong>Factory Method / Abstract Factory (Unit 8):</strong>
+                Encapsulate Strategy instantiation within a Factory so client code doesn't manage lifecycle manually.
+              </li>
+              <li>
+                <strong>Lambdas &amp; Method References (Modern Languages):</strong>
+                In modern Java/Python/TypeScript, functional interfaces allow passing pure functions or method references directly (e.g. <code>data.sort(Integer::compareTo)</code>) without allocating heavy class instances.
+              </li>
+            </ol>
+          </div>
+        </details>
+
+        <!-- Question 2 -->
+        <details class="drill-item" open>
+          <summary>
+            <span class="drill-tag">Self-Study Q2</span>
+            <span class="drill-q">In the implementation section of GoF, the authors describe two ways a Strategy gets information: (A) data passed as arguments, or (B) Context reference passed to Strategy. What happens if the data required by Strategy is NOT available on the Context's public interface? How can you remedy this?</span>
+            <span class="drill-reveal-hint"></span>
+          </summary>
+          <div class="drill-a">
+            <p><strong>The Dilemma:</strong></p>
+            <p>If the Strategy requires internal data that Context does not expose publicly, naively adding public getters violates <strong>Encapsulation / Information Hiding</strong>, exposing Context internals to the outside world.</p>
+            <p><strong>Architectural Remedies:</strong></p>
+            <ol>
+              <li>
+                <strong>Pass a Parameter Object / Data Transfer Object (DTO):</strong>
+                Have Context bundle exactly the required calculation parameters into a specialized DTO and pass it to <code>algorithm(DataBundle data)</code>.
+              </li>
+              <li>
+                <strong>Narrow Interface (Interface Segregation Principle · Unit 6):</strong>
+                Define a narrow, specialized interface (e.g. <code>ContextInspectable</code>) with only the getters the Strategy needs. Context implements this interface, and passes <code>this</code> typed to that narrow interface. Outside clients remain blind to these internal methods.
+              </li>
+              <li>
+                <strong>Package-Private or Friend Access (Language-Specific):</strong>
+                In Java, place Context and concrete Strategies in the same package using package-private visibility. In C++, designate the Strategy as a <code>friend class</code>.
+              </li>
+            </ol>
+          </div>
+        </details>
+
+      </div>
+    </section>
+
+    <!-- Navigation footer -->
+    <footer class="page-footer" style="margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--border); display: flex; justify-content: space-between;">
+      <span><a href="index.html">← Back to Course Hub</a></span>
+      <span><a href="mock-1.html">Take Mock Exam 1 →</a></span>
+    </footer>
+
+  </div>
+</div>
+
+<script src="assets/site.js" defer></script>
+</body>
+</html>

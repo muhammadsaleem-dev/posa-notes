@@ -1,0 +1,275 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Unit 9: Flexibility Patterns (Decorator &amp; Adapter) | POSA 2026</title>
+<meta name="description" content="Unit 9 of Pattern-Oriented Software Architecture by Prof. Dr. Jörg Schäfer: Decorator (Starbuzz coffee, java.io), Adapter (Object vs Class), and self-study questions.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230c7a73'/%3E%3Cpath d='M8 10h16M8 16h16M8 22h10' stroke='%23fff' stroke-width='2.2' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+<style>
+  .quote-card {
+    margin: 1.5rem 0 2rem;
+    padding: 1.25rem 1.5rem;
+    background: var(--accent-soft);
+    border-left: 4px solid var(--accent);
+    border-radius: 0 var(--radius-md) var(--radius-md) 0;
+    font-style: italic;
+    color: var(--accent-ink);
+  }
+  .quote-author {
+    display: block;
+    margin-top: 0.5rem;
+    font-style: normal;
+    font-weight: 700;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .code-container {
+    margin: 1.5rem 0;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+  }
+  .code-header {
+    background: rgba(0,0,0,0.05);
+    padding: 0.5rem 1rem;
+    display: flex;
+    justify-content: space-between;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--text-muted);
+  }
+  .code-body {
+    padding: 1rem;
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: 0.88rem;
+    overflow-x: auto;
+    line-height: 1.5;
+  }
+</style>
+<script>(function(){try{var t=localStorage.getItem('posa-theme')||'light';document.documentElement.setAttribute('data-theme',t);var m=localStorage.getItem('posa-mode')||'concept';document.documentElement.setAttribute('data-mode',m);}catch(e){}})();</script>
+</head>
+<body>
+
+<nav class="sitenav">
+  <div class="sitenav-inner">
+    <a class="sitenav-home" href="index.html">POSA 2026</a>
+    <div class="sitenav-links">
+      <a href="index.html">Overview</a>
+      <a href="unit-1-strategy.html">1 · Strategy</a>
+      <a href="unit-8-creational.html">8 · Creational</a>
+      <a href="unit-9-flexibility.html" class="active">9 · Flexibility</a>
+      <a href="unit-10-decoupling.html">10 · Decoupling</a>
+      <a href="mock-1.html">📝 Mock 1</a>
+    </div>
+    <button class="nav-toggle" id="navToggle" type="button" aria-expanded="false" aria-controls="navPanel">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+      Menu
+    </button>
+    <button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle color theme">
+      <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path></svg>
+      <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+    </button>
+    <button class="mode-toggle" id="modeToggle" type="button" aria-label="Toggle technical mode" style="font-size: 1.1rem; line-height: 1;">🎓</button>
+  </div>
+  <div class="nav-panel" id="navPanel">
+    <div class="nav-panel-section">
+      <span class="nav-panel-label">Course Navigation</span>
+      <a href="index.html">Overview</a>
+      <a href="unit-8-creational.html">Unit 8 · Creational Patterns</a>
+      <a href="unit-9-flexibility.html" class="active">Unit 9 · Flexibility Patterns</a>
+      <a href="unit-10-decoupling.html">Unit 10 · Decoupling Patterns</a>
+      <a href="mock-1.html">📝 Mock Exam 1</a>
+    </div>
+  </div>
+</nav>
+
+<div class="page-shell">
+  <aside class="sidebar-toc">
+    <div class="sidebar-block">
+      <span class="sidebar-label">On This Page</span>
+      <a href="#decorator-pattern"><span class="toc-num">1</span>Decorator: Starbuzz &amp; java.io</a>
+      <a href="#adapter-pattern"><span class="toc-num">2</span>Adapter: Object vs. Class</a>
+      <a href="#decorator-vs-strategy"><span class="toc-num">3</span>Decorator vs. Strategy vs. Adapter</a>
+      <a href="#self-study"><span class="toc-num">4</span>Self-Study Exam Questions</a>
+    </div>
+    <div class="sidebar-block">
+      <span class="sidebar-label">Instructor</span>
+      <p style="font-size: 0.85rem; color: var(--text-muted); margin: 0;">
+        Prof. Dr. Jörg Schäfer<br>
+        <em>Frankfurt University of Applied Sciences</em>
+      </p>
+    </div>
+  </aside>
+
+  <div class="page">
+    <div class="masthead">
+      <div>
+        <div class="eyebrow">Unit 9 · Structural &amp; Behavioral Flexibility</div>
+        <h1 class="title">Decorator &amp; Adapter Patterns</h1>
+      </div>
+    </div>
+
+    <div class="quote-card">
+      “Decorator changes the skin of an object; Strategy changes its guts.”
+      <span class="quote-author">— Erich Gamma et al. (GoF Design Patterns)</span>
+    </div>
+
+    <p class="dek">
+      Extending object functionality at runtime without inheritance explosion, and converting incompatible interfaces so legacy systems integrate seamlessly.
+    </p>
+
+    <!-- Section 1: Decorator -->
+    <section class="chapter" id="decorator-pattern">
+      <div class="chapter-head">
+        <span class="chapter-num">1</span>
+        <h2>9.3 The Decorator Pattern</h2>
+      </div>
+      <p class="chapter-dek">Dynamic runtime wrapping as an alternative to subclass explosion.</p>
+
+      <div style="background: var(--bg-raised); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 1.5rem; margin-bottom: 1.5rem;">
+        <p><strong>GoF Intent:</strong> Attach additional responsibilities to an object dynamically. Decorators provide a flexible alternative to subclassing for extending functionality.</p>
+        <p><strong>The Starbuzz Coffee Dilemma:</strong> A coffee shop offers HouseBlend, DarkRoast, Espresso, and Decaf. Customers can customize with Milk, Soy, Mocha, and Whip. Creating static subclasses for every combination leads to <code>HouseBlendWithSoyAndMocha</code>, producing over 100 classes!</p>
+        <p><strong>The Solution:</strong> Start with a base beverage and <strong>wrap</strong> it with decorators. The client treats the outermost decorator as the Beverage!</p>
+      </div>
+
+      <div class="arch-diagram-block">
+┌────────────────────────────────────────────────────────┐
+│               &lt;&lt;abstract&gt;&gt; Beverage                    │
+├────────────────────────────────────────────────────────┤
+│ + getDescription() : String                            │
+│ + cost() : double                                      │
+└───────────────────────────▲────────────────────────────┘
+                            │
+              ┌─────────────┴─────────────┐
+┌─────────────┴─────────────┐ ┌───────────┴─────────────┐
+│         Espresso          │ │  &lt;&lt;abstract&gt;&gt; Condiment │
+│    (ConcreteComponent)    │ │   (Decorator Base)      │
+├───────────────────────────┤ ├─────────────────────────┤
+│ + cost() : 1.99           │ │ - beverage: Beverage    │
+└───────────────────────────┘ └───────────▲─────────────┘
+                                          │
+                            ┌─────────────┴─────────────┐
+              ┌─────────────┴─────────────┐ ┌───────────┴─────────────┐
+              │           Mocha           │ │           Whip            │
+              ├───────────────────────────┤ ├─────────────────────────┤
+              │ cost(): beverage.cost()+0.20│ cost():beverage.cost()+0.10│
+              └───────────────────────────┘ └─────────────────────────┘</div>
+
+      <div style="padding: 1.25rem; background: var(--bg-raised); border: 1px solid var(--border); border-radius: var(--radius-sm); margin: 1.5rem 0;">
+        <strong style="color: var(--accent);">Java Real-World Example: <code>java.io</code> Streams</strong>
+        <p style="font-size: 0.9rem; color: var(--text-muted); margin-top: 0.4rem;">
+          <code>InputStream is = new BufferedInputStream(new GZIPInputStream(new FileInputStream("data.gz")));</code>
+          <br>Here, <code>FileInputStream</code> is the concrete component; <code>GZIPInputStream</code> and <code>BufferedInputStream</code> are decorators augmenting decompression and buffering capabilities!
+        </p>
+      </div>
+    </section>
+
+    <!-- Section 2: Adapter -->
+    <section class="chapter" id="adapter-pattern">
+      <div class="chapter-head">
+        <span class="chapter-num">2</span>
+        <h2>9.5 The Adapter Pattern</h2>
+      </div>
+      <p class="chapter-dek">Translating an existing interface to match client expectations.</p>
+
+      <div style="background: var(--bg-raised); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 1.5rem; margin-bottom: 1.5rem;">
+        <p><strong>GoF Intent:</strong> Convert the interface of a class into another interface clients expect. Adapter lets classes work together that couldn't otherwise because of incompatible interfaces.</p>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1.5rem 0;">
+        <div style="padding: 1.25rem; background: var(--bg-raised); border: 1px solid var(--border); border-radius: var(--radius-sm);">
+          <strong style="color: var(--accent);">1. Object Adapter (Composition)</strong>
+          <p style="font-size: 0.88rem; color: var(--text-muted); margin-top: 0.3rem;">
+            Adapter implements <code>Target</code> and holds an internal reference to <code>Adaptee</code>. Preferred in Java because it adheres to "Favor composition over inheritance."
+          </p>
+        </div>
+        <div style="padding: 1.25rem; background: var(--bg-raised); border: 1px solid var(--border); border-radius: var(--radius-sm);">
+          <strong style="color: var(--accent);">2. Class Adapter (Multiple Inheritance)</strong>
+          <p style="font-size: 0.88rem; color: var(--text-muted); margin-top: 0.3rem;">
+            Adapter inherits from both <code>Target</code> and <code>Adaptee</code>. Feasible in C++, but not possible in single-inheritance languages like Java.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 3: Comparison -->
+    <section class="chapter" id="decorator-vs-strategy">
+      <div class="chapter-head">
+        <span class="chapter-num">3</span>
+        <h2>Architectural Comparison</h2>
+      </div>
+
+      <div style="background: var(--bg-raised); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 1.25rem;">
+        <table style="width: 100%; border-collapse: collapse; font-size: 0.9rem;">
+          <thead>
+            <tr style="border-bottom: 2px solid var(--border); text-align: left;">
+              <th style="padding: 0.5rem;">Pattern</th>
+              <th style="padding: 0.5rem;">Primary Purpose</th>
+              <th style="padding: 0.5rem;">Interface Relationship</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 0.5rem; font-weight: 700;">Decorator</td>
+              <td style="padding: 0.5rem;">Adds responsibilities dynamically without changing interface</td>
+              <td style="padding: 0.5rem;">Same interface as wrapped component</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 0.5rem; font-weight: 700;">Adapter</td>
+              <td style="padding: 0.5rem;">Converts an incompatible interface to match target</td>
+              <td style="padding: 0.5rem;">Different interface (adapts Old to New)</td>
+            </tr>
+            <tr>
+              <td style="padding: 0.5rem; font-weight: 700;">Strategy</td>
+              <td style="padding: 0.5rem;">Alters the internal algorithm/guts via delegation</td>
+              <td style="padding: 0.5rem;">Context delegates to Strategy interface</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Section 4: Self Study -->
+    <section class="chapter" id="self-study">
+      <div class="chapter-head">
+        <span class="chapter-num">4</span>
+        <h2>9.7 Questions for Self-Study</h2>
+      </div>
+
+      <div class="drill-list">
+        <details class="drill-item" open>
+          <summary>
+            <span class="drill-tag">Exam Drill</span>
+            <span class="drill-q">What are the disadvantages of the Decorator pattern?</span>
+            <span class="drill-reveal-hint"></span>
+          </summary>
+          <div class="drill-a">
+            <ol>
+              <li><strong>Proliferation of Small Objects:</strong> Using decorators creates many tiny, similar objects (as seen in <code>java.io</code>), which can make debugging and stack traces difficult to follow.</li>
+              <li><strong>Type Identity Issues:</strong> Client code relying on concrete types (<code>instanceof</code> checks) will fail because an object wrapped by a decorator is no longer directly an instance of the concrete component.</li>
+              <li><strong>Instantiation Complexity:</strong> Initializing an object requires wrapping multiple layers (mitigated by using a Factory or Builder).</li>
+            </ol>
+          </div>
+        </details>
+      </div>
+    </section>
+
+    <footer class="page-footer" style="margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--border); display: flex; justify-content: space-between;">
+      <span><a href="unit-8-creational.html">← Previous: Unit 8 Creational</a></span>
+      <span><a href="unit-10-decoupling.html">Next: Unit 10 Decoupling Patterns →</a></span>
+    </footer>
+
+  </div>
+</div>
+
+<script src="assets/site.js" defer></script>
+</body>
+</html>

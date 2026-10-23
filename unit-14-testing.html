@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Unit 14: Testing Patterns &amp; Test Doubles | POSA 2026</title>
+<meta name="description" content="Unit 14 of Pattern-Oriented Software Architecture by Prof. Dr. Jörg Schäfer: Gerard Meszaros Test Doubles (Dummies, Fakes, Stubs, Spies, Mocks), and exam questions.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230c7a73'/%3E%3Cpath d='M8 10h16M8 16h16M8 22h10' stroke='%23fff' stroke-width='2.2' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+<style>
+  .quote-card {
+    margin: 1.5rem 0 2rem;
+    padding: 1.25rem 1.5rem;
+    background: var(--accent-soft);
+    border-left: 4px solid var(--accent);
+    border-radius: 0 var(--radius-md) var(--radius-md) 0;
+    font-style: italic;
+    color: var(--accent-ink);
+  }
+  .quote-author {
+    display: block;
+    margin-top: 0.5rem;
+    font-style: normal;
+    font-weight: 700;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .double-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1rem;
+    margin: 1.5rem 0;
+  }
+  .double-card {
+    background: var(--bg-raised);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 1.25rem;
+  }
+  .double-card h4 {
+    margin: 0 0 0.4rem;
+    color: var(--accent);
+    font-family: var(--font-display);
+  }
+</style>
+<script>(function(){try{var t=localStorage.getItem('posa-theme')||'light';document.documentElement.setAttribute('data-theme',t);var m=localStorage.getItem('posa-mode')||'concept';document.documentElement.setAttribute('data-mode',m);}catch(e){}})();</script>
+</head>
+<body>
+
+<nav class="sitenav">
+  <div class="sitenav-inner">
+    <a class="sitenav-home" href="index.html">POSA 2026</a>
+    <div class="sitenav-links">
+      <a href="index.html">Overview</a>
+      <a href="unit-13-analysis.html">13 · Analysis</a>
+      <a href="unit-14-testing.html" class="active">14 · Testing</a>
+      <a href="unit-15-criticism.html">15 · Criticism</a>
+      <a href="mock-1.html">📝 Mock 1</a>
+    </div>
+    <button class="nav-toggle" id="navToggle" type="button" aria-expanded="false" aria-controls="navPanel">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+      Menu
+    </button>
+    <button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle color theme">
+      <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path></svg>
+      <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+    </button>
+    <button class="mode-toggle" id="modeToggle" type="button" aria-label="Toggle technical mode" style="font-size: 1.1rem; line-height: 1;">🎓</button>
+  </div>
+  <div class="nav-panel" id="navPanel">
+    <div class="nav-panel-section">
+      <span class="nav-panel-label">Course Navigation</span>
+      <a href="index.html">Overview</a>
+      <a href="unit-13-analysis.html">Unit 13 · Analysis &amp; Enterprise</a>
+      <a href="unit-14-testing.html" class="active">Unit 14 · Testing Patterns</a>
+      <a href="unit-15-criticism.html">Unit 15 · Pattern Criticism</a>
+      <a href="mock-1.html">📝 Mock Exam 1</a>
+    </div>
+  </div>
+</nav>
+
+<div class="page-shell">
+  <aside class="sidebar-toc">
+    <div class="sidebar-block">
+      <span class="sidebar-label">On This Page</span>
+      <a href="#test-doubles"><span class="toc-num">1</span>The 5 Test Doubles</a>
+      <a href="#state-vs-behavior"><span class="toc-num">2</span>State vs. Behavior Verification</a>
+      <a href="#self-study"><span class="toc-num">3</span>Self-Study Exam Questions</a>
+    </div>
+    <div class="sidebar-block">
+      <span class="sidebar-label">Instructor</span>
+      <p style="font-size: 0.85rem; color: var(--text-muted); margin: 0;">
+        Prof. Dr. Jörg Schäfer<br>
+        <em>Frankfurt University of Applied Sciences</em>
+      </p>
+    </div>
+  </aside>
+
+  <div class="page">
+    <div class="masthead">
+      <div>
+        <div class="eyebrow">Unit 14 · Quality Assurance &amp; Verification</div>
+        <h1 class="title">Testing Patterns &amp; Test Doubles</h1>
+      </div>
+    </div>
+
+    <div class="quote-card">
+      “Now you really have done something.”
+      <span class="quote-author">— Christopher Alexander</span>
+    </div>
+
+    <p class="dek">
+      Gerard Meszaros’s xUnit patterns for isolating the System Under Test (SUT): the 5 distinct varieties of Test Doubles and the difference between state and behavioral verification.
+    </p>
+
+    <!-- Section 1: Test Doubles -->
+    <section class="chapter" id="test-doubles">
+      <div class="chapter-head">
+        <span class="chapter-num">1</span>
+        <h2>14.3 The 5 Test Doubles (Gerard Meszaros)</h2>
+      </div>
+      <p class="chapter-dek">A "Test Double" is any pretend object used in place of a real collaborator during tests.</p>
+
+      <div class="double-grid">
+        <div class="double-card">
+          <h4>1. Dummy</h4>
+          <p style="font-size: 0.85rem; color: var(--text-muted); margin: 0;">
+            Passed around but never actually used. Used solely to satisfy parameter lists (e.g. <code>new User("test", null)</code>).
+          </p>
+        </div>
+        <div class="double-card">
+          <h4>2. Fake</h4>
+          <p style="font-size: 0.85rem; color: var(--text-muted); margin: 0;">
+            Has a real working implementation, but takes shortcuts that make it unsuitable for production (e.g. an in-memory database).
+          </p>
+        </div>
+        <div class="double-card">
+          <h4>3. Stub</h4>
+          <p style="font-size: 0.85rem; color: var(--text-muted); margin: 0;">
+            Provides pre-programmed canned answers to calls made during tests, ignoring calls outside scenario expectations.
+          </p>
+        </div>
+        <div class="double-card">
+          <h4>4. Spy</h4>
+          <p style="font-size: 0.85rem; color: var(--text-muted); margin: 0;">
+            A stub that also records execution telemetry (e.g. records how many emails were sent and what arguments were passed).
+          </p>
+        </div>
+        <div class="double-card">
+          <h4>5. Mock</h4>
+          <p style="font-size: 0.85rem; color: var(--text-muted); margin: 0;">
+            Pre-programmed with strict expectations. Verifies that specific methods were invoked in a specific order (behavior verification).
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 2: Verification -->
+    <section class="chapter" id="state-vs-behavior">
+      <div class="chapter-head">
+        <span class="chapter-num">2</span>
+        <h2>State vs. Behavior Verification</h2>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1.5rem 0;">
+        <div style="padding: 1.25rem; background: var(--bg-raised); border: 1px solid var(--border); border-radius: var(--radius-sm);">
+          <strong style="color: var(--accent);">State Verification (Stubs / Classical)</strong>
+          <p style="font-size: 0.88rem; color: var(--text-muted); margin-top: 0.4rem;">
+            Executes the method and inspects the final state of the SUT or its collaborators:
+            <code style="display:block; margin-top:0.3rem;">assertEquals(150.0, account.getBalance());</code>
+          </p>
+        </div>
+        <div style="padding: 1.25rem; background: var(--bg-raised); border: 1px solid var(--border); border-radius: var(--radius-sm);">
+          <strong style="color: var(--accent);">Behavior Verification (Mocks / Mockist)</strong>
+          <p style="font-size: 0.88rem; color: var(--text-muted); margin-top: 0.4rem;">
+            Verifies that the SUT correctly collaborated with its peers:
+            <code style="display:block; margin-top:0.3rem;">verify(paymentGateway, times(1)).charge(150.0);</code>
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 3: Self Study -->
+    <section class="chapter" id="self-study">
+      <div class="chapter-head">
+        <span class="chapter-num">3</span>
+        <h2>14.4 Questions for Self-Study</h2>
+      </div>
+
+      <div class="drill-list">
+        <details class="drill-item" open>
+          <summary>
+            <span class="drill-tag">Exam Drill</span>
+            <span class="drill-q">What is the critical risk of over-relying on Mock objects for behavior verification?</span>
+            <span class="drill-reveal-hint"></span>
+          </summary>
+          <div class="drill-a">
+            <p>
+              Over-mocking creates <strong>brittle tests</strong> that are tightly coupled to implementation details.
+            </p>
+            <p>
+              If a developer refactors the internal method delegation of a class without altering its external output, state-verification tests continue to pass, but mock-verification tests break because the specific mocked invocations changed. Tests should verify <em>what</em> happens, not <em>how</em> it happens.
+            </p>
+          </div>
+        </details>
+      </div>
+    </section>
+
+    <footer class="page-footer" style="margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--border); display: flex; justify-content: space-between;">
+      <span><a href="unit-13-analysis.html">← Previous: Unit 13 Analysis</a></span>
+      <span><a href="unit-15-criticism.html">Next: Unit 15 Pattern Criticism →</a></span>
+    </footer>
+
+  </div>
+</div>
+
+<script src="assets/site.js" defer></script>
+</body>
+</html>

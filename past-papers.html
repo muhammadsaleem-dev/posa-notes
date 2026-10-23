@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Past Papers &amp; Mock Exams Hub | POSA 2026</title>
+<meta name="description" content="Complete Past Papers and Mock Exams Hub for Pattern-Oriented Software Architecture (Mock 1 & Mock 2) with verified solutions, rubrics, and professor gotchas.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230c7a73'/%3E%3Cpath d='M8 10h16M8 16h16M8 22h10' stroke='%23fff' stroke-width='2.2' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+<style>
+  .exam-card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 1.5rem;
+    margin: 2rem 0;
+  }
+  .exam-hub-card {
+    background: var(--bg-raised);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .exam-hub-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+    border-color: var(--accent);
+  }
+</style>
+<script>(function(){try{var t=localStorage.getItem('posa-theme')||'light';document.documentElement.setAttribute('data-theme',t);var m=localStorage.getItem('posa-mode')||'concept';document.documentElement.setAttribute('data-mode',m);}catch(e){}})();</script>
+</head>
+<body>
+
+<nav class="sitenav">
+  <div class="sitenav-inner">
+    <a class="sitenav-home" href="index.html">POSA 2026</a>
+    <div class="sitenav-links">
+      <a href="index.html">Overview</a>
+      <a href="unit-1-strategy.html">1 · Strategy</a>
+      <a href="unit-6-solid.html">6 · SOLID</a>
+      <a href="past-papers.html" class="active">📝 Past Papers Hub</a>
+      <a href="mock-1.html">Mock 1 (75 pts)</a>
+    </div>
+    <button class="nav-toggle" id="navToggle" type="button" aria-expanded="false" aria-controls="navPanel">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+      Menu
+    </button>
+    <button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle color theme">
+      <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path></svg>
+      <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+    </button>
+    <button class="mode-toggle" id="modeToggle" type="button" aria-label="Toggle technical mode" style="font-size: 1.1rem; line-height: 1;">🎓</button>
+  </div>
+  <div class="nav-panel" id="navPanel">
+    <div class="nav-panel-section">
+      <span class="nav-panel-label">Exam Hub</span>
+      <a href="index.html">Course Overview</a>
+      <a href="past-papers.html" class="active">📝 Past Papers Hub</a>
+      <a href="mock-1.html">Mock 1 (75 pts)</a>
+      <a href="mock-2.html">Mock 2 (95 pts)</a>
+    </div>
+  </div>
+</nav>
+
+<div class="page-shell">
+  <aside class="sidebar-toc">
+    <div class="sidebar-block">
+      <span class="sidebar-label">Exam Hub</span>
+      <a href="#available-mocks"><span class="toc-num">1</span>Available Mock Exams</a>
+      <a href="#exam-strategy"><span class="toc-num">2</span>Exam Strategy &amp; Rubrics</a>
+    </div>
+    <div class="sidebar-block">
+      <span class="sidebar-label">Navigation</span>
+      <a href="index.html">← Back to Course Hub</a>
+    </div>
+  </aside>
+
+  <div class="page">
+    <div class="masthead">
+      <div>
+        <div class="eyebrow">Exam Preparation &amp; Assessment</div>
+        <h1 class="title">Past Papers &amp; Mock Exams Hub</h1>
+      </div>
+    </div>
+
+    <p class="dek">
+      Master actual university and master's level past papers for Pattern-Oriented Software Architecture. Complete simulations with verified architectural solutions, points breakdowns, and critical grading traps.
+    </p>
+
+    <div class="exam-card-grid" id="available-mocks">
+      
+      <!-- Mock 1 Card -->
+      <div class="exam-hub-card">
+        <div>
+          <span class="card-badge">Simulation · 75 Points</span>
+          <h3 style="font-family: var(--font-display); margin: 0.5rem 0;">Mock Exam 1: Core POSA &amp; Concurrency</h3>
+          <p style="font-size: 0.9rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 1.25rem;">
+            Covers Architectural Styles (POSA 1: Broker, Layers, Blackboard), Concurrency &amp; Networking (POSA 2: Reactor, Proactor, Half-Sync/Half-Async, Leader/Followers), Thread-Safe Interface, and a full 80k-connection Crypto Gateway synthesis.
+          </p>
+        </div>
+        <div>
+          <div style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem;">
+            ⏱️ 120 Minutes &nbsp;|&nbsp; 🎯 75 Pts &nbsp;|&nbsp; 📊 Pass: 50 / 75
+          </div>
+          <a href="mock-1.html" class="btn-exam" style="text-decoration: none; display: inline-block;">Take Mock Exam 1 &rarr;</a>
+        </div>
+      </div>
+
+      <!-- Mock 2 Card -->
+      <div class="exam-hub-card" style="border-color: var(--accent); background: var(--accent-soft);">
+        <div>
+          <span class="card-badge" style="background: var(--accent); color: #fff;">Comprehensive · 95 Points</span>
+          <h3 style="font-family: var(--font-display); margin: 0.5rem 0;">Mock Exam 2: Frankfurt UAS Full Curriculum</h3>
+          <p style="font-size: 0.9rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 1.25rem;">
+            Directly aligned with Prof. Dr. Jörg Schäfer’s curriculum: SimUDuck Strategy, Coffee/Tea Template, Command undo/redo, Package Instability &amp; Distance calculations ($I, A, D$), Double-Checked Locking Singleton, Decorator streams, and GenAI architectural auditing.
+          </p>
+        </div>
+        <div>
+          <div style="font-size: 0.85rem; color: var(--accent-ink); margin-bottom: 1rem; font-weight: 600;">
+            ⏱️ 120 Minutes &nbsp;|&nbsp; 🎯 95 Pts &nbsp;|&nbsp; 📊 Pass: 63 / 95
+          </div>
+          <a href="mock-2.html" class="btn-exam" style="text-decoration: none; display: inline-block;">Take Mock Exam 2 &rarr;</a>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Exam Strategy Section -->
+    <section class="chapter" id="exam-strategy">
+      <div class="chapter-head">
+        <span class="chapter-num">2</span>
+        <h2>Proven Exam Preparation Strategy</h2>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 1rem; margin: 1.5rem 0;">
+        <div style="padding: 1.25rem; background: var(--bg-raised); border: 1px solid var(--border); border-radius: var(--radius-sm);">
+          <strong style="color: var(--accent);">1. Active Retrieval Practice</strong>
+          <p style="font-size: 0.9rem; color: var(--text-muted); margin: 0.3rem 0 0;">
+            Click <strong>"Collapse All for Self-Testing"</strong> on the mock exam page. Read the question, write your answer on paper or recall it from memory, and <em>then</em> click to reveal the verified answer. Testing yourself before reading cements memories 300% more effectively than passive re-reading.
+          </p>
+        </div>
+
+        <div style="padding: 1.25rem; background: var(--bg-raised); border: 1px solid var(--border); border-radius: var(--radius-sm);">
+          <strong style="color: var(--accent);">2. Study the "Professor Gotchas"</strong>
+          <p style="font-size: 0.9rem; color: var(--text-muted); margin: 0.3rem 0 0;">
+            Pay close attention to the yellow <strong>⚠️ Gotcha Boxes</strong>. These reflect common point deduction traps on university exams (e.g., confusing Strategy with State, forgetting that Blackboard Knowledge Sources never talk directly to each other, or calculating package Instability inversely).
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <footer class="page-footer" style="margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--border);">
+      <span>POSA 2026 Past Papers Hub · Frankfurt University of Applied Sciences</span>
+    </footer>
+
+  </div>
+</div>
+
+<script src="assets/site.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,263 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Unit 8: Creational Patterns (Abstract Factory &amp; Singleton) | POSA 2026</title>
+<meta name="description" content="Unit 8 of Pattern-Oriented Software Architecture by Prof. Dr. Jörg Schäfer: Abstract Factory, Pizza ingredient families, Singleton concurrency, and self-study questions.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230c7a73'/%3E%3Cpath d='M8 10h16M8 16h16M8 22h10' stroke='%23fff' stroke-width='2.2' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+<style>
+  .quote-card {
+    margin: 1.5rem 0 2rem;
+    padding: 1.25rem 1.5rem;
+    background: var(--accent-soft);
+    border-left: 4px solid var(--accent);
+    border-radius: 0 var(--radius-md) var(--radius-md) 0;
+    font-style: italic;
+    color: var(--accent-ink);
+  }
+  .quote-author {
+    display: block;
+    margin-top: 0.5rem;
+    font-style: normal;
+    font-weight: 700;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .code-container {
+    margin: 1.5rem 0;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+  }
+  .code-header {
+    background: rgba(0,0,0,0.05);
+    padding: 0.5rem 1rem;
+    display: flex;
+    justify-content: space-between;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--text-muted);
+  }
+  .code-body {
+    padding: 1rem;
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: 0.88rem;
+    overflow-x: auto;
+    line-height: 1.5;
+  }
+</style>
+<script>(function(){try{var t=localStorage.getItem('posa-theme')||'light';document.documentElement.setAttribute('data-theme',t);var m=localStorage.getItem('posa-mode')||'concept';document.documentElement.setAttribute('data-mode',m);}catch(e){}})();</script>
+</head>
+<body>
+
+<nav class="sitenav">
+  <div class="sitenav-inner">
+    <a class="sitenav-home" href="index.html">POSA 2026</a>
+    <div class="sitenav-links">
+      <a href="index.html">Overview</a>
+      <a href="unit-1-strategy.html">1 · Strategy</a>
+      <a href="unit-7-packaging.html">7 · Packaging</a>
+      <a href="unit-8-creational.html" class="active">8 · Creational</a>
+      <a href="mock-1.html">📝 Mock 1</a>
+    </div>
+    <button class="nav-toggle" id="navToggle" type="button" aria-expanded="false" aria-controls="navPanel">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+      Menu
+    </button>
+    <button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle color theme">
+      <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path></svg>
+      <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+    </button>
+    <button class="mode-toggle" id="modeToggle" type="button" aria-label="Toggle technical mode" style="font-size: 1.1rem; line-height: 1;">🎓</button>
+  </div>
+  <div class="nav-panel" id="navPanel">
+    <div class="nav-panel-section">
+      <span class="nav-panel-label">Course Navigation</span>
+      <a href="index.html">Overview</a>
+      <a href="unit-7-packaging.html">Unit 7 · Packaging Principles</a>
+      <a href="unit-8-creational.html" class="active">Unit 8 · Creational Patterns</a>
+      <a href="mock-1.html">📝 Mock Exam 1</a>
+    </div>
+  </div>
+</nav>
+
+<div class="page-shell">
+  <aside class="sidebar-toc">
+    <div class="sidebar-block">
+      <span class="sidebar-label">On This Page</span>
+      <a href="#abstract-factory"><span class="toc-num">1</span>Abstract Factory: Pizza Ingredient Families</a>
+      <a href="#factory-comparison"><span class="toc-num">2</span>Factory Method vs. Abstract Factory</a>
+      <a href="#singleton"><span class="toc-num">3</span>Singleton &amp; Thread-Safety Idioms</a>
+      <a href="#singleton-criticism"><span class="toc-num">4</span>Singleton Criticisms (Anti-pattern?)</a>
+      <a href="#self-study"><span class="toc-num">5</span>Self-Study Exam Questions</a>
+    </div>
+    <div class="sidebar-block">
+      <span class="sidebar-label">Instructor</span>
+      <p style="font-size: 0.85rem; color: var(--text-muted); margin: 0;">
+        Prof. Dr. Jörg Schäfer<br>
+        <em>Frankfurt University of Applied Sciences</em>
+      </p>
+    </div>
+  </aside>
+
+  <div class="page">
+    <div class="masthead">
+      <div>
+        <div class="eyebrow">Unit 8 · Creational Patterns</div>
+        <h1 class="title">Abstract Factory &amp; The Singleton Pattern</h1>
+      </div>
+    </div>
+
+    <div class="quote-card">
+      “Each pattern is a rule which describes what you have to do, to bring that configuration of relationships about.”
+      <span class="quote-author">— Christopher Alexander</span>
+    </div>
+
+    <p class="dek">
+      Managing object instantiation responsibly: ensuring cohesive product families and controlling global instance lifecycles safely in multi-threaded environments.
+    </p>
+
+    <!-- Section 1: Abstract Factory -->
+    <section class="chapter" id="abstract-factory">
+      <div class="chapter-head">
+        <span class="chapter-num">1</span>
+        <h2>8.3 The Abstract Factory Pattern</h2>
+      </div>
+      <p class="chapter-dek">Producing families of related products without binding to concrete classes.</p>
+
+      <div style="background: var(--bg-raised); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 1.5rem; margin-bottom: 1.5rem;">
+        <p><strong>GoF Intent:</strong> Provide an interface for creating families of related or dependent objects without specifying their concrete classes.</p>
+        <p><strong>The Pizza Franchise Problem:</strong> NY Pizza requires thin crust, marinara sauce, and Reggiano cheese. Chicago Pizza requires thick deep-dish dough, plum tomato sauce, and Mozzarella. If a Chicago kitchen accidentally uses NY dough with plum sauce, quality control fails.</p>
+        <p><strong>The Solution:</strong> Create an <code>PizzaIngredientFactory</code> interface. Each regional factory (<code>NYPizzaIngredientFactory</code>, <code>ChicagoPizzaIngredientFactory</code>) produces a guaranteed cohesive family of ingredients.</p>
+      </div>
+
+      <div class="arch-diagram-block">
+┌────────────────────────────────────────────────────────┐
+│             &lt;&lt;interface&gt;&gt; PizzaIngredientFactory       │
+├────────────────────────────────────────────────────────┤
+│ + createDough() : Dough                                │
+│ + createSauce() : Sauce                                │
+│ + createCheese() : Cheese                              │
+└───────────────────────────▲────────────────────────────┘
+                            │
+              ┌─────────────┴─────────────┐
+┌─────────────┴─────────────┐ ┌───────────┴─────────────┐
+│ NYPizzaIngredientFactory  │ │ChicagoIngredientFactory │
+├───────────────────────────┤ ├─────────────────────────┤
+│ createDough(): ThinCrust  │ │ createDough(): ThickCrust│
+│ createSauce(): Marinara   │ │ createSauce(): PlumSauce│
+│ createCheese(): Reggiano  │ │ createCheese(): Mozzar. │
+└───────────────────────────┘ └─────────────────────────┘</div>
+    </section>
+
+    <!-- Section 2: Comparison -->
+    <section class="chapter" id="factory-comparison">
+      <div class="chapter-head">
+        <span class="chapter-num">2</span>
+        <h2>Factory Method vs. Abstract Factory</h2>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1.5rem 0;">
+        <div style="padding: 1.25rem; background: var(--bg-raised); border: 1px solid var(--border); border-radius: var(--radius-sm);">
+          <strong style="color: var(--accent);">Factory Method (Inheritance)</strong>
+          <p style="font-size: 0.88rem; color: var(--text-muted); margin-top: 0.3rem;">
+            Relies on inheritance: an abstract class declares an abstract method <code>createPizza(String type)</code>, and subclasses decide which concrete product class to instantiate. Creates <strong>one product</strong>.
+          </p>
+        </div>
+        <div style="padding: 1.25rem; background: var(--bg-raised); border: 1px solid var(--border); border-radius: var(--radius-sm);">
+          <strong style="color: var(--accent);">Abstract Factory (Composition)</strong>
+          <p style="font-size: 0.88rem; color: var(--text-muted); margin-top: 0.3rem;">
+            Relies on composition: an independent factory object is passed to client code, exposing multiple factory methods to create an entire <strong>family of related products</strong>.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 3: Singleton -->
+    <section class="chapter" id="singleton">
+      <div class="chapter-head">
+        <span class="chapter-num">3</span>
+        <h2>8.5 The Singleton Pattern &amp; Thread-Safety</h2>
+      </div>
+      <p class="chapter-dek">Guaranteeing a single shared instance across a multi-threaded application.</p>
+
+      <p><strong>Intent:</strong> Ensure a class only has one instance, and provide a global point of access to it.</p>
+
+      <div class="code-container">
+        <div class="code-header"><span>DoubleCheckedLocking.java</span><span>Thread-Safe Lazy Initialization</span></div>
+        <pre class="code-body"><code>public class DatabaseConnectionPool {
+    // 1. volatile prevents CPU instruction reordering!
+    private static volatile DatabaseConnectionPool uniqueInstance;
+
+    // 2. Private constructor prevents direct 'new' instantiations
+    private DatabaseConnectionPool() {}
+
+    // 3. Double-checked locking avoids synchronizing on every call
+    public static DatabaseConnectionPool getInstance() {
+        if (uniqueInstance == null) {
+            synchronized (DatabaseConnectionPool.class) {
+                if (uniqueInstance == null) {
+                    uniqueInstance = new DatabaseConnectionPool();
+                }
+            }
+        }
+        return uniqueInstance;
+    }
+}</code></pre>
+      </div>
+
+      <div style="padding: 1.25rem; background: var(--warn-soft); border-left: 3px solid var(--warn); border-radius: 0 var(--radius-sm) var(--radius-sm) 0; margin: 1.5rem 0;" id="singleton-criticism">
+        <strong style="color: var(--warn);">⚠️ Why is Singleton Often Considered an Anti-Pattern?</strong>
+        <ul style="margin: 0.5rem 0 0; padding-left: 1.2rem; font-size: 0.9rem; line-height: 1.6;">
+          <li><strong>Hidden Dependencies:</strong> Classes access <code>Singleton.getInstance()</code> internally instead of declaring dependencies in their constructors.</li>
+          <li><strong>Unit Testing Nightmare:</strong> Global state persists across test cases, making tests interdependent and impossible to run reliably in parallel.</li>
+          <li><strong>Violates SRP:</strong> The class controls both its domain responsibility AND its own lifecycle management.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Section 5: Self Study -->
+    <section class="chapter" id="self-study">
+      <div class="chapter-head">
+        <span class="chapter-num">4</span>
+        <h2>8.7 Questions for Self-Study</h2>
+      </div>
+
+      <div class="drill-list">
+        <details class="drill-item" open>
+          <summary>
+            <span class="drill-tag">Exam Drill</span>
+            <span class="drill-q">Why is the <code>volatile</code> keyword mandatory in Java's Double-Checked Locking Singleton implementation?</span>
+            <span class="drill-reveal-hint"></span>
+          </summary>
+          <div class="drill-a">
+            <p>
+              Without <code>volatile</code>, the JVM/compiler can reorder bytecode instructions during object creation.
+            </p>
+            <p>
+              Specifically, <code>new Object()</code> involves three steps: (1) allocate memory, (2) initialize the object, (3) assign reference to <code>uniqueInstance</code>. If instructions reorder step 3 before step 2, another thread checking <code>uniqueInstance == null</code> outside the synchronized block might see a non-null reference to a <strong>partially initialized object</strong>, leading to silent memory corruption or crashes.
+            </p>
+          </div>
+        </details>
+      </div>
+    </section>
+
+    <footer class="page-footer" style="margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--border); display: flex; justify-content: space-between;">
+      <span><a href="unit-7-packaging.html">← Previous: Unit 7 Packaging</a></span>
+      <span><a href="unit-9-flexibility.html">Next: Unit 9 Flexibility Patterns →</a></span>
+    </footer>
+
+  </div>
+</div>
+
+<script src="assets/site.js" defer></script>
+</body>
+</html>

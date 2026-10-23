@@ -1,0 +1,280 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Unit 7: OO Principles II (Packaging Principles &amp; Metrics) | POSA 2026</title>
+<meta name="description" content="Unit 7 of Pattern-Oriented Software Architecture by Prof. Dr. Jörg Schäfer: Package Cohesion (REP, CRP, CCP), Package Coupling (ADP, SDP, SAP), Instability, Abstractness, and Distance metrics.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230c7a73'/%3E%3Cpath d='M8 10h16M8 16h16M8 22h10' stroke='%23fff' stroke-width='2.2' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+<style>
+  .metric-card {
+    background: var(--bg-raised);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 1.5rem;
+    margin: 1.5rem 0;
+  }
+  .formula-box {
+    margin: 1rem 0;
+    padding: 1rem 1.25rem;
+    background: var(--code-bg);
+    border-radius: var(--radius-sm);
+    font-family: var(--font-mono);
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--accent-ink);
+  }
+</style>
+<script>(function(){try{var t=localStorage.getItem('posa-theme')||'light';document.documentElement.setAttribute('data-theme',t);var m=localStorage.getItem('posa-mode')||'concept';document.documentElement.setAttribute('data-mode',m);}catch(e){}})();</script>
+</head>
+<body>
+
+<nav class="sitenav">
+  <div class="sitenav-inner">
+    <a class="sitenav-home" href="index.html">POSA 2026</a>
+    <div class="sitenav-links">
+      <a href="index.html">Overview</a>
+      <a href="unit-1-strategy.html">1 · Strategy</a>
+      <a href="unit-6-solid.html">6 · SOLID</a>
+      <a href="unit-7-packaging.html" class="active">7 · Packaging</a>
+      <a href="mock-1.html">📝 Mock 1</a>
+    </div>
+    <button class="nav-toggle" id="navToggle" type="button" aria-expanded="false" aria-controls="navPanel">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+      Menu
+    </button>
+    <button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle color theme">
+      <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path></svg>
+      <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+    </button>
+    <button class="mode-toggle" id="modeToggle" type="button" aria-label="Toggle technical mode" style="font-size: 1.1rem; line-height: 1;">🎓</button>
+  </div>
+  <div class="nav-panel" id="navPanel">
+    <div class="nav-panel-section">
+      <span class="nav-panel-label">Course Navigation</span>
+      <a href="index.html">Overview</a>
+      <a href="unit-6-solid.html">Unit 6 · SOLID Principles</a>
+      <a href="unit-7-packaging.html" class="active">Unit 7 · Packaging Principles &amp; Metrics</a>
+      <a href="mock-1.html">📝 Mock Exam 1</a>
+    </div>
+  </div>
+</nav>
+
+<div class="page-shell">
+  <aside class="sidebar-toc">
+    <div class="sidebar-block">
+      <span class="sidebar-label">On This Page</span>
+      <a href="#package-cohesion"><span class="toc-num">1</span>Package Cohesion (REP, CRP, CCP)</a>
+      <a href="#package-coupling"><span class="toc-num">2</span>Package Coupling (ADP, SDP, SAP)</a>
+      <a href="#package-metrics"><span class="toc-num">3</span>Formulas: I, A, and D Metrics</a>
+      <a href="#main-sequence"><span class="toc-num">4</span>Main Sequence &amp; Zone of Pain</a>
+      <a href="#self-study"><span class="toc-num">5</span>Self-Study Exam Questions</a>
+    </div>
+    <div class="sidebar-block">
+      <span class="sidebar-label">Instructor</span>
+      <p style="font-size: 0.85rem; color: var(--text-muted); margin: 0;">
+        Prof. Dr. Jörg Schäfer<br>
+        <em>Frankfurt University of Applied Sciences</em>
+      </p>
+    </div>
+  </aside>
+
+  <div class="page">
+    <div class="masthead">
+      <div>
+        <div class="eyebrow">Unit 7 · Macro Architecture &amp; Modularity</div>
+        <h1 class="title">OO Principles II: Packaging Patterns &amp; Metrics</h1>
+      </div>
+    </div>
+
+    <p class="dek">
+      Scaling beyond individual classes into packages, JARs, and microservice modules. Uncle Bob’s 6 package principles and the mathematical metrics for stability and abstractness.
+    </p>
+
+    <!-- Section 1: Cohesion -->
+    <section class="chapter" id="package-cohesion">
+      <div class="chapter-head">
+        <span class="chapter-num">1</span>
+        <h2>7.3.2 Principles of Package Cohesion</h2>
+      </div>
+      <p class="chapter-dek">Which classes belong inside the same package?</p>
+
+      <div style="display: flex; flex-direction: column; gap: 1rem; margin: 1.5rem 0;">
+        <div style="padding: 1.25rem; background: var(--bg-raised); border: 1px solid var(--border); border-radius: var(--radius-sm);">
+          <strong style="color: var(--accent);">1. REP: Reuse-Release Equivalence Principle</strong>
+          <p style="font-size: 0.9rem; color: var(--text-muted); margin: 0.3rem 0 0;">
+            <em>“The granule of reuse is the granule of release.”</em> You cannot effectively reuse a library without tracking version numbers and changelogs. Everything inside a package must be released together under a shared version tag.
+          </p>
+        </div>
+
+        <div style="padding: 1.25rem; background: var(--bg-raised); border: 1px solid var(--border); border-radius: var(--radius-sm);">
+          <strong style="color: var(--accent);">2. CRP: Common-Reuse Principle</strong>
+          <p style="font-size: 0.9rem; color: var(--text-muted); margin: 0.3rem 0 0;">
+            <em>“Classes that aren’t reused together should not be packaged together.”</em> Prevents clients from depending on classes they don’t actually need. (The package-level equivalent of the Interface Segregation Principle).
+          </p>
+        </div>
+
+        <div style="padding: 1.25rem; background: var(--bg-raised); border: 1px solid var(--border); border-radius: var(--radius-sm);">
+          <strong style="color: var(--accent);">3. CCP: Common-Closure Principle</strong>
+          <p style="font-size: 0.9rem; color: var(--text-muted); margin: 0.3rem 0 0;">
+            <em>“The classes in a package should be closed together against the same kinds of changes.”</em> If requirements change, all affected classes should reside in a single package. (The package-level equivalent of the Single Responsibility Principle).
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 2: Coupling -->
+    <section class="chapter" id="package-coupling">
+      <div class="chapter-head">
+        <span class="chapter-num">2</span>
+        <h2>7.3.6 Principles of Package Coupling</h2>
+      </div>
+      <p class="chapter-dek">How packages should depend on one another.</p>
+
+      <div style="display: flex; flex-direction: column; gap: 1rem; margin: 1.5rem 0;">
+        <div style="padding: 1.25rem; background: var(--bg-raised); border: 1px solid var(--border); border-radius: var(--radius-sm);">
+          <strong style="color: var(--accent);">1. ADP: Acyclic-Dependencies Principle</strong>
+          <p style="font-size: 0.9rem; color: var(--text-muted); margin: 0.3rem 0 0;">
+            <em>“The dependency structure between packages must form a Directed Acyclic Graph (DAG).”</em> No cyclic dependencies! Cycles create a “morning-after syndrome” where changes anywhere break builds everywhere.
+            <br><strong>How to break cycles:</strong> (A) Apply Dependency Inversion (DIP) with an interface; or (B) extract shared dependencies into a new third package.
+          </p>
+        </div>
+
+        <div style="padding: 1.25rem; background: var(--bg-raised); border: 1px solid var(--border); border-radius: var(--radius-sm);">
+          <strong style="color: var(--accent);">2. SDP: Stable-Dependencies Principle</strong>
+          <p style="font-size: 0.9rem; color: var(--text-muted); margin: 0.3rem 0 0;">
+            <em>“Depend in the direction of stability.”</em> A package should only depend on packages that are more stable than itself. Volatile packages should sit at the top of the dependency graph; stable packages at the bottom.
+          </p>
+        </div>
+
+        <div style="padding: 1.25rem; background: var(--bg-raised); border: 1px solid var(--border); border-radius: var(--radius-sm);">
+          <strong style="color: var(--accent);">3. SAP: Stable-Abstractions Principle</strong>
+          <p style="font-size: 0.9rem; color: var(--text-muted); margin: 0.3rem 0 0;">
+            <em>“A package should be as abstract as it is stable.”</em> A stable package that is heavily depended upon must be abstract (composed of interfaces) so it can be extended without requiring source code modifications.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 3: Package Metrics -->
+    <section class="chapter" id="package-metrics">
+      <div class="chapter-head">
+        <span class="chapter-num">3</span>
+        <h2>7.3.8 Mathematical Package Metrics</h2>
+      </div>
+      <p class="chapter-dek">Quantifying stability, abstractness, and architectural health.</p>
+
+      <div class="metric-card">
+        <h3>1. Instability Metric ($I$)</h3>
+        <p style="font-size: 0.9rem; color: var(--text-muted);">
+          Coupling count: $C_a$ (Afferent coupling: incoming dependencies), $C_e$ (Efferent coupling: outgoing dependencies).
+        </p>
+        <div class="formula-box">
+          Instability: I = C_e / (C_a + C_e)
+        </div>
+        <ul>
+          <li><strong>$I = 0$ (Maximally Stable):</strong> $C_e = 0$, $C_a &gt; 0$. Depended upon by many packages, depends on none. Hard to change.</li>
+          <li><strong>$I = 1$ (Maximally Unstable):</strong> $C_e &gt; 0$, $C_a = 0$. Depends on many packages, depended upon by none. Easy to change.</li>
+        </ul>
+      </div>
+
+      <div class="metric-card">
+        <h3>2. Abstractness Metric ($A$)</h3>
+        <p style="font-size: 0.9rem; color: var(--text-muted);">
+          Ratio of abstract classes &amp; interfaces ($N_a$) to total classes ($N_c$).
+        </p>
+        <div class="formula-box">
+          Abstractness: A = N_a / N_c
+        </div>
+        <ul>
+          <li><strong>$A = 0$:</strong> Completely concrete package (no interfaces).</li>
+          <li><strong>$A = 1$:</strong> Pure abstraction (only interfaces and abstract classes).</li>
+        </ul>
+      </div>
+
+      <div class="metric-card" id="main-sequence">
+        <h3>3. Normalized Distance from the Main Sequence ($D$)</h3>
+        <div class="formula-box">
+          Normalized Distance: D = |A + I - 1|
+        </div>
+        <p style="font-size: 0.9rem; color: var(--text-muted); line-height: 1.6;">
+          On the ideal Main Sequence, $A + I = 1$. The further a package drifts ($D \to 1$), the more architecturally troubled it is:
+        </p>
+        <div class="arch-diagram-block">
+A (Abstractness)
+▲
+1.0 ┌──────────────────────────────────────┐
+    │  Zone of Uselessness                 │
+    │  (A=1, I=1: Abstract, but unreferenced)
+    │        \                             │
+    │         \    THE MAIN SEQUENCE       │
+    │          \   (Ideal Balance: A+I=1)  │
+    │           \                          │
+    │            \                         │
+    │  Zone of Pain                        │
+    │  (A=0, I=0: Concrete & unchangeable) │
+0.0 └──────────────────────────────────────┴──► I (Instability)
+    0.0                                    1.0</div>
+        
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1rem;">
+          <div style="padding: 1rem; background: var(--warn-soft); border-radius: var(--radius-sm);">
+            <strong style="color: var(--warn);">⚠️ Zone of Pain ($A=0, I=0$)</strong>
+            <p style="font-size: 0.85rem; margin-top: 0.3rem;">
+              Completely concrete, but heavily depended upon. Highly rigid and painful to change (e.g. core database entities without interfaces).
+            </p>
+          </div>
+          <div style="padding: 1rem; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-sm);">
+            <strong>👻 Zone of Uselessness ($A=1, I=1$)</strong>
+            <p style="font-size: 0.85rem; margin-top: 0.3rem; color: var(--text-muted);">
+              Pure abstract classes that nobody depends on. Waste of design effort; dead abstractions.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 4: Self Study Questions -->
+    <section class="chapter" id="self-study">
+      <div class="chapter-head">
+        <span class="chapter-num">4</span>
+        <h2>7.5 Questions for Self-Study (Exam Practice)</h2>
+      </div>
+
+      <div class="drill-list">
+        <details class="drill-item" open>
+          <summary>
+            <span class="drill-tag">Exam Calculation</span>
+            <span class="drill-q">A package has 3 incoming package dependencies ($C_a = 3$) and depends on 1 external package ($C_e = 1$). It contains 2 interfaces and 8 concrete classes ($N_c = 10$). Compute Instability ($I$), Abstractness ($A$), and Distance ($D$). Is this package in good architectural health?</span>
+            <span class="drill-reveal-hint"></span>
+          </summary>
+          <div class="drill-a">
+            <p><strong>Step-by-Step Calculation:</strong></p>
+            <ol>
+              <li>$I = \frac{C_e}{C_a + C_e} = \frac{1}{3 + 1} = \frac{1}{4} = \mathbf{0.25}$</li>
+              <li>$A = \frac{N_a}{N_c} = \frac{2}{10} = \mathbf{0.20}$</li>
+              <li>$D = |A + I - 1| = |0.20 + 0.25 - 1| = |-0.55| = \mathbf{0.55}$</li>
+            </ol>
+            <p><strong>Architectural Diagnosis:</strong></p>
+            <p>
+              $D = 0.55$ indicates noticeable drift toward the <strong>Zone of Pain</strong> ($A + I = 0.45 &lt; 1$). Because the package is relatively stable ($I = 0.25$), it is depended upon by 3 external packages, but it is $80\%$ concrete ($A = 0.20$). To restore balance closer to the Main Sequence, the developers should extract interfaces for the exported classes to increase $A$.
+            </p>
+          </div>
+        </details>
+      </div>
+    </section>
+
+    <footer class="page-footer" style="margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--border); display: flex; justify-content: space-between;">
+      <span><a href="unit-6-solid.html">← Previous: Unit 6 SOLID</a></span>
+      <span><a href="index.html">Course Hub →</a></span>
+    </footer>
+
+  </div>
+</div>
+
+<script src="assets/site.js" defer></script>
+</body>
+</html>

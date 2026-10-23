@@ -1,0 +1,250 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Unit 5: Pattern Theory &amp; Origins | POSA 2026</title>
+<meta name="description" content="Unit 5 of Pattern-Oriented Software Architecture by Prof. Dr. Jörg Schäfer: Christopher Alexander, GoF categorization, Pattern Languages, and criticisms.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230c7a73'/%3E%3Cpath d='M8 10h16M8 16h16M8 22h10' stroke='%23fff' stroke-width='2.2' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+<style>
+  .quote-card {
+    margin: 1.5rem 0 2rem;
+    padding: 1.25rem 1.5rem;
+    background: var(--accent-soft);
+    border-left: 4px solid var(--accent);
+    border-radius: 0 var(--radius-md) var(--radius-md) 0;
+    font-style: italic;
+    color: var(--accent-ink);
+  }
+  .quote-author {
+    display: block;
+    margin-top: 0.5rem;
+    font-style: normal;
+    font-weight: 700;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .theory-card {
+    background: var(--bg-raised);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+</style>
+<script>(function(){try{var t=localStorage.getItem('posa-theme')||'light';document.documentElement.setAttribute('data-theme',t);var m=localStorage.getItem('posa-mode')||'concept';document.documentElement.setAttribute('data-mode',m);}catch(e){}})();</script>
+</head>
+<body>
+
+<nav class="sitenav">
+  <div class="sitenav-inner">
+    <a class="sitenav-home" href="index.html">POSA 2026</a>
+    <div class="sitenav-links">
+      <a href="index.html">Overview</a>
+      <a href="unit-1-strategy.html">1 · Strategy</a>
+      <a href="unit-4-junit.html">4 · JUnit</a>
+      <a href="unit-5-theory.html" class="active">5 · Theory</a>
+      <a href="unit-6-solid.html">6 · SOLID</a>
+      <a href="mock-1.html">📝 Mock 1</a>
+    </div>
+    <button class="nav-toggle" id="navToggle" type="button" aria-expanded="false" aria-controls="navPanel">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+      Menu
+    </button>
+    <button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle color theme">
+      <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path></svg>
+      <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+    </button>
+    <button class="mode-toggle" id="modeToggle" type="button" aria-label="Toggle technical mode" style="font-size: 1.1rem; line-height: 1;">🎓</button>
+  </div>
+  <div class="nav-panel" id="navPanel">
+    <div class="nav-panel-section">
+      <span class="nav-panel-label">Course Navigation</span>
+      <a href="index.html">Overview</a>
+      <a href="unit-4-junit.html">Unit 4 · Case Study JUnit</a>
+      <a href="unit-5-theory.html" class="active">Unit 5 · Pattern Theory</a>
+      <a href="unit-6-solid.html">Unit 6 · SOLID Principles</a>
+      <a href="mock-1.html">📝 Mock Exam 1</a>
+    </div>
+  </div>
+</nav>
+
+<div class="page-shell">
+  <aside class="sidebar-toc">
+    <div class="sidebar-block">
+      <span class="sidebar-label">On This Page</span>
+      <a href="#alexander-origins"><span class="toc-num">1</span>Christopher Alexander's Origins</a>
+      <a href="#three-part-rule"><span class="toc-num">2</span>The Three-Part Rule &amp; Forces</a>
+      <a href="#pattern-hierarchy"><span class="toc-num">3</span>Pattern Taxonomies (GoF vs POSA)</a>
+      <a href="#criticism"><span class="toc-num">4</span>Pattern Criticisms &amp; Overuse</a>
+      <a href="#self-study"><span class="toc-num">5</span>Self-Study Exam Questions</a>
+    </div>
+    <div class="sidebar-block">
+      <span class="sidebar-label">Instructor</span>
+      <p style="font-size: 0.85rem; color: var(--text-muted); margin: 0;">
+        Prof. Dr. Jörg Schäfer<br>
+        <em>Frankfurt University of Applied Sciences</em>
+      </p>
+    </div>
+  </aside>
+
+  <div class="page">
+    <div class="masthead">
+      <div>
+        <div class="eyebrow">Unit 5 · Epistemology &amp; Foundations</div>
+        <h1 class="title">Pattern Theory: Origins, Languages &amp; Limits</h1>
+      </div>
+    </div>
+
+    <div class="quote-card">
+      “Each pattern describes a problem which occurs over and over again in our environment, and then describes the core of the solution to that problem, in such a way that you can use this solution a million times over, without ever doing it the same way twice.”
+      <span class="quote-author">— Christopher Alexander (A Pattern Language, 1977)</span>
+    </div>
+
+    <p class="dek">
+      Where do patterns come from? The philosophical roots in building architecture, the definition of a pattern language, and the scientific criticisms of software design patterns.
+    </p>
+
+    <!-- Section 1: Origins -->
+    <section class="chapter" id="alexander-origins">
+      <div class="chapter-head">
+        <span class="chapter-num">1</span>
+        <h2>5.3 The Origins: Christopher Alexander</h2>
+      </div>
+      <p class="chapter-dek">From physical architecture in urban planning to object-oriented software engineering.</p>
+
+      <p>
+        Design patterns were not invented by computer scientists. They originated with architect <strong>Christopher Alexander</strong> in books like <em>A Pattern Language</em> (1977) and <em>The Timeless Way of Building</em> (1979).
+      </p>
+      <p>
+        Alexander observed that master builders over centuries solved recurring structural problems with common harmonious forms: *Light on Two Sides of Every Room*, *A Place to Wait*, *Alcoves*, and *Arcades*.
+      </p>
+      <p>
+        In 1987, <strong>Kent Beck and Ward Cunningham</strong> applied Alexander’s architectural concepts to Smalltalk GUI programming. In 1994, the <strong>Gang of Four (GoF)</strong> popularized the 23 foundational object-oriented design patterns.
+      </p>
+    </section>
+
+    <!-- Section 2: Three-Part Rule -->
+    <section class="chapter" id="three-part-rule">
+      <div class="chapter-head">
+        <span class="chapter-num">2</span>
+        <h2>5.6 The Three-Part Rule &amp; Resolving Forces</h2>
+      </div>
+
+      <div class="theory-card">
+        <h3>The Fundamental Anatomy of a Pattern</h3>
+        <div class="arch-diagram-block">
+┌────────────────────────────────────────────────────────┐
+│ 1. CONTEXT: The environment, preconditions, and        │
+│    situation in which the problem recurs.              │
+└──────────────────────────┬─────────────────────────────┘
+                           │ presents
+                           ▼
+┌────────────────────────────────────────────────────────┐
+│ 2. PROBLEM &amp; FORCES: The conflicting requirements,      │
+│    trade-offs, and design goals (e.g., speed vs.       │
+│    memory, flexibility vs. complexity).                │
+└──────────────────────────┬─────────────────────────────┘
+                           │ resolves
+                           ▼
+┌────────────────────────────────────────────────────────┐
+│ 3. SOLUTION: The structural relationship of components │
+│    that resolves the forces into balance.              │
+└────────────────────────────────────────────────────────┘</div>
+      </div>
+    </section>
+
+    <!-- Section 3: Pattern Hierarchy -->
+    <section class="chapter" id="pattern-hierarchy">
+      <div class="chapter-head">
+        <span class="chapter-num">3</span>
+        <h2>5.6.2 Pattern Taxonomies: POSA vs. GoF</h2>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; margin: 1.5rem 0;">
+        <div style="padding: 1rem; background: var(--bg-raised); border: 1px solid var(--border); border-radius: var(--radius-sm);">
+          <strong style="color: var(--accent);">Architectural Patterns (POSA)</strong>
+          <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.4rem;">
+            Fundamental structural organization of whole systems: <em>Layers, Broker, Pipes &amp; Filters, Blackboard, Model-View-Controller</em>.
+          </p>
+        </div>
+        <div style="padding: 1rem; background: var(--bg-raised); border: 1px solid var(--border); border-radius: var(--radius-sm);">
+          <strong style="color: var(--accent);">Design Patterns (GoF)</strong>
+          <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.4rem;">
+            Medium-scale component refinement: <em>Strategy, Observer, Composite, Command, Abstract Factory, Decorator</em>.
+          </p>
+        </div>
+        <div style="padding: 1rem; background: var(--bg-raised); border: 1px solid var(--border); border-radius: var(--radius-sm);">
+          <strong style="color: var(--accent);">Idioms (Language-Specific)</strong>
+          <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.4rem;">
+            Low-level implementation idioms: <em>RAII in C++, Double-Checked Locking in Java, Context Managers (with) in Python</em>.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 4: Criticism -->
+    <section class="chapter" id="criticism">
+      <div class="chapter-head">
+        <span class="chapter-num">4</span>
+        <h2>5.6.3 Criticisms &amp; The Limits of Patterns</h2>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 1rem; margin: 1.5rem 0;">
+        <div style="padding: 1.25rem; background: var(--warn-soft); border-radius: var(--radius-sm);">
+          <strong style="color: var(--warn);">1. Patterns as "Missing Language Features" (Peter Norvig)</strong>
+          <p style="font-size: 0.9rem; margin: 0.3rem 0 0;">
+            In his famous 1996 analysis, Peter Norvig demonstrated that <strong>16 out of the 23 GoF patterns</strong> are either invisible or trivial in first-class dynamic languages (Lisp, Python). For example, <em>Strategy</em> is just passing a first-class function!
+          </p>
+        </div>
+        <div style="padding: 1.25rem; background: var(--bg-raised); border: 1px solid var(--border); border-radius: var(--radius-sm);">
+          <strong>2. "Patternitis" (Premature Over-Engineering)</strong>
+          <p style="font-size: 0.9rem; color: var(--text-muted); margin: 0.3rem 0 0;">
+            Novice developers often attempt to squeeze as many patterns as possible into a codebase, creating needless indirection and complexity when a simple 5-line function would do.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 5: Self Study -->
+    <section class="chapter" id="self-study">
+      <div class="chapter-head">
+        <span class="chapter-num">5</span>
+        <h2>5.10 Questions for Self-Study</h2>
+      </div>
+
+      <div class="drill-list">
+        <details class="drill-item" open>
+          <summary>
+            <span class="drill-tag">Exam Question</span>
+            <span class="drill-q">What is the distinction between a "Pattern Catalog" and a "Pattern Language"?</span>
+            <span class="drill-reveal-hint"></span>
+          </summary>
+          <div class="drill-a">
+            <p>
+              A <strong>Pattern Catalog</strong> (like GoF) is an organized dictionary of independent patterns with alphabetical or topical groupings, but leaves the connections and composition rules largely to the reader.
+            </p>
+            <p>
+              A <strong>Pattern Language</strong> is a network of interlocking patterns where the solution of one pattern establishes the context and forces for the next pattern, guiding the developer through a complete design synthesis from macro architecture to micro implementation.
+            </p>
+          </div>
+        </details>
+      </div>
+    </section>
+
+    <footer class="page-footer" style="margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--border); display: flex; justify-content: space-between;">
+      <span><a href="unit-4-junit.html">← Previous: Unit 4 JUnit</a></span>
+      <span><a href="unit-6-solid.html">Next: Unit 6 SOLID Principles →</a></span>
+    </footer>
+
+  </div>
+</div>
+
+<script src="assets/site.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,300 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Unit 6: OO Principles I (SOLID &amp; Design Smells) | POSA 2026</title>
+<meta name="description" content="Unit 6 of Pattern-Oriented Software Architecture by Prof. Dr. Jörg Schäfer: SOLID principles (SRP, OCP, LSP, ISP, DIP), 7 design smells, and exam questions.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230c7a73'/%3E%3Cpath d='M8 10h16M8 16h16M8 22h10' stroke='%23fff' stroke-width='2.2' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+<style>
+  .quote-card {
+    margin: 1.5rem 0 2rem;
+    padding: 1.25rem 1.5rem;
+    background: var(--accent-soft);
+    border-left: 4px solid var(--accent);
+    border-radius: 0 var(--radius-md) var(--radius-md) 0;
+    font-style: italic;
+    color: var(--accent-ink);
+  }
+  .quote-author {
+    display: block;
+    margin-top: 0.5rem;
+    font-style: normal;
+    font-weight: 700;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .smell-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1rem;
+    margin: 1.5rem 0;
+  }
+  .smell-card {
+    background: var(--bg-raised);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 1.25rem;
+  }
+  .smell-name {
+    font-weight: 700;
+    color: var(--warn);
+    font-size: 1.05rem;
+    margin-bottom: 0.4rem;
+  }
+  .solid-card {
+    background: var(--bg-raised);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+  .solid-letter {
+    display: inline-block;
+    width: 34px;
+    height: 34px;
+    line-height: 34px;
+    text-align: center;
+    background: var(--accent);
+    color: #fff;
+    font-weight: 700;
+    border-radius: var(--radius-sm);
+    font-family: var(--font-mono);
+    margin-right: 0.5rem;
+  }
+</style>
+<script>(function(){try{var t=localStorage.getItem('posa-theme')||'light';document.documentElement.setAttribute('data-theme',t);var m=localStorage.getItem('posa-mode')||'concept';document.documentElement.setAttribute('data-mode',m);}catch(e){}})();</script>
+</head>
+<body>
+
+<nav class="sitenav">
+  <div class="sitenav-inner">
+    <a class="sitenav-home" href="index.html">POSA 2026</a>
+    <div class="sitenav-links">
+      <a href="index.html">Overview</a>
+      <a href="unit-1-strategy.html">1 · Strategy</a>
+      <a href="unit-2-behavioral.html">2 · Behavioral</a>
+      <a href="unit-3-structural.html">3 · Structural</a>
+      <a href="unit-6-solid.html" class="active">6 · SOLID</a>
+      <a href="unit-7-packaging.html">7 · Packaging</a>
+      <a href="mock-1.html">📝 Mock 1</a>
+    </div>
+    <button class="nav-toggle" id="navToggle" type="button" aria-expanded="false" aria-controls="navPanel">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+      Menu
+    </button>
+    <button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle color theme">
+      <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path></svg>
+      <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+    </button>
+    <button class="mode-toggle" id="modeToggle" type="button" aria-label="Toggle technical mode" style="font-size: 1.1rem; line-height: 1;">🎓</button>
+  </div>
+  <div class="nav-panel" id="navPanel">
+    <div class="nav-panel-section">
+      <span class="nav-panel-label">Course Navigation</span>
+      <a href="index.html">Overview</a>
+      <a href="unit-1-strategy.html">Unit 1 · Strategy</a>
+      <a href="unit-6-solid.html" class="active">Unit 6 · SOLID Principles</a>
+      <a href="unit-7-packaging.html">Unit 7 · Packaging Principles</a>
+      <a href="mock-1.html">📝 Mock Exam 1</a>
+    </div>
+  </div>
+</nav>
+
+<div class="page-shell">
+  <aside class="sidebar-toc">
+    <div class="sidebar-block">
+      <span class="sidebar-label">On This Page</span>
+      <a href="#design-smells"><span class="toc-num">1</span>The 7 Design Smells</a>
+      <a href="#solid-principles"><span class="toc-num">2</span>SOLID Deep Dive</a>
+      <a href="#liskov-substitution"><span class="toc-num">3</span>LSP: Rectangle vs. Square</a>
+      <a href="#self-study"><span class="toc-num">4</span>Self-Study Exam Questions</a>
+    </div>
+    <div class="sidebar-block">
+      <span class="sidebar-label">Instructor</span>
+      <p style="font-size: 0.85rem; color: var(--text-muted); margin: 0;">
+        Prof. Dr. Jörg Schäfer<br>
+        <em>Frankfurt University of Applied Sciences</em>
+      </p>
+    </div>
+  </aside>
+
+  <div class="page">
+    <div class="masthead">
+      <div>
+        <div class="eyebrow">Unit 6 · Core Object-Oriented Principles</div>
+        <h1 class="title">OO Principles I: SOLID &amp; Design Smells</h1>
+      </div>
+    </div>
+
+    <div class="quote-card">
+      “The ‘bad’ patterns are unable to contain the forces which occur in them. In the end, the whole system must collapse.”
+      <span class="quote-author">— Christopher Alexander</span>
+    </div>
+
+    <p class="dek">
+      Robert C. Martin’s (Uncle Bob) design smells that signal architectural rot, and the 5 foundational SOLID principles that counteract them.
+    </p>
+
+    <!-- Section 1: 7 Design Smells -->
+    <section class="chapter" id="design-smells">
+      <div class="chapter-head">
+        <span class="chapter-num">1</span>
+        <h2>6.4 The 7 Classic Design Smells</h2>
+      </div>
+      <p class="chapter-dek">Symptoms of decaying, brittle software architectures.</p>
+
+      <div class="smell-grid">
+        <div class="smell-card">
+          <div class="smell-name">1. Rigidity</div>
+          <p style="font-size: 0.88rem; color: var(--text-muted); margin: 0;">
+            The tendency for software to be difficult to change. A single simple change causes a cascade of downstream changes in dependent modules.
+          </p>
+        </div>
+        <div class="smell-card">
+          <div class="smell-name">2. Fragility</div>
+          <p style="font-size: 0.88rem; color: var(--text-muted); margin: 0;">
+            The software breaks in unexpected places that have no conceptual relationship to the area that was modified.
+          </p>
+        </div>
+        <div class="smell-card">
+          <div class="smell-name">3. Immobility</div>
+          <p style="font-size: 0.88rem; color: var(--text-muted); margin: 0;">
+            The inability to reuse software from other projects or parts of the same project because it is too entangled with its current context.
+          </p>
+        </div>
+        <div class="smell-card">
+          <div class="smell-name">4. Viscosity</div>
+          <p style="font-size: 0.88rem; color: var(--text-muted); margin: 0;">
+            Doing things the right, architectural way is much harder than doing the quick-and-dirty hack or copy-pasting.
+          </p>
+        </div>
+        <div class="smell-card">
+          <div class="smell-name">5. Needless Complexity</div>
+          <p style="font-size: 0.88rem; color: var(--text-muted); margin: 0;">
+            Contains speculative design elements that anticipate problems that never actually occur (violating YAGNI).
+          </p>
+        </div>
+        <div class="smell-card">
+          <div class="smell-name">6. Needless Repetition</div>
+          <p style="font-size: 0.88rem; color: var(--text-muted); margin: 0;">
+            Copy-and-paste reuse, violating the DRY principle. Changes must be repeatedly applied across duplicated blocks.
+          </p>
+        </div>
+        <div class="smell-card">
+          <div class="smell-name">7. Opacity</div>
+          <p style="font-size: 0.88rem; color: var(--text-muted); margin: 0;">
+            The tendency of a module to be difficult to read and understand. Convoluted logic and poor naming.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 2: SOLID Principles -->
+    <section class="chapter" id="solid-principles">
+      <div class="chapter-head">
+        <span class="chapter-num">2</span>
+        <h2>6.5 The SOLID Principles (Uncle Bob)</h2>
+      </div>
+
+      <!-- SRP -->
+      <div class="solid-card">
+        <h3><span class="solid-letter">S</span> SRP: Single Responsibility Principle</h3>
+        <p><strong>Rule:</strong> <em>“A class should have one, and only one, reason to change.”</em></p>
+        <p style="font-size: 0.9rem; color: var(--text-muted);">
+          Each class should encapsulate a single actor's requirements. If a class handles business calculations, database persistence, AND GUI formatting, changes to database schema or UI layout will force modifications to the core business logic.
+        </p>
+      </div>
+
+      <!-- OCP -->
+      <div class="solid-card">
+        <h3><span class="solid-letter">O</span> OCP: Open Closed Principle</h3>
+        <p><strong>Rule:</strong> <em>“Software entities (classes, modules, functions) should be open for extension, but closed for modification.”</em> (Bertrand Meyer)</p>
+        <p style="font-size: 0.9rem; color: var(--text-muted);">
+          You should be able to extend the behavior of a module without modifying its source code. Achieved via abstraction (interfaces, abstract classes) and patterns like <strong>Strategy</strong> and <strong>Template Method</strong>.
+        </p>
+      </div>
+
+      <!-- LSP -->
+      <div class="solid-card" id="liskov-substitution">
+        <h3><span class="solid-letter">L</span> LSP: Liskov Substitution Principle</h3>
+        <p><strong>Rule:</strong> <em>“Subtypes must be substitutable for their base types without altering program correctness.”</em> (Barbara Liskov)</p>
+        
+        <div style="margin: 1rem 0; padding: 1rem; background: var(--code-bg); border-radius: var(--radius-sm); border: 1px solid var(--border);">
+          <strong>The Classic Counterexample: The Rectangle and Square Problem</strong>
+          <p style="font-size: 0.88rem; color: var(--text-muted); margin: 0.5rem 0;">
+            In mathematics, a Square is a kind of Rectangle. But in object-oriented programming:
+          </p>
+          <pre style="margin: 0; font-family: var(--font-mono); font-size: 0.85rem;"><code>void clientFunction(Rectangle r) {
+    r.setWidth(5);
+    r.setHeight(4);
+    assert(r.getArea() == 20); // FAILS IF r IS A SQUARE!
+}</code></pre>
+          <p style="font-size: 0.88rem; color: var(--text-muted); margin-top: 0.5rem;">
+            If <code>Square extends Rectangle</code>, <code>setWidth(5)</code> sets both width and height to 5. Then <code>setHeight(4)</code> sets both to 4! The assertion fails. Subtypes must honor all behavioral guarantees of the parent.
+          </p>
+        </div>
+      </div>
+
+      <!-- ISP -->
+      <div class="solid-card">
+        <h3><span class="solid-letter">I</span> ISP: Interface Segregation Principle</h3>
+        <p><strong>Rule:</strong> <em>“Clients should not be forced to depend upon interfaces that they do not use.”</em></p>
+        <p style="font-size: 0.9rem; color: var(--text-muted);">
+          Many client-specific interfaces are much better than one bloated "fat" interface. Avoid "God Interfaces" that bundle printer, scanner, fax, and staple operations together when a client only wants to print.
+        </p>
+      </div>
+
+      <!-- DIP -->
+      <div class="solid-card">
+        <h3><span class="solid-letter">D</span> DIP: Dependency Inversion Principle</h3>
+        <p><strong>Rule:</strong></p>
+        <ol style="font-size: 0.9rem; color: var(--text-muted); line-height: 1.6;">
+          <li>High-level modules should not depend on low-level modules. Both should depend on abstractions.</li>
+          <li>Abstractions should not depend on details. Details (concrete implementations) should depend on abstractions.</li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- Section 4: Self-Study Questions -->
+    <section class="chapter" id="self-study">
+      <div class="chapter-head">
+        <span class="chapter-num">3</span>
+        <h2>6.7 Questions for Self-Study (Exam Practice)</h2>
+      </div>
+
+      <div class="drill-list">
+        <details class="drill-item" open>
+          <summary>
+            <span class="drill-tag">Self-Study Q1</span>
+            <span class="drill-q">Explain why "A Square is a Rectangle" fails under the Liskov Substitution Principle (LSP).</span>
+            <span class="drill-reveal-hint"></span>
+          </summary>
+          <div class="drill-a">
+            <p>
+              In mathematics, a square has an invariant that width equals height. But a <code>Rectangle</code> class in software asserts an independent postcondition: after <code>setWidth(w)</code>, the height remains unchanged.
+            </p>
+            <p>
+              A <code>Square</code> subclass cannot preserve this postcondition without violating its own invariant. Because the Square subclass breaks the behavioral contract expected by clients of Rectangle, it violates LSP. <strong>IS-A relationship in real life does not equal IS-A in software behavior!</strong>
+            </p>
+          </div>
+        </details>
+      </div>
+    </section>
+
+    <footer class="page-footer" style="margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--border); display: flex; justify-content: space-between;">
+      <span><a href="unit-3-structural.html">← Previous: Unit 3 Structural</a></span>
+      <span><a href="unit-7-packaging.html">Next: Unit 7 Packaging Principles →</a></span>
+    </footer>
+
+  </div>
+</div>
+
+<script src="assets/site.js" defer></script>
+</body>
+</html>

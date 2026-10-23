@@ -1,0 +1,557 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>POSA Mock Exam 2 (95 pts) with Solutions | Frankfurt UAS POSA 2026</title>
+<meta name="description" content="Complete Mock Exam 2 (95 pts) for Pattern-Oriented Software Architecture based on Prof. Dr. Jörg Schäfer's curriculum with step-by-step calculations, verified code solutions, and grading traps.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230c7a73'/%3E%3Cpath d='M8 10h16M8 16h16M8 22h10' stroke='%23fff' stroke-width='2.2' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+<style>
+  .exam-meta-banner {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 1rem;
+    margin: 1.5rem 0 2.5rem;
+    padding: 1.25rem 1.5rem;
+    background: var(--bg-raised);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+  }
+  .exam-meta-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+  .exam-meta-label {
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+    font-weight: 600;
+  }
+  .exam-meta-val {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--accent);
+    font-family: var(--font-mono);
+  }
+  .exam-actions-bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1rem 1.25rem;
+    background: var(--accent-soft);
+    border-radius: var(--radius-md);
+    margin-bottom: 2rem;
+    border: 1px solid rgba(12, 122, 115, 0.2);
+  }
+  .exam-timer-wrap {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-weight: 600;
+    font-family: var(--font-mono);
+  }
+  .btn-exam {
+    background: var(--accent);
+    color: #ffffff;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: var(--radius-sm);
+    font-weight: 600;
+    font-size: 0.88rem;
+    cursor: pointer;
+    transition: opacity 0.2s;
+  }
+  .btn-exam:hover { opacity: 0.9; }
+  .btn-outline {
+    background: transparent;
+    border: 1px solid var(--accent);
+    color: var(--accent-ink);
+  }
+  .points-badge {
+    display: inline-block;
+    padding: 0.2rem 0.6rem;
+    background: var(--accent-soft);
+    color: var(--accent-ink);
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    font-family: var(--font-mono);
+    margin-left: 0.5rem;
+  }
+  .gotcha-box {
+    margin-top: 1rem;
+    padding: 0.85rem 1.1rem;
+    background: var(--warn-soft);
+    border-left: 3px solid var(--warn);
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    font-size: 0.9rem;
+    color: var(--text);
+  }
+  .gotcha-box strong { color: var(--warn); }
+  .arch-diagram-block {
+    margin: 1.2rem 0;
+    padding: 1.2rem;
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    overflow-x: auto;
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    line-height: 1.45;
+  }
+</style>
+<script>(function(){try{var t=localStorage.getItem('posa-theme')||'light';document.documentElement.setAttribute('data-theme',t);var m=localStorage.getItem('posa-mode')||'concept';document.documentElement.setAttribute('data-mode',m);}catch(e){}})();</script>
+</head>
+<body>
+
+<nav class="sitenav">
+  <div class="sitenav-inner">
+    <a class="sitenav-home" href="index.html">POSA 2026</a>
+    <div class="sitenav-links">
+      <a href="index.html">Overview</a>
+      <a href="past-papers.html">📝 Past Papers Hub</a>
+      <a href="mock-1.html">Mock 1 (75 pts)</a>
+      <a href="mock-2.html" class="active">Mock 2 (95 pts)</a>
+    </div>
+    <button class="nav-toggle" id="navToggle" type="button" aria-expanded="false" aria-controls="navPanel">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+      Menu
+    </button>
+    <button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle color theme">
+      <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path></svg>
+      <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+    </button>
+    <button class="mode-toggle" id="modeToggle" type="button" aria-label="Toggle technical mode" style="font-size: 1.1rem; line-height: 1;">🎓</button>
+  </div>
+  <div class="nav-panel" id="navPanel">
+    <div class="nav-panel-section">
+      <span class="nav-panel-label">Mock 2 Sections</span>
+      <a href="#section-1">1 · Behavioral &amp; Structural (25 pts)</a>
+      <a href="#section-2">2 · SOLID &amp; Package Metrics (25 pts)</a>
+      <a href="#section-3">3 · Creational &amp; Flexibility (20 pts)</a>
+      <a href="#section-4">4 · Decoupling, MVC &amp; GenAI (25 pts)</a>
+    </div>
+  </div>
+</nav>
+
+<div class="page-shell">
+  <aside class="sidebar-toc">
+    <div class="sidebar-block">
+      <span class="sidebar-label">Navigation</span>
+      <a href="past-papers.html">← Past Papers Hub</a>
+      <a href="index.html">Course Overview</a>
+    </div>
+    <div class="sidebar-block">
+      <span class="sidebar-label">Exam Sections</span>
+      <a href="#section-1"><span class="toc-num">1</span>Behavioral &amp; Structural (25 pts)</a>
+      <a href="#section-2"><span class="toc-num">2</span>SOLID &amp; Package Metrics (25 pts)</a>
+      <a href="#section-3"><span class="toc-num">3</span>Creational &amp; Flexibility (20 pts)</a>
+      <a href="#section-4"><span class="toc-num">4</span>Decoupling, MVC &amp; GenAI (25 pts)</a>
+    </div>
+  </aside>
+
+  <div class="page">
+    <div class="masthead">
+      <div>
+        <div class="eyebrow">Comprehensive Past Paper Simulation · Frankfurt UAS 2026</div>
+        <h1 class="title">POSA Mock Exam 2 with Verified Solutions</h1>
+      </div>
+    </div>
+    <p class="dek">
+      A comprehensive 95-point master’s level examination directly modeled after Prof. Dr. Jörg Schäfer’s curriculum. Features step-by-step package metrics derivations, design smells diagnosis, and GenAI architectural auditing.
+    </p>
+
+    <!-- Meta Banner -->
+    <div class="exam-meta-banner">
+      <div class="exam-meta-item">
+        <span class="exam-meta-label">Total Points</span>
+        <span class="exam-meta-val">95 Points</span>
+      </div>
+      <div class="exam-meta-item">
+        <span class="exam-meta-label">Time Limit</span>
+        <span class="exam-meta-val">120 Mins</span>
+      </div>
+      <div class="exam-meta-item">
+        <span class="exam-meta-label">Pass Threshold</span>
+        <span class="exam-meta-val">63 / 95 (66%)</span>
+      </div>
+      <div class="exam-meta-item">
+        <span class="exam-meta-label">Curriculum</span>
+        <span class="exam-meta-val">Units 1–16</span>
+      </div>
+    </div>
+
+    <!-- Actions Bar -->
+    <div class="exam-actions-bar">
+      <div class="exam-timer-wrap">
+        <span>⏱️ Time Remaining:</span>
+        <span id="examTimerDisplay">120:00</span>
+      </div>
+      <div style="display: flex; gap: 0.5rem;">
+        <button type="button" class="btn-exam" id="timerStartBtn" onclick="toggleTimer()">Start Timer</button>
+        <button type="button" class="btn-exam btn-outline" onclick="expandAllSolutions()">Expand All</button>
+        <button type="button" class="btn-exam btn-outline" onclick="collapseAllSolutions()">Collapse All</button>
+      </div>
+    </div>
+
+    <!-- SECTION 1 -->
+    <section class="chapter" id="section-1">
+      <div class="chapter-head">
+        <span class="chapter-num">1</span>
+        <h2>Behavioral &amp; Structural Patterns <span class="points-badge">25 Points</span></h2>
+      </div>
+
+      <div class="drill-list">
+        <!-- Q1 -->
+        <details class="drill-item" open>
+          <summary>
+            <span class="drill-tag">Strategy Pattern · 5 pts</span>
+            <span class="drill-q">In the SimUDuck simulator, explaining why declaring <code>fly()</code> in the abstract superclass <code>Duck</code> created architectural rot. How did the Strategy pattern resolve the forces?</span>
+            <span class="drill-reveal-hint"></span>
+          </summary>
+          <div class="drill-a">
+            <p><strong>The Architectural Rot:</strong></p>
+            <p>Adding <code>fly()</code> to the base <code>Duck</code> class assumed that all ducks fly. Inanimate rubber ducks and decoy ducks inherited flight capability. Overriding <code>fly()</code> in subclasses with empty no-op bodies duplicated code across 50 subclasses, violating the <strong>DRY Principle</strong> and creating high fragility.</p>
+            <p><strong>The Strategy Resolution:</strong></p>
+            <p>Encapsulated flying behavior into an independent interface <code>FlyBehavior</code> (with implementations like <code>FlyWithWings</code>, <code>FlyNoWay</code>). Duck now <em>has-a</em> <code>FlyBehavior</code> (composition over inheritance) and delegates <code>performFly()</code> to the strategy instance. Flying behavior can be changed dynamically at runtime.</p>
+          </div>
+        </details>
+
+        <!-- Q2 -->
+        <details class="drill-item">
+          <summary>
+            <span class="drill-tag">Template vs Strategy · 5 pts</span>
+            <span class="drill-q">Compare the Template Method pattern with the Strategy pattern regarding the <strong>Hollywood Principle</strong> and resilience to runtime change.</span>
+            <span class="drill-reveal-hint"></span>
+          </summary>
+          <div class="drill-a">
+            <p><strong>Template Method:</strong> Relies on <em>inheritance</em>. The superclass enforces the algorithm skeleton (Hollywood Principle: <em>“Don’t call us, we’ll call you”</em>) and calls subclass hook operations. Inflexible at runtime because inheritance is statically bound at compile time.</p>
+            <p><strong>Strategy Pattern:</strong> Relies on <em>object composition and delegation</em>. The entire algorithm is encapsulated in a separate object. Highly resilient to change because the strategy object can be swapped dynamically while the program is running.</p>
+          </div>
+        </details>
+
+        <!-- Q3 -->
+        <details class="drill-item">
+          <summary>
+            <span class="drill-tag">Command Pattern · 5 pts</span>
+            <span class="drill-q">A home automation remote control uses a <code>MacroCommand</code> containing <code>[LightOnCommand, StereoOnCommand, AirConditionerOnCommand]</code>. In what order must the <code>undo()</code> method execute these commands, and why?</span>
+            <span class="drill-reveal-hint"></span>
+          </summary>
+          <div class="drill-a">
+            <p><strong>Exact Execution Order:</strong> Reverse chronological order: <code>AirConditionerOnCommand.undo()</code> $\to$ <code>StereoOnCommand.undo()</code> $\to$ <code>LightOnCommand.undo()</code>.</p>
+            <p><strong>Reasoning:</strong> Commands often have state dependencies where later operations depend on the preconditions established by earlier operations. Reversing the sequence ensures that dependent resources are safely rolled back without violating state invariants (implemented via a Last-In-First-Out stack).</p>
+          </div>
+        </details>
+
+        <!-- Q4 -->
+        <details class="drill-item">
+          <summary>
+            <span class="drill-tag">Composite Pattern · 5 pts</span>
+            <span class="drill-q">How does the Composite pattern eliminate <code>instanceof</code> type-checking loops when traversing hierarchical tree structures?</span>
+            <span class="drill-reveal-hint"></span>
+          </summary>
+          <div class="drill-a">
+            <p>Both individual leaf elements (<code>MenuItem</code>) and nested branches (<code>Menu</code>) implement a common uniform component interface (<code>MenuComponent</code>). When the client calls <code>menu.print()</code>, polymorphic dispatch takes over: leaves print themselves, while composites iterate over their child list and call <code>child.print()</code> recursively. The client requires zero conditional logic.</p>
+          </div>
+        </details>
+
+        <!-- Q5 -->
+        <details class="drill-item">
+          <summary>
+            <span class="drill-tag">JUnit Architecture · 5 pts</span>
+            <span class="drill-q">In JUnit 3.8.x (Cook’s Tour), identify the roles of <code>TestCase</code>, <code>TestSuite</code>, and <code>TestResult</code>.</span>
+            <span class="drill-reveal-hint"></span>
+          </summary>
+          <div class="drill-a">
+            <ul>
+              <li><strong>TestCase (Command &amp; Template Method):</strong> Encapsulates individual test execution commands, sequencing <code>setUp()</code> $\to$ <code>runTest()</code> $\to$ <code>tearDown()</code>.</li>
+              <li><strong>TestSuite (Composite):</strong> Aggregates <code>Test</code> instances so running one test or running 5,000 tests looks completely identical to test runners.</li>
+              <li><strong>TestResult (Collecting Parameter):</strong> Passed across the entire composite tree to accumulate test success, failure, and error counts without coupling tests to runners.</li>
+            </ul>
+          </div>
+        </details>
+      </div>
+    </section>
+
+    <!-- SECTION 2 -->
+    <section class="chapter" id="section-2">
+      <div class="chapter-head">
+        <span class="chapter-num">2</span>
+        <h2>SOLID Principles &amp; Package Metrics <span class="points-badge">25 Points</span></h2>
+      </div>
+
+      <div class="drill-list">
+        <!-- Q6 -->
+        <details class="drill-item" open>
+          <summary>
+            <span class="drill-tag">Liskov Substitution · 5 pts</span>
+            <span class="drill-q">State Barbara Liskov’s formal substitution definition. Why does <code>Square extends Rectangle</code> violate it?</span>
+            <span class="drill-reveal-hint"></span>
+          </summary>
+          <div class="drill-a">
+            <p><strong>Formal Definition:</strong> If $S$ is a subtype of $T$, then objects of type $T$ may be replaced with objects of type $S$ without altering any of the desirable properties of the program (correctness, task performed).</p>
+            <p><strong>Violation:</strong> A <code>Rectangle</code> contract guarantees that calling <code>setWidth(w)</code> alters only the width while leaving height unchanged. A <code>Square</code> subclass breaks this postcondition by modifying both width and height simultaneously. Client code asserting area calculations breaks unexpectedly.</p>
+          </div>
+        </details>
+
+        <!-- Q7 -->
+        <details class="drill-item">
+          <summary>
+            <span class="drill-tag">Package Metrics Calculation · 10 pts</span>
+            <span class="drill-q"><strong>Full Mathematical Derivation:</strong> Package <code>com.ecommerce.billing</code> has 6 incoming dependencies from external packages ($C_a = 6$) and depends on 2 external utility packages ($C_e = 2$). The package contains 4 interfaces ($N_a = 4$) and 16 total classes ($N_c = 16$).
+            <br><br>
+            Calculate:
+            <br>1. Instability Metric ($I$)
+            <br>2. Abstractness Metric ($A$)
+            <br>3. Normalized Distance from the Main Sequence ($D$)
+            <br>4. Diagnose whether the package suffers from the Zone of Pain or Zone of Uselessness.</span>
+            <span class="drill-reveal-hint"></span>
+          </summary>
+          <div class="drill-a">
+            <p><strong>1. Instability:</strong></p>
+            $$I = \frac{C_e}{C_a + C_e} = \frac{2}{6 + 2} = \frac{2}{8} = \mathbf{0.25}$$
+            
+            <p><strong>2. Abstractness:</strong></p>
+            $$A = \frac{N_a}{N_c} = \frac{4}{16} = \mathbf{0.25}$$
+
+            <p><strong>3. Normalized Distance from Main Sequence:</strong></p>
+            $$D = |A + I - 1| = |0.25 + 0.25 - 1| = |-0.50| = \mathbf{0.50}$$
+
+            <p><strong>4. Architectural Diagnosis:</strong></p>
+            <p>Since $A + I = 0.50 &lt; 1$, the package is drifting into the <strong>Zone of Pain</strong>. Because it is highly stable ($I = 0.25$, heavily depended upon by 6 packages), having only $25\%$ abstractness ($A = 0.25$) makes it too concrete and rigid to modify easily without breaking clients. The team should extract more interfaces to raise $A$ closer to $0.75$.</p>
+          </div>
+        </details>
+
+        <!-- Q8 -->
+        <details class="drill-item">
+          <summary>
+            <span class="drill-tag">Package Cohesion Rules · 5 pts</span>
+            <span class="drill-q">Differentiate between the <strong>Common-Reuse Principle (CRP)</strong> and the <strong>Common-Closure Principle (CCP)</strong>.</span>
+            <span class="drill-reveal-hint"></span>
+          </summary>
+          <div class="drill-a">
+            <ul>
+              <li><strong>Common-Closure Principle (CCP):</strong> Classes that change together should be packaged together. It minimizes release frequency by ensuring a requirement change affects only one package (Package-level Single Responsibility).</li>
+              <li><strong>Common-Reuse Principle (CRP):</strong> Classes that aren’t reused together should not be packaged together. It prevents clients from being forced to depend on classes they don’t need (Package-level Interface Segregation).</li>
+            </ul>
+          </div>
+        </details>
+
+        <!-- Q9 -->
+        <details class="drill-item">
+          <summary>
+            <span class="drill-tag">Breaking Package Cycles · 5 pts</span>
+            <span class="drill-q">How does an architect resolve a dependency cycle between Package A and Package B that violates the Acyclic Dependencies Principle (ADP)?</span>
+            <span class="drill-reveal-hint"></span>
+          </summary>
+          <div class="drill-a">
+            <p><strong>Two Standard Architectural Solutions:</strong></p>
+            <ol>
+              <li><strong>Apply Dependency Inversion (DIP):</strong> If Class in A depends on Class in B, and Class in B depends on Class in A, create an interface inside Package A. Have the class in Package B implement that interface, inverting the dependency and breaking the cycle.</li>
+              <li><strong>Extract to a Third Package:</strong> Move the mutually dependent classes into a new shared package C that both A and B depend upon.</li>
+            </ol>
+          </div>
+        </details>
+      </div>
+    </section>
+
+    <!-- SECTION 3 -->
+    <section class="chapter" id="section-3">
+      <div class="chapter-head">
+        <span class="chapter-num">3</span>
+        <h2>Creational &amp; Flexibility Patterns <span class="points-badge">20 Points</span></h2>
+      </div>
+
+      <div class="drill-list">
+        <!-- Q10 -->
+        <details class="drill-item">
+          <summary>
+            <span class="drill-tag">Abstract Factory · 5 pts</span>
+            <span class="drill-q">How does the Abstract Factory pattern enforce that families of products are never accidentally mixed (e.g. NY pizza dough with Chicago pizza sauce)?</span>
+            <span class="drill-reveal-hint"></span>
+          </summary>
+          <div class="drill-a">
+            <p>The client code only interacts with the generic <code>PizzaIngredientFactory</code> interface. A concrete factory instance (<code>NYPizzaIngredientFactory</code>) is injected into the client. Because the concrete factory manufactures all related components (dough, sauce, cheese) internally, the client has no way to mix and match individual ingredients from competing families.</p>
+          </div>
+        </details>
+
+        <!-- Q11 -->
+        <details class="drill-item">
+          <summary>
+            <span class="drill-tag">Singleton Concurrency · 5 pts</span>
+            <span class="drill-q">What critical bug does the <code>volatile</code> keyword prevent in Java's Double-Checked Locking Singleton?</span>
+            <span class="drill-reveal-hint"></span>
+          </summary>
+          <div class="drill-a">
+            <p>It prevents compiler and CPU <strong>instruction reordering</strong>. Without <code>volatile</code>, the JVM can allocate memory, assign the reference to the static variable, and execute constructor initialization out of order. A concurrent thread reading the reference outside the lock could observe a non-null reference to an uninitialized object.</p>
+          </div>
+        </details>
+
+        <!-- Q12 -->
+        <details class="drill-item">
+          <summary>
+            <span class="drill-tag">Decorator Streams · 5 pts</span>
+            <span class="drill-q">Analyze the code: <code>new LineNumberInputStream(new BufferedInputStream(new FileInputStream("test.txt")))</code>. Identify the component and decorators, and state which principle this exemplifies.</span>
+            <span class="drill-reveal-hint"></span>
+          </summary>
+          <div class="drill-a">
+            <p><code>FileInputStream</code> is the Concrete Component (reads raw bytes). <code>BufferedInputStream</code> and <code>LineNumberInputStream</code> are Concrete Decorators augmenting buffering and line tracking. This exemplifies the <strong>Open-Closed Principle (OCP)</strong>: adding behavior dynamically without altering the underlying byte-reading class.</p>
+          </div>
+        </details>
+
+        <!-- Q13 -->
+        <details class="drill-item">
+          <summary>
+            <span class="drill-tag">Adapter Pattern · 5 pts</span>
+            <span class="drill-q">Why does an Object Adapter offer superior flexibility over a Class Adapter?</span>
+            <span class="drill-reveal-hint"></span>
+          </summary>
+          <div class="drill-a">
+            <p>An <strong>Object Adapter</strong> uses composition to hold an Adaptee reference, allowing a single adapter to adapt not just the Adaptee class, but all of its existing and future subclasses. A <strong>Class Adapter</strong> binds statically to a single concrete Adaptee via inheritance and cannot adapt subclasses.</p>
+          </div>
+        </details>
+      </div>
+    </section>
+
+    <!-- SECTION 4 -->
+    <section class="chapter" id="section-4">
+      <div class="chapter-head">
+        <span class="chapter-num">4</span>
+        <h2>Decoupling, MVC &amp; GenAI Synthesis <span class="points-badge">25 Points</span></h2>
+      </div>
+
+      <div class="drill-list">
+        <!-- Q14 -->
+        <details class="drill-item">
+          <summary>
+            <span class="drill-tag">Observer Memory Leak · 5 pts</span>
+            <span class="drill-q">Explain the "Lapsed Listener Problem" in the Observer pattern and how it causes memory leaks in managed runtimes (Java/C#).</span>
+            <span class="drill-reveal-hint"></span>
+          </summary>
+          <div class="drill-a">
+            <p>The Subject holds a strong reference to all registered Observers in its internal listener list. If an observer goes out of application scope without explicitly calling <code>removeObserver()</code>, the Subject's strong reference keeps the observer reachable in the GC root graph, preventing garbage collection. Solution: Use <code>WeakReference</code> for listener registration.</p>
+          </div>
+        </details>
+
+        <!-- Q15 -->
+        <details class="drill-item">
+          <summary>
+            <span class="drill-tag">Pipes vs Blackboard · 5 pts</span>
+            <span class="drill-q">Contrast Pipes &amp; Filters with the Blackboard pattern regarding control flow and state management.</span>
+            <span class="drill-reveal-hint"></span>
+          </summary>
+          <div class="drill-a">
+            <ul>
+              <li><strong>Pipes &amp; Filters:</strong> Feed-forward deterministic data stream. Data flows through pipes between adjacent filters without a shared global state.</li>
+              <li><strong>Blackboard:</strong> Opportunistic non-deterministic search. Multiple independent Knowledge Sources iteratively inspect and update a centralized global repository under the guidance of a Controller.</li>
+            </ul>
+          </div>
+        </details>
+
+        <!-- Q16 -->
+        <details class="drill-item">
+          <summary>
+            <span class="drill-tag">MVC Patterns · 5 pts</span>
+            <span class="drill-q">Name the three design patterns that collaborate within classic Model-View-Controller.</span>
+            <span class="drill-reveal-hint"></span>
+          </summary>
+          <div class="drill-a">
+            <ol>
+              <li><strong>Observer:</strong> Model acts as Subject, View acts as Observer.</li>
+              <li><strong>Strategy:</strong> Controller acts as the input handling Strategy for the View.</li>
+              <li><strong>Composite:</strong> View elements (windows, buttons, panels) are structured as composite trees.</li>
+            </ol>
+          </div>
+        </details>
+
+        <!-- Q17 -->
+        <details class="drill-item" open>
+          <summary>
+            <span class="drill-tag">Architectural Synthesis &amp; GenAI · 10 pts</span>
+            <span class="drill-q"><strong>Unit 16 Case Study: IoT Weather Station with AI Assistance.</strong> You are instructing an AI coding assistant to scaffold an IoT Weather Station application. Synthesize the architectural pattern composition (Quantity, Observer, MVC) and state 2 architectural guardrails to prevent the AI from generating brittle code.</span>
+            <span class="drill-reveal-hint"></span>
+          </summary>
+          <div class="drill-a">
+            <p><strong>1. Architectural Pattern Composition:</strong></p>
+            <ul>
+              <li><strong>Quantity Pattern:</strong> Sensor readings (temperature, pressure, wind speed) are modeled as immutable Value Objects bound to explicit <code>Unit</code> enums (preventing unit confusion bugs).</li>
+              <li><strong>Observer Pattern:</strong> <code>WeatherStationModel</code> publishes domain events whenever valid sensor quantities arrive.</li>
+              <li><strong>Model-View-Controller:</strong> Separates sensor ingest and calculation (Model) from mobile/web displays (View) and calibration REST endpoints (Controller).</li>
+            </ul>
+            <div class="gotcha-box">
+              <strong>⚠️ 2 Critical Architectural Guardrails:</strong>
+              <ol style="margin: 0.5rem 0 0 1rem; padding: 0;">
+                <li><strong>Enforce Interface Segregation (ISP):</strong> Prevent the AI from creating a single monolithic God Interface combining sensor reading, persistence, and UI display. Demand narrow client-specific interfaces.</li>
+                <li><strong>Strict Immutability on Quantities:</strong> Require that Quantity objects have no setter methods to prevent the AI from mutating shared value state across observer threads.</li>
+              </ol>
+            </div>
+          </div>
+        </details>
+      </div>
+    </section>
+
+    <footer class="page-footer" style="margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--border); display: flex; justify-content: space-between;">
+      <span><a href="past-papers.html">← Back to Past Papers Hub</a></span>
+      <span><a href="index.html">Course Overview →</a></span>
+    </footer>
+
+  </div>
+</div>
+
+<script src="assets/site.js" defer></script>
+<script>
+var timerInterval = null;
+var secondsRemaining = 120 * 60;
+
+function updateTimerDisplay() {
+  var minutes = Math.floor(secondsRemaining / 60);
+  var seconds = secondsRemaining % 60;
+  var formatted = (minutes < 10 ? "0" : "") + minutes + ":" + (seconds < 10 ? "0" : "") + seconds;
+  var display = document.getElementById("examTimerDisplay");
+  if (display) display.textContent = formatted;
+}
+
+function toggleTimer() {
+  var btn = document.getElementById("timerStartBtn");
+  if (timerInterval) {
+    clearInterval(timerInterval);
+    timerInterval = null;
+    if (btn) btn.textContent = "Resume Timer";
+    showToast("Exam timer paused");
+  } else {
+    timerInterval = setInterval(function() {
+      if (secondsRemaining > 0) {
+        secondsRemaining--;
+        updateTimerDisplay();
+      } else {
+        clearInterval(timerInterval);
+        timerInterval = null;
+        alert("Time is up! Review your answers against the verified solutions.");
+      }
+    }, 1000);
+    if (btn) btn.textContent = "Pause Timer";
+    showToast("Exam timer started (120 mins)");
+  }
+}
+
+function expandAllSolutions() {
+  document.querySelectorAll("details.drill-item").forEach(function(d) { d.open = true; });
+  showToast("All verified solutions expanded");
+}
+
+function collapseAllSolutions() {
+  document.querySelectorAll("details.drill-item").forEach(function(d) { d.open = false; });
+  showToast("All solutions collapsed for self-testing");
+}
+</script>
+</body>
+</html>
