@@ -2,53 +2,140 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Unit 12: Architectural Patterns (Pipes &amp; Filters, Blackboard) | POSA 2026</title>
-<meta name="description" content="Unit 12 of Pattern-Oriented Software Architecture by Prof. Dr. Jörg Schäfer: Pipes & Filters, Blackboard pattern, Apache web server case study, and exam questions.">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230c7a73'/%3E%3Cpath d='M8 10h16M8 16h16M8 22h10' stroke='%23fff' stroke-width='2.2' stroke-linecap='round'/%3E%3C/svg%3E">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Unit 12: Architectural Patterns (Pipes &amp; Filters, Blackboard, Broker) | POSA 2026 Masterclass</title>
+<meta name="description" content="Master POSA 1 Architectural Patterns: Pipes & Filters data streams, the Blackboard pattern for opportunistic AI problem solving, Apache Server hooks, and exam drills with Prof. Dr. Jörg Schäfer.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%238b5cf6'/%3E%3Cpath d='M8 10h16M8 16h16M8 22h10' stroke='%23fff' stroke-width='2.2' stroke-linecap='round'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/style.css">
+<link rel="stylesheet" href="assets/style.css?v=2026.15">
 <style>
-  .quote-card {
-    margin: 1.5rem 0 2rem;
-    padding: 1.25rem 1.5rem;
-    background: var(--accent-soft);
-    border-left: 4px solid var(--accent);
-    border-radius: 0 var(--radius-md) var(--radius-md) 0;
-    font-style: italic;
-    color: var(--accent-ink);
+  .reading-progress-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #8b5cf6 0%, #38bdf8 50%, #10b981 100%);
+    width: 0%;
+    z-index: 9999;
+    transition: width 0.1s ease-out;
   }
-  .quote-author {
+  .stage-takeaways-box {
+    background: rgba(139, 92, 246, 0.05);
+    border: 1px solid rgba(139, 92, 246, 0.2);
+    border-radius: var(--radius-md);
+    padding: 1.5rem;
+    margin: 2rem 0;
+  }
+  [data-theme="light"] .stage-takeaways-box {
+    background: #fbfbfe;
+    border-color: #ddd6fe;
+  }
+  .stage-takeaways-title {
+    font-weight: 800;
+    color: #7c3aed;
+    margin-bottom: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1.05rem;
+  }
+  .takeaway-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+  .takeaway-item {
+    background: var(--bg-raised);
+    padding: 1rem;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+  }
+  .takeaway-item strong {
+    color: var(--text);
     display: block;
-    margin-top: 0.5rem;
-    font-style: normal;
-    font-weight: 700;
-    font-size: 0.85rem;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
+    margin-bottom: 0.35rem;
+    font-size: 0.92rem;
   }
-  .arch-box {
+  .takeaway-item p {
+    margin: 0;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    line-height: 1.5;
+  }
+  /* Interactive Pipeline Sandbox */
+  .arch-sandbox-card {
     background: var(--bg-raised);
     border: 1px solid var(--border);
     border-radius: var(--radius-md);
     padding: 1.5rem;
-    margin: 1.5rem 0;
+    margin: 2rem 0;
+  }
+  .pipeline-visualizer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    padding: 1.5rem 1rem;
+    background: #090d16;
+    border-radius: 8px;
+    border: 1px solid #1e293b;
+    margin: 1.25rem 0;
+    overflow-x: auto;
+  }
+  .pipeline-stage-box {
+    background: #1e293b;
+    border: 2px solid #334155;
+    border-radius: 6px;
+    padding: 0.75rem 1rem;
+    text-align: center;
+    font-family: var(--font-mono);
+    min-width: 130px;
+    transition: all 0.25s ease;
+  }
+  .pipeline-stage-box.is-streaming {
+    border-color: #38bdf8;
+    box-shadow: 0 0 14px rgba(56, 189, 248, 0.4);
+    transform: scale(1.04);
+  }
+  .pipeline-connector {
+    color: #64748b;
+    font-weight: 800;
+    font-size: 1.2rem;
+  }
+  .terminal-output {
+    background: #090d16;
+    color: #38bdf8;
+    font-family: var(--font-mono);
+    padding: 0.85rem 1.25rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.82rem;
+    min-height: 48px;
+    display: flex;
+    align-items: center;
+    border: 1px solid #1e293b;
+    margin-top: 1rem;
+    overflow-x: auto;
   }
 </style>
-<script>(function(){try{var t=localStorage.getItem('posa-theme')||'light';document.documentElement.setAttribute('data-theme',t);var m=localStorage.getItem('posa-mode')||'concept';document.documentElement.setAttribute('data-mode',m);}catch(e){}})();</script>
+<script>(function(){try{var t=localStorage.getItem('posa-theme')||'dark';document.documentElement.setAttribute('data-theme',t);var m=localStorage.getItem('posa-mode')||'concept';document.documentElement.setAttribute('data-mode',m);}catch(e){}})();</script>
 </head>
-<body>
+<body class="mode-stage-focused">
+
+<div class="reading-progress-bar" id="readingProgressBar"></div>
 
 <nav class="sitenav">
   <div class="sitenav-inner">
     <a class="sitenav-home" href="index.html">
-      <span style="background:var(--accent);color:#fff;padding:0.15rem 0.45rem;border-radius:4px;font-size:0.8rem;font-weight:800;letter-spacing:0.04em;">POSA</span>
-      <span>2026</span>
+      <span style="background:linear-gradient(135deg, #8b5cf6 0%, #38bdf8 100%);color:#fff;padding:0.2rem 0.55rem;border-radius:6px;font-size:0.82rem;font-weight:800;letter-spacing:0.04em;">POSA</span>
+      <span style="font-weight:800;letter-spacing:-0.02em;">2026</span>
     </a>
     <div class="sitenav-links">
       <a href="index.html">Overview</a>
+      <a href="unit-1-strategy.html">1 · Strategy</a>
+      <a href="unit-10-decoupling.html">10 · Decoupling</a>
       <a href="unit-11-mvc.html">11 · MVC</a>
       <a href="unit-12-architectural.html" class="active">12 · Architecture</a>
       <a href="unit-13-analysis.html">13 · Analysis</a>
@@ -70,157 +157,1128 @@
       <a href="index.html">Overview</a>
       <a href="unit-11-mvc.html">Unit 11 · Case Study MVC</a>
       <a href="unit-12-architectural.html" class="active">Unit 12 · Architectural Patterns</a>
-      <a href="unit-13-analysis.html">Unit 13 · Analysis &amp; Enterprise</a>
+      <a href="unit-13-analysis.html">Unit 13 · Architecture Analysis</a>
       <a href="mock-1.html">📝 Mock Exam 1</a>
     </div>
   </div>
 </nav>
 
+<!-- Mobile Native Bottom Dock (iOS App Bar) -->
+<nav class="mobile-bottom-dock" aria-label="Mobile Navigation Dock">
+  <a href="#stage-1-problem" class="dock-item active">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+    <span>Pipes</span>
+  </a>
+  <a href="#stage-2-uml" class="dock-item">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line><line x1="9" y1="21" x2="9" y2="9"></line></svg>
+    <span>Blackboard</span>
+  </a>
+  <a href="#stage-3-sandbox" class="dock-item">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+    <span>Pipeline Lab</span>
+  </a>
+  <a href="#stage-4-apache" class="dock-item">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+    <span>Apache Hooks</span>
+  </a>
+  <a href="#stage-5-exam" class="dock-item">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+    <span>Drills</span>
+  </a>
+</nav>
+
 <div class="page-shell">
   <aside class="sidebar-toc">
     <div class="sidebar-block">
-      <span class="sidebar-label">On This Page</span>
-      <a href="#pipes-and-filters"><span class="toc-num">1</span>Pipes and Filters</a>
-      <a href="#blackboard-pattern"><span class="toc-num">2</span>The Blackboard Pattern</a>
-      <a href="#apache-case-study"><span class="toc-num">3</span>Case Study: Apache Server</a>
-      <a href="#self-study"><span class="toc-num">4</span>Self-Study Exam Questions</a>
+      <span class="sidebar-label">Curriculum Navigation</span>
+      <a href="#stage-1-problem" class="jump-stage-btn" data-target-stage="stage-1-problem"><span class="toc-num">1</span>Pipes &amp; Filters Topologies</a>
+      <a href="#stage-2-uml" class="jump-stage-btn" data-target-stage="stage-2-uml"><span class="toc-num">2</span>The Blackboard Pattern</a>
+      <a href="#stage-3-sandbox" class="jump-stage-btn" data-target-stage="stage-3-sandbox"><span class="toc-num">3</span>Live Streaming Pipeline Lab</a>
+      <a href="#stage-4-apache" class="jump-stage-btn" data-target-stage="stage-4-apache"><span class="toc-num">4</span>Apache Server Hook Architecture</a>
+      <a href="#stage-5-exam" class="jump-stage-btn" data-target-stage="stage-5-exam"><span class="toc-num">5</span>Prof. Schäfer Exam Drills</a>
     </div>
     <div class="sidebar-block">
-      <span class="sidebar-label">Instructor</span>
-      <p style="font-size: 0.85rem; color: var(--text-muted); margin: 0;">
-        Prof. Dr. Jörg Schäfer<br>
-        <em>Frankfurt University of Applied Sciences</em>
+      <span class="sidebar-label">Course Origin</span>
+      <p style="font-size: 0.85rem; color: var(--text-muted); margin: 0 0 0.5rem; line-height: 1.5;">
+        <strong>Prof. Dr. Jörg Schäfer</strong><br>
+        Frankfurt University of Applied Sciences<br>
+        Fachbereich 2: Informatik
       </p>
+      <div style="font-size:0.75rem; font-weight:700; color:#8b5cf6; background:rgba(139,92,246,0.12); border:1px solid rgba(139,92,246,0.25); padding:0.25rem 0.5rem; border-radius:4px; display:inline-block; margin-top:0.4rem;">
+        ⏱️ 45 Min · 20 Exam Pts
+      </div>
     </div>
   </aside>
 
   <div class="page">
-    <div class="masthead">
+    
+    <!-- Hero Masthead -->
+    <header class="masthead">
       <div>
-        <div class="eyebrow">Unit 12 · Macro-Architectural Patterns (POSA 1)</div>
-        <h1 class="title">Pipes &amp; Filters and The Blackboard Pattern</h1>
+        <div class="eyebrow">
+          <span>Macro Architecture Masterclass · POSA 1 System Patterns</span>
+        </div>
+        <h1 class="title">Unit 12: Architectural Patterns (Pipes &amp; Filters, Blackboard)</h1>
+        <p class="dek" style="font-size:1.05rem; line-height:1.65; max-width:68ch; color:var(--text-muted);">
+          System-level macro structures for data processing: streaming feed-forward pipelines without feedback versus opportunistic, non-deterministic blackboard architectures for complex AI problem solving.
+        </p>
+
+        <!-- Course Meta Metric Chips -->
+        <div class="masthead-metrics-grid">
+          <div class="metric-chip">
+            <div class="metric-chip-label">⏱️ Study Time</div>
+            <div class="metric-chip-val" style="color:#38bdf8;">45 Minutes</div>
+          </div>
+          <div class="metric-chip">
+            <div class="metric-chip-label">🎯 Exam Weight</div>
+            <div class="metric-chip-val" style="color:#10b981;">20 Pts (Grade 1.0)</div>
+          </div>
+          <div class="metric-chip">
+            <div class="metric-chip-label">🏛️ Category</div>
+            <div class="metric-chip-val" style="color:#a5b4fc;">Macro Architecture (POSA 1)</div>
+          </div>
+          <div class="metric-chip">
+            <div class="metric-chip-label">⚙️ Visual Sandbox</div>
+            <div class="metric-chip-val" style="color:#f59e0b;">Streaming Pipeline Lab</div>
+          </div>
+        </div>
+
+      </div>
+    </header>
+
+    <!-- ====================================================================
+         SECTION 1: 8-PILLAR ARCHITECTURAL BLUEPRINT (UNIVERSAL RUBRIC)
+         ==================================================================== -->
+    <div class="masterclass-section-divider" style="margin: 2.5rem 0 1.5rem;">
+      <div class="section-divider-line"></div>
+      <div class="section-divider-chip">
+        <span>PART 1 · ARCHITECTURAL RUBRIC</span>
+      </div>
+      <div class="section-divider-line"></div>
+    </div>
+
+    <section class="blueprint-suite" id="blueprintSuite" aria-label="8-Pillar Architecture Rubric">
+      <div class="blueprint-suite-top">
+        <div>
+          <div class="blueprint-suite-badge">
+            <span class="section-badge-pill">SECTION 1 OF 2</span>
+            <span class="badge-sep">·</span>
+            <span>📐 Universal Pattern Rubric</span>
+            <span class="badge-sep">·</span>
+            <span>Exam &amp; Production Standard</span>
+          </div>
+          <h3 class="blueprint-suite-title">The 8 Pillars of Software Pattern Mastery</h3>
+          <p class="blueprint-suite-desc">
+            The definitive architectural rubric for POSA 1 macro patterns: Pipes and Filters vs The Blackboard Pattern in distributed data engineering and AI problem solving.
+          </p>
+        </div>
+        <div class="blueprint-suite-actions">
+          <div class="blueprint-view-toggles" style="display:inline-flex; gap:0.4rem;">
+            <button type="button" class="btn-suite-toggle active" id="btnViewExplorer" onclick="setBlueprintView('explorer')" title="Explore one pillar at a time with interactive details">
+              <span>⚡ Interactive Explorer</span>
+            </button>
+            <button type="button" class="btn-suite-toggle" id="btnViewMatrix" onclick="setBlueprintView('matrix')" title="View all 8 pillars simultaneously in an executive grid">
+              <span>📊 Full Matrix</span>
+            </button>
+          </div>
+          <button type="button" class="btn-copy-rubric" id="btnCopyRubricSuite" onclick="copyBlueprintRubric()" title="Copy entire 8-pillar markdown study rubric to clipboard">
+            <span>📋</span>
+            <span id="copyRubricSuiteLabel">Copy Rubric</span>
+          </button>
+          <button type="button" class="btn-section-collapse" id="btnCollapseBlueprint" onclick="toggleBlueprintCollapse()" aria-expanded="true" title="Collapse or expand the 8-Pillar section">
+            <span class="collapse-icon">▲</span>
+            <span class="collapse-label">Collapse Rubric</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Collapsed Hint Bar -->
+      <div class="blueprint-collapsed-hint" id="blueprintCollapsedHint" style="display:none; padding:0.85rem 1.75rem; background:var(--bg-subtle); border-top:1px dashed var(--border); font-size:0.85rem; color:var(--text-muted); align-items:center; justify-content:space-between; flex-wrap:wrap; gap:0.5rem;">
+        <div style="display:flex; align-items:center; gap:0.6rem;">
+          <span style="font-size:1.1rem;">📐</span>
+          <span><strong>8-Pillar Architecture Rubric is Collapsed</strong> (Pipes &amp; Filters and Blackboard). Click to restore instant reference.</span>
+        </div>
+        <button type="button" class="btn-restore-rubric" onclick="toggleBlueprintCollapse(false)" style="background:var(--accent); color:#fff; border:none; padding:0.35rem 0.85rem; border-radius:6px; font-weight:700; cursor:pointer; font-size:0.8rem;">
+          Restore Rubric ▲
+        </button>
+      </div>
+
+      <div class="blueprint-collapsible-body" id="blueprintCollapsibleBody">
+        <!-- Explorer View -->
+        <div class="blueprint-explorer" id="blueprintExplorer">
+          <nav class="blueprint-pillar-tabs" role="tablist" aria-label="8 Pillars Navigation">
+            <button type="button" class="pillar-tab-btn active" role="tab" aria-selected="true" onclick="selectPillar(1)">
+              <span class="pillar-tab-num">1</span>
+              <span class="pillar-tab-label">Intent</span>
+            </button>
+            <button type="button" class="pillar-tab-btn" role="tab" aria-selected="false" onclick="selectPillar(2)">
+              <span class="pillar-tab-num">2</span>
+              <span class="pillar-tab-label">Roles</span>
+            </button>
+            <button type="button" class="pillar-tab-btn" role="tab" aria-selected="false" onclick="selectPillar(3)">
+              <span class="pillar-tab-num">3</span>
+              <span class="pillar-tab-label">UML</span>
+            </button>
+            <button type="button" class="pillar-tab-btn" role="tab" aria-selected="false" onclick="selectPillar(4)">
+              <span class="pillar-tab-num">4</span>
+              <span class="pillar-tab-label">Principles</span>
+            </button>
+            <button type="button" class="pillar-tab-btn" role="tab" aria-selected="false" onclick="selectPillar(5)">
+              <span class="pillar-tab-num">5</span>
+              <span class="pillar-tab-label">Mechanics</span>
+            </button>
+            <button type="button" class="pillar-tab-btn" role="tab" aria-selected="false" onclick="selectPillar(6)">
+              <span class="pillar-tab-num">6</span>
+              <span class="pillar-tab-label">Trade-offs</span>
+            </button>
+            <button type="button" class="pillar-tab-btn" role="tab" aria-selected="false" onclick="selectPillar(7)">
+              <span class="pillar-tab-num">7</span>
+              <span class="pillar-tab-label">Rivals</span>
+            </button>
+            <button type="button" class="pillar-tab-btn" role="tab" aria-selected="false" onclick="selectPillar(8)">
+              <span class="pillar-tab-num">8</span>
+              <span class="pillar-tab-label">Exam Traps</span>
+            </button>
+          </nav>
+
+          <div class="blueprint-active-pillar-card" id="pillarActiveCard">
+            <div class="pillar-panel active" id="pillarPanel1">
+              <div class="pillar-panel-badge">PILLAR 1 OF 8 · INTENT &amp; MOTIVATION</div>
+              <h4 class="pillar-panel-title">Macro Architectural Structures</h4>
+              <p style="font-size:0.95rem; line-height:1.6; color:var(--text); margin-bottom:1rem;">
+                Unlike micro GoF class design patterns, POSA architectural patterns organize the entire topology of a subsystem. Pipes &amp; Filters partitions data stream transformations into independent stages, while Blackboard enables opportunistic problem solving where no deterministic algorithm exists.
+              </p>
+              <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:1rem;">
+                <div style="background:var(--bg-subtle); padding:1rem; border-radius:6px; border-left:3px solid #8b5cf6;">
+                  <strong style="color:#8b5cf6; display:block; margin-bottom:0.35rem;">Pipes &amp; Filters Intent</strong>
+                  <p style="font-size:0.85rem; color:var(--text-muted); margin:0;">
+                    Provide a structure for systems that process a stream of data. Encapsulate each transformation step in a reusable filter component linked by directional pipes.
+                  </p>
+                </div>
+                <div style="background:var(--bg-subtle); padding:1rem; border-radius:6px; border-left:3px solid #06b6d4;">
+                  <strong style="color:#0891b2; display:block; margin-bottom:0.35rem;">Blackboard Intent</strong>
+                  <p style="font-size:0.85rem; color:var(--text-muted); margin:0;">
+                    Enable diverse specialized expert modules (Knowledge Sources) to collaboratively discover a solution to non-deterministic problems via a shared repository.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div class="pillar-panel" id="pillarPanel2" style="display:none;">
+              <div class="pillar-panel-badge">PILLAR 2 OF 8 · PARTICIPANTS &amp; ROLES</div>
+              <h4 class="pillar-panel-title">Structural Roles &amp; Topologies</h4>
+              <div class="pillar-matrix-table-wrap">
+                <table class="pillar-matrix-table">
+                  <thead>
+                    <tr>
+                      <th>Pattern</th>
+                      <th>Participant</th>
+                      <th>Macro Responsibility</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><strong>Pipes &amp; Filters</strong></td>
+                      <td><code>Data Source / Sink</code></td>
+                      <td>Originates the initial raw stream or consumes the final transformed stream.</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Pipes &amp; Filters</strong></td>
+                      <td><code>Filter</code></td>
+                      <td>Enriches, transforms, or validates stream chunks independently without knowing upstream or downstream filters.</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Pipes &amp; Filters</strong></td>
+                      <td><code>Pipe</code></td>
+                      <td>Directional buffer transporting bytes between adjacent filters; handles backpressure and concurrency.</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Blackboard</strong></td>
+                      <td><code>Blackboard</code></td>
+                      <td>Central shared memory containing hypotheses, problem state, and partial solutions.</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Blackboard</strong></td>
+                      <td><code>Knowledge Sources (KS)</code></td>
+                      <td>Domain experts that inspect the blackboard and append inferences when their trigger conditions match.</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Blackboard</strong></td>
+                      <td><code>Controller</code></td>
+                      <td>Evaluates the blackboard state and schedules which eligible Knowledge Source executes next.</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div class="pillar-panel" id="pillarPanel3" style="display:none;">
+              <div class="pillar-panel-badge">PILLAR 3 OF 8 · FORMAL UML ANATOMY</div>
+              <h4 class="pillar-panel-title">Vector SVG UML: Blackboard Architecture</h4>
+              <p style="font-size:0.88rem; color:var(--text-muted); margin-bottom:1rem;">
+                Knowledge sources do not talk to each other; they communicate exclusively through the centralized Blackboard repository.
+              </p>
+              <div class="uml-svg-container" style="background:#090d16; border-radius:8px; padding:1.5rem; text-align:center; overflow-x:auto;">
+                <svg viewBox="0 0 760 250" width="100%" height="auto" xmlns="http://www.w3.org/2000/svg" style="font-family:'JetBrains Mono', 'SF Mono', monospace; font-size:12px;">
+                  <defs>
+                    <marker id="u12-arrow" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                      <path d="M 0 1 L 10 5 L 0 9 z" fill="#8b5cf6"/>
+                    </marker>
+                  </defs>
+
+                  <!-- Controller (Top) -->
+                  <rect x="250" y="15" width="260" height="60" rx="6" fill="#1e293b" stroke="#8b5cf6" stroke-width="2"/>
+                  <rect x="250" y="15" width="260" height="20" rx="6" fill="#6d28d9"/>
+                  <text x="380" y="30" fill="#ffffff" font-weight="700" text-anchor="middle">Blackboard Controller</text>
+                  <text x="260" y="55" fill="#ddd6fe">+ loop() | + selectNextKnowledgeSource()</text>
+
+                  <!-- Blackboard (Middle) -->
+                  <rect x="80" y="105" width="600" height="55" rx="6" fill="#1e293b" stroke="#38bdf8" stroke-width="2"/>
+                  <rect x="80" y="105" width="600" height="20" rx="6" fill="#0284c7"/>
+                  <text x="380" y="120" fill="#ffffff" font-weight="700" text-anchor="middle">Central Blackboard Repository (Hypotheses &amp; State)</text>
+                  <text x="100" y="145" fill="#f8fafc">Levels: [Acoustic Waveforms] -&gt; [Phonemes] -&gt; [Words] -&gt; [Syntax Tree]</text>
+
+                  <!-- Knowledge Sources (Bottom) -->
+                  <rect x="60" y="185" width="190" height="50" rx="6" fill="#1e293b" stroke="#10b981" stroke-width="1.8"/>
+                  <text x="155" y="210" fill="#34d399" font-weight="700" text-anchor="middle">KS 1: Acoustic Expert</text>
+                  <text x="155" y="225" fill="#94a3b8" font-size="10" text-anchor="middle">reads wave / writes phoneme</text>
+
+                  <rect x="285" y="185" width="190" height="50" rx="6" fill="#1e293b" stroke="#10b981" stroke-width="1.8"/>
+                  <text x="380" y="210" fill="#34d399" font-weight="700" text-anchor="middle">KS 2: Lexicon Lookup</text>
+                  <text x="380" y="225" fill="#94a3b8" font-size="10" text-anchor="middle">reads phoneme / writes word</text>
+
+                  <rect x="510" y="185" width="190" height="50" rx="6" fill="#1e293b" stroke="#10b981" stroke-width="1.8"/>
+                  <text x="605" y="210" fill="#34d399" font-weight="700" text-anchor="middle">KS 3: Syntax Grammar</text>
+                  <text x="605" y="225" fill="#94a3b8" font-size="10" text-anchor="middle">reads words / writes sentence</text>
+
+                  <!-- Connecting Lines -->
+                  <line x1="380" y1="75" x2="380" y2="105" stroke="#8b5cf6" stroke-width="2" marker-end="url(#u12-arrow)"/>
+                  <line x1="155" y1="185" x2="155" y2="160" stroke="#10b981" stroke-width="1.8"/>
+                  <line x1="380" y1="185" x2="380" y2="160" stroke="#10b981" stroke-width="1.8"/>
+                  <line x1="605" y1="185" x2="605" y2="160" stroke="#10b981" stroke-width="1.8"/>
+                </svg>
+              </div>
+            </div>
+
+            <div class="pillar-panel" id="pillarPanel4" style="display:none;">
+              <div class="pillar-panel-badge">PILLAR 4 OF 8 · DESIGN PRINCIPLES</div>
+              <h4 class="pillar-panel-title">Deterministic vs Non-Deterministic Control</h4>
+              <div class="takeaway-grid">
+                <div class="takeaway-item" style="border-left:3px solid #8b5cf6;">
+                  <strong>Feed-Forward Streams (Pipes &amp; Filters)</strong>
+                  <p>Processing is strictly deterministic. Data moves unidirectionally through independent filters without feedback loops or cycles.</p>
+                </div>
+                <div class="takeaway-item" style="border-left:3px solid #06b6d4;">
+                  <strong>Opportunistic Heuristics (Blackboard)</strong>
+                  <p>Processing is non-deterministic. The sequence of Knowledge Source activation is determined dynamically at runtime based on confidence scores.</p>
+                </div>
+                <div class="takeaway-item" style="border-left:3px solid #10b981;">
+                  <strong>High Filter Reusability</strong>
+                  <p>Filters can be recombined into new pipelines like Unix CLI utilities (<code>cat | grep | sort | uniq</code>) without changing filter source code.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="pillar-panel" id="pillarPanel5" style="display:none;">
+              <div class="pillar-panel-badge">PILLAR 5 OF 8 · IMPLEMENTATION MECHANICS</div>
+              <h4 class="pillar-panel-title">Active vs Passive Filters</h4>
+              <div class="mac-ide-window" style="margin: 0.5rem 0;">
+                <div class="mac-ide-top">
+                  <div class="mac-ide-dots">
+                    <span class="mac-dot mac-dot-red"></span>
+                    <span class="mac-dot mac-dot-yellow"></span>
+                    <span class="mac-dot mac-dot-green"></span>
+                  </div>
+                  <div class="mac-ide-tab">StreamPipeline.java · Java Streams &amp; Active Filters</div>
+                  <button type="button" class="btn-copy-code" onclick="copySnippet('codeSnippetP5Arch')">Copy Code</button>
+                </div>
+                <pre class="mac-ide-content" id="codeSnippetP5Arch"><code>// Active Filter: Runs in its own thread, reading from inPipe and writing to outPipe
+public class DecryptingFilter implements Runnable {
+    private final BlockingQueue&lt;ByteBuffer&gt; inPipe;
+    private final BlockingQueue&lt;ByteBuffer&gt; outPipe;
+
+    public void run() {
+        while (!Thread.currentThread().isInterrupted()) {
+            ByteBuffer rawChunk = inPipe.take(); // Pulls when ready (blocks on empty)
+            ByteBuffer decrypted = decrypt(rawChunk);
+            outPipe.put(decrypted); // Pushes downstream (blocks on full backpressure)
+        }
+    }
+}</code></pre>
+              </div>
+            </div>
+
+            <div class="pillar-panel" id="pillarPanel6" style="display:none;">
+              <div class="pillar-panel-badge">PILLAR 6 OF 8 · COSTS &amp; TRADE-OFFS</div>
+              <h4 class="pillar-panel-title">Architectural Costs &amp; Bottlenecks</h4>
+              <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+                <div style="background:rgba(16,185,129,0.06); border:1px solid rgba(16,185,129,0.25); border-radius:6px; padding:1rem;">
+                  <strong style="color:#10b981; display:block; margin-bottom:0.5rem;">✅ Architectural Benefits</strong>
+                  <ul style="margin:0; padding-left:1.2rem; font-size:0.85rem; color:var(--text); line-height:1.5;">
+                    <li>High concurrency: Active filters execute concurrently across multi-core processors.</li>
+                    <li>Pluggable recombining: Easy to insert new compression or encryption filters.</li>
+                    <li>Blackboard solves complex AI tasks where algorithmic steps are unknown.</li>
+                  </ul>
+                </div>
+                <div style="background:rgba(239,68,68,0.06); border:1px solid rgba(239,68,68,0.25); border-radius:6px; padding:1rem;">
+                  <strong style="color:#ef4444; display:block; margin-bottom:0.5rem;">⚠️ Architectural Liabilities</strong>
+                  <ul style="margin:0; padding-left:1.2rem; font-size:0.85rem; color:var(--text); line-height:1.5;">
+                    <li>Data transformation overhead: Serialization and deserialization at each pipe stage.</li>
+                    <li>Lowest common denominator data format (e.g. byte streams or JSON strings).</li>
+                    <li>Blackboard synchronization bottlenecks around shared central memory.</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <div class="pillar-panel" id="pillarPanel7" style="display:none;">
+              <div class="pillar-panel-badge">PILLAR 7 OF 8 · RIVAL PATTERN MATRIX</div>
+              <h4 class="pillar-panel-title">Pipes &amp; Filters vs Blackboard vs Broker</h4>
+              <div class="pillar-matrix-table-wrap">
+                <table class="pillar-matrix-table">
+                  <thead>
+                    <tr>
+                      <th>Dimension</th>
+                      <th>Pipes &amp; Filters</th>
+                      <th>Blackboard</th>
+                      <th>Broker Pattern</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><strong>Data Flow</strong></td>
+                      <td>Unidirectional feed-forward streaming</td>
+                      <td>Opportunistic iterative reading/writing</td>
+                      <td>Remote procedure call forwarding</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Determinism</strong></td>
+                      <td>100% Deterministic pipeline</td>
+                      <td>Non-deterministic heuristic discovery</td>
+                      <td>Deterministic request routing</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Classic Domain</strong></td>
+                      <td>Compilers, ETL pipelines, video codecs</td>
+                      <td>Speech recognition, protein folding, AI</td>
+                      <td>CORBA, gRPC, distributed microservices</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div class="pillar-panel" id="pillarPanel8" style="display:none;">
+              <div class="pillar-panel-badge">PILLAR 8 OF 8 · EXAM TRAPS &amp; BENCHMARKS</div>
+              <h4 class="pillar-panel-title">Prof. Schäfer Exam Traps: Feedback Loops</h4>
+              <div style="background:rgba(245,158,11,0.08); border-left:4px solid #f59e0b; padding:1.25rem; border-radius:0 6px 6px 0; margin-bottom:1rem;">
+                <strong style="color:#f59e0b; font-size:0.92rem;">🚨 Frankfurt UAS Exam Trap #1: Can Pipes &amp; Filters have Feedback?</strong>
+                <p style="font-size:0.86rem; color:var(--text); margin:0.35rem 0 0; line-height:1.5;">
+                  Question: <em>"Can a filter in Pipes &amp; Filters pass data backwards to an upstream filter?"</em><br>
+                  <strong>Model Answer:</strong> No! The pure Pipes and Filters architectural pattern strictly mandates feed-forward acyclic streaming. Introducing backward feedback loops destroys pipeline parallelism, creates deadlocks in bounded buffers, and violates filter autonomy.
+                </p>
+              </div>
+              <div style="font-size:0.85rem; color:var(--text-muted);">
+                <strong>Industry Standard:</strong> Apache Kafka, Unix Shell Pipelines, Apache Web Server Hooks.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Full Matrix View (Hidden by default) -->
+        <div class="blueprint-matrix-view" id="blueprintMatrix" style="display:none;">
+          <div class="pillar-matrix-table-wrap">
+            <table class="pillar-matrix-table">
+              <thead>
+                <tr>
+                  <th style="width:12%;">Pillar #</th>
+                  <th style="width:20%;">Mastery Dimension</th>
+                  <th style="width:34%;">Pipes and Filters Pattern</th>
+                  <th style="width:34%;">The Blackboard Pattern</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Pillar 1</strong></td>
+                  <td><strong>Intent &amp; Motivation</strong></td>
+                  <td>Process streaming data chunks through independent transformational stages.</td>
+                  <td>Collaboratively discover solutions to non-deterministic, open-ended AI problems.</td>
+                </tr>
+                <tr>
+                  <td><strong>Pillar 2</strong></td>
+                  <td><strong>Participants</strong></td>
+                  <td><code>DataSource</code>, <code>Pipe</code>, <code>Filter</code>, <code>DataSink</code>.</td>
+                  <td><code>Blackboard</code>, <code>KnowledgeSources</code>, <code>Controller</code>.</td>
+                </tr>
+                <tr>
+                  <td><strong>Pillar 3</strong></td>
+                  <td><strong>UML Topology</strong></td>
+                  <td>Linear sequential directed pipeline with directional pipes.</td>
+                  <td>Central hub repository surrounded by decoupled, independent experts.</td>
+                </tr>
+                <tr>
+                  <td><strong>Pillar 4</strong></td>
+                  <td><strong>Design Principles</strong></td>
+                  <td>Feed-forward streaming; complete filter autonomy (no shared memory).</td>
+                  <td>Opportunistic heuristic control; knowledge source decoupling.</td>
+                </tr>
+                <tr>
+                  <td><strong>Pillar 5</strong></td>
+                  <td><strong>Mechanics</strong></td>
+                  <td>Active vs passive filters; bounded buffers with backpressure handling.</td>
+                  <td>Trigger condition assessment; confidence rating scheduling loop.</td>
+                </tr>
+                <tr>
+                  <td><strong>Pillar 6</strong></td>
+                  <td><strong>Trade-offs</strong></td>
+                  <td>Data transformation overhead between pipes vs high concurrency.</td>
+                  <td>Concurrency contention on shared blackboard vs emergent solution discovery.</td>
+                </tr>
+                <tr>
+                  <td><strong>Pillar 7</strong></td>
+                  <td><strong>Rival Disambiguation</strong></td>
+                  <td>Pipes &amp; Filters (streaming) vs Chain of Resp (short-circuiting request handler).</td>
+                  <td>Blackboard (shared memory) vs Event-Driven Architecture (message passing).</td>
+                </tr>
+                <tr>
+                  <td><strong>Pillar 8</strong></td>
+                  <td><strong>Exam Traps</strong></td>
+                  <td>Assuming pipes support feedback loops; confusing active with passive filters.</td>
+                  <td>Assuming Knowledge Sources invoke each other directly (they never do!).</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         SECTION 2: 5-STAGE HANDS-ON CURRICULUM
+         ==================================================================== -->
+    <div class="masterclass-section-divider" style="margin: 3.5rem 0 1.5rem;">
+      <div class="section-divider-line"></div>
+      <div class="section-divider-chip">
+        <span>PART 2 · HANDS-ON CURRICULUM</span>
+      </div>
+      <div class="section-divider-line"></div>
+    </div>
+
+    <!-- Curriculum Super-Header with Metadata Chips -->
+    <div class="curriculum-super-header" id="curriculumHeader" style="margin-bottom:1.5rem; background:var(--bg-raised); border:1px solid var(--border); border-radius:var(--radius-md); padding:1.5rem;">
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem;">
+        <div>
+          <div style="font-size:0.75rem; font-weight:800; letter-spacing:0.08em; text-transform:uppercase; color:#8b5cf6; margin-bottom:0.25rem;">
+            STAGE-DRIVEN MASTERY PATH
+          </div>
+          <h2 style="font-size:1.4rem; font-weight:800; margin:0; letter-spacing:-0.02em;">
+            Architectural Patterns: 5 Stages to Grade 1.0
+          </h2>
+        </div>
+        <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
+          <span style="background:rgba(139,92,246,0.12); color:#8b5cf6; font-size:0.78rem; font-weight:700; padding:0.35rem 0.75rem; border-radius:20px; border:1px solid rgba(139,92,246,0.25);">⏱️ 45 Min Total</span>
+          <span style="background:rgba(16,185,129,0.12); color:#10b981; font-size:0.78rem; font-weight:700; padding:0.35rem 0.75rem; border-radius:20px; border:1px solid rgba(16,185,129,0.25);">🎯 20 Exam Points</span>
+          <span style="background:rgba(56,189,248,0.12); color:#38bdf8; font-size:0.78rem; font-weight:700; padding:0.35rem 0.75rem; border-radius:20px; border:1px solid rgba(56,189,248,0.25);">🏛️ Prof. Dr. Jörg Schäfer</span>
+        </div>
       </div>
     </div>
 
-    <div class="quote-card">
-      “Each pattern depends both on the smaller patterns it contains, and on the larger patterns within which it is contained.”
-      <span class="quote-author">— Christopher Alexander</span>
-    </div>
+    <!-- Masterclass Stage Navigation Bar -->
+    <nav class="masterclass-stage-nav" aria-label="Curriculum Stages">
+      <a href="#stage-1-problem" class="stage-nav-pill active" data-stage="1">
+        <span class="pill-number">1</span>
+        <span class="pill-title">Pipes &amp; Filters</span>
+      </a>
+      <a href="#stage-2-uml" class="stage-nav-pill" data-stage="2">
+        <span class="pill-number">2</span>
+        <span class="pill-title">Blackboard AI</span>
+      </a>
+      <a href="#stage-3-sandbox" class="stage-nav-pill" data-stage="3">
+        <span class="pill-number">3</span>
+        <span class="pill-title">Streaming Lab</span>
+      </a>
+      <a href="#stage-4-apache" class="stage-nav-pill" data-stage="4">
+        <span class="pill-number">4</span>
+        <span class="pill-title">Apache Hooks</span>
+      </a>
+      <a href="#stage-5-exam" class="stage-nav-pill" data-stage="5">
+        <span class="pill-number">5</span>
+        <span class="pill-title">Exam Traps</span>
+      </a>
+    </nav>
 
-    <p class="dek">
-      System-level macro structures for data processing: streaming pipelines without feedback versus centralized opportunistic blackboard systems for non-deterministic AI problem solving.
-    </p>
-
-    <!-- Section 1: Pipes and Filters -->
-    <section class="chapter" id="pipes-and-filters">
-      <div class="chapter-head">
-        <span class="chapter-num">1</span>
-        <h2>12.3 Pipes and Filters Architecture</h2>
+    <!-- ====================================================================
+         STAGE 1: PIPES AND FILTERS TOPOLOGIES
+         ==================================================================== -->
+    <section class="masterclass-stage-section" id="stage-1-problem">
+      <div class="stage-header-top">
+        <div class="stage-eyebrow-pill">● Stage 01 · Pipes &amp; Filters Topologies</div>
+        <button type="button" class="stage-mastery-btn" onclick="markStageComplete(1)">Mark Stage 1 Complete ✓</button>
       </div>
-      <p class="chapter-dek">Sequential streaming transformations with independent processing stages.</p>
+      <h2 class="stage-title">Stream Processing &amp; The Pipeline Topology</h2>
 
-      <div class="arch-box">
-        <p><strong>POSA Intent:</strong> Provide a structure for systems that process a stream of data. Each processing step is encapsulated in a filter component. Data is passed through pipes between adjacent filters.</p>
-        <p><strong>Ingredients:</strong></p>
-        <ul>
-          <li><strong>Data Source:</strong> Generates initial stream (e.g. file, network socket, sensors).</li>
-          <li><strong>Pipe:</strong> Directional conduit transferring data from one filter to another, managing buffering and backpressure.</li>
-          <li><strong>Filter:</strong> Enriches, refines, or transforms data. Can be <em>active</em> (runs its own thread, pulls/pushes) or <em>passive</em>.</li>
-          <li><strong>Data Sink:</strong> Target consumer (database, display, output file).</li>
-        </ul>
-      </div>
-
-      <div class="arch-diagram-block">
-┌──────────────┐          ┌──────────────┐          ┌──────────────┐          ┌──────────────┐
-│  Data Source │===Pipe==&gt;│   Filter 1   │===Pipe==&gt;│   Filter 2   │===Pipe==&gt;│  Data Sink   │
-│ (Raw Sensor) │          │ (Decompress) │          │  (Aggregate) │          │ (Analytics)  │
-└──────────────┘          └──────────────┘          └──────────────┘          └──────────────┘</div>
-    </section>
-
-    <!-- Section 2: Blackboard -->
-    <section class="chapter" id="blackboard-pattern">
-      <div class="chapter-head">
-        <span class="chapter-num">2</span>
-        <h2>12.4 The Blackboard Pattern</h2>
-      </div>
-      <p class="chapter-dek">Opportunistic problem-solving for non-deterministic domains.</p>
-
-      <div class="arch-box">
-        <p><strong>POSA Intent:</strong> Useful for problems where no deterministic algorithm exists (speech recognition, AI routing, protein folding). Multiple diverse specialized modules collaborate to discover a solution incrementally.</p>
-        <p><strong>The 3 Participants:</strong></p>
-        <ol>
-          <li><strong>Blackboard:</strong> The central global memory containing partial solutions, hypotheses, and problem state.</li>
-          <li><strong>Knowledge Sources (KS):</strong> Distinct, independent experts. Each KS evaluates the blackboard and adds new inferences when its preconditions are satisfied. <em>KS never talk to each other!</em></li>
-          <li><strong>Controller:</strong> An orchestrator that assesses the state of the blackboard and schedules which eligible Knowledge Source executes next.</li>
-        </ol>
-      </div>
-
-      <div class="arch-diagram-block">
-                          ┌───────────────────────────────┐
-                          │          Controller           │
-                          ├───────────────────────────────┤
-                          │ + loop()                      │
-                          └───────┬───────────────▲───────┘
-                                  │ selects       │ monitors
-                                  ▼               │
-┌─────────────────────────────────────────────────────────┴─────┐
-│                       Blackboard                              │
-│  • Hypothesis Levels: [Acoustic] -&gt; [Syllables] -&gt; [Words]    │
-└──────────────▲──────────────────────▲──────────────────▲──────┘
-               │ reads/writes         │ reads/writes     │ reads/writes
-┌──────────────┴────────┐ ┌───────────┴─────────┐ ┌──────┴──────────────┐
-│ Knowledge Source 1    │ │ Knowledge Source 2  │ │ Knowledge Source 3  │
-│ (Acoustic Phonetics)  │ │ (Dictionary Lookup) │ │ (Grammar/Syntax)    │
-└───────────────────────┘ └─────────────────────┘ └─────────────────────┘</div>
-    </section>
-
-    <!-- Section 3: Apache -->
-    <section class="chapter" id="apache-case-study">
-      <div class="chapter-head">
-        <span class="chapter-num">3</span>
-        <h2>12.7 Case Study: Apache Web Server Hooks</h2>
-      </div>
-      <p style="font-size: 0.92rem; color: var(--text-muted); line-height: 1.6;">
-        Apache HTTP Server organizes request servicing into a pipeline of processing phases:
-        <code>URI-to-filename translation</code> $\to$ <code>Header parsing</code> $\to$ <code>Authentication</code> $\to$ <code>Authorization</code> $\to$ <code>Content generation</code> $\to$ <code>Logging</code>.
-        Modules register hook functions with the core server, creating a flexible hybrid of Pipes &amp; Filters, Chain of Responsibility, and Component Configurator.
+      <p style="font-size:1rem; line-height:1.7; color:var(--text); margin-bottom:1.5rem;">
+        Pipes and Filters partitions high-throughput data processing into self-contained, independent filter components. Pipes connect the output of one filter to the input of the next without the filters being aware of each other's existence.
       </p>
+
+      <!-- High-Res Vector SVG Diagram -->
+      <div class="uml-svg-container" style="background:#090d16; border-radius:8px; padding:2rem 1rem; border:1px solid #1e293b; margin:1.5rem 0;">
+        <svg viewBox="0 0 820 180" width="100%" height="auto" xmlns="http://www.w3.org/2000/svg" style="font-family:'JetBrains Mono', 'SF Mono', monospace; font-size:11.5px;">
+          <defs>
+            <marker id="u12-pipe-arrow" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+              <path d="M 0 1 L 10 5 L 0 9 z" fill="#38bdf8"/>
+            </marker>
+          </defs>
+
+          <!-- Source -->
+          <rect x="30" y="50" width="140" height="70" rx="6" fill="#1e293b" stroke="#10b981" stroke-width="2"/>
+          <text x="100" y="80" fill="#34d399" font-weight="700" text-anchor="middle">Data Source</text>
+          <text x="100" y="100" fill="#94a3b8" font-size="10" text-anchor="middle">(Raw Telemetry)</text>
+
+          <!-- Pipe 1 -->
+          <line x1="170" y1="85" x2="230" y2="85" stroke="#38bdf8" stroke-width="4" marker-end="url(#u12-pipe-arrow)"/>
+          <text x="200" y="75" fill="#38bdf8" font-size="10" text-anchor="middle">Pipe 1</text>
+
+          <!-- Filter 1 -->
+          <rect x="230" y="50" width="150" height="70" rx="6" fill="#1e293b" stroke="#8b5cf6" stroke-width="2"/>
+          <text x="305" y="80" fill="#c4b5fd" font-weight="700" text-anchor="middle">DecompressFilter</text>
+          <text x="305" y="100" fill="#94a3b8" font-size="10" text-anchor="middle">(GZip Unpack)</text>
+
+          <!-- Pipe 2 -->
+          <line x1="380" y1="85" x2="440" y2="85" stroke="#38bdf8" stroke-width="4" marker-end="url(#u12-pipe-arrow)"/>
+          <text x="410" y="75" fill="#38bdf8" font-size="10" text-anchor="middle">Pipe 2</text>
+
+          <!-- Filter 2 -->
+          <rect x="440" y="50" width="150" height="70" rx="6" fill="#1e293b" stroke="#8b5cf6" stroke-width="2"/>
+          <text x="515" y="80" fill="#c4b5fd" font-weight="700" text-anchor="middle">AnomalyFilter</text>
+          <text x="515" y="100" fill="#94a3b8" font-size="10" text-anchor="middle">(Threshold Check)</text>
+
+          <!-- Pipe 3 -->
+          <line x1="590" y1="85" x2="650" y2="85" stroke="#38bdf8" stroke-width="4" marker-end="url(#u12-pipe-arrow)"/>
+          <text x="620" y="75" fill="#38bdf8" font-size="10" text-anchor="middle">Pipe 3</text>
+
+          <!-- Sink -->
+          <rect x="650" y="50" width="140" height="70" rx="6" fill="#1e293b" stroke="#f59e0b" stroke-width="2"/>
+          <text x="720" y="80" fill="#fbbf24" font-weight="700" text-anchor="middle">Data Sink</text>
+          <text x="720" y="100" fill="#94a3b8" font-size="10" text-anchor="middle">(Time-Series DB)</text>
+        </svg>
+      </div>
+
+      <!-- Key Takeaways Box -->
+      <div class="stage-takeaways-box">
+        <div class="stage-takeaways-title">
+          <span>🧠 Key Takeaways: Stream Processing Axioms</span>
+        </div>
+        <div class="takeaway-grid">
+          <div class="takeaway-item">
+            <strong>Filter Isolation</strong>
+            <p>A filter knows nothing of upstream or downstream stages. It reads from its input pipe and writes to its output pipe.</p>
+          </div>
+          <div class="takeaway-item">
+            <strong>Parallel Pipeline Execution</strong>
+            <p>Active filters execute on separate threads, enabling true multi-core parallel streaming across chunks.</p>
+          </div>
+          <div class="takeaway-item">
+            <strong>Backpressure Management</strong>
+            <p>Bounded pipes prevent fast upstream filters from overwhelming slower downstream consumers.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Up Next Card -->
+      <div class="stage-next-card">
+        <div class="stage-next-card-content">
+          <div class="stage-next-card-label">UP NEXT · STAGE 02</div>
+          <div class="stage-next-card-title">The Blackboard Pattern: Opportunistic AI Discovery</div>
+          <p class="stage-next-card-desc">Examine how central shared memory and independent Knowledge Sources solve open-ended problems.</p>
+        </div>
+        <a href="#stage-2-uml" class="stage-next-card-btn">Jump to Stage 2 →</a>
+      </div>
     </section>
 
-    <!-- Section 4: Self Study -->
-    <section class="chapter" id="self-study">
-      <div class="chapter-head">
-        <span class="chapter-num">4</span>
-        <h2>12.8 Questions for Self-Study</h2>
+    <!-- ====================================================================
+         STAGE 2: THE BLACKBOARD PATTERN
+         ==================================================================== -->
+    <section class="masterclass-stage-section" id="stage-2-uml">
+      <div class="stage-header-top">
+        <div class="stage-eyebrow-pill">● Stage 02 · The Blackboard Pattern</div>
+        <button type="button" class="stage-mastery-btn" onclick="markStageComplete(2)">Mark Stage 2 Complete ✓</button>
       </div>
+      <h2 class="stage-title">The Blackboard Pattern: Opportunistic Heuristic Solving</h2>
+
+      <p style="font-size:1rem; line-height:1.7; color:var(--text); margin-bottom:1.5rem;">
+        What happens when no deterministic pipeline algorithm exists? In speech recognition, radar tracking, or medical diagnostics, multiple incomplete hypotheses must be evaluated concurrently. The <strong>Blackboard Pattern</strong> coordinates independent Knowledge Sources through a shared memory hub.
+      </p>
+
+      <div style="display:flex; flex-direction:column; gap:1rem; margin:1.5rem 0;">
+        <div style="padding:1.25rem; background:var(--bg-raised); border:1px solid var(--border); border-radius:var(--radius-sm); border-left:4px solid #38bdf8;">
+          <strong style="color:#38bdf8; font-size:1.05rem;">1. The Blackboard (Central Repository)</strong>
+          <p style="font-size:0.92rem; color:var(--text); margin:0.35rem 0 0; line-height:1.6;">
+            A structured global memory partitioned into hypothesis levels (e.g., Acoustic Waveform $\to$ Syllables $\to$ Words $\to$ Complete Sentence). It holds partial solutions and confidence scores.
+          </p>
+        </div>
+
+        <div style="padding:1.25rem; background:var(--bg-raised); border:1px solid var(--border); border-radius:var(--radius-sm); border-left:4px solid #10b981;">
+          <strong style="color:#10b981; font-size:1.05rem;">2. Knowledge Sources (Domain Experts)</strong>
+          <p style="font-size:0.92rem; color:var(--text); margin:0.35rem 0 0; line-height:1.6;">
+            Specialized modules that know how to transform data at one level to a higher level. <em>Knowledge Sources never communicate with each other directly!</em> They only inspect and modify the Blackboard.
+          </p>
+        </div>
+
+        <div style="padding:1.25rem; background:var(--bg-raised); border:1px solid var(--border); border-radius:var(--radius-sm); border-left:4px solid #8b5cf6;">
+          <strong style="color:#8b5cf6; font-size:1.05rem;">3. The Controller (Orchestrator)</strong>
+          <p style="font-size:0.92rem; color:var(--text); margin:0.35rem 0 0; line-height:1.6;">
+            Monitors the state of the Blackboard. Whenever new data is written, the Controller evaluates which Knowledge Sources qualify to execute and schedules the one with the highest confidence rating.
+          </p>
+        </div>
+      </div>
+
+      <!-- Up Next Card -->
+      <div class="stage-next-card">
+        <div class="stage-next-card-content">
+          <div class="stage-next-card-label">UP NEXT · STAGE 03</div>
+          <div class="stage-next-card-title">Live Interactive Lab: Streaming Pipeline Sandbox</div>
+          <p class="stage-next-card-desc">Inject raw sensor packets and watch active filters process data chunks in sequence with live terminal output.</p>
+        </div>
+        <a href="#stage-3-sandbox" class="stage-next-card-btn">Jump to Stage 3 →</a>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         STAGE 3: INTERACTIVE LABORATORY & VISUAL SANDBOX
+         ==================================================================== -->
+    <section class="masterclass-stage-section" id="stage-3-sandbox">
+      <div class="stage-header-top">
+        <div class="stage-eyebrow-pill">● Stage 03 · Interactive Laboratory</div>
+        <button type="button" class="stage-mastery-btn" onclick="markStageComplete(3)">Mark Stage 3 Complete ✓</button>
+      </div>
+      <h2 class="stage-title">Interactive Streaming Pipeline Simulator</h2>
+
+      <p style="font-size:1rem; line-height:1.7; color:var(--text); margin-bottom:1.5rem;">
+        Click <strong>"Emit Raw Sensor Packet"</strong> to observe active filter processing: Data Source emits bytes $\to$ Decompression Filter unpacks $\to$ Anomaly Filter flags outliers $\to$ Data Sink persists results!
+      </p>
+
+      <div class="arch-sandbox-card">
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem; margin-bottom:1rem;">
+          <div>
+            <h4 style="margin:0 0 0.25rem; font-size:1.1rem; color:var(--text);">Pipes &amp; Filters Telemetry Pipeline</h4>
+            <span style="font-size:0.82rem; color:var(--text-muted);">Status: Active Threaded Processing</span>
+          </div>
+          <button type="button" id="btnEmitPacket" class="btn-suite-toggle active" style="font-weight:700;">
+            <span>🚀 Emit Raw Sensor Packet</span>
+          </button>
+        </div>
+
+        <!-- Pipeline Stages Visualizer -->
+        <div class="pipeline-visualizer">
+          <div class="pipeline-stage-box" id="pStageSource">
+            <span style="color:#10b981; font-weight:800; font-size:0.8rem;">SOURCE</span>
+            <div style="font-size:0.85rem; color:#f8fafc; margin-top:0.25rem;">Sensor #42</div>
+          </div>
+          <span class="pipeline-connector">&rarr;</span>
+          <div class="pipeline-stage-box" id="pStageDecompress">
+            <span style="color:#8b5cf6; font-weight:800; font-size:0.8rem;">DECOMPRESS</span>
+            <div style="font-size:0.85rem; color:#f8fafc; margin-top:0.25rem;">GZip Filter</div>
+          </div>
+          <span class="pipeline-connector">&rarr;</span>
+          <div class="pipeline-stage-box" id="pStageAnomaly">
+            <span style="color:#f59e0b; font-weight:800; font-size:0.8rem;">ANOMALY</span>
+            <div style="font-size:0.85rem; color:#f8fafc; margin-top:0.25rem;">Outlier Filter</div>
+          </div>
+          <span class="pipeline-connector">&rarr;</span>
+          <div class="pipeline-stage-box" id="pStageSink">
+            <span style="color:#38bdf8; font-weight:800; font-size:0.8rem;">SINK</span>
+            <div style="font-size:0.85rem; color:#f8fafc; margin-top:0.25rem;">InfluxDB</div>
+          </div>
+        </div>
+
+        <!-- Terminal Console Output -->
+        <div class="terminal-output" id="pipelineConsole">
+          >> [Pipeline Initialized] Waiting for incoming stream packet. Click 'Emit Raw Sensor Packet' to run.
+        </div>
+      </div>
+
+      <!-- Up Next Card -->
+      <div class="stage-next-card">
+        <div class="stage-next-card-content">
+          <div class="stage-next-card-label">UP NEXT · STAGE 04</div>
+          <div class="stage-next-card-title">Apache HTTP Server Hook Architecture</div>
+          <p class="stage-next-card-desc">Examine how the world's most widely deployed web server uses a hybrid of Pipes &amp; Filters and Chain of Responsibility.</p>
+        </div>
+        <a href="#stage-4-apache" class="stage-next-card-btn">Jump to Stage 4 →</a>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         STAGE 4: APACHE SERVER HOOK ARCHITECTURE
+         ==================================================================== -->
+    <section class="masterclass-stage-section" id="stage-4-apache">
+      <div class="stage-header-top">
+        <div class="stage-eyebrow-pill">● Stage 04 · Production Case Study</div>
+        <button type="button" class="stage-mastery-btn" onclick="markStageComplete(4)">Mark Stage 4 Complete ✓</button>
+      </div>
+      <h2 class="stage-title">Case Study: Apache Web Server Hooks</h2>
+
+      <p style="font-size:1rem; line-height:1.7; color:var(--text); margin-bottom:1.5rem;">
+        The Apache HTTP Server is a classic real-world implementation of the Pipes and Filters architecture combined with Chain of Responsibility. Each incoming HTTP request flows through a predetermined sequence of processing phases:
+      </p>
+
+      <div class="mac-ide-window" style="margin: 1.5rem 0;">
+        <div class="mac-ide-top">
+          <div class="mac-ide-dots">
+            <span class="mac-dot mac-dot-red"></span>
+            <span class="mac-dot mac-dot-yellow"></span>
+            <span class="mac-dot mac-dot-green"></span>
+          </div>
+          <div class="mac-ide-tab">mod_authz_core.c · Apache Hook Registration</div>
+          <button type="button" class="btn-copy-code" onclick="copySnippet('codeSnippetApache')">Copy Code</button>
+        </div>
+        <pre class="mac-ide-content" id="codeSnippetApache"><code>// Apache 2.4 Hook Registration Pipeline
+static void register_hooks(apr_pool_t *p) {
+    // Phase 1: Translate URI to server filename
+    ap_hook_translate_name(translate_user_uri, NULL, NULL, APR_HOOK_MIDDLE);
+
+    // Phase 2: Authentication & Authorization Filters
+    ap_hook_check_authn(verify_jwt_token, NULL, NULL, APR_HOOK_FIRST);
+    ap_hook_check_authz(check_role_permissions, NULL, NULL, APR_HOOK_MIDDLE);
+
+    // Phase 3: Content Generation (The Core Handler)
+    ap_hook_handler(render_static_html, NULL, NULL, APR_HOOK_LAST);
+
+    // Phase 4: Logging Filter
+    ap_hook_log_transaction(log_access_metrics, NULL, NULL, APR_HOOK_REALLY_LAST);
+}</code></pre>
+      </div>
+
+      <!-- Up Next Card -->
+      <div class="stage-next-card">
+        <div class="stage-next-card-content">
+          <div class="stage-next-card-label">UP NEXT · STAGE 05</div>
+          <div class="stage-next-card-title">Frankfurt UAS Exam Traps &amp; Self-Study Drills</div>
+          <p class="stage-next-card-desc">Review authentic 20-point past-paper exam questions from Prof. Dr. Jörg Schäfer covering the Blackboard pattern and pipeline feedback rules.</p>
+        </div>
+        <a href="#stage-5-exam" class="stage-next-card-btn">Jump to Stage 5 →</a>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         STAGE 5: EXAM TRAPS & SELF-STUDY DRILLS
+         ==================================================================== -->
+    <section class="masterclass-stage-section" id="stage-5-exam">
+      <div class="stage-header-top">
+        <div class="stage-eyebrow-pill">● Stage 05 · Exam Traps &amp; Self-Study</div>
+        <button type="button" class="stage-mastery-btn" onclick="markStageComplete(5)">Mark Stage 5 Complete ✓</button>
+      </div>
+      <h2 class="stage-title">Frankfurt UAS Exam Drills: Prof. Dr. Jörg Schäfer</h2>
+
+      <p style="font-size:1rem; line-height:1.7; color:var(--text); margin-bottom:1.5rem;">
+        Click each drill to reveal the exact grading rubric, common pitfalls, and 1.0 model answers expected in POSA examinations.
+      </p>
 
       <div class="drill-list">
+        <!-- Drill 1 -->
         <details class="drill-item" open>
           <summary>
-            <span class="drill-tag">Exam Drill</span>
-            <span class="drill-q">Why is the Blackboard pattern considered non-deterministic, and how does its control loop differ fundamentally from Pipes and Filters?</span>
+            <span class="drill-tag">Exam Drill 1</span>
+            <span class="drill-q">Why is the Blackboard pattern considered non-deterministic, and how does its control loop differ fundamentally from Pipes and Filters? (10 Exam Points)</span>
             <span class="drill-reveal-hint"></span>
           </summary>
           <div class="drill-a">
-            <p>
-              In <strong>Pipes and Filters</strong>, the control and data flow is fixed, deterministic, and feed-forward: data flows from filter A directly to filter B in a predetermined pipeline.
-            </p>
-            <p>
-              In <strong>Blackboard</strong>, there is no predetermined sequence. Multiple Knowledge Sources evaluate the shared hypotheses simultaneously. The Controller opportunistically selects whichever Knowledge Source provides the highest confidence score based on the current state. The order of execution varies from run to run depending on partial inferences.
-            </p>
+            <p><strong>Model Answer (Prof. Schäfer 1.0 Standard):</strong></p>
+            <p><strong>Pipes and Filters (Deterministic):</strong> Control flow is fixed, predetermined, and feed-forward. Data always flows in an immutable sequence from Filter 1 to Filter 2 to Filter 3. Given the same input stream, filters execute in the identical order every time.</p>
+            <p><strong>Blackboard (Non-Deterministic):</strong> Control flow is opportunistic and dynamic. Multiple independent Knowledge Sources monitor the central Blackboard. The Controller inspects the Blackboard state and schedules whichever Knowledge Source produces the highest confidence rating at that instant. Execution sequencing varies from run to run based on partial hypotheses.</p>
+          </div>
+        </details>
+
+        <!-- Drill 2 -->
+        <details class="drill-item">
+          <summary>
+            <span class="drill-tag">Exam Drill 2</span>
+            <span class="drill-q">Can a filter in a Pipes &amp; Filters architecture send feedback data backwards to an upstream filter? Explain why or why not. (6 Exam Points)</span>
+            <span class="drill-reveal-hint"></span>
+          </summary>
+          <div class="drill-a">
+            <p><strong>Model Answer:</strong></p>
+            <p>No! The Pipes and Filters architectural pattern strictly forbids backward feedback loops for two fundamental reasons:</p>
+            <ol>
+              <li><strong>Deadlock Hazard:</strong> Pipes are implemented as bounded buffers. If Filter B waits for Filter A while simultaneously trying to push feedback into a full pipe connected back to Filter A, both filters deadlock.</li>
+              <li><strong>Destruction of Filter Independence:</strong> Introducing backward feedback couples upstream filters to the internal processing states of downstream filters, violating autonomy and preventing parallel pipelining.</li>
+            </ol>
+          </div>
+        </details>
+
+        <!-- Drill 3 -->
+        <details class="drill-item">
+          <summary>
+            <span class="drill-tag">Exam Drill 3</span>
+            <span class="drill-q">Compare Active Filters with Passive Filters in Pipes and Filters architectures. (4 Exam Points)</span>
+            <span class="drill-reveal-hint"></span>
+          </summary>
+          <div class="drill-a">
+            <p><strong>Model Answer:</strong></p>
+            <ul>
+              <li><strong>Active Filter:</strong> Runs on its own dedicated OS thread (or process). It actively pulls data from the input pipe and pushes results to the output pipe in a continuous loop. Enables multi-threaded concurrency.</li>
+              <li><strong>Passive Filter:</strong> Does not possess its own thread. It acts as a passive function invoked by an adjacent active component (e.g. called via a pull method invocation or pushed via a callback).</li>
+            </ul>
           </div>
         </details>
       </div>
+
+      <!-- Final Masterclass Roadmap Transition Card -->
+      <div class="stage-next-card" style="margin-top:2.5rem; border:1px solid #10b981; background:rgba(16,185,129,0.06);">
+        <div class="stage-next-card-content">
+          <div class="stage-next-card-label" style="color:#10b981;">NEXT CHAPTER IN CURRICULUM · UNIT 13</div>
+          <div class="stage-next-card-title">Unit 13: Architecture Analysis &amp; Quality Attributes</div>
+          <p class="stage-next-card-desc">Master trade-off analysis methods (ATAM), non-functional quality attribute scenarios (Availability, Performance, Modifiability), and risk assessment.</p>
+        </div>
+        <a href="unit-13-analysis.html" class="stage-next-card-btn" style="background:#10b981;">Go to Unit 13: Analysis →</a>
+      </div>
     </section>
 
-    <footer class="page-footer" style="margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--border); display: flex; justify-content: space-between;">
-      <span><a href="unit-11-mvc.html">← Previous: Unit 11 MVC</a></span>
-      <span><a href="unit-13-analysis.html">Next: Unit 13 Analysis Patterns →</a></span>
+    <!-- Footer -->
+    <footer class="page-footer" style="margin-top: 3.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border); display: flex; justify-content: space-between; flex-wrap:wrap; gap:1rem;">
+      <span><a href="unit-11-mvc.html" style="color:var(--text-muted); font-weight:600;">← Previous: Unit 11 MVC</a></span>
+      <span><a href="unit-13-analysis.html" style="color:var(--accent); font-weight:700;">Next: Unit 13 Architecture Analysis →</a></span>
     </footer>
 
   </div>
 </div>
 
-<script src="assets/site.js" defer></script>
+<script src="assets/site.js?v=2026.15"></script>
+<script>
+// Reading Progress Bar
+window.addEventListener("scroll", function () {
+  var winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+  var height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+  var scrolled = (winScroll / height) * 100;
+  var bar = document.getElementById("readingProgressBar");
+  if (bar) bar.style.width = scrolled + "%";
+});
+
+// 8-Pillar Selection & Matrix View Toggles
+var _currentPillar = 1;
+function selectPillar(num) {
+  _currentPillar = num;
+  var tabs = document.querySelectorAll(".pillar-tab-btn");
+  tabs.forEach(function (t, i) {
+    if (i + 1 === num) {
+      t.classList.add("active");
+      t.setAttribute("aria-selected", "true");
+    } else {
+      t.classList.remove("active");
+      t.setAttribute("aria-selected", "false");
+    }
+  });
+
+  for (var i = 1; i <= 8; i++) {
+    var p = document.getElementById("pillarPanel" + i);
+    if (p) p.style.display = (i === num) ? "block" : "none";
+  }
+}
+
+function setBlueprintView(mode) {
+  var explorer = document.getElementById("blueprintExplorer");
+  var matrix = document.getElementById("blueprintMatrix");
+  var btnExp = document.getElementById("btnViewExplorer");
+  var btnMat = document.getElementById("btnViewMatrix");
+
+  if (mode === "matrix") {
+    if (explorer) explorer.style.display = "none";
+    if (matrix) matrix.style.display = "block";
+    if (btnExp) btnExp.classList.remove("active");
+    if (btnMat) btnMat.classList.add("active");
+  } else {
+    if (explorer) explorer.style.display = "block";
+    if (matrix) matrix.style.display = "none";
+    if (btnExp) btnExp.classList.add("active");
+    if (btnMat) btnMat.classList.remove("active");
+    selectPillar(_currentPillar);
+  }
+}
+
+// Debounced Collapse Handler
+var _lastInlineCollapseTime = 0;
+function toggleBlueprintCollapse(forceState) {
+  var now = Date.now();
+  if (typeof forceState !== "boolean" && now - _lastInlineCollapseTime < 250) {
+    return;
+  }
+  _lastInlineCollapseTime = now;
+
+  var suite = document.getElementById("blueprintSuite");
+  var collapseBtn = document.getElementById("btnCollapseBlueprint");
+  var body = document.getElementById("blueprintCollapsibleBody");
+  var hint = document.getElementById("blueprintCollapsedHint");
+  if (!suite) return;
+
+  var isCurrentlyCollapsed = suite.classList.contains("is-collapsed");
+  var willCollapse = (typeof forceState === "boolean") ? forceState : !isCurrentlyCollapsed;
+
+  if (willCollapse) {
+    suite.classList.add("is-collapsed");
+    if (body) body.style.display = "none";
+    if (hint) hint.style.display = "flex";
+  } else {
+    suite.classList.remove("is-collapsed");
+    if (body) body.style.display = "block";
+    if (hint) hint.style.display = "none";
+  }
+
+  if (collapseBtn) {
+    var icon = collapseBtn.querySelector(".collapse-icon");
+    var label = collapseBtn.querySelector(".collapse-label");
+    if (willCollapse) {
+      if (icon) icon.textContent = "▼";
+      if (label) label.textContent = "Expand Rubric";
+      collapseBtn.setAttribute("aria-expanded", "false");
+    } else {
+      if (icon) icon.textContent = "▲";
+      if (label) label.textContent = "Collapse Rubric";
+      collapseBtn.setAttribute("aria-expanded", "true");
+    }
+  }
+}
+
+function copyBlueprintRubric() {
+  var copyLabel = document.getElementById("copyRubricSuiteLabel");
+  var rubricMarkdown = 
+    "# Software Pattern Mastery: The 8-Pillar Architectural Rubric\n" +
+    "*(Standard for POSA Exams & Technical Architecture Reviews)*\n\n" +
+    "## Domain: POSA 1 Architectural Patterns (Pipes & Filters vs Blackboard)\n\n" +
+    "### 1. Intent & Architectural Motivation\n" +
+    "- Pipes & Filters: Stream data chunks through independent transformational stages.\n" +
+    "- Blackboard: Opportunistic problem solving for non-deterministic AI tasks via shared memory.\n\n" +
+    "### 2. Structural Roles & Participants\n" +
+    "- Pipes & Filters: DataSource, Pipe, Filter (active/passive), DataSink.\n" +
+    "- Blackboard: Blackboard Repository, Knowledge Sources (independent experts), Controller.\n\n" +
+    "### 3. Formal UML Topology\n" +
+    "- Directional acyclic pipeline vs Centralized hub repository.\n\n" +
+    "### 4. Core Design Principles Enforced\n" +
+    "- Feed-forward streaming (no backward cycles); complete filter isolation.\n" +
+    "- Knowledge sources never communicate directly; decoupled via Blackboard.\n\n" +
+    "### 5. Implementation Mechanics\n" +
+    "- Active filters (dedicated threads) with bounded buffer backpressure handling.\n" +
+    "- Heuristic confidence scoring loops in Blackboard Controller.\n\n" +
+    "### 6. Architectural Costs & Trade-offs\n" +
+    "- Pipelining parallelism vs data serialization overhead.\n" +
+    "- Blackboard non-deterministic emergent discovery vs repository synchronization bottlenecks.\n\n" +
+    "### 7. Rival Pattern Decision Matrix\n" +
+    "- Pipes & Filters (streaming) vs Blackboard (opportunistic AI) vs Broker (RPC).\n\n" +
+    "### 8. Real-World JDK & Exam Traps\n" +
+    "- Exam Trap: Pipes & Filters strictly forbids feedback loops (deadlock risk).\n" +
+    "- Exam Trap: Knowledge Sources do NOT call each other.\n";
+
+  function updateLabelSuccess() {
+    if (copyLabel) copyLabel.textContent = "Copied to Clipboard!";
+    if (typeof window.showToast === "function") window.showToast("8-Pillar Study Rubric copied to clipboard!");
+    setTimeout(function () {
+      if (copyLabel) copyLabel.textContent = "Copy Rubric (Markdown)";
+    }, 2500);
+  }
+
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(rubricMarkdown).then(updateLabelSuccess).catch(function () {
+      fallbackCopy(rubricMarkdown);
+    });
+  } else {
+    fallbackCopy(rubricMarkdown);
+  }
+
+  function fallbackCopy(text) {
+    var ta = document.createElement("textarea");
+    ta.value = text;
+    ta.style.position = "fixed";
+    ta.style.opacity = "0";
+    document.body.appendChild(ta);
+    ta.select();
+    try {
+      document.execCommand("copy");
+      updateLabelSuccess();
+    } catch (e) {
+      alert("Please press Ctrl+C to copy rubric");
+    }
+    document.body.removeChild(ta);
+  }
+}
+
+function copySnippet(elementId) {
+  var el = document.getElementById(elementId);
+  if (!el) return;
+  var text = el.innerText || el.textContent;
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(function() {
+      if (typeof window.showToast === "function") window.showToast("Code snippet copied to clipboard!");
+    });
+  }
+}
+
+// Stage Completion Indicator
+function markStageComplete(stageNum) {
+  var btn = event.target;
+  if (btn) {
+    btn.textContent = "Completed ✓";
+    btn.style.background = "#10b981";
+    btn.style.color = "#fff";
+  }
+  var pill = document.querySelector('.stage-nav-pill[data-stage="' + stageNum + '"]');
+  if (pill) {
+    pill.style.borderColor = "#10b981";
+  }
+  if (typeof window.showToast === "function") window.showToast("Stage " + stageNum + " marked complete! Great progress.");
+}
+
+// Interactive Pipeline Simulator Controller
+(function initPipelineSandbox() {
+  var btnEmit = document.getElementById("btnEmitPacket");
+  var boxSource = document.getElementById("pStageSource");
+  var boxDecompress = document.getElementById("pStageDecompress");
+  var boxAnomaly = document.getElementById("pStageAnomaly");
+  var boxSink = document.getElementById("pStageSink");
+  var consoleEl = document.getElementById("pipelineConsole");
+
+  if (!btnEmit || !boxSource || !boxDecompress || !boxAnomaly || !boxSink || !consoleEl) return;
+
+  btnEmit.addEventListener("click", function () {
+    btnEmit.disabled = true;
+    var packetId = "#" + Math.floor(1000 + Math.random() * 9000);
+
+    // Step 1: Source
+    boxSource.classList.add("is-streaming");
+    consoleEl.textContent = ">> [Data Source] Generated raw gzip telemetry packet " + packetId + " (1024 bytes). Pushing into Pipe 1...";
+
+    setTimeout(function () {
+      boxSource.classList.remove("is-streaming");
+      boxDecompress.classList.add("is-streaming");
+      consoleEl.textContent = ">> [DecompressFilter] Pulled packet " + packetId + ". GZip uncompressed to JSON payload (4096 bytes). Pushing into Pipe 2...";
+
+      setTimeout(function () {
+        boxDecompress.classList.remove("is-streaming");
+        boxAnomaly.classList.add("is-streaming");
+        var isAnomaly = Math.random() > 0.6;
+        var statusStr = isAnomaly ? "⚠️ Temperature spike detected (>85°C)!" : "✓ Sensor metrics within normal bounds.";
+        consoleEl.textContent = ">> [AnomalyFilter] Evaluated packet " + packetId + ": " + statusStr + " Pushing into Pipe 3...";
+
+        setTimeout(function () {
+          boxAnomaly.classList.remove("is-streaming");
+          boxSink.classList.add("is-streaming");
+          consoleEl.textContent = ">> [Data Sink] InfluxDB persisted packet " + packetId + " to time-series cluster. Pipeline streaming cycle complete.";
+
+          setTimeout(function () {
+            boxSink.classList.remove("is-streaming");
+            btnEmit.disabled = false;
+          }, 600);
+        }, 400);
+      }, 400);
+    }, 400);
+  });
+})();
+
+window.selectPillar = selectPillar;
+window.setBlueprintView = setBlueprintView;
+window.toggleBlueprintCollapse = toggleBlueprintCollapse;
+window.copyBlueprintRubric = copyBlueprintRubric;
+window.copySnippet = copySnippet;
+window.markStageComplete = markStageComplete;
+</script>
 </body>
 </html>
