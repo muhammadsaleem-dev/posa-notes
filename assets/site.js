@@ -771,9 +771,16 @@
       s.classList.toggle("active", s.getAttribute("id") === stageId);
     });
 
+    // Synchronize Mobile Bottom Dock navigation state
+    var dockItems = document.querySelectorAll(".mobile-bottom-dock .dock-item");
+    dockItems.forEach(function (di) {
+      var target = di.getAttribute("data-target-stage");
+      di.classList.toggle("active", target === stageId);
+    });
+
     var targetElement = document.getElementById(stageId);
     if (targetElement) {
-      var headerOffset = 110;
+      var headerOffset = window.innerWidth <= 900 ? 70 : 120;
       var elementPosition = targetElement.getBoundingClientRect().top;
       var offsetPosition = elementPosition + window.pageYOffset - headerOffset;
       window.scrollTo({ top: offsetPosition, behavior: "smooth" });

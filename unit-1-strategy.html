@@ -236,23 +236,49 @@
             We start with an abstract base class <code>Duck</code> providing shared behaviors like <code>quack()</code> and <code>swim()</code>. Subclasses like <code>MallardDuck</code> and <code>RedheadDuck</code> inherit these methods and provide their own display logic.
           </p>
 
-          <div style="background:var(--bg); border:1px solid var(--border); border-radius:var(--radius-md); padding:1.25rem; text-align:center;">
-            <svg viewBox="0 0 600 150" width="100%" height="auto" xmlns="http://www.w3.org/2000/svg" style="font-family:'JetBrains Mono', monospace; font-size:12px;">
-              <rect x="220" y="10" width="160" height="60" rx="6" fill="#0f172a" stroke="#6366f1" stroke-width="1.8"/>
-              <text x="300" y="32" fill="#fff" font-weight="700" text-anchor="middle" font-size="12">abstract Duck</text>
-              <text x="300" y="52" fill="#94a3b8" text-anchor="middle" font-size="11">+ quack() | + swim()</text>
+          <!-- ByteByteGo-Style Responsive Starting Model Card Flow -->
+          <div class="arch-card-flow">
+            <!-- Parent Class Node -->
+            <div class="arch-flow-node">
+              <div class="arch-flow-header">
+                <span class="arch-badge">&laquo;abstract&gt;&gt;</span>
+                <span class="arch-title">Duck</span>
+              </div>
+              <div class="arch-flow-methods">
+                <div class="arch-method-line"><code>+ quack()</code> <span class="arch-note-comment">// Shared sound</span></div>
+                <div class="arch-method-line"><code>+ swim()</code> <span class="arch-note-comment">// Shared buoyancy</span></div>
+                <div class="arch-method-line"><code>+ display()*</code> <span class="arch-note-comment">// Abstract hook</span></div>
+              </div>
+            </div>
 
-              <line x1="300" y1="70" x2="300" y2="95" stroke="#6366f1" stroke-width="1.6"/>
-              <line x1="150" y1="95" x2="450" y2="95" stroke="#6366f1" stroke-width="1.6"/>
-              <line x1="150" y1="95" x2="150" y2="105" stroke="#6366f1" stroke-width="1.6"/>
-              <line x1="450" y1="95" x2="450" y2="105" stroke="#6366f1" stroke-width="1.6"/>
+            <!-- Connector -->
+            <div class="arch-flow-connector">
+              <div class="arch-connector-line"></div>
+              <span class="arch-connector-label">Inherited by subclasses (is-a)</span>
+              <div class="arch-connector-arrow">▼</div>
+            </div>
 
-              <rect x="70" y="105" width="160" height="34" rx="5" fill="#0f172a" stroke="#38bdf8" stroke-width="1.5"/>
-              <text x="150" y="127" fill="#38bdf8" font-weight="700" text-anchor="middle" font-size="11.5">MallardDuck</text>
-
-              <rect x="370" y="105" width="160" height="34" rx="5" fill="#0f172a" stroke="#38bdf8" stroke-width="1.5"/>
-              <text x="450" y="127" fill="#38bdf8" font-weight="700" text-anchor="middle" font-size="11.5">RedheadDuck</text>
-            </svg>
+            <!-- Subclasses Grid -->
+            <div class="arch-flow-subclasses">
+              <div class="arch-flow-node">
+                <div class="arch-flow-header child-header">
+                  <span class="arch-badge">Subclass</span>
+                  <span class="arch-title">MallardDuck</span>
+                </div>
+                <div class="arch-flow-methods">
+                  <div class="arch-method-line"><code>+ display()</code> <span class="arch-note-comment">// Green head visual</span></div>
+                </div>
+              </div>
+              <div class="arch-flow-node">
+                <div class="arch-flow-header child-header">
+                  <span class="arch-badge">Subclass</span>
+                  <span class="arch-title">RedheadDuck</span>
+                </div>
+                <div class="arch-flow-methods">
+                  <div class="arch-method-line"><code>+ display()</code> <span class="arch-note-comment">// Red head visual</span></div>
+                </div>
+              </div>
+            </div>
           </div>
           <div style="background:rgba(99,102,241,0.08); border-left:3px solid var(--accent); padding:0.75rem 1rem; border-radius:0 6px 6px 0; margin-top:1rem; font-size:0.88rem; color:var(--text);">
             💡 <strong>Why it worked:</strong> Every duck in the system behaved identically. There was zero variance in flight or sound.
@@ -334,32 +360,71 @@
           <p style="font-size:0.95rem; color:var(--text); line-height:1.6; margin-bottom:1.25rem;">
             <strong>The Solution:</strong> <em>Take what varies and pull it completely out of Duck!</em> Encapsulate flying inside a <code>FlyBehavior</code> interface. The <code>Duck</code> class holds an interface reference and <strong>delegates</strong> at runtime.
           </p>
-          <div style="background:var(--bg); border:1px solid var(--border); border-radius:var(--radius-md); padding:1.25rem; text-align:center;">
-            <svg viewBox="0 0 680 180" width="100%" height="auto" xmlns="http://www.w3.org/2000/svg" style="font-family:'JetBrains Mono', monospace; font-size:12px;">
-              <!-- Context -->
-              <rect x="30" y="25" width="220" height="90" rx="6" fill="#0f172a" stroke="#6366f1" stroke-width="2"/>
-              <rect x="30" y="25" width="220" height="26" rx="6" fill="#4f46e5"/>
-              <text x="140" y="43" fill="#fff" font-weight="700" text-anchor="middle" font-size="12">Duck (Context)</text>
-              <text x="45" y="72" fill="#f8fafc" font-size="11">- flyBehavior: FlyBehavior</text>
-              <text x="45" y="94" fill="#38bdf8" font-size="11">+ performFly() { fb.fly(); }</text>
+          <!-- ByteByteGo-Style Responsive Solution Flow -->
+          <div class="arch-solution-flow">
+            <div class="arch-solution-grid">
+              <!-- Context Card -->
+              <div class="arch-flow-node">
+                <div class="arch-flow-header context-header">
+                  <span class="arch-badge">Context Chassis</span>
+                  <span class="arch-title">Duck</span>
+                </div>
+                <div class="arch-flow-methods">
+                  <div class="arch-method-line"><code>- flyBehavior: FlyBehavior</code></div>
+                  <div class="arch-method-line"><code>- quackBehavior: QuackBehavior</code></div>
+                  <div class="arch-method-line">
+                    <code>+ performFly()</code>
+                    <span class="arch-note-delegate">fb.fly(); // Delegates!</span>
+                  </div>
+                  <div class="arch-method-line"><code>+ setFlyBehavior(fb)</code></div>
+                </div>
+              </div>
 
-              <!-- Arrow -->
-              <line x1="250" y1="70" x2="390" y2="70" stroke="#6366f1" stroke-width="2" marker-end="url(#uml-arrow)"/>
-              <text x="320" y="62" fill="#a5b4fc" font-size="10.5" font-weight="700" text-anchor="middle">delegates</text>
+              <!-- Delegation Bridge -->
+              <div class="arch-bridge">
+                <div class="arch-bridge-badge">Composition (HAS-A)</div>
+                <div class="arch-bridge-arrow">
+                  <span class="arch-bridge-symbol">──►</span>
+                  <span class="arch-bridge-text">delegates to</span>
+                </div>
+              </div>
 
-              <!-- Strategy Interface -->
-              <rect x="400" y="25" width="250" height="70" rx="6" fill="#0f172a" stroke="#10b981" stroke-width="2"/>
-              <rect x="400" y="25" width="250" height="26" rx="6" fill="#059669"/>
-              <text x="525" y="43" fill="#fff" font-weight="700" text-anchor="middle" font-size="12">&lt;&lt;interface&gt;&gt; FlyBehavior</text>
-              <text x="420" y="75" fill="#f8fafc" font-size="11">+ fly(): void</text>
+              <!-- Strategy Family Column -->
+              <div class="arch-strategy-column">
+                <!-- Strategy Interface -->
+                <div class="arch-flow-node" style="max-width:100%;">
+                  <div class="arch-flow-header interface-header">
+                    <span class="arch-badge">&laquo;interface&gt;&gt;</span>
+                    <span class="arch-title">FlyBehavior</span>
+                  </div>
+                  <div class="arch-flow-methods">
+                    <div class="arch-method-line"><code>+ fly(): void</code> <span class="arch-note-comment">// Algorithm Contract</span></div>
+                  </div>
+                </div>
 
-              <!-- Concrete Strategies -->
-              <rect x="360" y="125" width="140" height="40" rx="5" fill="#0f172a" stroke="#38bdf8" stroke-width="1.5"/>
-              <text x="430" y="150" fill="#38bdf8" font-weight="700" text-anchor="middle" font-size="11">FlyWithWings</text>
-
-              <rect x="520" y="125" width="140" height="40" rx="5" fill="#0f172a" stroke="#38bdf8" stroke-width="1.5"/>
-              <text x="590" y="150" fill="#38bdf8" font-weight="700" text-anchor="middle" font-size="11">FlyNoWay</text>
-            </svg>
+                <!-- Realizations Subclasses -->
+                <div class="arch-flow-subclasses">
+                  <div class="arch-flow-node">
+                    <div class="arch-flow-header concrete-header">
+                      <span class="arch-badge">Implementation</span>
+                      <span class="arch-title">FlyWithWings</span>
+                    </div>
+                    <div class="arch-flow-methods">
+                      <div class="arch-method-line"><code>+ fly()</code> <span class="arch-note-comment">// Real flaps</span></div>
+                    </div>
+                  </div>
+                  <div class="arch-flow-node">
+                    <div class="arch-flow-header concrete-header">
+                      <span class="arch-badge">Implementation</span>
+                      <span class="arch-title">FlyNoWay</span>
+                    </div>
+                    <div class="arch-flow-methods">
+                      <div class="arch-method-line"><code>+ fly()</code> <span class="arch-note-comment">// No-op safe</span></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
           <div style="background:rgba(16,185,129,0.08); border-left:3px solid #10B981; padding:0.75rem 1rem; border-radius:0 6px 6px 0; margin-top:1rem; font-size:0.88rem; color:var(--text);">
             🎉 <strong>The Triumph:</strong> New flight algorithms can be created without changing a single line of Duck! Behavior can be swapped dynamically at runtime via <code>setFlyBehavior()</code>!
@@ -425,9 +490,12 @@
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line><line x1="9" y1="21" x2="9" y2="9"></line></svg>
             Interactive UML Architecture Inspector (Click any class)
           </div>
-          <span style="font-family:var(--font-mono); font-size:0.75rem; color:#38bdf8; background:rgba(56,189,248,0.12); padding:0.2rem 0.55rem; border-radius:4px;">
-            Interactive
-          </span>
+          <div style="display:flex; align-items:center; gap:0.5rem;">
+            <span class="uml-scroll-hint" style="font-family:var(--font-mono); font-size:0.74rem; color:var(--accent-ink);">↔ Swipe diagram on mobile</span>
+            <span style="font-family:var(--font-mono); font-size:0.75rem; color:#38bdf8; background:rgba(56,189,248,0.12); padding:0.2rem 0.55rem; border-radius:4px;">
+              Interactive
+            </span>
+          </div>
         </div>
 
         <div class="uml-svg-container">
