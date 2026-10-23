@@ -788,13 +788,6 @@
       di.classList.toggle("active", target === stageId);
     });
 
-    // Synchronize Section 2 Roadmap Flow Chips
-    var roadmapChips = document.querySelectorAll(".roadmap-steps-flow .roadmap-chip");
-    roadmapChips.forEach(function (rc) {
-      var target = rc.getAttribute("data-target-stage");
-      rc.classList.toggle("active", target === stageId);
-    });
-
     // Synchronize Sidebar Links
     var sidebarLinks = document.querySelectorAll(".sidebar .jump-stage-btn");
     sidebarLinks.forEach(function (sl) {

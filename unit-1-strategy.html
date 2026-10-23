@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/style.css?v=2026.12">
+<link rel="stylesheet" href="assets/style.css?v=2026.13">
 <style>
   .quote-card {
     margin: 1.5rem 0 2rem;
@@ -745,19 +745,16 @@ duck.setFlyBehavior(FlyBehaviors.NO_WAY); // Reuses 1 shared instance, 0 GC allo
           Step through the complete architectural journey from initial design intuition to production-grade refactoring and exam-tested edge cases. Follow each stage sequentially or jump directly to any topic below:
         </p>
 
-        <!-- Course Trajectory Roadmap / Breadcrumbs (What will come next) -->
-        <div class="curriculum-roadmap-preview">
-          <div class="roadmap-track-label">🎯 Learning Track:</div>
-          <div class="roadmap-steps-flow">
-            <span class="roadmap-chip active jump-stage-btn" data-target-stage="stage-1-mental-model">1. Mental Model</span>
-            <span class="roadmap-arrow">→</span>
-            <span class="roadmap-chip jump-stage-btn" data-target-stage="stage-2-architecture">2. Architecture &amp; UML</span>
-            <span class="roadmap-arrow">→</span>
-            <span class="roadmap-chip jump-stage-btn" data-target-stage="stage-3-refactoring">3. Refactoring Lab</span>
-            <span class="roadmap-arrow">→</span>
-            <span class="roadmap-chip jump-stage-btn" data-target-stage="stage-4-decision">4. Decision Wizard</span>
-            <span class="roadmap-arrow">→</span>
-            <span class="roadmap-chip jump-stage-btn" data-target-stage="stage-5-exam">5. Exam Drills</span>
+        <!-- Course Meta Badges (Context without repeating the stage navigation pills) -->
+        <div class="curriculum-meta-row" style="display:flex; align-items:center; gap:0.65rem; flex-wrap:wrap; margin-top:0.75rem;">
+          <div style="display:inline-flex; align-items:center; gap:0.35rem; font-family:var(--font-mono); font-size:0.74rem; color:var(--text-muted); background:var(--bg-subtle); padding:0.25rem 0.65rem; border-radius:4px; border:1px solid var(--border);">
+            <span>⏱️ 45 Min Total</span>
+          </div>
+          <div style="display:inline-flex; align-items:center; gap:0.35rem; font-family:var(--font-mono); font-size:0.74rem; color:#10B981; background:rgba(16,185,129,0.1); padding:0.25rem 0.65rem; border-radius:4px; border:1px solid rgba(16,185,129,0.25);">
+            <span>🎯 15 Exam Points Target</span>
+          </div>
+          <div style="display:inline-flex; align-items:center; gap:0.35rem; font-family:var(--font-mono); font-size:0.74rem; color:#38BDF8; background:rgba(56,189,248,0.1); padding:0.25rem 0.65rem; border-radius:4px; border:1px solid rgba(56,189,248,0.25);">
+            <span>🏛️ Prof. Dr. Jörg Schäfer (Frankfurt UAS)</span>
           </div>
         </div>
       </header>
@@ -793,16 +790,19 @@ duck.setFlyBehavior(FlyBehaviors.NO_WAY); // Reuses 1 shared instance, 0 GC allo
          ==================================================================== -->
     <div class="stage-view active" id="stage-1-mental-model">
       
-      <div class="chapter-head chapter-head-row">
-        <div>
-          <span class="chapter-num">Stage 1</span>
-          <h2>The Mental Model: The 5-Step Story of Why Strategy Exists</h2>
+      <div class="stage-header-top">
+        <div class="stage-eyebrow-pill">
+          <span class="stage-eyebrow-dot"></span>
+          <span class="stage-eyebrow-num">Stage 01</span>
+          <span class="stage-eyebrow-sep">·</span>
+          <span class="stage-eyebrow-topic">Intuitive Mental Model</span>
         </div>
         <button type="button" class="stage-mastery-btn" data-stage="stage-1-mental-model">
           <span class="mastery-check">○</span>
           <span class="mastery-label">Mark Mastered</span>
         </button>
       </div>
+      <h2 class="stage-title">The Mental Model: The 5-Step Story of Why Strategy Exists</h2>
       <p class="chapter-dek">
         Follow the interactive timeline below to witness how textbook object-oriented inheritance broke in production, and how composition solved it.
       </p>
@@ -1145,16 +1145,19 @@ duck.setFlyBehavior(FlyBehaviors.NO_WAY); // Reuses 1 shared instance, 0 GC allo
          ==================================================================== -->
     <div class="stage-view" id="stage-2-architecture">
       
-      <div class="chapter-head chapter-head-row">
-        <div>
-          <span class="chapter-num">Stage 2</span>
-          <h2>Architecture Blueprint: Click-to-Inspect GoF Specification</h2>
+      <div class="stage-header-top">
+        <div class="stage-eyebrow-pill">
+          <span class="stage-eyebrow-dot"></span>
+          <span class="stage-eyebrow-num">Stage 02</span>
+          <span class="stage-eyebrow-sep">·</span>
+          <span class="stage-eyebrow-topic">Vector UML &amp; Specification</span>
         </div>
         <button type="button" class="stage-mastery-btn" data-stage="stage-2-architecture">
           <span class="mastery-check">○</span>
           <span class="mastery-label">Mark Mastered</span>
         </button>
       </div>
+      <h2 class="stage-title">Architecture Blueprint: Click-to-Inspect GoF Specification</h2>
       <p class="chapter-dek">
         The formal Gang of Four blueprint. Click on any box in the diagram below to inspect its operational role, design principles, and code snippet.
       </p>
@@ -1290,16 +1293,19 @@ duck.setFlyBehavior(FlyBehaviors.NO_WAY); // Reuses 1 shared instance, 0 GC allo
          ==================================================================== -->
     <div class="stage-view" id="stage-3-refactoring">
       
-      <div class="chapter-head chapter-head-row">
-        <div>
-          <span class="chapter-num">Stage 3</span>
-          <h2>Before &amp; After Refactoring: The Code Transformation</h2>
+      <div class="stage-header-top">
+        <div class="stage-eyebrow-pill">
+          <span class="stage-eyebrow-dot"></span>
+          <span class="stage-eyebrow-num">Stage 03</span>
+          <span class="stage-eyebrow-sep">·</span>
+          <span class="stage-eyebrow-topic">Live Code &amp; Sorter Lab</span>
         </div>
         <button type="button" class="stage-mastery-btn" data-stage="stage-3-refactoring">
           <span class="mastery-check">○</span>
           <span class="mastery-label">Mark Mastered</span>
         </button>
       </div>
+      <h2 class="stage-title">Before &amp; After Refactoring: The Code Transformation</h2>
       <p class="chapter-dek">
         Compare the brittle inheritance antipattern against the clean Strategy pattern implementation side-by-side.
       </p>
@@ -1481,16 +1487,19 @@ public abstract class Duck {
          ==================================================================== -->
     <div class="stage-view" id="stage-4-decision">
       
-      <div class="chapter-head chapter-head-row">
-        <div>
-          <span class="chapter-num">Stage 4</span>
-          <h2>Architectural Trade-offs &amp; Pattern Decision Wizard</h2>
+      <div class="stage-header-top">
+        <div class="stage-eyebrow-pill">
+          <span class="stage-eyebrow-dot"></span>
+          <span class="stage-eyebrow-num">Stage 04</span>
+          <span class="stage-eyebrow-sep">·</span>
+          <span class="stage-eyebrow-topic">Decision Wizard &amp; Trade-offs</span>
         </div>
         <button type="button" class="stage-mastery-btn" data-stage="stage-4-decision">
           <span class="mastery-check">○</span>
           <span class="mastery-label">Mark Mastered</span>
         </button>
       </div>
+      <h2 class="stage-title">Architectural Trade-offs &amp; Pattern Decision Wizard</h2>
       <p class="chapter-dek">
         When should you reach for Strategy versus Template Method or State? Use the interactive wizard and trade-off matrix below.
       </p>
@@ -1595,16 +1604,19 @@ public abstract class Duck {
          ==================================================================== -->
     <div class="stage-view" id="stage-5-exam">
       
-      <div class="chapter-head chapter-head-row">
-        <div>
-          <span class="chapter-num">Stage 5</span>
-          <h2>Prof. Dr. Jörg Schäfer Exam Mastery &amp; Self-Study</h2>
+      <div class="stage-header-top">
+        <div class="stage-eyebrow-pill">
+          <span class="stage-eyebrow-dot"></span>
+          <span class="stage-eyebrow-num">Stage 05</span>
+          <span class="stage-eyebrow-sep">·</span>
+          <span class="stage-eyebrow-topic">Frankfurt UAS Exam Drills</span>
         </div>
         <button type="button" class="stage-mastery-btn" data-stage="stage-5-exam">
           <span class="mastery-check">○</span>
           <span class="mastery-label">Mark Mastered</span>
         </button>
       </div>
+      <h2 class="stage-title">Prof. Dr. Jörg Schäfer Exam Mastery &amp; Self-Study</h2>
       <p class="chapter-dek">
         Master the 2 classic exam gotchas assigned by Prof. Schäfer, followed by verified Frankfurt UAS exam questions.
       </p>
@@ -1875,6 +1887,6 @@ window.toggleBlueprintCollapse = toggleBlueprintCollapse;
 window.copyBlueprintRubric = copyBlueprintRubric;
 </script>
 
-<script src="assets/site.js?v=2026.12" defer></script>
+<script src="assets/site.js?v=2026.13" defer></script>
 </body>
 </html>
