@@ -2,46 +2,128 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Unit 16: Patterns and Generative AI | POSA 2026</title>
-<meta name="description" content="Unit 16 of Pattern-Oriented Software Architecture by Prof. Dr. Jörg Schäfer: Do patterns matter in the age of AI? Weather station case study with GenAI.">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230c7a73'/%3E%3Cpath d='M8 10h16M8 16h16M8 22h10' stroke='%23fff' stroke-width='2.2' stroke-linecap='round'/%3E%3C/svg%3E">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Unit 16: Patterns and Generative AI | POSA 2026 Masterclass</title>
+<meta name="description" content="Explore the frontiers of software architecture in the era of GenAI, pattern-dense prompting, AI architectural guardrails, agentic design patterns, and the IoT Weather Station with Prof. Dr. Jörg Schäfer.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%236366f1'/%3E%3Cpath d='M8 10h16M8 16h16M8 22h10' stroke='%23fff' stroke-width='2.2' stroke-linecap='round'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/style.css">
+<link rel="stylesheet" href="assets/style.css?v=2026.15">
 <style>
-  .quote-card {
-    margin: 1.5rem 0 2rem;
-    padding: 1.25rem 1.5rem;
-    background: var(--accent-soft);
-    border-left: 4px solid var(--accent);
-    border-radius: 0 var(--radius-md) var(--radius-md) 0;
-    font-style: italic;
-    color: var(--accent-ink);
+  .reading-progress-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #6366f1 0%, #8b5cf6 50%, #d946ef 100%);
+    width: 0%;
+    z-index: 9999;
+    transition: width 0.1s ease-out;
   }
-  .quote-author {
+  .stage-takeaways-box {
+    background: rgba(99, 102, 241, 0.05);
+    border: 1px solid rgba(99, 102, 241, 0.2);
+    border-radius: var(--radius-md);
+    padding: 1.5rem;
+    margin: 2rem 0;
+  }
+  [data-theme="light"] .stage-takeaways-box {
+    background: #eef2ff;
+    border-color: #c7d2fe;
+  }
+  .stage-takeaways-title {
+    font-weight: 800;
+    color: #4f46e5;
+    margin-bottom: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1.05rem;
+  }
+  .takeaway-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+  .takeaway-item {
+    background: var(--bg-raised);
+    padding: 1rem;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+  }
+  .takeaway-item strong {
+    color: var(--text);
     display: block;
-    margin-top: 0.5rem;
-    font-style: normal;
-    font-weight: 700;
+    margin-bottom: 0.35rem;
+    font-size: 0.92rem;
+  }
+  .takeaway-item p {
+    margin: 0;
     font-size: 0.85rem;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
+    color: var(--text-muted);
+    line-height: 1.5;
+  }
+  /* Interactive GenAI Prompt Lab */
+  .genai-lab-card {
+    background: var(--bg-raised);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 1.5rem;
+    margin: 2rem 0;
+  }
+  .prompt-tabs {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    margin: 1.25rem 0;
+  }
+  .prompt-btn {
+    padding: 0.5rem 1rem;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+    background: var(--bg);
+    color: var(--text);
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  .prompt-btn.active {
+    background: #6366f1;
+    color: #fff;
+    border-color: #6366f1;
+  }
+  .genai-console {
+    background: #090d16;
+    color: #a5b4fc;
+    font-family: var(--font-mono);
+    padding: 1.25rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.85rem;
+    min-height: 120px;
+    border: 1px solid #1e293b;
+    margin-top: 1rem;
+    white-space: pre-wrap;
+    line-height: 1.6;
   }
 </style>
-<script>(function(){try{var t=localStorage.getItem('posa-theme')||'light';document.documentElement.setAttribute('data-theme',t);var m=localStorage.getItem('posa-mode')||'concept';document.documentElement.setAttribute('data-mode',m);}catch(e){}})();</script>
+<script>(function(){try{var t=localStorage.getItem('posa-theme')||'dark';document.documentElement.setAttribute('data-theme',t);var m=localStorage.getItem('posa-mode')||'concept';document.documentElement.setAttribute('data-mode',m);}catch(e){}})();</script>
 </head>
-<body>
+<body class="mode-stage-focused">
+
+<div class="reading-progress-bar" id="readingProgressBar"></div>
 
 <nav class="sitenav">
   <div class="sitenav-inner">
     <a class="sitenav-home" href="index.html">
-      <span style="background:var(--accent);color:#fff;padding:0.15rem 0.45rem;border-radius:4px;font-size:0.8rem;font-weight:800;letter-spacing:0.04em;">POSA</span>
-      <span>2026</span>
+      <span style="background:linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);color:#fff;padding:0.2rem 0.55rem;border-radius:6px;font-size:0.82rem;font-weight:800;letter-spacing:0.04em;">POSA</span>
+      <span style="font-weight:800;letter-spacing:-0.02em;">2026</span>
     </a>
     <div class="sitenav-links">
       <a href="index.html">Overview</a>
+      <a href="unit-14-testing.html">14 · Testing</a>
       <a href="unit-15-criticism.html">15 · Criticism</a>
       <a href="unit-16-genai.html" class="active">16 · GenAI</a>
       <a href="mock-1.html">📝 Mock 1</a>
@@ -59,9 +141,10 @@
   <div class="nav-panel" id="navPanel">
     <div class="nav-panel-section">
       <span class="nav-panel-label">Course Navigation</span>
-      <a href="index.html">Overview</a>
-      <a href="unit-15-criticism.html">Unit 15 · Pattern Criticism</a>
-      <a href="unit-16-genai.html" class="active">Unit 16 · Patterns &amp; GenAI</a>
+      <a href="index.html">Course Overview</a>
+      <a href="unit-14-testing.html">Unit 14 · Testing Patterns &amp; Doubles</a>
+      <a href="unit-15-criticism.html">Unit 15 · Pattern Criticism &amp; Evolution</a>
+      <a href="unit-16-genai.html" class="active">Unit 16 · Patterns &amp; Generative AI</a>
       <a href="mock-1.html">📝 Mock Exam 1</a>
     </div>
   </div>
@@ -70,111 +153,925 @@
 <div class="page-shell">
   <aside class="sidebar-toc">
     <div class="sidebar-block">
-      <span class="sidebar-label">On This Page</span>
-      <a href="#patterns-in-ai-age"><span class="toc-num">1</span>Do Patterns Still Matter?</a>
-      <a href="#weather-station"><span class="toc-num">2</span>Weather Station Case Study</a>
-      <a href="#self-study"><span class="toc-num">3</span>Self-Study Exam Questions</a>
+      <span class="sidebar-label">PART 1 · RUBRIC</span>
+      <a href="#pillar-1"><span class="toc-num">P1</span>Architectural Shift</a>
+      <a href="#pillar-2"><span class="toc-num">P2</span>AI Architecture Loop</a>
+      <a href="#pillar-3"><span class="toc-num">P3</span>Agentic Topologies</a>
+      <a href="#pillar-4"><span class="toc-num">P4</span>Hallucination Risks</a>
+      <a href="#pillar-5"><span class="toc-num">P5</span>POSA to AI Map</a>
+      <a href="#pillar-6"><span class="toc-num">P6</span>Vibe Coding Smells</a>
+      <a href="#pillar-7"><span class="toc-num">P7</span>Weather Station Code</a>
+      <a href="#pillar-8"><span class="toc-num">P8</span>Frankfurt UAS Exam Traps</a>
     </div>
     <div class="sidebar-block">
-      <span class="sidebar-label">Instructor</span>
-      <p style="font-size: 0.85rem; color: var(--text-muted); margin: 0;">
-        Prof. Dr. Jörg Schäfer<br>
-        <em>Frankfurt University of Applied Sciences</em>
+      <span class="sidebar-label">PART 2 · CURRICULUM</span>
+      <a href="#stage-1"><span class="toc-num">1</span>Patterns in AI Era</a>
+      <a href="#stage-2"><span class="toc-num">2</span>Weather Station Case</a>
+      <a href="#stage-3"><span class="toc-num">3</span>Prompting Lab</a>
+      <a href="#stage-4"><span class="toc-num">4</span>Agentic Patterns</a>
+      <a href="#stage-5"><span class="toc-num">5</span>Exam Drills</a>
+    </div>
+    <div class="sidebar-block">
+      <span class="sidebar-label">Academic Profile</span>
+      <p style="font-size: 0.85rem; color: var(--text-muted); margin: 0; line-height: 1.4;">
+        <strong>Prof. Dr. Jörg Schäfer</strong><br>
+        Frankfurt University of Applied Sciences<br>
+        <span style="display:inline-block;margin-top:0.35rem;padding:0.15rem 0.4rem;background:rgba(99,102,241,0.15);border-radius:4px;color:#6366f1;font-weight:700;font-size:0.75rem;">AI &amp; Architecture 2026</span>
       </p>
     </div>
   </aside>
 
-  <div class="page">
+  <main class="page">
     <div class="masthead">
-      <div>
-        <div class="eyebrow">Unit 16 · Modern Frontiers (2025/2026)</div>
-        <h1 class="title">Patterns and Generative AI</h1>
-      </div>
-    </div>
-
-    <div class="quote-card">
-      “At this final stage, the patterns are no longer seen as recipes for creating artifacts, but as signs of human intelligence.”
-      <span class="quote-author">— Christopher Alexander</span>
-    </div>
-
-    <p class="dek">
-      As Large Language Models and AI coding assistants generate software at scale, do software design patterns still matter? Prof. Schäfer’s perspective on architectural guardrails and prompt engineering.
-    </p>
-
-    <!-- Section 1: AI Age -->
-    <section class="chapter" id="patterns-in-ai-age">
-      <div class="chapter-head">
-        <span class="chapter-num">1</span>
-        <h2>16.3 Do Patterns Still Matter in the Age of GenAI?</h2>
-      </div>
-
-      <div style="display: flex; flex-direction: column; gap: 1rem; margin: 1.5rem 0;">
-        <div style="padding: 1.25rem; background: var(--bg-raised); border: 1px solid var(--border); border-radius: var(--radius-sm);">
-          <strong style="color: var(--accent);">1. High-Density Prompts for LLMs</strong>
-          <p style="font-size: 0.9rem; color: var(--text-muted); margin: 0.3rem 0 0;">
-            Prompting an LLM with <em>“Implement a payment processor using Strategy and Factory Method with bounded queues”</em> yields modular, production-ready code. Without pattern vocabulary, LLMs generate monolithic, spaghetti procedural code.
-          </p>
-        </div>
-        <div style="padding: 1.25rem; background: var(--bg-raised); border: 1px solid var(--border); border-radius: var(--radius-sm);">
-          <strong style="color: var(--accent);">2. Architectural Guardrails Against AI Hallucinations</strong>
-          <p style="font-size: 0.9rem; color: var(--text-muted); margin: 0.3rem 0 0;">
-            AI can generate syntax rapidly, but it lacks spatial systemic awareness. Patterns provide structural boundaries that prevent AI-generated code from violating the Open-Closed and Single Responsibility principles.
-          </p>
-        </div>
-        <div style="padding: 1.25rem; background: var(--bg-raised); border: 1px solid var(--border); border-radius: var(--radius-sm);">
-          <strong style="color: var(--accent);">3. Humans Still Own Architecture &amp; Review</strong>
-          <p style="font-size: 0.9rem; color: var(--text-muted); margin: 0.3rem 0 0;">
-            Engineers in the AI era spend less time typing boilerplate syntax and much more time conducting architectural reviews, evaluating trade-offs, and enforcing package stability metrics ($I, A, D$).
-          </p>
-        </div>
-      </div>
-    </section>
-
-    <!-- Section 2: Weather Station -->
-    <section class="chapter" id="weather-station">
-      <div class="chapter-head">
-        <span class="chapter-num">2</span>
-        <h2>16.3.1 Case Study: Weather Station with GenAI</h2>
-      </div>
-      <p style="font-size: 0.92rem; color: var(--text-muted); line-height: 1.6;">
-        Prof. Schäfer demonstrates designing an IoT Weather Station by composing <strong>Quantity</strong> (for metric/imperial units), <strong>Observer</strong> (for display feeds), <strong>Model-View-Controller</strong>, and REST endpoints using AI code generation as an accelerator.
+      <div class="eyebrow">Unit 16 · Modern Frontiers (2025/2026)</div>
+      <h1 class="title">Patterns and Generative AI</h1>
+      <p class="dek">
+        As Large Language Models and autonomous coding agents generate software at massive speed, architectural patterns become the vital guardrails, semantic compression vocabulary, and governance criteria for software engineering.
       </p>
+    </div>
+
+    <!-- Symmetrical Demarcation 1 -->
+    <div class="section-divider-wrapper" style="margin: 2.5rem 0 1.5rem;">
+      <div class="section-divider-line"></div>
+      <div class="section-divider-tag">
+        <span class="section-divider-dot"></span>
+        <span>PART 1 · ARCHITECTURAL RUBRIC</span>
+      </div>
+      <div class="section-divider-line"></div>
+    </div>
+
+    <section class="blueprint-suite" id="blueprintSuite" aria-label="8-Pillar Architecture Rubric">
+      <div class="blueprint-suite-top">
+        <div>
+          <div class="blueprint-suite-badge">
+            <span class="section-badge-pill">SECTION 1 OF 2</span>
+            <span class="badge-sep">·</span>
+            <span>8-PILLAR ARCHITECTURAL RUBRIC</span>
+          </div>
+          <h2 class="blueprint-suite-heading">The AI-Assisted Architecture Blueprint</h2>
+          <p class="blueprint-suite-sub">
+            The canonical engineering specification for leveraging design patterns as semantic prompt compressors, structural guardrails, and agentic orchestration backbones.
+          </p>
+        </div>
+        <div class="blueprint-suite-actions">
+          <div class="blueprint-view-toggle" role="group" aria-label="Blueprint Layout">
+            <button class="blueprint-toggle-btn active" id="btnViewExplorer" type="button" onclick="setBlueprintView('explorer')">Explorer View</button>
+            <button class="blueprint-toggle-btn" id="btnViewMatrix" type="button" onclick="setBlueprintView('matrix')">Full Matrix</button>
+          </div>
+          <button class="rubric-action-btn" type="button" onclick="copyBlueprintRubric()">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            Export Rubric (MD)
+          </button>
+          <button class="rubric-action-btn rubric-collapse-btn" id="btnCollapseRubric" type="button" onclick="toggleBlueprintCollapse()">
+            <span id="collapseLabel">▲ Collapse Rubric</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="blueprint-collapsed-hint" id="blueprintCollapsedHint" style="display:none;">
+        <span class="hint-icon">💡</span>
+        <span>The 8-Pillar Rubric is currently collapsed. Click <strong>Expand Rubric</strong> above to inspect details.</span>
+      </div>
+
+      <div class="blueprint-suite-body" id="blueprintSuiteBody">
+        <div class="blueprint-tabs" role="tablist" aria-label="8 Pillars">
+          <button class="blueprint-tab active" role="tab" aria-selected="true" data-pillar="1" onclick="selectPillar(1)">
+            <span class="blueprint-tab-num">01</span>
+            <span class="blueprint-tab-title">Architectural Shift</span>
+          </button>
+          <button class="blueprint-tab" role="tab" aria-selected="false" data-pillar="2" onclick="selectPillar(2)">
+            <span class="blueprint-tab-num">02</span>
+            <span class="blueprint-tab-title">AI Architecture Loop</span>
+          </button>
+          <button class="blueprint-tab" role="tab" aria-selected="false" data-pillar="3" onclick="selectPillar(3)">
+            <span class="blueprint-tab-num">03</span>
+            <span class="blueprint-tab-title">Agentic Topologies</span>
+          </button>
+          <button class="blueprint-tab" role="tab" aria-selected="false" data-pillar="4" onclick="selectPillar(4)">
+            <span class="blueprint-tab-num">04</span>
+            <span class="blueprint-tab-title">Hallucination Risks</span>
+          </button>
+          <button class="blueprint-tab" role="tab" aria-selected="false" data-pillar="5" onclick="selectPillar(5)">
+            <span class="blueprint-tab-num">05</span>
+            <span class="blueprint-tab-title">POSA to AI Map</span>
+          </button>
+          <button class="blueprint-tab" role="tab" aria-selected="false" data-pillar="6" onclick="selectPillar(6)">
+            <span class="blueprint-tab-num">06</span>
+            <span class="blueprint-tab-title">Vibe Coding Smells</span>
+          </button>
+          <button class="blueprint-tab" role="tab" aria-selected="false" data-pillar="7" onclick="selectPillar(7)">
+            <span class="blueprint-tab-num">07</span>
+            <span class="blueprint-tab-title">Weather Station Code</span>
+          </button>
+          <button class="blueprint-tab" role="tab" aria-selected="false" data-pillar="8" onclick="selectPillar(8)">
+            <span class="blueprint-tab-num">08</span>
+            <span class="blueprint-tab-title">Exam Traps (Schäfer)</span>
+          </button>
+        </div>
+
+        <div class="blueprint-content-area" id="blueprintContentArea">
+          <!-- Pillar 1 -->
+          <article class="pillar-panel active" id="pillar-1" data-pillar="1">
+            <div class="pillar-header">
+              <span class="pillar-tag">PILLAR 01 · FOUNDATIONAL INTENT</span>
+              <h3 class="pillar-title">The Paradigm Shift: From Syntax Typist to System Auditor</h3>
+            </div>
+            <div class="pillar-body">
+              <div class="pillar-grid-2col">
+                <div>
+                  <h4 style="color:#6366f1;margin-top:0;">The Rise of Commodity Code Generation</h4>
+                  <p>In 2026, Large Language Models (LLMs) can generate syntactically valid code in seconds. However, LLMs are fundamentally stochastic token predictors: they optimize for local plausibility, not global architectural integrity.</p>
+                  <p>Without explicit structural direction, AI assistants generate tightly coupled procedural code, hardcode magic values, and introduce subtle dependency cycles ($ADP$ violations).</p>
+                </div>
+                <div>
+                  <h4 style="color:var(--text);margin-top:0;">Patterns as High-Density Semantic Prompts</h4>
+                  <p>Design patterns provide the highest compression ratio in software engineering:</p>
+                  <ul>
+                    <li>Telling an AI: <em>"Implement a WeatherStation using Fowler's Quantity pattern, Observer for display feeds, and Strategy for forecast algorithms"</em> immediately constrains the search space to clean, decoupled classes.</li>
+                    <li>Patterns transform prompt engineering from vague wishful thinking into rigorous architectural specifications.</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <!-- Pillar 2 -->
+          <article class="pillar-panel" id="pillar-2" data-pillar="2">
+            <div class="pillar-header">
+              <span class="pillar-tag">PILLAR 02 · STRUCTURAL TOPOLOGY</span>
+              <h3 class="pillar-title">The AI-Assisted Architecture Lifecycle (Vector SVG)</h3>
+            </div>
+            <div class="pillar-body">
+              <p>The closed-loop engineering lifecycle where patterns act as both generative inputs and automated validation gates:</p>
+
+              <div style="background:var(--bg-raised);border:1px solid var(--border);border-radius:var(--radius-md);padding:1.5rem;margin:1.5rem 0;">
+                <svg viewBox="0 0 880 260" style="width:100%;height:auto;display:block;" xmlns="http://www.w3.org/2000/svg">
+                  <defs>
+                    <marker id="uml-arrow-16" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+                      <polygon points="0 2, 8 5, 0 8" fill="#6366f1"/>
+                    </marker>
+                  </defs>
+
+                  <!-- Step 1: Architect Specification -->
+                  <g transform="translate(30, 40)">
+                    <rect width="180" height="90" rx="8" fill="var(--bg)" stroke="#6366f1" stroke-width="2"/>
+                    <text x="90" y="28" font-family="var(--font-display)" font-size="13" font-weight="800" fill="#6366f1" text-anchor="middle">1. Human Architect</text>
+                    <line x1="0" y1="38" x2="180" y2="38" stroke="var(--border)" stroke-width="1"/>
+                    <text x="10" y="58" font-family="var(--font-sans)" font-size="10.5" fill="var(--text-muted)">• Balances trade-offs</text>
+                    <text x="10" y="74" font-family="var(--font-sans)" font-size="10.5" fill="var(--text-muted)">• Pattern-dense prompt</text>
+                  </g>
+
+                  <!-- Step 2: LLM Synthesis -->
+                  <g transform="translate(250, 40)">
+                    <rect width="180" height="90" rx="8" fill="var(--bg)" stroke="#a855f7" stroke-width="2"/>
+                    <text x="90" y="28" font-family="var(--font-display)" font-size="13" font-weight="800" fill="#a855f7" text-anchor="middle">2. LLM Engine</text>
+                    <line x1="0" y1="38" x2="180" y2="38" stroke="var(--border)" stroke-width="1"/>
+                    <text x="10" y="58" font-family="var(--font-sans)" font-size="10.5" fill="var(--text-muted)">• Rapid code synthesis</text>
+                    <text x="10" y="74" font-family="var(--font-sans)" font-size="10.5" fill="var(--text-muted)">• Follows pattern rubric</text>
+                  </g>
+
+                  <!-- Step 3: Pattern Verification Guardrails -->
+                  <g transform="translate(470, 40)">
+                    <rect width="180" height="90" rx="8" fill="var(--bg)" stroke="#ec4899" stroke-width="2"/>
+                    <text x="90" y="28" font-family="var(--font-display)" font-size="13" font-weight="800" fill="#ec4899" text-anchor="middle">3. Structural Guardrails</text>
+                    <line x1="0" y1="38" x2="180" y2="38" stroke="var(--border)" stroke-width="1"/>
+                    <text x="10" y="58" font-family="var(--font-sans)" font-size="10.5" fill="var(--text-muted)">• ArchUnit cycle check</text>
+                    <text x="10" y="74" font-family="var(--font-sans)" font-size="10.5" fill="var(--text-muted)">• Stable package metrics</text>
+                  </g>
+
+                  <!-- Step 4: Production Deployment -->
+                  <g transform="translate(690, 40)">
+                    <rect width="160" height="90" rx="8" fill="var(--bg)" stroke="#10b981" stroke-width="2"/>
+                    <text x="80" y="28" font-family="var(--font-display)" font-size="13" font-weight="800" fill="#10b981" text-anchor="middle">4. Enterprise Deploy</text>
+                    <line x1="0" y1="38" x2="160" y2="38" stroke="var(--border)" stroke-width="1"/>
+                    <text x="10" y="58" font-family="var(--font-sans)" font-size="10.5" fill="var(--text-muted)">• Deterministic tests</text>
+                    <text x="10" y="74" font-family="var(--font-sans)" font-size="10.5" fill="var(--text-muted)">• Zero circular deps</text>
+                  </g>
+
+                  <!-- Forward Arrows -->
+                  <line x1="210" y1="85" x2="240" y2="85" stroke="#6366f1" stroke-width="2" marker-end="url(#uml-arrow-16)"/>
+                  <line x1="430" y1="85" x2="460" y2="85" stroke="#a855f7" stroke-width="2" marker-end="url(#uml-arrow-16)"/>
+                  <line x1="650" y1="85" x2="680" y2="85" stroke="#ec4899" stroke-width="2" marker-end="url(#uml-arrow-16)"/>
+
+                  <!-- Feedback loop if guardrail fails -->
+                  <path d="M 560 130 L 560 200 L 340 200 L 340 140" fill="none" stroke="#ef4444" stroke-width="1.8" stroke-dasharray="4 4" marker-end="url(#uml-arrow-16)"/>
+                  <text x="450" y="220" font-family="var(--font-mono)" font-size="10" fill="#ef4444" text-anchor="middle">Automated Refinement Prompt on Test / Metric Failure</text>
+                </svg>
+              </div>
+            </div>
+          </article>
+
+          <!-- Pillar 3 -->
+          <article class="pillar-panel" id="pillar-3" data-pillar="3">
+            <div class="pillar-header">
+              <span class="pillar-tag">PILLAR 03 · AGENTIC ARCHITECTURES</span>
+              <h3 class="pillar-title">Modern Agentic Patterns: Re-Imagining POSA for Autonomous AI</h3>
+            </div>
+            <div class="pillar-body">
+              <div class="pillar-grid-2col">
+                <div>
+                  <h4 style="color:#6366f1;margin-top:0;">1. Router &amp; Dynamic Dispatch (Strategy)</h4>
+                  <p>In multi-model architectures, a lightweight Router LLM inspects user intent and dynamically chooses which specialized model or agent to invoke (analogous to the GoF <strong>Strategy</strong> and <strong>Chain of Responsibility</strong> patterns).</p>
+                </div>
+                <div>
+                  <h4 style="color:#a855f7;margin-top:0;">2. Shared Multi-Agent Memory (POSA Blackboard)</h4>
+                  <p>Autonomous agents (Researcher, Coder, Reviewer) do not talk point-to-point. They read and update a shared, structured state store—an exact 2026 reincarnation of the <strong>POSA Blackboard Pattern</strong>!</p>
+                </div>
+                <div>
+                  <h4 style="color:#ec4899;margin-top:0;">3. Tool Calling Pipelines (Pipes &amp; Filters)</h4>
+                  <p>Complex agent tasks stream through deterministic tool validation pipelines (Input Filter $\to$ Rate Limiter $\to$ LLM Execution $\to$ Output Sanitizer), identical to POSA <strong>Pipes &amp; Filters</strong>.</p>
+                </div>
+                <div>
+                  <h4 style="color:#10b981;margin-top:0;">4. Safety Guardrails (Decorator / Proxy)</h4>
+                  <p>Output validation layers wrap LLM generation calls to redact sensitive data, intercept prompt injections, and enforce JSON schemas, behaving as classical <strong>Proxy</strong> and <strong>Decorator</strong> wrappers.</p>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <!-- Pillar 4 -->
+          <article class="pillar-panel" id="pillar-4" data-pillar="4">
+            <div class="pillar-header">
+              <span class="pillar-tag">PILLAR 04 · TRADE-OFFS &amp; RISKS</span>
+              <h3 class="pillar-title">Trade-Offs &amp; Risks: The Danger of "Vibe Coding"</h3>
+            </div>
+            <div class="pillar-body">
+              <table class="blueprint-table" style="width:100%;border-collapse:collapse;margin-top:0.5rem;font-size:0.88rem;">
+                <thead>
+                  <tr style="border-bottom:2px solid var(--border);text-align:left;">
+                    <th style="padding:0.6rem;">Engineering Dimension</th>
+                    <th style="padding:0.6rem;">Unconstrained "Vibe Coding"</th>
+                    <th style="padding:0.6rem;">Pattern-Disciplined GenAI</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr style="border-bottom:1px solid var(--border);">
+                    <td style="padding:0.6rem;font-weight:700;">Coupling &amp; Modularity</td>
+                    <td style="padding:0.6rem;color:#ef4444;">High (monolithic files, global state)</td>
+                    <td style="padding:0.6rem;color:#10b981;">Low (SRP, DIP, bounded contexts)</td>
+                  </tr>
+                  <tr style="border-bottom:1px solid var(--border);">
+                    <td style="padding:0.6rem;font-weight:700;">Refactoring Feasibility</td>
+                    <td style="padding:0.6rem;color:#ef4444;">Near Zero (fear of breaking mystery code)</td>
+                    <td style="padding:0.6rem;color:#10b981;">High (clear interfaces &amp; test doubles)</td>
+                  </tr>
+                  <tr style="border-bottom:1px solid var(--border);">
+                    <td style="padding:0.6rem;font-weight:700;">Token Efficiency</td>
+                    <td style="padding:0.6rem;color:#ef4444;">Poor (requires re-pasting 500 lines of context)</td>
+                    <td style="padding:0.6rem;color:#10b981;">High (small single-responsibility files)</td>
+                  </tr>
+                  <tr>
+                    <td style="padding:0.6rem;font-weight:700;">Bug Triage &amp; Audit</td>
+                    <td style="padding:0.6rem;color:#ef4444;">Slow (hallucinated edge cases)</td>
+                    <td style="padding:0.6rem;color:#10b981;">Immediate (isolated unit tests)</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </article>
+
+          <!-- Pillar 5 -->
+          <article class="pillar-panel" id="pillar-5" data-pillar="5">
+            <div class="pillar-header">
+              <span class="pillar-tag">PILLAR 05 · POSA TO AI CROSS-MAP</span>
+              <h3 class="pillar-title">Mapping Classic POSA Patterns to GenAI System Architectures</h3>
+            </div>
+            <div class="pillar-body">
+              <div class="pillar-grid-2col">
+                <div class="takeaway-item">
+                  <strong>Blackboard $\longleftrightarrow$ Multi-Agent Collaboration</strong>
+                  <p>The control shell schedules specialized agents (Knowledge Sources) reading and updating a shared memory vector store.</p>
+                </div>
+                <div class="takeaway-item">
+                  <strong>Broker $\longleftrightarrow$ Model Gateway &amp; Tool Routing</strong>
+                  <p>Decouples clients from specific LLM providers (Anthropic, Google, OpenAI), managing failover, rate limiting, and response caching.</p>
+                </div>
+                <div class="takeaway-item">
+                  <strong>Pipes &amp; Filters $\longleftrightarrow$ RAG Ingestion Pipeline</strong>
+                  <p>Document parser $\to$ Semantic chunker $\to$ Embedding generator $\to$ Vector index writer.</p>
+                </div>
+                <div class="takeaway-item">
+                  <strong>Adapter $\longleftrightarrow$ Schema Translation &amp; Function Calling</strong>
+                  <p>Translates LLM unstructured JSON function arguments into strongly typed Java/Kotlin domain records.</p>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <!-- Pillar 6 -->
+          <article class="pillar-panel" id="pillar-6" data-pillar="6">
+            <div class="pillar-header">
+              <span class="pillar-tag">PILLAR 06 · VIBE CODING SMELLS</span>
+              <h3 class="pillar-title">Architectural Smells in AI-Generated Codebases</h3>
+            </div>
+            <div class="pillar-body">
+              <div class="smell-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+                <div style="background:var(--bg-raised);padding:1rem;border-left:4px solid #ef4444;border-radius:0 4px 4px 0;">
+                  <strong style="color:#ef4444;">1. The God Class Hallucination</strong>
+                  <p style="font-size:0.85rem;color:var(--text-muted);margin:0.4rem 0 0;">
+                    AI generating a 1,500-line `WeatherService` containing database SQL, HTTP client calls, parsing logic, and UI HTML generation in one file.
+                  </p>
+                  <span style="font-size:0.78rem;color:#10b981;font-weight:700;">Remedy: Prompt with SRP and MVC layer decomposition.</span>
+                </div>
+                <div style="background:var(--bg-raised);padding:1rem;border-left:4px solid #ef4444;border-radius:0 4px 4px 0;">
+                  <strong style="color:#ef4444;">2. Primitive Obsession Drift</strong>
+                  <p style="font-size:0.85rem;color:var(--text-muted);margin:0.4rem 0 0;">
+                    Passing raw `double` temperatures and speeds everywhere, causing catastrophic bugs when imperial and metric units collide.
+                  </p>
+                  <span style="font-size:0.78rem;color:#10b981;font-weight:700;">Remedy: Enforce Martin Fowler's Quantity Pattern (Unit 13).</span>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <!-- Pillar 7 -->
+          <article class="pillar-panel" id="pillar-7" data-pillar="7">
+            <div class="pillar-header">
+              <span class="pillar-tag">PILLAR 07 · WEATHER STATION CODE</span>
+              <h3 class="pillar-title">Weather Station Implementation: Compounding Quantity, Observer &amp; GenAI</h3>
+            </div>
+            <div class="pillar-body">
+              <div class="code-window">
+                <div class="code-window-bar">
+                  <div class="code-dots"><span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span></div>
+                  <span class="code-file">WeatherStationMasterclass.java · Multi-Pattern Synthesis</span>
+                  <button class="code-copy-btn" onclick="copySnippet('codeWeatherStation')">Copy Code</button>
+                </div>
+                <pre class="code-pre" id="codeWeatherStation"><code><span class="k">package</span> de.frankfurt.uas.posa.genai;
+
+<span class="k">import</span> java.util.*;
+
+<span class="c">// 1. QUANTITY PATTERN: Type-safe unit representation</span>
+<span class="k">public record</span> <span class="nc">Quantity</span>(<span class="k">double</span> amount, <span class="nc">String</span> unit) {
+    <span class="k">public</span> <span class="nc">Quantity</span> <span class="nf">toFahrenheit</span>() {
+        <span class="k">if</span> (<span class="s">"C"</span>.equals(unit)) <span class="k">return new</span> <span class="nc">Quantity</span>(amount * <span class="m">1.8</span> + <span class="m">32</span>, <span class="s">"F"</span>);
+        <span class="k">return this</span>;
+    }
+}
+
+<span class="c">// 2. OBSERVER PATTERN: Decoupled sensor telemetry broadcast</span>
+<span class="k">public interface</span> <span class="nc">WeatherObserver</span> {
+    <span class="k">void</span> <span class="nf">onMeasurement</span>(<span class="nc">Quantity</span> temperature, <span class="nc">Quantity</span> pressure);
+}
+
+<span class="k">public class</span> <span class="nc">WeatherStation</span> {
+    <span class="k">private final</span> <span class="nc">List</span>&lt;<span class="nc">WeatherObserver</span>&gt; observers = <span class="k">new</span> <span class="nc">ArrayList</span>&lt;&gt;();
+
+    <span class="k">public void</span> <span class="nf">register</span>(<span class="nc">WeatherObserver</span> obs) { observers.add(obs); }
+    <span class="k">public void</span> <span class="nf">broadcast</span>(<span class="nc">Quantity</span> temp, <span class="nc">Quantity</span> press) {
+        <span class="k">for</span> (<span class="nc">WeatherObserver</span> o : observers) o.onMeasurement(temp, press);
+    }
+}
+
+<span class="c">// 3. GENAI ADVISORY OBSERVER: Submits telemetry to LLM for forecast summary</span>
+<span class="k">public class</span> <span class="nc">AiForecaster</span> <span class="k">implements</span> <span class="nc">WeatherObserver</span> {
+    <span class="nd">@Override</span>
+    <span class="k">public void</span> <span class="nf">onMeasurement</span>(<span class="nc">Quantity</span> temp, <span class="nc">Quantity</span> press) {
+        <span class="nc">String</span> prompt = <span class="nc">String</span>.format(
+            <span class="s">"Generate a natural weather advisory for Temp: %s, Pressure: %s"</span>,
+            temp, press
+        );
+        <span class="nc">System</span>.out.println(<span class="s">"AI Advisory: "</span> + <span class="nc">LlmClient</span>.predict(prompt));
+    }
+}</code></pre>
+              </div>
+            </div>
+          </article>
+
+          <!-- Pillar 8 -->
+          <article class="pillar-panel" id="pillar-8" data-pillar="8">
+            <div class="pillar-header">
+              <span class="pillar-tag">PILLAR 08 · EXAM TRAPS &amp; DEFENSE</span>
+              <h3 class="pillar-title">Frankfurt UAS Examination Pitfalls (Prof. Dr. Jörg Schäfer)</h3>
+            </div>
+            <div class="pillar-body">
+              <div class="pillar-grid-2col">
+                <div style="background:rgba(239,68,68,0.06);border:1px solid rgba(239,68,68,0.3);border-radius:var(--radius-sm);padding:1rem;">
+                  <strong style="color:#ef4444;">Exam Trap 1: "Will AI eliminate software architects?"</strong>
+                  <p style="font-size:0.86rem;color:var(--text-muted);margin-top:0.4rem;">
+                    <strong>Schäfer's Trap:</strong> "Since LLMs can write full applications from a prompt, software architecture is no longer needed."<br>
+                    <strong>Correct UAS Defense:</strong> False! AI eliminates syntax typing, but radically elevates the need for software architects. The architect must formulate system boundaries, define pattern guardrails, prevent cyclic package dependencies ($ADP$), and audit stochastic outputs for security and design smells.
+                  </p>
+                </div>
+                <div style="background:rgba(239,68,68,0.06);border:1px solid rgba(239,68,68,0.3);border-radius:var(--radius-sm);padding:1rem;">
+                  <strong style="color:#ef4444;">Exam Trap 2: Weather Station Compound Architecture</strong>
+                  <p style="font-size:0.86rem;color:var(--text-muted);margin-top:0.4rem;">
+                    <strong>Schäfer's Trap:</strong> "Which patterns collaborate in the Weather Station case study?"<br>
+                    <strong>Correct UAS Defense:</strong> <strong>Quantity Pattern</strong> (type-safe measurements preventing unit conversion errors) + <strong>Observer Pattern</strong> (broadcasting real-time telemetry to multiple decoupled displays and services) + <strong>Model-View-Controller</strong> (separating physical sensor hardware from presentation).
+                  </p>
+                </div>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
     </section>
 
-    <!-- Section 3: Self Study -->
-    <section class="chapter" id="self-study">
-      <div class="chapter-head">
-        <span class="chapter-num">3</span>
-        <h2>16.5 Questions for Self-Study</h2>
+    <!-- Symmetrical Demarcation 2 -->
+    <div class="section-divider-wrapper" style="margin: 3.5rem 0 1.5rem;">
+      <div class="section-divider-line"></div>
+      <div class="section-divider-tag">
+        <span class="section-divider-dot"></span>
+        <span>PART 2 · HANDS-ON CURRICULUM</span>
+      </div>
+      <div class="section-divider-line"></div>
+    </div>
+
+    <!-- Curriculum Super-Header -->
+    <header class="curriculum-header" id="curriculumHeader">
+      <div class="curriculum-meta-chip">
+        <span>⏱️ 40 Min Curriculum</span>
+        <span class="dot-sep">·</span>
+        <span>🎯 Exam Target: Patterns &amp; GenAI Guardrails</span>
+        <span class="dot-sep">·</span>
+        <span>🏛️ Prof. Dr. Jörg Schäfer</span>
+      </div>
+      <h2 class="curriculum-title">5-Stage Masterclass: Patterns and Generative AI</h2>
+      <p class="curriculum-desc">
+        Explore how to leverage software patterns as high-density prompt compressors, build architectural guardrails against LLM hallucinations, and master the Weather Station case study.
+      </p>
+
+      <!-- Stage Navigation Bar -->
+      <nav class="masterclass-stage-nav" aria-label="Curriculum Stages">
+        <a class="stage-nav-pill active" href="#stage-1" data-stage="1">
+          <span class="pill-number">01</span>
+          <span class="pill-label">Patterns in AI Era</span>
+        </a>
+        <a class="stage-nav-pill" href="#stage-2" data-stage="2">
+          <span class="pill-number">02</span>
+          <span class="pill-label">Weather Station</span>
+        </a>
+        <a class="stage-nav-pill" href="#stage-3" data-stage="3">
+          <span class="pill-number">03</span>
+          <span class="pill-label">Prompt Lab</span>
+        </a>
+        <a class="stage-nav-pill" href="#stage-4" data-stage="4">
+          <span class="pill-number">04</span>
+          <span class="pill-label">Agentic Patterns</span>
+        </a>
+        <a class="stage-nav-pill" href="#stage-5" data-stage="5">
+          <span class="pill-number">05</span>
+          <span class="pill-label">Exam Drills</span>
+        </a>
+      </nav>
+    </header>
+
+    <!-- Stage 1 -->
+    <section class="masterclass-stage" id="stage-1" data-stage="1">
+      <div class="stage-header-top">
+        <div>
+          <span class="stage-eyebrow-pill">STAGE 01 OF 05 · MODERN FRONTIERS</span>
+          <h3 class="stage-title">Why Patterns Matter More in the Age of GenAI</h3>
+        </div>
+        <button class="stage-mastery-btn" type="button" onclick="markStageComplete(1)">Mark Stage 1 Complete</button>
+      </div>
+
+      <div class="stage-takeaways-box">
+        <div class="stage-takeaways-title">
+          <span>⚡</span>
+          <span>Core Takeaways for Frankfurt UAS Students</span>
+        </div>
+        <div class="takeaway-grid">
+          <div class="takeaway-item">
+            <strong>1. Semantic Compression</strong>
+            <p>Pattern names pack hundreds of architectural decisions into a single prompt token for LLMs.</p>
+          </div>
+          <div class="takeaway-item">
+            <strong>2. Guardrail Auditing</strong>
+            <p>Human engineers use architectural fitness functions (ArchUnit) to verify AI-generated structures.</p>
+          </div>
+          <div class="takeaway-item">
+            <strong>3. The Anti-Spaghetti Shield</strong>
+            <p>Patterns prevent stochastic LLMs from degenerating into unmaintainable monolithic files.</p>
+          </div>
+        </div>
+      </div>
+
+      <p>
+        In 2026, the cost of generating code dropped to zero. Consequently, the cost of bad architecture rose to infinity. When an engineering team relies on "vibe coding" without patterns, codebases swell with repetitive, tightly coupled code that becomes impossible to maintain or audit.
+      </p>
+
+      <div class="stage-next-card">
+        <div class="stage-next-body">
+          <span class="stage-next-eyebrow">UP NEXT · STAGE 02</span>
+          <h4 class="stage-next-title">The Weather Station IoT Case Study</h4>
+          <p class="stage-next-desc">Deconstruct Prof. Schäfer's composite architecture combining Quantity, Observer, and MVC.</p>
+        </div>
+        <a class="stage-next-btn" href="#stage-2">Proceed to Stage 2 →</a>
+      </div>
+    </section>
+
+    <!-- Stage 2 -->
+    <section class="masterclass-stage" id="stage-2" data-stage="2">
+      <div class="stage-header-top">
+        <div>
+          <span class="stage-eyebrow-pill">STAGE 02 OF 05 · CASE STUDY</span>
+          <h3 class="stage-title">The IoT Weather Station Case Study</h3>
+        </div>
+        <button class="stage-mastery-btn" type="button" onclick="markStageComplete(2)">Mark Stage 2 Complete</button>
+      </div>
+
+      <p>
+        Prof. Dr. Jörg Schäfer uses the Weather Station case study to illustrate how patterns seamlessly compound:
+      </p>
+
+      <div class="pillar-grid-2col" style="margin: 1.5rem 0;">
+        <div class="takeaway-item">
+          <h4 style="color:#6366f1;margin-top:0;">1. Martin Fowler Quantity Pattern</h4>
+          <p>
+            Physical sensors record temperatures in Celsius and Fahrenheit, wind speeds in knots and km/h, and pressures in hPa and inHg. Using raw <code>double</code> values leads to dimensional disaster (like NASA's Mars Climate Orbiter). The <strong>Quantity Pattern</strong> ensures mathematical operations are dimensionally sound.
+          </p>
+        </div>
+
+        <div class="takeaway-item">
+          <h4 style="color:#10b981;margin-top:0;">2. GoF Observer &amp; MVC</h4>
+          <p>
+            The physical weather station acts as the <strong>Subject</strong>. An arbitrary number of decoupled displays (mobile app, LED wall display, statistical logger, and AI weather advisory service) act as <strong>Observers</strong>. New displays can be added at runtime without modifying the sensor code.
+          </p>
+        </div>
+      </div>
+
+      <div class="stage-next-card">
+        <div class="stage-next-body">
+          <span class="stage-next-eyebrow">UP NEXT · STAGE 03</span>
+          <h4 class="stage-next-title">Interactive Laboratory: The GenAI Prompt Architect</h4>
+          <p class="stage-next-desc">Compare naive plain-text prompts against pattern-dense prompts and observe simulated LLM output.</p>
+        </div>
+        <a class="stage-next-btn" href="#stage-3">Proceed to Stage 3 →</a>
+      </div>
+    </section>
+
+    <!-- Stage 3 -->
+    <section class="masterclass-stage" id="stage-3" data-stage="3">
+      <div class="stage-header-top">
+        <div>
+          <span class="stage-eyebrow-pill">STAGE 03 OF 05 · HANDS-ON LAB</span>
+          <h3 class="stage-title">Interactive GenAI Prompt Architect &amp; Guardrail Lab</h3>
+        </div>
+        <button class="stage-mastery-btn" type="button" onclick="markStageComplete(3)">Mark Stage 3 Complete</button>
+      </div>
+
+      <div class="genai-lab-card">
+        <h4 style="margin:0;color:var(--text);">Simulated LLM Architecture Synthesis Engine</h4>
+        <p style="font-size:0.85rem;color:var(--text-muted);margin:0.25rem 0 1rem;">
+          Select a prompt style to observe how pattern density affects the generated code's architecture, maintainability, and coupling:
+        </p>
+
+        <div class="prompt-tabs">
+          <button class="prompt-btn" id="btnPromptNaive" onclick="setPromptSim('naive')">1. Naive Plain English Prompt</button>
+          <button class="prompt-btn active" id="btnPromptPattern" onclick="setPromptSim('pattern')">2. Pattern-Dense Architectural Prompt</button>
+        </div>
+
+        <div class="genai-console" id="genaiConsole">Loading prompt simulation...</div>
+      </div>
+
+      <div class="stage-next-card">
+        <div class="stage-next-body">
+          <span class="stage-next-eyebrow">UP NEXT · STAGE 04</span>
+          <h4 class="stage-next-title">Autonomous Agentic Architecture Patterns</h4>
+          <p class="stage-next-desc">Explore how Blackboard, Router, and Pipes &amp; Filters power 2026 AI multi-agent systems.</p>
+        </div>
+        <a class="stage-next-btn" href="#stage-4">Proceed to Stage 4 →</a>
+      </div>
+    </section>
+
+    <!-- Stage 4 -->
+    <section class="masterclass-stage" id="stage-4" data-stage="4">
+      <div class="stage-header-top">
+        <div>
+          <span class="stage-eyebrow-pill">STAGE 04 OF 05 · AGENTIC ARCHITECTURES</span>
+          <h3 class="stage-title">Agentic Architecture Patterns (2025/2026 Frontiers)</h3>
+        </div>
+        <button class="stage-mastery-btn" type="button" onclick="markStageComplete(4)">Mark Stage 4 Complete</button>
+      </div>
+
+      <p>Multi-agent AI platforms do not reinvent computer science; they build directly on POSA foundations:</p>
+
+      <div class="blueprint-table-wrapper" style="margin: 1.5rem 0; overflow-x: auto;">
+        <table class="blueprint-table" style="width:100%; border-collapse: collapse; font-size: 0.9rem;">
+          <thead>
+            <tr style="border-bottom: 2px solid var(--border); text-align: left;">
+              <th style="padding: 0.75rem;">Agentic Architecture Pattern</th>
+              <th style="padding: 0.75rem;">POSA / GoF Foundation</th>
+              <th style="padding: 0.75rem;">Modern Production Manifestation</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 0.75rem; font-weight:700; color:#6366f1;">Blackboard Multi-Agent</td>
+              <td style="padding: 0.75rem;">POSA 1 Blackboard Pattern</td>
+              <td style="padding: 0.75rem;">Shared conversation context &amp; memory scratchpad across specialized agents</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 0.75rem; font-weight:700; color:#6366f1;">Dynamic Model Router</td>
+              <td style="padding: 0.75rem;">GoF Strategy &amp; Chain of Resp</td>
+              <td style="padding: 0.75rem;">Triage LLM choosing between fast-flash, code-specialized, or deep-reasoning models</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 0.75rem; font-weight:700; color:#6366f1;">RAG Tool Execution Pipeline</td>
+              <td style="padding: 0.75rem;">POSA 1 Pipes &amp; Filters</td>
+              <td style="padding: 0.75rem;">Sequential stages: Query expansion $\to$ Vector search $\to$ Re-ranking $\to$ Context injection</td>
+            </tr>
+            <tr>
+              <td style="padding: 0.75rem; font-weight:700; color:#6366f1;">Guardrail Proxy</td>
+              <td style="padding: 0.75rem;">GoF Proxy &amp; Decorator</td>
+              <td style="padding: 0.75rem;">Intercepting user inputs and LLM outputs for safety, PII redaction, and schema compliance</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="stage-next-card">
+        <div class="stage-next-body">
+          <span class="stage-next-eyebrow">UP NEXT · STAGE 05</span>
+          <h4 class="stage-next-title">Frankfurt UAS Exam Drills &amp; Self-Study Traps</h4>
+          <p class="stage-next-desc">Master Prof. Dr. Jörg Schäfer's official exam drills on Patterns and GenAI.</p>
+        </div>
+        <a class="stage-next-btn" href="#stage-5">Proceed to Stage 5 →</a>
+      </div>
+    </section>
+
+    <!-- Stage 5 -->
+    <section class="masterclass-stage" id="stage-5" data-stage="5">
+      <div class="stage-header-top">
+        <div>
+          <span class="stage-eyebrow-pill">STAGE 05 OF 05 · ACADEMIC VERIFICATION</span>
+          <h3 class="stage-title">Frankfurt UAS Examination Drills (Prof. Dr. Jörg Schäfer)</h3>
+        </div>
+        <button class="stage-mastery-btn" type="button" onclick="markStageComplete(5)">Mark Stage 5 Complete</button>
       </div>
 
       <div class="drill-list">
         <details class="drill-item" open>
           <summary>
-            <span class="drill-tag">Exam Reflection</span>
-            <span class="drill-q">How does knowledge of architectural patterns change the role of a software engineer when using AI coding assistants?</span>
+            <span class="drill-tag">Exam Drill 1 · Role of the Engineer</span>
+            <span class="drill-q">How does the rise of Generative AI coding assistants transform the role of the software architect?</span>
             <span class="drill-reveal-hint"></span>
           </summary>
           <div class="drill-a">
+            <p><strong>Official Model Answer:</strong></p>
             <p>
-              The engineer shifts from a "code typist" to a <strong>system architect and auditor</strong>.
+              The engineer transforms from a mechanical syntax typist into an <strong>architectural evaluator, specifier, and auditor</strong>.
             </p>
             <p>
-              Instead of manually implementing boilerplate loops and getters, the engineer specifies the system decomposition, selects the appropriate patterns to balance conflicting forces, and audits the AI's output to ensure it does not introduce design smells (rigidity, fragility, cycles). Patterns become the high-level specification language between humans and AI.
+              Because AI can generate thousands of lines of syntax instantly, the architect's primary responsibility is establishing structural guardrails, decomposing systems into bounded modules, enforcing package coupling metrics ($ADP, SDP, SAP$), and auditing stochastic AI code against architectural drift and design smells.
+            </p>
+          </div>
+        </details>
+
+        <details class="drill-item">
+          <summary>
+            <span class="drill-tag">Exam Drill 2 · Weather Station Synthesis</span>
+            <span class="drill-q">Describe how the Quantity pattern and Observer pattern resolve distinct forces in the IoT Weather Station case study.</span>
+            <span class="drill-reveal-hint"></span>
+          </summary>
+          <div class="drill-a">
+            <p><strong>Official Model Answer:</strong></p>
+            <ul>
+              <li><strong>Quantity Pattern:</strong> Resolves the force of dimensional type safety and unit conversion incompatibility (preventing arithmetic errors between Celsius and Fahrenheit or metric and imperial pressure).</li>
+              <li><strong>Observer Pattern:</strong> Resolves the force of open-ended display extensibility, allowing new physical LED screens, web dashboards, or AI forecasters to subscribe to sensor broadcasts dynamically without modifying sensor hardware drivers.</li>
+            </ul>
+          </div>
+        </details>
+
+        <details class="drill-item">
+          <summary>
+            <span class="drill-tag">Exam Drill 3 · Semantic Prompting</span>
+            <span class="drill-q">Why does prompt engineering that uses formal pattern names produce higher-quality code than natural language task descriptions?</span>
+            <span class="drill-reveal-hint"></span>
+          </summary>
+          <div class="drill-a">
+            <p><strong>Official Model Answer:</strong></p>
+            <p>
+              Design pattern names represent <strong>semantic compression</strong>. During pre-training on millions of open-source repositories, LLMs form dense latent representations of patterns like <em>Strategy</em>, <em>Observer</em>, or <em>Composite</em>. Citing a formal pattern activates these modular, decoupled topological priors, preventing the LLM from defaulting to naive monolithic procedural code.
             </p>
           </div>
         </details>
       </div>
     </section>
 
-    <footer class="page-footer" style="margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--border); display: flex; justify-content: space-between;">
-      <span><a href="unit-15-criticism.html">← Previous: Unit 15 Criticism</a></span>
-      <span><a href="mock-1.html">Take Mock Exam 1 →</a></span>
+    <!-- Footer Navigation -->
+    <footer class="page-footer" style="margin-top: 4rem; padding-top: 2rem; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+      <a class="nav-prev" href="unit-15-criticism.html" style="font-weight: 700; color: var(--accent); text-decoration: none;">← Previous: Unit 15 · Pattern Criticism</a>
+      <a class="nav-next" href="mock-1.html" style="font-weight: 700; color: var(--accent); text-decoration: none;">Take Official Mock Exam 1 →</a>
     </footer>
-
-  </div>
+  </main>
 </div>
 
-<script src="assets/site.js" defer></script>
+<script src="assets/site.js?v=2026.15" defer></script>
+<script>
+// Reading progress bar
+window.addEventListener('scroll', function() {
+  var h = document.documentElement, b = document.body;
+  var st = 'scrollTop', sh = 'scrollHeight';
+  var percent = (h[st]||b[st]) / ((h[sh]||b[sh]) - h.clientHeight) * 100;
+  var bar = document.getElementById('readingProgressBar');
+  if (bar) bar.style.width = percent + '%';
+});
+
+// Blueprint Pillar & Layout Controls
+var _blueprintCollapsed = false;
+var _lastInlineCollapseTime = 0;
+
+function selectPillar(num) {
+  var tabs = document.querySelectorAll('.blueprint-tab');
+  var panels = document.querySelectorAll('.pillar-panel');
+  tabs.forEach(function(t) {
+    var match = t.getAttribute('data-pillar') == num;
+    t.classList.toggle('active', match);
+    t.setAttribute('aria-selected', match ? 'true' : 'false');
+  });
+  panels.forEach(function(p) {
+    p.classList.toggle('active', p.getAttribute('data-pillar') == num);
+  });
+}
+
+function setBlueprintView(mode) {
+  var suite = document.getElementById('blueprintSuite');
+  var btnExplorer = document.getElementById('btnViewExplorer');
+  var btnMatrix = document.getElementById('btnViewMatrix');
+  if (!suite) return;
+
+  if (mode === 'matrix') {
+    suite.classList.add('view-matrix');
+    if (btnMatrix) btnMatrix.classList.add('active');
+    if (btnExplorer) btnExplorer.classList.remove('active');
+    document.querySelectorAll('.pillar-panel').forEach(function(p) { p.classList.add('active'); });
+  } else {
+    suite.classList.remove('view-matrix');
+    if (btnExplorer) btnExplorer.classList.add('active');
+    if (btnMatrix) btnMatrix.classList.remove('active');
+    var activeTab = document.querySelector('.blueprint-tab.active');
+    var pNum = activeTab ? activeTab.getAttribute('data-pillar') : 1;
+    selectPillar(pNum);
+  }
+}
+
+function toggleBlueprintCollapse() {
+  var now = Date.now();
+  if (now - _lastInlineCollapseTime < 250) return;
+  _lastInlineCollapseTime = now;
+
+  _blueprintCollapsed = !_blueprintCollapsed;
+  var body = document.getElementById('blueprintSuiteBody');
+  var hint = document.getElementById('blueprintCollapsedHint');
+  var label = document.getElementById('collapseLabel');
+
+  if (_blueprintCollapsed) {
+    if (body) body.style.display = 'none';
+    if (hint) hint.style.display = 'flex';
+    if (label) label.textContent = '▼ Expand Rubric';
+  } else {
+    if (body) body.style.display = '';
+    if (hint) hint.style.display = 'none';
+    if (label) label.textContent = '▲ Collapse Rubric';
+  }
+}
+
+function copyBlueprintRubric() {
+  var md = `# Unit 16: Patterns and Generative AI - 8-Pillar Architecture Rubric
+## Instructor: Prof. Dr. Jörg Schäfer · Frankfurt University of Applied Sciences
+
+### Pillar 1: Architectural Shift
+- Engineer shifts from syntax typist to system auditor, boundary definer, and evaluator.
+- Patterns act as high-density semantic prompt compressors.
+
+### Pillar 2: AI Architecture Loop
+- Human specification -> LLM synthesis -> Automated ArchUnit / Fitness Function validation -> Deploy.
+
+### Pillar 3: Agentic Topologies
+- POSA Blackboard -> Shared Multi-Agent Context; GoF Strategy -> Dynamic Model Routing.
+- Pipes & Filters -> RAG retrieval pipelines; Proxy/Decorator -> Guardrails.
+
+### Pillar 4: Trade-Offs & Vibe Coding
+- Unconstrained AI code creates tightly coupled monolithic god classes and primitive obsession.
+
+### Pillar 5: POSA to AI Map
+- Broker -> Model Gateways; Blackboard -> Autonomous Agent Memory; Adapter -> Function Calling Schemas.
+
+### Pillar 6: Vibe Coding Smells
+- God Class Hallucinations, Primitive Obsession, and Unbounded Context Window Bloat.
+
+### Pillar 7: Weather Station Code
+- Quantity (Fowler) + Observer (GoF) + AI Forecast Advisory Service in Java 17.
+
+### Pillar 8: Frankfurt UAS Exam Traps
+- GenAI elevates the need for software architects to audit stochastic outputs.
+- Patterns provide dense semantic compression that constrains LLM generation.
+`;
+
+  function updateLabelSuccess() {
+    var btn = document.querySelector('.blueprint-suite-actions button[onclick="copyBlueprintRubric()"]');
+    if (btn) {
+      var orig = btn.innerHTML;
+      btn.innerHTML = 'Copied to Clipboard! ✓';
+      setTimeout(function() { btn.innerHTML = orig; }, 2000);
+    }
+  }
+
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(md).then(updateLabelSuccess);
+  } else {
+    var ta = document.createElement('textarea');
+    ta.value = md;
+    document.body.appendChild(ta);
+    ta.select();
+    try {
+      document.execCommand('copy');
+      updateLabelSuccess();
+    } catch (e) {
+      alert("Please press Ctrl+C to copy rubric");
+    }
+    document.body.removeChild(ta);
+  }
+}
+
+function copySnippet(elementId) {
+  var el = document.getElementById(elementId);
+  if (!el) return;
+  var text = el.innerText || el.textContent;
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(function() {
+      if (typeof window.showToast === "function") window.showToast("Code snippet copied to clipboard!");
+    });
+  }
+}
+
+function markStageComplete(stageNum) {
+  var btn = event.target;
+  if (btn) {
+    btn.textContent = "Completed ✓";
+    btn.style.background = "#6366f1";
+    btn.style.color = "#fff";
+  }
+  var pill = document.querySelector('.stage-nav-pill[data-stage="' + stageNum + '"]');
+  if (pill) {
+    pill.style.borderColor = "#6366f1";
+  }
+  if (typeof window.showToast === "function") window.showToast("Stage " + stageNum + " marked complete! Great progress.");
+}
+
+// Prompt Simulation Engine
+function setPromptSim(type) {
+  var out = document.getElementById('genaiConsole');
+  var btnN = document.getElementById('btnPromptNaive');
+  var btnP = document.getElementById('btnPromptPattern');
+  if (!out || !btnN || !btnP) return;
+
+  btnN.classList.toggle('active', type === 'naive');
+  btnP.classList.toggle('active', type === 'pattern');
+
+  if (type === 'naive') {
+    out.textContent = `>> USER PROMPT: "Write a weather station in Java that takes temperature and prints to console and screen."
+
+>> LLM SYNTHESIZED CODE (Naive Procedural Monolith):
+public class WeatherStation {
+    public static double temp = 22.5; // Primitive Obsession! What unit?!
+    public static void main(String[] args) {
+        System.out.println("Console: " + temp);
+        // Hardcoded direct print - zero observer decoupling!
+        System.out.println("LED Screen: " + temp);
+    }
+}
+
+⚠️ ARCHITECTURAL AUDIT:
+• Missing Quantity Pattern: No units! Adding Fahrenheit will crash or require rewrite.
+• Missing Observer Pattern: Adding a 3rd display requires modifying WeatherStation.main().
+• Zero Testability: Static hardcoded values cannot be tested with doubles.`;
+  } else {
+    out.textContent = `>> USER PROMPT: "Implement a WeatherStation using Fowler's Quantity pattern for units and GoF Observer for decoupled display broadcasting."
+
+>> LLM SYNTHESIZED CODE (Pattern-Dense Modular Architecture):
+public record Quantity(double amount, String unit) {} // Martin Fowler Quantity
+public interface WeatherObserver { void onUpdate(Quantity temp); } // Observer
+
+public class WeatherStation {
+    private final List<WeatherObserver> observers = new ArrayList<>();
+    public void addObserver(WeatherObserver obs) { observers.add(obs); }
+    public void setMeasurement(Quantity temp) {
+        observers.forEach(o -> o.onUpdate(temp));
+    }
+}
+
+✅ ARCHITECTURAL AUDIT:
+• Type-safe: Quantity encapsulates metric/imperial arithmetic.
+• Extensible: New displays subscribe at runtime (Open-Closed Principle).
+• 100% Testable: Easily verified using Gerard Meszaros Stubs & Spies!`;
+  }
+}
+
+// Initial prompt render
+window.addEventListener('DOMContentLoaded', function() {
+  setPromptSim('pattern');
+});
+
+window.selectPillar = selectPillar;
+window.setBlueprintView = setBlueprintView;
+window.toggleBlueprintCollapse = toggleBlueprintCollapse;
+window.copyBlueprintRubric = copyBlueprintRubric;
+window.copySnippet = copySnippet;
+window.markStageComplete = markStageComplete;
+window.setPromptSim = setPromptSim;
+</script>
 </body>
 </html>
