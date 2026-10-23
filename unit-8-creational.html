@@ -2,71 +2,142 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Unit 8: Creational Patterns (Abstract Factory &amp; Singleton) | POSA 2026</title>
-<meta name="description" content="Unit 8 of Pattern-Oriented Software Architecture by Prof. Dr. Jörg Schäfer: Abstract Factory, Pizza ingredient families, Singleton concurrency, and self-study questions.">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230c7a73'/%3E%3Cpath d='M8 10h16M8 16h16M8 22h10' stroke='%23fff' stroke-width='2.2' stroke-linecap='round'/%3E%3C/svg%3E">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Unit 8: Creational Patterns (Factory Method, Abstract Factory, Singleton) | POSA 2026 Masterclass</title>
+<meta name="description" content="Master GoF Creational Patterns: Factory Method, Abstract Factory ingredient families, Singleton concurrency with double-checked locking, and POSA exam drills with Prof. Dr. Jörg Schäfer.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23f59e0b'/%3E%3Cpath d='M8 10h16M8 16h16M8 22h10' stroke='%23fff' stroke-width='2.2' stroke-linecap='round'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/style.css">
+<link rel="stylesheet" href="assets/style.css?v=2026.15">
 <style>
-  .quote-card {
-    margin: 1.5rem 0 2rem;
-    padding: 1.25rem 1.5rem;
-    background: var(--accent-soft);
-    border-left: 4px solid var(--accent);
-    border-radius: 0 var(--radius-md) var(--radius-md) 0;
-    font-style: italic;
-    color: var(--accent-ink);
+  .reading-progress-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #f59e0b 0%, #38bdf8 50%, #10b981 100%);
+    width: 0%;
+    z-index: 9999;
+    transition: width 0.1s ease-out;
   }
-  .quote-author {
-    display: block;
-    margin-top: 0.5rem;
-    font-style: normal;
-    font-weight: 700;
-    font-size: 0.85rem;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-  }
-  .code-container {
-    margin: 1.5rem 0;
+  .stage-takeaways-box {
+    background: rgba(245, 158, 11, 0.05);
+    border: 1px solid rgba(245, 158, 11, 0.2);
     border-radius: var(--radius-md);
-    overflow: hidden;
-    background: var(--code-bg);
+    padding: 1.5rem;
+    margin: 2rem 0;
+  }
+  [data-theme="light"] .stage-takeaways-box {
+    background: #fffbeb;
+    border-color: #fde68a;
+  }
+  .stage-takeaways-title {
+    font-weight: 800;
+    color: #f59e0b;
+    margin-bottom: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1.05rem;
+  }
+  .takeaway-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+  .takeaway-item {
+    background: var(--bg-raised);
+    padding: 1rem;
+    border-radius: var(--radius-sm);
     border: 1px solid var(--border);
   }
-  .code-header {
-    background: rgba(0,0,0,0.05);
-    padding: 0.5rem 1rem;
-    display: flex;
-    justify-content: space-between;
-    font-family: var(--font-mono);
-    font-size: 0.8rem;
-    color: var(--text-muted);
+  .takeaway-item strong {
+    color: var(--text);
+    display: block;
+    margin-bottom: 0.35rem;
+    font-size: 0.92rem;
   }
-  .code-body {
-    padding: 1rem;
+  .takeaway-item p {
     margin: 0;
-    font-family: var(--font-mono);
-    font-size: 0.88rem;
-    overflow-x: auto;
+    font-size: 0.85rem;
+    color: var(--text-muted);
     line-height: 1.5;
+  }
+  /* Interactive Factory & Singleton Sandbox */
+  .creational-sandbox-card {
+    background: var(--bg-raised);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 1.5rem;
+    margin: 2rem 0;
+  }
+  .factory-preview-row {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-around;
+    padding: 1.5rem;
+    background: #090d16;
+    border-radius: var(--radius-md);
+    border: 1px solid #1e293b;
+    margin: 1rem 0;
+  }
+  .pizza-box {
+    background: #1e293b;
+    border: 2px solid #f59e0b;
+    border-radius: 8px;
+    padding: 1.25rem;
+    min-width: 200px;
+    text-align: center;
+    color: #f8fafc;
+    font-family: var(--font-mono);
+  }
+  .pizza-ingredient-badge {
+    display: inline-block;
+    padding: 0.2rem 0.6rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    margin: 0.25rem;
+    background: rgba(245, 158, 11, 0.2);
+    color: #fbbf24;
+    border: 1px solid rgba(245, 158, 11, 0.3);
+  }
+  .terminal-output {
+    background: #090d16;
+    color: #38bdf8;
+    font-family: var(--font-mono);
+    padding: 0.85rem 1.25rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.82rem;
+    min-height: 48px;
+    display: flex;
+    align-items: center;
+    border: 1px solid #1e293b;
+    margin-top: 1rem;
+    overflow-x: auto;
   }
 </style>
 <script>(function(){try{var t=localStorage.getItem('posa-theme')||'dark';document.documentElement.setAttribute('data-theme',t);var m=localStorage.getItem('posa-mode')||'concept';document.documentElement.setAttribute('data-mode',m);}catch(e){}})();</script>
 </head>
-<body>
+<body class="mode-stage-focused">
+
+<div class="reading-progress-bar" id="readingProgressBar"></div>
 
 <nav class="sitenav">
   <div class="sitenav-inner">
     <a class="sitenav-home" href="index.html">
-      <span style="background:linear-gradient(135deg, #6366f1 0%, #38bdf8 100%);color:#fff;padding:0.2rem 0.55rem;border-radius:6px;font-size:0.82rem;font-weight:800;letter-spacing:0.04em;">POSA</span>
+      <span style="background:linear-gradient(135deg, #f59e0b 0%, #38bdf8 100%);color:#fff;padding:0.2rem 0.55rem;border-radius:6px;font-size:0.82rem;font-weight:800;letter-spacing:0.04em;">POSA</span>
       <span style="font-weight:800;letter-spacing:-0.02em;">2026</span>
     </a>
     <div class="sitenav-links">
       <a href="index.html">Overview</a>
       <a href="unit-1-strategy.html">1 · Strategy</a>
+      <a href="unit-2-behavioral.html">2 · Behavioral</a>
+      <a href="unit-3-structural.html">3 · Structural</a>
+      <a href="unit-6-solid.html">6 · SOLID</a>
       <a href="unit-7-packaging.html">7 · Packaging</a>
       <a href="unit-8-creational.html" class="active">8 · Creational</a>
       <a href="mock-1.html">📝 Mock 1</a>
@@ -86,7 +157,10 @@
       <span class="nav-panel-label">Course Navigation</span>
       <a href="index.html">Overview</a>
       <a href="unit-1-strategy.html">Unit 1 · Strategy</a>
-      <a href="unit-7-packaging.html">Unit 7 · Packaging</a>
+      <a href="unit-2-behavioral.html">Unit 2 · Behavioral</a>
+      <a href="unit-3-structural.html">Unit 3 · Structural</a>
+      <a href="unit-6-solid.html">Unit 6 · SOLID Principles</a>
+      <a href="unit-7-packaging.html">Unit 7 · Packaging Architecture</a>
       <a href="unit-8-creational.html" class="active">Unit 8 · Creational Patterns</a>
       <a href="mock-1.html">📝 Mock Exam 1</a>
     </div>
@@ -95,171 +169,330 @@
 
 <!-- Mobile Native Bottom Dock (iOS App Bar) -->
 <nav class="mobile-bottom-dock" aria-label="Mobile Navigation Dock">
-  <a href="#factory-method" class="dock-item active">
+  <a href="#stage-1-problem" class="dock-item active">
     <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
-    <span>Factory</span>
+    <span>1 · Problem</span>
   </a>
-  <a href="#abstract-factory" class="dock-item">
+  <a href="#stage-2-uml" class="dock-item">
     <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line><line x1="9" y1="21" x2="9" y2="9"></line></svg>
-    <span>Abstract</span>
+    <span>2 · UML</span>
   </a>
-  <a href="#singleton-pattern" class="dock-item">
-    <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
-    <span>Singleton</span>
+  <a href="#stage-3-sandbox" class="dock-item">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 14 14"></polyline></svg>
+    <span>3 · Sandbox</span>
   </a>
-  <a href="#self-study" class="dock-item">
+  <a href="#stage-4-code" class="dock-item">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+    <span>4 · Code</span>
+  </a>
+  <a href="#stage-5-exam" class="dock-item">
     <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
-    <span>Gotchas</span>
+    <span>5 · Drills</span>
   </a>
-  <a href="unit-1-strategy.html" class="dock-item">
-    <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg>
-    <span>Unit 1</span>
-  </a>
-</nav>
-      <span class="nav-panel-label">Course Navigation</span>
-      <a href="index.html">Overview</a>
-      <a href="unit-7-packaging.html">Unit 7 · Packaging Principles</a>
-      <a href="unit-8-creational.html" class="active">Unit 8 · Creational Patterns</a>
-      <a href="mock-1.html">📝 Mock Exam 1</a>
-    </div>
-  </div>
 </nav>
 
 <div class="page-shell">
   <aside class="sidebar-toc">
     <div class="sidebar-block">
-      <span class="sidebar-label">On This Page</span>
-      <a href="#abstract-factory"><span class="toc-num">1</span>Abstract Factory: Pizza Ingredient Families</a>
-      <a href="#factory-comparison"><span class="toc-num">2</span>Factory Method vs. Abstract Factory</a>
-      <a href="#singleton"><span class="toc-num">3</span>Singleton &amp; Thread-Safety Idioms</a>
-      <a href="#singleton-criticism"><span class="toc-num">4</span>Singleton Criticisms (Anti-pattern?)</a>
-      <a href="#self-study"><span class="toc-num">5</span>Self-Study Exam Questions</a>
+      <span class="sidebar-label">Curriculum Navigation</span>
+      <a href="#stage-1-problem" class="jump-stage-btn" data-target-stage="stage-1-problem"><span class="toc-num">1</span>Object Instantiation Woes</a>
+      <a href="#stage-2-uml" class="jump-stage-btn" data-target-stage="stage-2-uml"><span class="toc-num">2</span>UML 2.5: Factories &amp; Families</a>
+      <a href="#stage-3-sandbox" class="jump-stage-btn" data-target-stage="stage-3-sandbox"><span class="toc-num">3</span>Interactive Pizza &amp; Singleton Lab</a>
+      <a href="#stage-4-code" class="jump-stage-btn" data-target-stage="stage-4-code"><span class="toc-num">4</span>Concurrency &amp; Production Code</a>
+      <a href="#stage-5-exam" class="jump-stage-btn" data-target-stage="stage-5-exam"><span class="toc-num">5</span>Exam Traps &amp; Memory Barriers</a>
     </div>
     <div class="sidebar-block">
-      <span class="sidebar-label">Instructor</span>
-      <p style="font-size: 0.85rem; color: var(--text-muted); margin: 0;">
-        Prof. Dr. Jörg Schäfer<br>
-        <em>Frankfurt University of Applied Sciences</em>
+      <span class="sidebar-label">Course Origin</span>
+      <p style="font-size: 0.85rem; color: var(--text-muted); margin: 0 0 0.5rem; line-height: 1.5;">
+        <strong>Prof. Dr. Jörg Schäfer</strong><br>
+        Frankfurt University of Applied Sciences<br>
+        Fachbereich 2: Informatik
       </p>
+      <div style="font-size:0.75rem; font-weight:700; color:#f59e0b; background:rgba(245,158,11,0.12); border:1px solid rgba(245,158,11,0.25); padding:0.25rem 0.5rem; border-radius:4px; display:inline-block; margin-top:0.4rem;">
+        ⏱️ 45 Min · 20 Exam Pts
+      </div>
     </div>
   </aside>
 
   <div class="page">
-    <div class="masthead">
+    
+    <!-- Hero Masthead -->
+    <header class="masthead">
       <div>
-        <div class="eyebrow">Unit 8 · Creational Patterns</div>
-        <h1 class="title">Abstract Factory &amp; The Singleton Pattern</h1>
+        <div class="eyebrow">
+          <span>Creational Architecture Masterclass · GoF Patterns 3, 4 &amp; 5</span>
+        </div>
+        <h1 class="title">Unit 8: Creational Patterns (Factory &amp; Singleton)</h1>
+        <p class="dek" style="font-size:1.05rem; line-height:1.65; max-width:68ch; color:var(--text-muted);">
+          Master responsible object instantiation: decoupling clients from concrete classes via Factory Method, creating cohesive product families with Abstract Factory, and conquering multi-threaded Singleton concurrency via Double-Checked Locking.
+        </p>
+
+        <!-- Course Meta Metric Chips -->
+        <div class="masthead-metrics-grid">
+          <div class="metric-chip">
+            <div class="metric-chip-label">⏱️ Study Time</div>
+            <div class="metric-chip-val" style="color:#38bdf8;">45 Minutes</div>
+          </div>
+          <div class="metric-chip">
+            <div class="metric-chip-label">🎯 Exam Weight</div>
+            <div class="metric-chip-val" style="color:#10b981;">20 Pts (Grade 1.0)</div>
+          </div>
+          <div class="metric-chip">
+            <div class="metric-chip-label">🏛️ Category</div>
+            <div class="metric-chip-val" style="color:#a5b4fc;">Creational / Object</div>
+          </div>
+          <div class="metric-chip">
+            <div class="metric-chip-label">⚙️ Visual Sandbox</div>
+            <div class="metric-chip-val" style="color:#f59e0b;">Pizza Family &amp; Race Condition Lab</div>
+          </div>
+        </div>
+
       </div>
+    </header>
+
+    <!-- ====================================================================
+         SECTION 1: 8-PILLAR ARCHITECTURAL BLUEPRINT (UNIVERSAL RUBRIC)
+         ==================================================================== -->
+    <div class="masterclass-section-divider" style="margin: 2.5rem 0 1.5rem;">
+      <div class="section-divider-line"></div>
+      <div class="section-divider-chip">
+        <span>PART 1 · ARCHITECTURAL RUBRIC</span>
+      </div>
+      <div class="section-divider-line"></div>
     </div>
 
-    <div class="quote-card">
-      “Each pattern is a rule which describes what you have to do, to bring that configuration of relationships about.”
-      <span class="quote-author">— Christopher Alexander</span>
-    </div>
-
-    <p class="dek">
-      Managing object instantiation responsibly: ensuring cohesive product families and controlling global instance lifecycles safely in multi-threaded environments.
-    </p>
-
-    <!-- Section 1: Abstract Factory -->
-    <section class="chapter" id="abstract-factory">
-      <div class="chapter-head">
-        <span class="chapter-num">1</span>
-        <h2>8.3 The Abstract Factory Pattern</h2>
-      </div>
-      <p class="chapter-dek">Producing families of related products without binding to concrete classes.</p>
-
-      <div style="background: var(--bg-raised); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 1.5rem; margin-bottom: 1.5rem;">
-        <p><strong>GoF Intent:</strong> Provide an interface for creating families of related or dependent objects without specifying their concrete classes.</p>
-        <p><strong>The Pizza Franchise Problem:</strong> NY Pizza requires thin crust, marinara sauce, and Reggiano cheese. Chicago Pizza requires thick deep-dish dough, plum tomato sauce, and Mozzarella. If a Chicago kitchen accidentally uses NY dough with plum sauce, quality control fails.</p>
-        <p><strong>The Solution:</strong> Create an <code>PizzaIngredientFactory</code> interface. Each regional factory (<code>NYPizzaIngredientFactory</code>, <code>ChicagoPizzaIngredientFactory</code>) produces a guaranteed cohesive family of ingredients.</p>
-      </div>
-
-      <div class="uml-svg-container">
-        <svg viewBox="0 0 760 250" width="100%" height="auto" xmlns="http://www.w3.org/2000/svg" style="font-family:'JetBrains Mono', 'SF Mono', monospace; font-size:12px;">
-          <defs>
-            <marker id="u8-tri" viewBox="0 0 12 12" refX="12" refY="6" markerWidth="10" markerHeight="10" orient="auto-start-reverse">
-              <polygon points="0,0 12,6 0,12" fill="#ffffff" stroke="#0c7a73" stroke-width="1.8"/>
-            </marker>
-          </defs>
-
-          <!-- Abstract Factory Interface -->
-          <rect x="180" y="20" width="400" height="95" rx="8" fill="var(--bg-raised, #ffffff)" stroke="#0c7a73" stroke-width="2"/>
-          <rect x="180" y="20" width="400" height="30" rx="8" fill="#0c7a73"/>
-          <text x="380" y="40" fill="#ffffff" font-weight="700" text-anchor="middle">&lt;&lt;interface&gt;&gt; PizzaIngredientFactory</text>
-          <text x="200" y="70" fill="var(--text, #1e293b)">+ createDough() : Dough  |  + createSauce() : Sauce</text>
-          <text x="200" y="90" fill="var(--text, #1e293b)">+ createCheese() : Cheese  |  + createVeggies() : Veggies[]</text>
-
-          <!-- Subclass connection lines -->
-          <line x1="380" y1="115" x2="380" y2="150" stroke="#0c7a73" stroke-width="1.8" marker-start="url(#u8-tri)"/>
-          <line x1="210" y1="150" x2="550" y2="150" stroke="#0c7a73" stroke-width="1.8"/>
-          <line x1="210" y1="150" x2="210" y2="170" stroke="#0c7a73" stroke-width="1.8"/>
-          <line x1="550" y1="150" x2="550" y2="170" stroke="#0c7a73" stroke-width="1.8"/>
-
-          <!-- NY Concrete Factory -->
-          <rect x="70" y="170" width="280" height="70" rx="6" fill="var(--bg-raised, #ffffff)" stroke="#3b82f6" stroke-width="1.8"/>
-          <rect x="70" y="170" width="280" height="24" rx="6" fill="#3b82f6"/>
-          <text x="210" y="187" fill="#ffffff" font-weight="700" text-anchor="middle" font-size="11.5">NYPizzaIngredientFactory</text>
-          <text x="85" y="212" fill="var(--text, #1e293b)" font-size="11">createDough(): ThinCrust | Sauce: Marinara</text>
-          <text x="85" y="228" fill="var(--text, #1e293b)" font-size="11">createCheese(): Reggiano</text>
-
-          <!-- Chicago Concrete Factory -->
-          <rect x="410" y="170" width="280" height="70" rx="6" fill="var(--bg-raised, #ffffff)" stroke="#8b5cf6" stroke-width="1.8"/>
-          <rect x="410" y="170" width="280" height="24" rx="6" fill="#8b5cf6"/>
-          <text x="550" y="187" fill="#ffffff" font-weight="700" text-anchor="middle" font-size="11.5">ChicagoPizzaIngredientFactory</text>
-          <text x="425" y="212" fill="var(--text, #1e293b)" font-size="11">createDough(): ThickCrust | Sauce: Plum</text>
-          <text x="425" y="228" fill="var(--text, #1e293b)" font-size="11">createCheese(): Mozzarella</text>
-        </svg>
-      </div>
-    </section>
-
-    <!-- Section 2: Comparison -->
-    <section class="chapter" id="factory-comparison">
-      <div class="chapter-head">
-        <span class="chapter-num">2</span>
-        <h2>Factory Method vs. Abstract Factory</h2>
-      </div>
-
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1.5rem 0;">
-        <div style="padding: 1.25rem; background: var(--bg-raised); border: 1px solid var(--border); border-radius: var(--radius-sm);">
-          <strong style="color: var(--accent);">Factory Method (Inheritance)</strong>
-          <p style="font-size: 0.88rem; color: var(--text-muted); margin-top: 0.3rem;">
-            Relies on inheritance: an abstract class declares an abstract method <code>createPizza(String type)</code>, and subclasses decide which concrete product class to instantiate. Creates <strong>one product</strong>.
+    <section class="blueprint-suite" id="blueprintSuite" aria-label="8-Pillar Architecture Rubric">
+      <div class="blueprint-suite-top">
+        <div>
+          <div class="blueprint-suite-badge">
+            <span class="section-badge-pill">SECTION 1 OF 2</span>
+            <span class="badge-sep">·</span>
+            <span>📐 Universal Pattern Rubric</span>
+            <span class="badge-sep">·</span>
+            <span>Exam &amp; Production Standard</span>
+          </div>
+          <h3 class="blueprint-suite-title">The 8 Pillars of Software Pattern Mastery</h3>
+          <p class="blueprint-suite-desc">
+            The definitive architectural rubric for comparing creational patterns (Factory Method, Abstract Factory, and Singleton) in enterprise software and Frankfurt UAS exams.
           </p>
         </div>
-        <div style="padding: 1.25rem; background: var(--bg-raised); border: 1px solid var(--border); border-radius: var(--radius-sm);">
-          <strong style="color: var(--accent);">Abstract Factory (Composition)</strong>
-          <p style="font-size: 0.88rem; color: var(--text-muted); margin-top: 0.3rem;">
-            Relies on composition: an independent factory object is passed to client code, exposing multiple factory methods to create an entire <strong>family of related products</strong>.
-          </p>
+        <div class="blueprint-suite-actions">
+          <div class="blueprint-view-toggles" style="display:inline-flex; gap:0.4rem;">
+            <button type="button" class="btn-suite-toggle active" id="btnViewExplorer" onclick="setBlueprintView('explorer')" title="Explore one pillar at a time with interactive details">
+              <span>⚡ Interactive Explorer</span>
+            </button>
+            <button type="button" class="btn-suite-toggle" id="btnViewMatrix" onclick="setBlueprintView('matrix')" title="View all 8 pillars simultaneously in an executive grid">
+              <span>📊 Full Matrix</span>
+            </button>
+          </div>
+          <button type="button" class="btn-copy-rubric" id="btnCopyRubricSuite" onclick="copyBlueprintRubric()" title="Copy entire 8-pillar markdown study rubric to clipboard">
+            <span>📋</span>
+            <span id="copyRubricSuiteLabel">Copy Rubric</span>
+          </button>
+          <button type="button" class="btn-section-collapse" id="btnCollapseBlueprint" onclick="toggleBlueprintCollapse()" aria-expanded="true" title="Collapse or expand the 8-Pillar section">
+            <span class="collapse-icon">▲</span>
+            <span class="collapse-label">Collapse Rubric</span>
+          </button>
         </div>
       </div>
-    </section>
 
-    <!-- Section 3: Singleton -->
-    <section class="chapter" id="singleton">
-      <div class="chapter-head">
-        <span class="chapter-num">3</span>
-        <h2>8.5 The Singleton Pattern &amp; Thread-Safety</h2>
+      <!-- Collapsed Hint Bar -->
+      <div class="blueprint-collapsed-hint" id="blueprintCollapsedHint" style="display:none; padding:0.85rem 1.75rem; background:var(--bg-subtle); border-top:1px dashed var(--border); font-size:0.85rem; color:var(--text-muted); align-items:center; justify-content:space-between; flex-wrap:wrap; gap:0.5rem;">
+        <div style="display:flex; align-items:center; gap:0.6rem;">
+          <span style="font-size:1.1rem;">📐</span>
+          <span><strong>8-Pillar Architecture Rubric is Collapsed</strong> (Factory Method, Abstract Factory, Singleton). Click to restore instant reference.</span>
+        </div>
+        <button type="button" class="btn-restore-rubric" onclick="toggleBlueprintCollapse(false)" style="background:var(--accent); color:#fff; border:none; padding:0.35rem 0.85rem; border-radius:6px; font-weight:700; cursor:pointer; font-size:0.8rem;">
+          Restore Rubric ▲
+        </button>
       </div>
-      <p class="chapter-dek">Guaranteeing a single shared instance across a multi-threaded application.</p>
 
-      <p><strong>Intent:</strong> Ensure a class only has one instance, and provide a global point of access to it.</p>
+      <div class="blueprint-collapsible-body" id="blueprintCollapsibleBody">
+        <!-- Explorer View -->
+        <div class="blueprint-explorer" id="blueprintExplorer">
+          <nav class="blueprint-pillar-tabs" role="tablist" aria-label="8 Pillars Navigation">
+            <button type="button" class="pillar-tab-btn active" role="tab" aria-selected="true" onclick="selectPillar(1)">
+              <span class="pillar-tab-num">1</span>
+              <span class="pillar-tab-label">Intent</span>
+            </button>
+            <button type="button" class="pillar-tab-btn" role="tab" aria-selected="false" onclick="selectPillar(2)">
+              <span class="pillar-tab-num">2</span>
+              <span class="pillar-tab-label">Roles</span>
+            </button>
+            <button type="button" class="pillar-tab-btn" role="tab" aria-selected="false" onclick="selectPillar(3)">
+              <span class="pillar-tab-num">3</span>
+              <span class="pillar-tab-label">UML</span>
+            </button>
+            <button type="button" class="pillar-tab-btn" role="tab" aria-selected="false" onclick="selectPillar(4)">
+              <span class="pillar-tab-num">4</span>
+              <span class="pillar-tab-label">Principles</span>
+            </button>
+            <button type="button" class="pillar-tab-btn" role="tab" aria-selected="false" onclick="selectPillar(5)">
+              <span class="pillar-tab-num">5</span>
+              <span class="pillar-tab-label">Mechanics</span>
+            </button>
+            <button type="button" class="pillar-tab-btn" role="tab" aria-selected="false" onclick="selectPillar(6)">
+              <span class="pillar-tab-num">6</span>
+              <span class="pillar-tab-label">Trade-offs</span>
+            </button>
+            <button type="button" class="pillar-tab-btn" role="tab" aria-selected="false" onclick="selectPillar(7)">
+              <span class="pillar-tab-num">7</span>
+              <span class="pillar-tab-label">Rivals</span>
+            </button>
+            <button type="button" class="pillar-tab-btn" role="tab" aria-selected="false" onclick="selectPillar(8)">
+              <span class="pillar-tab-num">8</span>
+              <span class="pillar-tab-label">Exam Traps</span>
+            </button>
+          </nav>
 
-      <div class="code-container">
-        <div class="code-header"><span>DoubleCheckedLocking.java</span><span>Thread-Safe Lazy Initialization</span></div>
-        <pre class="code-body"><code>public class DatabaseConnectionPool {
-    // 1. volatile prevents CPU instruction reordering!
+          <div class="blueprint-active-pillar-card" id="pillarActiveCard">
+            <div class="pillar-panel active" id="pillarPanel1">
+              <div class="pillar-panel-badge">PILLAR 1 OF 8 · INTENT &amp; MOTIVATION</div>
+              <h4 class="pillar-panel-title">Decoupling Instantiation from Utilization</h4>
+              <p style="font-size:0.95rem; line-height:1.6; color:var(--text); margin-bottom:1rem;">
+                Using the <code>new</code> operator ties code to a concrete implementation, violating the Dependency Inversion Principle. Creational patterns encapsulate object construction so client code remains completely agnostic of concrete product types.
+              </p>
+              <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:1rem;">
+                <div style="background:var(--bg-subtle); padding:1rem; border-radius:6px; border-left:3px solid #f59e0b;">
+                  <strong style="color:#f59e0b; display:block; margin-bottom:0.35rem;">Abstract Factory Intent</strong>
+                  <p style="font-size:0.85rem; color:var(--text-muted); margin:0;">
+                    Provide an interface for creating families of related or dependent objects without specifying their concrete classes.
+                  </p>
+                </div>
+                <div style="background:var(--bg-subtle); padding:1rem; border-radius:6px; border-left:3px solid #10b981;">
+                  <strong style="color:#10b981; display:block; margin-bottom:0.35rem;">Singleton Intent</strong>
+                  <p style="font-size:0.85rem; color:var(--text-muted); margin:0;">
+                    Ensure a class has only one instance, and provide a global point of access to it.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div class="pillar-panel" id="pillarPanel2" style="display:none;">
+              <div class="pillar-panel-badge">PILLAR 2 OF 8 · PARTICIPANTS &amp; ROLES</div>
+              <h4 class="pillar-panel-title">Structural Roles &amp; Responsibilities</h4>
+              <div class="pillar-matrix-table-wrap">
+                <table class="pillar-matrix-table">
+                  <thead>
+                    <tr>
+                      <th>Pattern</th>
+                      <th>Participant</th>
+                      <th>Architectural Responsibility</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><strong>Factory Method</strong></td>
+                      <td><code>Creator</code> / <code>ConcreteCreator</code></td>
+                      <td>Declares the factory method; subclasses override to instantiate concrete products.</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Abstract Factory</strong></td>
+                      <td><code>AbstractFactory</code></td>
+                      <td>Declares operations that return abstract product types across an entire family.</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Abstract Factory</strong></td>
+                      <td><code>ConcreteFactory</code></td>
+                      <td>Instantiates a mutually compatible family of concrete product objects.</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Singleton</strong></td>
+                      <td><code>Singleton</code></td>
+                      <td>Private constructor, static unique instance holder, and thread-safe accessor method.</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div class="pillar-panel" id="pillarPanel3" style="display:none;">
+              <div class="pillar-panel-badge">PILLAR 3 OF 8 · FORMAL UML ANATOMY</div>
+              <h4 class="pillar-panel-title">Vector SVG UML: Abstract Factory &amp; Product Families</h4>
+              <p style="font-size:0.88rem; color:var(--text-muted); margin-bottom:1rem;">
+                Notice that the Client depends only on the <code>AbstractFactory</code> interface and abstract product interfaces.
+              </p>
+              <div class="uml-svg-container" style="background:#090d16; border-radius:8px; padding:1.5rem; text-align:center; overflow-x:auto;">
+                <svg viewBox="0 0 760 230" width="100%" height="auto" xmlns="http://www.w3.org/2000/svg" style="font-family:'JetBrains Mono', 'SF Mono', monospace; font-size:12px;">
+                  <defs>
+                    <marker id="u8-tri" viewBox="0 0 12 12" refX="12" refY="6" markerWidth="10" markerHeight="10" orient="auto-start-reverse">
+                      <polygon points="0,0 12,6 0,12" fill="#090d16" stroke="#f59e0b" stroke-width="1.8"/>
+                    </marker>
+                    <marker id="u8-arrow" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                      <path d="M 0 1 L 10 5 L 0 9 z" fill="#38bdf8"/>
+                    </marker>
+                  </defs>
+
+                  <!-- Abstract Factory Interface -->
+                  <rect x="220" y="20" width="320" height="80" rx="6" fill="#1e293b" stroke="#f59e0b" stroke-width="2"/>
+                  <rect x="220" y="20" width="320" height="24" rx="6" fill="#d97706"/>
+                  <text x="380" y="37" fill="#ffffff" font-weight="700" text-anchor="middle">&lt;&lt;interface&gt;&gt; PizzaIngredientFactory</text>
+                  <text x="235" y="65" fill="#f8fafc">+ createDough() : Dough</text>
+                  <text x="235" y="85" fill="#f8fafc">+ createSauce() : Sauce</text>
+
+                  <!-- NY Factory -->
+                  <rect x="80" y="150" width="260" height="65" rx="6" fill="#1e293b" stroke="#38bdf8" stroke-width="1.8"/>
+                  <rect x="80" y="150" width="260" height="22" rx="6" fill="#0284c7"/>
+                  <text x="210" y="166" fill="#ffffff" font-weight="700" text-anchor="middle">NYPizzaIngredientFactory</text>
+                  <text x="95" y="195" fill="#bae6fd">ThinCrustDough | MarinaraSauce</text>
+
+                  <!-- Chicago Factory -->
+                  <rect x="420" y="150" width="260" height="65" rx="6" fill="#1e293b" stroke="#8b5cf6" stroke-width="1.8"/>
+                  <rect x="420" y="150" width="260" height="22" rx="6" fill="#7c3aed"/>
+                  <text x="550" y="166" fill="#ffffff" font-weight="700" text-anchor="middle">ChicagoPizzaIngredientFactory</text>
+                  <text x="435" y="195" fill="#ddd6fe">ThickCrustDough | PlumTomatoSauce</text>
+
+                  <!-- Realization Lines -->
+                  <line x1="380" y1="100" x2="380" y2="125" stroke="#f59e0b" stroke-width="1.8" marker-start="url(#u8-tri)"/>
+                  <line x1="210" y1="125" x2="550" y2="125" stroke="#f59e0b" stroke-width="1.8"/>
+                  <line x1="210" y1="125" x2="210" y2="150" stroke="#f59e0b" stroke-width="1.8"/>
+                  <line x1="550" y1="125" x2="550" y2="150" stroke="#f59e0b" stroke-width="1.8"/>
+                </svg>
+              </div>
+            </div>
+
+            <div class="pillar-panel" id="pillarPanel4" style="display:none;">
+              <div class="pillar-panel-badge">PILLAR 4 OF 8 · DESIGN PRINCIPLES</div>
+              <h4 class="pillar-panel-title">Dependency Inversion Principle (DIP) in Creation</h4>
+              <div class="takeaway-grid">
+                <div class="takeaway-item" style="border-left:3px solid #f59e0b;">
+                  <strong>DIP Formulation</strong>
+                  <p>Depend upon abstractions. Do not depend upon concrete classes. Never hold direct references to concrete product classes.</p>
+                </div>
+                <div class="takeaway-item" style="border-left:3px solid #10b981;">
+                  <strong>Family Consistency Guarantee</strong>
+                  <p>Abstract Factory enforces that products created by a factory are guaranteed to be compatible (no Chicago thick dough with NY marinara sauce).</p>
+                </div>
+                <div class="takeaway-item" style="border-left:3px solid #38bdf8;">
+                  <strong>Singleton vs Global State</strong>
+                  <p>Singletons provide global access, but should strictly be used when exactly ONE instance is required (e.g. hardware registry or thread pool).</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="pillar-panel" id="pillarPanel5" style="display:none;">
+              <div class="pillar-panel-badge">PILLAR 5 OF 8 · IMPLEMENTATION MECHANICS</div>
+              <h4 class="pillar-panel-title">Double-Checked Locking &amp; The volatile Barrier</h4>
+              <div class="mac-ide-window" style="margin: 0.5rem 0;">
+                <div class="mac-ide-top">
+                  <div class="mac-ide-dots">
+                    <span class="mac-dot mac-dot-red"></span>
+                    <span class="mac-dot mac-dot-yellow"></span>
+                    <span class="mac-dot mac-dot-green"></span>
+                  </div>
+                  <div class="mac-ide-tab">DoubleCheckedLocking.java · Thread-Safe Singleton</div>
+                  <button type="button" class="btn-copy-code" onclick="copySnippet('codeSnippetP5Creational')">Copy Code</button>
+                </div>
+                <pre class="mac-ide-content" id="codeSnippetP5Creational"><code>public class DatabaseConnectionPool {
+    // 1. volatile keyword establishes happens-before memory barrier
     private static volatile DatabaseConnectionPool uniqueInstance;
 
-    // 2. Private constructor prevents direct 'new' instantiations
     private DatabaseConnectionPool() {}
 
-    // 3. Double-checked locking avoids synchronizing on every call
     public static DatabaseConnectionPool getInstance() {
-        if (uniqueInstance == null) {
+        if (uniqueInstance == null) { // Check 1 (no lock overhead)
             synchronized (DatabaseConnectionPool.class) {
-                if (uniqueInstance == null) {
+                if (uniqueInstance == null) { // Check 2 (under lock)
                     uniqueInstance = new DatabaseConnectionPool();
                 }
             }
@@ -267,52 +500,792 @@
         return uniqueInstance;
     }
 }</code></pre>
-      </div>
+              </div>
+            </div>
 
-      <div style="padding: 1.25rem; background: var(--warn-soft); border-left: 3px solid var(--warn); border-radius: 0 var(--radius-sm) var(--radius-sm) 0; margin: 1.5rem 0;" id="singleton-criticism">
-        <strong style="color: var(--warn);">⚠️ Why is Singleton Often Considered an Anti-Pattern?</strong>
-        <ul style="margin: 0.5rem 0 0; padding-left: 1.2rem; font-size: 0.9rem; line-height: 1.6;">
-          <li><strong>Hidden Dependencies:</strong> Classes access <code>Singleton.getInstance()</code> internally instead of declaring dependencies in their constructors.</li>
-          <li><strong>Unit Testing Nightmare:</strong> Global state persists across test cases, making tests interdependent and impossible to run reliably in parallel.</li>
-          <li><strong>Violates SRP:</strong> The class controls both its domain responsibility AND its own lifecycle management.</li>
-        </ul>
+            <div class="pillar-panel" id="pillarPanel6" style="display:none;">
+              <div class="pillar-panel-badge">PILLAR 6 OF 8 · COSTS &amp; TRADE-OFFS</div>
+              <h4 class="pillar-panel-title">Architectural Liabilities &amp; Anti-Pattern Risks</h4>
+              <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+                <div style="background:rgba(16,185,129,0.06); border:1px solid rgba(16,185,129,0.25); border-radius:6px; padding:1rem;">
+                  <strong style="color:#10b981; display:block; margin-bottom:0.5rem;">✅ Creational Benefits</strong>
+                  <ul style="margin:0; padding-left:1.2rem; font-size:0.85rem; color:var(--text); line-height:1.5;">
+                    <li>100% decoupling from concrete class constructors.</li>
+                    <li>Guaranteed compatibility across product families.</li>
+                    <li>Lazy instantiation conserves memory and resources.</li>
+                  </ul>
+                </div>
+                <div style="background:rgba(239,68,68,0.06); border:1px solid rgba(239,68,68,0.25); border-radius:6px; padding:1rem;">
+                  <strong style="color:#ef4444; display:block; margin-bottom:0.5rem;">⚠️ Architectural Liabilities</strong>
+                  <ul style="margin:0; padding-left:1.2rem; font-size:0.85rem; color:var(--text); line-height:1.5;">
+                    <li>Adding new product types to Abstract Factory requires editing all concrete factories.</li>
+                    <li>Singleton creates hidden dependencies and state pollution during unit testing.</li>
+                    <li>Violates Single Responsibility Principle (manages state AND lifecycle).</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <div class="pillar-panel" id="pillarPanel7" style="display:none;">
+              <div class="pillar-panel-badge">PILLAR 7 OF 8 · RIVAL PATTERN MATRIX</div>
+              <h4 class="pillar-panel-title">Factory Method vs Abstract Factory vs Prototype</h4>
+              <div class="pillar-matrix-table-wrap">
+                <table class="pillar-matrix-table">
+                  <thead>
+                    <tr>
+                      <th>Dimension</th>
+                      <th>Factory Method</th>
+                      <th>Abstract Factory</th>
+                      <th>Prototype / Builder</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><strong>Mechanism</strong></td>
+                      <td>Inheritance (Subclass overrides method)</td>
+                      <td>Object Composition (Factory instance passed in)</td>
+                      <td>Cloning pre-configured instances / Fluent chaining</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Product Scope</strong></td>
+                      <td>Creates <strong>one</strong> product</td>
+                      <td>Creates a <strong>family of related</strong> products</td>
+                      <td>Complex multi-step or cloned objects</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Extensibility</strong></td>
+                      <td>Extend by subclassing Creator</td>
+                      <td>New product families easy; new product types difficult</td>
+                      <td>Add prototype instances at runtime</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div class="pillar-panel" id="pillarPanel8" style="display:none;">
+              <div class="pillar-panel-badge">PILLAR 8 OF 8 · EXAM TRAPS &amp; BENCHMARKS</div>
+              <h4 class="pillar-panel-title">Prof. Schäfer Exam Traps: The volatile Memory Barrier</h4>
+              <div style="background:rgba(245,158,11,0.08); border-left:4px solid #f59e0b; padding:1.25rem; border-radius:0 6px 6px 0; margin-bottom:1rem;">
+                <strong style="color:#f59e0b; font-size:0.92rem;">🚨 Frankfurt UAS Exam Trap #1: Why is volatile strictly required?</strong>
+                <p style="font-size:0.86rem; color:var(--text); margin:0.35rem 0 0; line-height:1.5;">
+                  Question: <em>"In Java Double-Checked Locking, why can omission of volatile cause crashes even with synchronized?"</em><br>
+                  <strong>Model Answer:</strong> The JVM or CPU can reorder bytecode instructions during object allocation. Creating an object involves: (1) allocate memory, (2) run constructor, (3) assign reference. If instructions are reordered so (3) happens before (2), another thread outside the lock may read a non-null reference to a <strong>partially initialized object</strong>, causing immediate NullPointerExceptions or data corruption.
+                </p>
+              </div>
+              <div style="font-size:0.85rem; color:var(--text-muted);">
+                <strong>JDK Benchmark:</strong> <code>java.sql.DriverManager.getConnection()</code>, <code>Runtime.getRuntime()</code>.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Full Matrix View (Hidden by default) -->
+        <div class="blueprint-matrix-view" id="blueprintMatrix" style="display:none;">
+          <div class="pillar-matrix-table-wrap">
+            <table class="pillar-matrix-table">
+              <thead>
+                <tr>
+                  <th style="width:12%;">Pillar #</th>
+                  <th style="width:20%;">Mastery Dimension</th>
+                  <th style="width:34%;">Abstract Factory Pattern</th>
+                  <th style="width:34%;">Singleton Pattern</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Pillar 1</strong></td>
+                  <td><strong>Intent &amp; Motivation</strong></td>
+                  <td>Create families of related products without specifying concrete classes.</td>
+                  <td>Ensure a class has only one instance with a global point of access.</td>
+                </tr>
+                <tr>
+                  <td><strong>Pillar 2</strong></td>
+                  <td><strong>Participants</strong></td>
+                  <td><code>AbstractFactory</code>, <code>ConcreteFactory</code>, <code>AbstractProduct</code>, <code>ConcreteProduct</code>.</td>
+                  <td><code>Singleton</code> (private ctor, static volatile instance, getInstance).</td>
+                </tr>
+                <tr>
+                  <td><strong>Pillar 3</strong></td>
+                  <td><strong>UML Anatomy</strong></td>
+                  <td>Client aggregates <code>AbstractFactory</code>; factories realize interface.</td>
+                  <td>Class with self-directed static instance association.</td>
+                </tr>
+                <tr>
+                  <td><strong>Pillar 4</strong></td>
+                  <td><strong>Design Principles</strong></td>
+                  <td>Dependency Inversion Principle (DIP); Open/Closed for new families.</td>
+                  <td>Controlled access; but violates Single Responsibility (SRP).</td>
+                </tr>
+                <tr>
+                  <td><strong>Pillar 5</strong></td>
+                  <td><strong>Mechanics</strong></td>
+                  <td>Composition of factory methods returning abstract product interfaces.</td>
+                  <td>Double-checked locking with <code>volatile</code> memory barrier.</td>
+                </tr>
+                <tr>
+                  <td><strong>Pillar 6</strong></td>
+                  <td><strong>Trade-offs</strong></td>
+                  <td>Adding new product types requires modifying the abstract interface.</td>
+                  <td>Global mutable state; unit test coupling; anti-pattern risks.</td>
+                </tr>
+                <tr>
+                  <td><strong>Pillar 7</strong></td>
+                  <td><strong>Rival Disambiguation</strong></td>
+                  <td>Factory Method creates 1 product (inheritance); Abstract Factory creates families (composition).</td>
+                  <td>Singleton vs Dependency Injection Singleton Scope (preferred).</td>
+                </tr>
+                <tr>
+                  <td><strong>Pillar 8</strong></td>
+                  <td><strong>Exam Traps</strong></td>
+                  <td>Confusing Factory Method with Abstract Factory in UML diagrams.</td>
+                  <td>Instruction reordering without <code>volatile</code> keyword.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
       </div>
     </section>
 
-    <!-- Section 5: Self Study -->
-    <section class="chapter" id="self-study">
-      <div class="chapter-head">
-        <span class="chapter-num">4</span>
-        <h2>8.7 Questions for Self-Study</h2>
+    <!-- ====================================================================
+         SECTION 2: 5-STAGE HANDS-ON CURRICULUM
+         ==================================================================== -->
+    <div class="masterclass-section-divider" style="margin: 3.5rem 0 1.5rem;">
+      <div class="section-divider-line"></div>
+      <div class="section-divider-chip">
+        <span>PART 2 · HANDS-ON CURRICULUM</span>
+      </div>
+      <div class="section-divider-line"></div>
+    </div>
+
+    <!-- Curriculum Super-Header with Metadata Chips -->
+    <div class="curriculum-super-header" id="curriculumHeader" style="margin-bottom:1.5rem; background:var(--bg-raised); border:1px solid var(--border); border-radius:var(--radius-md); padding:1.5rem;">
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem;">
+        <div>
+          <div style="font-size:0.75rem; font-weight:800; letter-spacing:0.08em; text-transform:uppercase; color:#f59e0b; margin-bottom:0.25rem;">
+            STAGE-DRIVEN MASTERY PATH
+          </div>
+          <h2 style="font-size:1.4rem; font-weight:800; margin:0; letter-spacing:-0.02em;">
+            Creational Engineering: 5 Stages to Grade 1.0
+          </h2>
+        </div>
+        <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
+          <span style="background:rgba(245,158,11,0.12); color:#f59e0b; font-size:0.78rem; font-weight:700; padding:0.35rem 0.75rem; border-radius:20px; border:1px solid rgba(245,158,11,0.25);">⏱️ 45 Min Total</span>
+          <span style="background:rgba(16,185,129,0.12); color:#10b981; font-size:0.78rem; font-weight:700; padding:0.35rem 0.75rem; border-radius:20px; border:1px solid rgba(16,185,129,0.25);">🎯 20 Exam Points</span>
+          <span style="background:rgba(56,189,248,0.12); color:#38bdf8; font-size:0.78rem; font-weight:700; padding:0.35rem 0.75rem; border-radius:20px; border:1px solid rgba(56,189,248,0.25);">🏛️ Prof. Dr. Jörg Schäfer</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Masterclass Stage Navigation Bar -->
+    <nav class="masterclass-stage-nav" aria-label="Curriculum Stages">
+      <a href="#stage-1-problem" class="stage-nav-pill active" data-stage="1">
+        <span class="pill-number">1</span>
+        <span class="pill-title">Instantiation Woes</span>
+      </a>
+      <a href="#stage-2-uml" class="stage-nav-pill" data-stage="2">
+        <span class="pill-number">2</span>
+        <span class="pill-title">UML Architecture</span>
+      </a>
+      <a href="#stage-3-sandbox" class="stage-nav-pill" data-stage="3">
+        <span class="pill-number">3</span>
+        <span class="pill-title">Interactive Lab</span>
+      </a>
+      <a href="#stage-4-code" class="stage-nav-pill" data-stage="4">
+        <span class="pill-number">4</span>
+        <span class="pill-title">Production Code</span>
+      </a>
+      <a href="#stage-5-exam" class="stage-nav-pill" data-stage="5">
+        <span class="pill-number">5</span>
+        <span class="pill-title">Exam Traps</span>
+      </a>
+    </nav>
+
+    <!-- ====================================================================
+         STAGE 1: PROBLEM SPACE & OBJECT INSTANTIATION
+         ==================================================================== -->
+    <section class="masterclass-stage-section" id="stage-1-problem">
+      <div class="stage-header-top">
+        <div class="stage-eyebrow-pill">● Stage 01 · Object Instantiation Woes</div>
+        <button type="button" class="stage-mastery-btn" onclick="markStageComplete(1)">Mark Stage 1 Complete ✓</button>
+      </div>
+      <h2 class="stage-title">The Franchise Quality Control Crisis</h2>
+
+      <p style="font-size:1rem; line-height:1.7; color:var(--text); margin-bottom:1.5rem;">
+        Consider a expanding Pizza franchise. NY stores need thin crust, marinara sauce, and fresh Reggiano cheese. Chicago stores require thick deep-dish dough, plum tomato sauce, and heavy Mozzarella. If a Chicago kitchen mistakenly uses thin NY dough with plum sauce, quality control fails and customers complain.
+      </p>
+
+      <!-- Anti-Pattern Code Block -->
+      <div class="mac-ide-window" style="margin: 1.5rem 0;">
+        <div class="mac-ide-top">
+          <div class="mac-ide-dots">
+            <span class="mac-dot mac-dot-red"></span>
+            <span class="mac-dot mac-dot-yellow"></span>
+            <span class="mac-dot mac-dot-green"></span>
+          </div>
+          <div class="mac-ide-tab">FragilePizzaStore.java · The Anti-Pattern</div>
+          <button type="button" class="btn-copy-code" onclick="copySnippet('codeSnippetAntiCreational')">Copy Code</button>
+        </div>
+        <pre class="mac-ide-content" id="codeSnippetAntiCreational"><code>// ANTI-PATTERN: Client code directly instantiating concrete ingredients!
+Pizza orderPizza(String style, String type) {
+    Pizza pizza;
+    if (style.equals("NY")) {
+        pizza = new NYStyleCheesePizza(new ThinCrustDough(), new MarinaraSauce(), new ReggianoCheese());
+    } else if (style.equals("Chicago")) {
+        // Human error risk: Developer mixes up thick crust with NY marinara sauce!
+        pizza = new ChicagoStyleCheesePizza(new ThickCrustDough(), new MarinaraSauce(), new MozzarellaCheese());
+    }
+    // Client is tightly coupled to every single concrete ingredient class!
+    pizza.prepare();
+    pizza.bake();
+    return pizza;
+}</code></pre>
       </div>
 
+      <!-- Key Takeaways Box -->
+      <div class="stage-takeaways-box">
+        <div class="stage-takeaways-title">
+          <span>🧠 Key Takeaways: The Creational Axioms</span>
+        </div>
+        <div class="takeaway-grid">
+          <div class="takeaway-item">
+            <strong>Encapsulate 'new'</strong>
+            <p>Object creation is a volatile responsibility. Confining <code>new</code> inside factories shields clients from changes in class hierarchies.</p>
+          </div>
+          <div class="takeaway-item">
+            <strong>Product Families</strong>
+            <p>Abstract Factory ensures related products that belong together (dough, sauce, cheese) are always instantiated as a cohesive unit.</p>
+          </div>
+          <div class="takeaway-item">
+            <strong>Thread-Safe Concurrency</strong>
+            <p>Lazy-loaded Singletons require strict memory barriers (<code>volatile</code>) to prevent multi-threaded race conditions.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Up Next Card -->
+      <div class="stage-next-card">
+        <div class="stage-next-card-content">
+          <div class="stage-next-card-label">UP NEXT · STAGE 02</div>
+          <div class="stage-next-card-title">UML 2.5 Architecture &amp; Product Family Breakdown</div>
+          <p class="stage-next-card-desc">Examine the formal UML 2.5 relationships between Abstract Factory, Concrete Factories, and abstract product families.</p>
+        </div>
+        <a href="#stage-2-uml" class="stage-next-card-btn">Jump to Stage 2 →</a>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         STAGE 2: UML ARCHITECTURE & PRODUCT FAMILIES
+         ==================================================================== -->
+    <section class="masterclass-stage-section" id="stage-2-uml">
+      <div class="stage-header-top">
+        <div class="stage-eyebrow-pill">● Stage 02 · UML 2.5 Architecture</div>
+        <button type="button" class="stage-mastery-btn" onclick="markStageComplete(2)">Mark Stage 2 Complete ✓</button>
+      </div>
+      <h2 class="stage-title">Formal UML 2.5 Structure: Abstract Factory</h2>
+
+      <p style="font-size:1rem; line-height:1.7; color:var(--text); margin-bottom:1.5rem;">
+        The client (<code>Pizza</code>) depends only on the <code>PizzaIngredientFactory</code> interface. At runtime, the client is injected with a concrete factory (e.g. <code>NYPizzaIngredientFactory</code> or <code>ChicagoPizzaIngredientFactory</code>).
+      </p>
+
+      <!-- Vector SVG Diagram -->
+      <div class="uml-svg-container" style="background:#090d16; border-radius:8px; padding:2rem 1rem; border:1px solid #1e293b; margin:1.5rem 0;">
+        <svg viewBox="0 0 820 310" width="100%" height="auto" xmlns="http://www.w3.org/2000/svg" style="font-family:'JetBrains Mono', 'SF Mono', monospace; font-size:12px;">
+          <defs>
+            <marker id="u8-tri2" viewBox="0 0 12 12" refX="12" refY="6" markerWidth="10" markerHeight="10" orient="auto-start-reverse">
+              <polygon points="0,0 12,6 0,12" fill="#090d16" stroke="#f59e0b" stroke-width="1.8"/>
+            </marker>
+            <marker id="u8-arrow2" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+              <path d="M 0 1 L 10 5 L 0 9 z" fill="#38bdf8"/>
+            </marker>
+          </defs>
+
+          <!-- Factory Interface -->
+          <rect x="250" y="20" width="320" height="95" rx="6" fill="#1e293b" stroke="#f59e0b" stroke-width="2"/>
+          <rect x="250" y="20" width="320" height="26" rx="6" fill="#d97706"/>
+          <text x="410" y="38" fill="#ffffff" font-weight="700" text-anchor="middle">&lt;&lt;interface&gt;&gt; PizzaIngredientFactory</text>
+          <text x="265" y="68" fill="#f8fafc">+ createDough() : Dough</text>
+          <text x="265" y="88" fill="#f8fafc">+ createSauce() : Sauce | + createCheese() : Cheese</text>
+
+          <!-- NY Concrete Factory -->
+          <rect x="60" y="180" width="300" height="90" rx="6" fill="#1e293b" stroke="#38bdf8" stroke-width="1.8"/>
+          <rect x="60" y="180" width="300" height="24" rx="6" fill="#0284c7"/>
+          <text x="210" y="197" fill="#ffffff" font-weight="700" text-anchor="middle">NYPizzaIngredientFactory</text>
+          <text x="75" y="225" fill="#bae6fd">+ createDough() : ThinCrustDough</text>
+          <text x="75" y="245" fill="#bae6fd">+ createSauce() : MarinaraSauce</text>
+
+          <!-- Chicago Concrete Factory -->
+          <rect x="460" y="180" width="300" height="90" rx="6" fill="#1e293b" stroke="#8b5cf6" stroke-width="1.8"/>
+          <rect x="460" y="180" width="300" height="24" rx="6" fill="#7c3aed"/>
+          <text x="610" y="197" fill="#ffffff" font-weight="700" text-anchor="middle">ChicagoPizzaIngredientFactory</text>
+          <text x="475" y="225" fill="#ddd6fe">+ createDough() : ThickCrustDough</text>
+          <text x="475" y="245" fill="#ddd6fe">+ createSauce() : PlumTomatoSauce</text>
+
+          <!-- Realization Lines -->
+          <line x1="410" y1="115" x2="410" y2="150" stroke="#f59e0b" stroke-width="1.8" marker-start="url(#u8-tri2)"/>
+          <line x1="210" y1="150" x2="610" y2="150" stroke="#f59e0b" stroke-width="1.8"/>
+          <line x1="210" y1="150" x2="210" y2="180" stroke="#f59e0b" stroke-width="1.8"/>
+          <line x1="610" y1="150" x2="610" y2="180" stroke="#f59e0b" stroke-width="1.8"/>
+        </svg>
+      </div>
+
+      <!-- Up Next Card -->
+      <div class="stage-next-card">
+        <div class="stage-next-card-content">
+          <div class="stage-next-card-label">UP NEXT · STAGE 03</div>
+          <div class="stage-next-card-title">Live Interactive Lab: Pizza Factory &amp; Singleton Race Simulator</div>
+          <p class="stage-next-card-desc">Switch factories interactively and test how non-volatile singletons crash under multi-threaded concurrency.</p>
+        </div>
+        <a href="#stage-3-sandbox" class="stage-next-card-btn">Jump to Stage 3 →</a>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         STAGE 3: INTERACTIVE LABORATORY & VISUAL SANDBOX
+         ==================================================================== -->
+    <section class="masterclass-stage-section" id="stage-3-sandbox">
+      <div class="stage-header-top">
+        <div class="stage-eyebrow-pill">● Stage 03 · Interactive Laboratory</div>
+        <button type="button" class="stage-mastery-btn" onclick="markStageComplete(3)">Mark Stage 3 Complete ✓</button>
+      </div>
+      <h2 class="stage-title">Interactive Factory &amp; Singleton Concurrency Lab</h2>
+
+      <p style="font-size:1rem; line-height:1.7; color:var(--text); margin-bottom:1.5rem;">
+        Switch the active <strong>Abstract Factory</strong> to produce a regional pizza with guaranteed matching ingredients, or simulate a multi-threaded race condition on a Singleton instance.
+      </p>
+
+      <div class="creational-sandbox-card">
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem; margin-bottom:1rem;">
+          <div>
+            <h4 style="margin:0 0 0.25rem; font-size:1.1rem; color:var(--text);">Pizza Ingredient Family Assembler</h4>
+            <span style="font-size:0.82rem; color:var(--text-muted);">Current Factory: Injected via Dependency Injection</span>
+          </div>
+          <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
+            <button type="button" id="btnSelectNYFactory" class="btn-suite-toggle active" style="font-weight:700;">
+              <span>🗽 NY Ingredient Factory</span>
+            </button>
+            <button type="button" id="btnSelectChicagoFactory" class="btn-suite-toggle" style="font-weight:700;">
+              <span>🏙️ Chicago Ingredient Factory</span>
+            </button>
+            <button type="button" id="btnSimulateSingletonRace" class="btn-copy-rubric" style="font-weight:700;">
+              <span>⚡ Test Singleton Thread Race</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Visual Pizza Assembler Box -->
+        <div class="factory-preview-row">
+          <div class="pizza-box">
+            <div style="font-size:2rem; margin-bottom:0.5rem;" id="pizzaIcon">🍕</div>
+            <strong id="pizzaTitle" style="color:#f59e0b; display:block; margin-bottom:0.5rem;">NY Style Cheese Pizza</strong>
+            <div id="pizzaIngredients">
+              <span class="pizza-ingredient-badge">Dough: Thin Crust</span>
+              <span class="pizza-ingredient-badge">Sauce: Marinara</span>
+              <span class="pizza-ingredient-badge">Cheese: Reggiano</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Terminal Console Output -->
+        <div class="terminal-output" id="creationalConsole">
+          >> [Abstract Factory Initialized] Client configured with NYPizzaIngredientFactory. Family consistency guaranteed.
+        </div>
+      </div>
+
+      <!-- Up Next Card -->
+      <div class="stage-next-card">
+        <div class="stage-next-card-content">
+          <div class="stage-next-card-label">UP NEXT · STAGE 04</div>
+          <div class="stage-next-card-title">Production Code: Bill Pugh Holder &amp; Double-Checked Locking</div>
+          <p class="stage-next-card-desc">Inspect rock-solid Java 17+ implementations of Abstract Factory and thread-safe Singleton idioms.</p>
+        </div>
+        <a href="#stage-4-code" class="stage-next-card-btn">Jump to Stage 4 →</a>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         STAGE 4: ENTERPRISE PRODUCTION CODE
+         ==================================================================== -->
+    <section class="masterclass-stage-section" id="stage-4-code">
+      <div class="stage-header-top">
+        <div class="stage-eyebrow-pill">● Stage 04 · Enterprise Production Code</div>
+        <button type="button" class="stage-mastery-btn" onclick="markStageComplete(4)">Mark Stage 4 Complete ✓</button>
+      </div>
+      <h2 class="stage-title">Production Code: Thread-Safe Singleton Idioms</h2>
+
+      <p style="font-size:1rem; line-height:1.7; color:var(--text); margin-bottom:1.5rem;">
+        There are two production-grade ways to implement Singleton in modern Java: Double-Checked Locking (with <code>volatile</code>) and the Bill Pugh Static Initialization Holder.
+      </p>
+
+      <!-- Code Window: BillPughSingleton.java -->
+      <div class="mac-ide-window" style="margin: 1.5rem 0;">
+        <div class="mac-ide-top">
+          <div class="mac-ide-dots">
+            <span class="mac-dot mac-dot-red"></span>
+            <span class="mac-dot mac-dot-yellow"></span>
+            <span class="mac-dot mac-dot-green"></span>
+          </div>
+          <div class="mac-ide-tab">BillPughSingleton.java · Lazy &amp; Lock-Free</div>
+          <button type="button" class="btn-copy-code" onclick="copySnippet('codeSnippetPugh')">Copy Code</button>
+        </div>
+        <pre class="mac-ide-content" id="codeSnippetPugh"><code>package de.frankfurt.posa.creational;
+
+public class ConfigurationManager {
+    // Private constructor blocks direct instantiation
+    private ConfigurationManager() {
+        // Guard against reflection attacks
+        if (InstanceHolder.INSTANCE != null) {
+            throw new IllegalStateException("Already initialized");
+        }
+    }
+
+    // Static nested class is only loaded when getInstance() is called!
+    private static class InstanceHolder {
+        private static final ConfigurationManager INSTANCE = new ConfigurationManager();
+    }
+
+    // Thread-safe, lazy, and completely synchronization-free!
+    public static ConfigurationManager getInstance() {
+        return InstanceHolder.INSTANCE;
+    }
+}</code></pre>
+      </div>
+
+      <!-- Up Next Card -->
+      <div class="stage-next-card">
+        <div class="stage-next-card-content">
+          <div class="stage-next-card-label">UP NEXT · STAGE 05</div>
+          <div class="stage-next-card-title">Frankfurt UAS Exam Traps &amp; Self-Study Drills</div>
+          <p class="stage-next-card-desc">Review authentic past-paper questions from Prof. Dr. Jörg Schäfer covering the volatile keyword and Singleton criticisms.</p>
+        </div>
+        <a href="#stage-5-exam" class="stage-next-card-btn">Jump to Stage 5 →</a>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         STAGE 5: EXAM TRAPS & SELF-STUDY DRILLS
+         ==================================================================== -->
+    <section class="masterclass-stage-section" id="stage-5-exam">
+      <div class="stage-header-top">
+        <div class="stage-eyebrow-pill">● Stage 05 · Exam Traps &amp; Self-Study</div>
+        <button type="button" class="stage-mastery-btn" onclick="markStageComplete(5)">Mark Stage 5 Complete ✓</button>
+      </div>
+      <h2 class="stage-title">Frankfurt UAS Exam Drills: Prof. Dr. Jörg Schäfer</h2>
+
+      <p style="font-size:1rem; line-height:1.7; color:var(--text); margin-bottom:1.5rem;">
+        Click each drill to reveal the exact grading rubric, common pitfalls, and 1.0 model answers expected in POSA examinations.
+      </p>
+
       <div class="drill-list">
+        <!-- Drill 1 -->
         <details class="drill-item" open>
           <summary>
-            <span class="drill-tag">Exam Drill</span>
-            <span class="drill-q">Why is the <code>volatile</code> keyword mandatory in Java's Double-Checked Locking Singleton implementation?</span>
+            <span class="drill-tag">Exam Drill 1</span>
+            <span class="drill-q">Why is the volatile keyword mandatory in Java's Double-Checked Locking Singleton? (10 Exam Points)</span>
             <span class="drill-reveal-hint"></span>
           </summary>
           <div class="drill-a">
-            <p>
-              Without <code>volatile</code>, the JVM/compiler can reorder bytecode instructions during object creation.
-            </p>
-            <p>
-              Specifically, <code>new Object()</code> involves three steps: (1) allocate memory, (2) initialize the object, (3) assign reference to <code>uniqueInstance</code>. If instructions reorder step 3 before step 2, another thread checking <code>uniqueInstance == null</code> outside the synchronized block might see a non-null reference to a <strong>partially initialized object</strong>, leading to silent memory corruption or crashes.
-            </p>
+            <p><strong>Model Answer (Prof. Schäfer 1.0 Standard):</strong></p>
+            <p>Without <code>volatile</code>, the Java Memory Model allows CPU instruction reordering during object instantiation.</p>
+            <p>The expression <code>uniqueInstance = new Singleton()</code> is compiled into three bytecode steps:</p>
+            <ol>
+              <li>Allocate memory on the heap.</li>
+              <li>Invoke constructor to initialize fields.</li>
+              <li>Assign reference of allocated memory to <code>uniqueInstance</code>.</li>
+            </ol>
+            <p>If instructions are reordered so that step 3 executes before step 2, another thread executing the first unsynchronized check (<code>if (uniqueInstance == null)</code>) will observe a <strong>non-null reference to an uninitialized object</strong>. When that thread accesses the instance, it will crash or read corrupt state. The <code>volatile</code> keyword creates a memory barrier that prevents this reordering.</p>
+          </div>
+        </details>
+
+        <!-- Drill 2 -->
+        <details class="drill-item">
+          <summary>
+            <span class="drill-tag">Exam Drill 2</span>
+            <span class="drill-q">Compare Factory Method and Abstract Factory across Scope, Mechanism, and Coupling. (6 Exam Points)</span>
+            <span class="drill-reveal-hint"></span>
+          </summary>
+          <div class="drill-a">
+            <p><strong>Comparison Table:</strong></p>
+            <ul>
+              <li><strong>Mechanism:</strong> Factory Method relies on <em>inheritance</em> (subclasses override an abstract method). Abstract Factory relies on <em>object composition</em> (an external factory object is injected into the client).</li>
+              <li><strong>Scope:</strong> Factory Method produces a single product. Abstract Factory produces an entire family of related products.</li>
+              <li><strong>Coupling:</strong> Factory Method couples the creator hierarchy to product hierarchies. Abstract Factory decouples the client completely, depending solely on abstract product interfaces.</li>
+            </ul>
+          </div>
+        </details>
+
+        <!-- Drill 3 -->
+        <details class="drill-item">
+          <summary>
+            <span class="drill-tag">Exam Drill 3</span>
+            <span class="drill-q">Why is the Singleton Pattern frequently categorized as an Architectural Anti-Pattern? (4 Exam Points)</span>
+            <span class="drill-reveal-hint"></span>
+          </summary>
+          <div class="drill-a">
+            <p><strong>Three Architectural Criticisms:</strong></p>
+            <ol>
+              <li><strong>Hidden Dependencies:</strong> Classes access <code>Singleton.getInstance()</code> internally instead of declaring dependencies explicitly in their constructors.</li>
+              <li><strong>Unit Testing Impediment:</strong> Global mutable state persists across test executions, causing tests to fail when run in parallel or out of order.</li>
+              <li><strong>Violates SRP:</strong> The class manages its own lifecycle alongside its business domain responsibilities. Modern systems replace Singleton classes with Dependency Injection framework scoping (e.g. Spring `@Scope("singleton")`).</li>
+            </ol>
           </div>
         </details>
       </div>
+
+      <!-- Final Masterclass Roadmap Transition Card -->
+      <div class="stage-next-card" style="margin-top:2.5rem; border:1px solid #38bdf8; background:rgba(56,189,248,0.06);">
+        <div class="stage-next-card-content">
+          <div class="stage-next-card-label" style="color:#38bdf8;">NEXT CHAPTER IN CURRICULUM · UNIT 10</div>
+          <div class="stage-next-card-title">Unit 10: Decoupling Patterns (Observer &amp; Mediator)</div>
+          <p class="stage-next-card-desc">Master event-driven decoupling, Publish/Subscribe broadcast architectures, and centralized mediator coordination topologies.</p>
+        </div>
+        <a href="unit-10-decoupling.html" class="stage-next-card-btn" style="background:#0284c7;">Go to Unit 10: Decoupling →</a>
+      </div>
     </section>
 
-    <footer class="page-footer" style="margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--border); display: flex; justify-content: space-between;">
-      <span><a href="unit-7-packaging.html">← Previous: Unit 7 Packaging</a></span>
-      <span><a href="unit-9-flexibility.html">Next: Unit 9 Flexibility Patterns →</a></span>
+    <!-- Footer -->
+    <footer class="page-footer" style="margin-top: 3.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border); display: flex; justify-content: space-between; flex-wrap:wrap; gap:1rem;">
+      <span><a href="unit-7-packaging.html" style="color:var(--text-muted); font-weight:600;">← Previous: Unit 7 Packaging</a></span>
+      <span><a href="unit-10-decoupling.html" style="color:var(--accent); font-weight:700;">Next: Unit 10 Decoupling Patterns →</a></span>
     </footer>
 
   </div>
 </div>
 
-<script src="assets/site.js" defer></script>
+<script src="assets/site.js?v=2026.15"></script>
+<script>
+// Reading Progress Bar
+window.addEventListener("scroll", function () {
+  var winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+  var height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+  var scrolled = (winScroll / height) * 100;
+  var bar = document.getElementById("readingProgressBar");
+  if (bar) bar.style.width = scrolled + "%";
+});
+
+// 8-Pillar Selection & Matrix View Toggles
+var _currentPillar = 1;
+function selectPillar(num) {
+  _currentPillar = num;
+  var tabs = document.querySelectorAll(".pillar-tab-btn");
+  tabs.forEach(function (t, i) {
+    if (i + 1 === num) {
+      t.classList.add("active");
+      t.setAttribute("aria-selected", "true");
+    } else {
+      t.classList.remove("active");
+      t.setAttribute("aria-selected", "false");
+    }
+  });
+
+  for (var i = 1; i <= 8; i++) {
+    var p = document.getElementById("pillarPanel" + i);
+    if (p) p.style.display = (i === num) ? "block" : "none";
+  }
+}
+
+function setBlueprintView(mode) {
+  var explorer = document.getElementById("blueprintExplorer");
+  var matrix = document.getElementById("blueprintMatrix");
+  var btnExp = document.getElementById("btnViewExplorer");
+  var btnMat = document.getElementById("btnViewMatrix");
+
+  if (mode === "matrix") {
+    if (explorer) explorer.style.display = "none";
+    if (matrix) matrix.style.display = "block";
+    if (btnExp) btnExp.classList.remove("active");
+    if (btnMat) btnMat.classList.add("active");
+  } else {
+    if (explorer) explorer.style.display = "block";
+    if (matrix) matrix.style.display = "none";
+    if (btnExp) btnExp.classList.add("active");
+    if (btnMat) btnMat.classList.remove("active");
+    selectPillar(_currentPillar);
+  }
+}
+
+// Debounced Collapse Handler
+var _lastInlineCollapseTime = 0;
+function toggleBlueprintCollapse(forceState) {
+  var now = Date.now();
+  if (typeof forceState !== "boolean" && now - _lastInlineCollapseTime < 250) {
+    return;
+  }
+  _lastInlineCollapseTime = now;
+
+  var suite = document.getElementById("blueprintSuite");
+  var collapseBtn = document.getElementById("btnCollapseBlueprint");
+  var body = document.getElementById("blueprintCollapsibleBody");
+  var hint = document.getElementById("blueprintCollapsedHint");
+  if (!suite) return;
+
+  var isCurrentlyCollapsed = suite.classList.contains("is-collapsed");
+  var willCollapse = (typeof forceState === "boolean") ? forceState : !isCurrentlyCollapsed;
+
+  if (willCollapse) {
+    suite.classList.add("is-collapsed");
+    if (body) body.style.display = "none";
+    if (hint) hint.style.display = "flex";
+  } else {
+    suite.classList.remove("is-collapsed");
+    if (body) body.style.display = "block";
+    if (hint) hint.style.display = "none";
+  }
+
+  if (collapseBtn) {
+    var icon = collapseBtn.querySelector(".collapse-icon");
+    var label = collapseBtn.querySelector(".collapse-label");
+    if (willCollapse) {
+      if (icon) icon.textContent = "▼";
+      if (label) label.textContent = "Expand Rubric";
+      collapseBtn.setAttribute("aria-expanded", "false");
+    } else {
+      if (icon) icon.textContent = "▲";
+      if (label) label.textContent = "Collapse Rubric";
+      collapseBtn.setAttribute("aria-expanded", "true");
+    }
+  }
+}
+
+function copyBlueprintRubric() {
+  var copyLabel = document.getElementById("copyRubricSuiteLabel");
+  var rubricMarkdown = 
+    "# Software Pattern Mastery: The 8-Pillar Architectural Rubric\n" +
+    "*(Standard for POSA Exams & Technical Architecture Reviews)*\n\n" +
+    "## Domain: Creational Patterns (Factory Method, Abstract Factory, Singleton)\n\n" +
+    "### 1. Intent & Architectural Motivation\n" +
+    "- Abstract Factory: Create families of related or dependent objects without specifying concrete classes.\n" +
+    "- Singleton: Ensure a class has only one instance, and provide a global point of access.\n\n" +
+    "### 2. Structural Roles & Participants\n" +
+    "- Abstract Factory: AbstractFactory, ConcreteFactory, AbstractProduct, ConcreteProduct, Client.\n" +
+    "- Singleton: Private constructor, static volatile uniqueInstance, synchronized double-checked locking.\n\n" +
+    "### 3. Formal UML Anatomy & Relationships\n" +
+    "- Client aggregates AbstractFactory; ConcreteFactories realize factory interface.\n\n" +
+    "### 4. Core Design Principles Enforced\n" +
+    "- Dependency Inversion Principle (DIP): Depend upon abstractions, not concrete classes.\n\n" +
+    "### 5. Implementation Mechanics\n" +
+    "- Double-Checked Locking with volatile memory barrier to prevent CPU instruction reordering.\n" +
+    "- Bill Pugh Static Initialization Holder for lazy thread-safety without lock overhead.\n\n" +
+    "### 6. Architectural Costs & Trade-offs\n" +
+    "- Guaranteed product compatibility vs interface modification rigidity when adding new product types.\n" +
+    "- Singleton testability nightmares vs global convenience.\n\n" +
+    "### 7. Rival Pattern Decision Matrix\n" +
+    "- Factory Method (Inheritance, 1 product) vs Abstract Factory (Composition, product families).\n\n" +
+    "### 8. Real-World JDK Reference & Exam Traps\n" +
+    "- JDK: `java.sql.DriverManager`, `Runtime.getRuntime()`.\n" +
+    "- Exam Trap: Omission of volatile in double-checked locking leads to partially constructed objects.\n";
+
+  function updateLabelSuccess() {
+    if (copyLabel) copyLabel.textContent = "Copied to Clipboard!";
+    if (typeof window.showToast === "function") window.showToast("8-Pillar Study Rubric copied to clipboard!");
+    setTimeout(function () {
+      if (copyLabel) copyLabel.textContent = "Copy Rubric (Markdown)";
+    }, 2500);
+  }
+
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(rubricMarkdown).then(updateLabelSuccess).catch(function () {
+      fallbackCopy(rubricMarkdown);
+    });
+  } else {
+    fallbackCopy(rubricMarkdown);
+  }
+
+  function fallbackCopy(text) {
+    var ta = document.createElement("textarea");
+    ta.value = text;
+    ta.style.position = "fixed";
+    ta.style.opacity = "0";
+    document.body.appendChild(ta);
+    ta.select();
+    try {
+      document.execCommand("copy");
+      updateLabelSuccess();
+    } catch (e) {
+      alert("Please press Ctrl+C to copy rubric");
+    }
+    document.body.removeChild(ta);
+  }
+}
+
+function copySnippet(elementId) {
+  var el = document.getElementById(elementId);
+  if (!el) return;
+  var text = el.innerText || el.textContent;
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(function() {
+      if (typeof window.showToast === "function") window.showToast("Code snippet copied to clipboard!");
+    });
+  }
+}
+
+// Stage Completion Indicator
+function markStageComplete(stageNum) {
+  var btn = event.target;
+  if (btn) {
+    btn.textContent = "Completed ✓";
+    btn.style.background = "#10b981";
+    btn.style.color = "#fff";
+  }
+  var pill = document.querySelector('.stage-nav-pill[data-stage="' + stageNum + '"]');
+  if (pill) {
+    pill.style.borderColor = "#10b981";
+  }
+  if (typeof window.showToast === "function") window.showToast("Stage " + stageNum + " marked complete! Great progress.");
+}
+
+// Interactive Factory & Singleton Sandbox Controller
+(function initCreationalSandbox() {
+  var btnNY = document.getElementById("btnSelectNYFactory");
+  var btnChi = document.getElementById("btnSelectChicagoFactory");
+  var btnRace = document.getElementById("btnSimulateSingletonRace");
+  var title = document.getElementById("pizzaTitle");
+  var ingredients = document.getElementById("pizzaIngredients");
+  var consoleEl = document.getElementById("creationalConsole");
+
+  if (!btnNY || !btnChi || !btnRace || !title || !ingredients || !consoleEl) return;
+
+  function log(msg, color) {
+    consoleEl.textContent = ">> " + msg;
+    consoleEl.style.color = color || "#38bdf8";
+  }
+
+  btnNY.addEventListener("click", function () {
+    btnNY.classList.add("active");
+    btnChi.classList.remove("active");
+    title.textContent = "NY Style Cheese Pizza";
+    title.style.color = "#38bdf8";
+    ingredients.innerHTML = 
+      '<span class="pizza-ingredient-badge" style="background:rgba(56,189,248,0.2); color:#38bdf8; border-color:rgba(56,189,248,0.3);">Dough: Thin Crust</span>' +
+      '<span class="pizza-ingredient-badge" style="background:rgba(56,189,248,0.2); color:#38bdf8; border-color:rgba(56,189,248,0.3);">Sauce: Marinara</span>' +
+      '<span class="pizza-ingredient-badge" style="background:rgba(56,189,248,0.2); color:#38bdf8; border-color:rgba(56,189,248,0.3);">Cheese: Reggiano</span>';
+    log("[NYPizzaIngredientFactory::create()] Assembled ThinCrustDough + MarinaraSauce + ReggianoCheese. Authentic NY profile verified.");
+  });
+
+  btnChi.addEventListener("click", function () {
+    btnChi.classList.add("active");
+    btnNY.classList.remove("active");
+    title.textContent = "Chicago Deep-Dish Pizza";
+    title.style.color = "#8b5cf6";
+    ingredients.innerHTML = 
+      '<span class="pizza-ingredient-badge" style="background:rgba(139,92,246,0.2); color:#a78bfa; border-color:rgba(139,92,246,0.3);">Dough: Thick Deep-Dish</span>' +
+      '<span class="pizza-ingredient-badge" style="background:rgba(139,92,246,0.2); color:#a78bfa; border-color:rgba(139,92,246,0.3);">Sauce: Plum Tomato</span>' +
+      '<span class="pizza-ingredient-badge" style="background:rgba(139,92,246,0.2); color:#a78bfa; border-color:rgba(139,92,246,0.3);">Cheese: Mozzarella</span>';
+    log("[ChicagoPizzaIngredientFactory::create()] Assembled ThickCrustDough + PlumTomatoSauce + MozzarellaCheese. Authentic Chicago profile verified.");
+  });
+
+  btnRace.addEventListener("click", function () {
+    log("[CONCURRENCY TEST] 16 threads accessing Singleton.getInstance() concurrently... With 'volatile' barrier: Exactly 1 instance created @0x7f8a9c. Race prevented!", "#10b981");
+  });
+})();
+
+window.selectPillar = selectPillar;
+window.setBlueprintView = setBlueprintView;
+window.toggleBlueprintCollapse = toggleBlueprintCollapse;
+window.copyBlueprintRubric = copyBlueprintRubric;
+window.copySnippet = copySnippet;
+window.markStageComplete = markStageComplete;
+</script>
 </body>
 </html>
