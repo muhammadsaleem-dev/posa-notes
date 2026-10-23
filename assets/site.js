@@ -908,7 +908,14 @@
         "</div>" +
         "<p style='font-size:0.92rem; color:var(--text); line-height:1.6; margin-bottom:0.75rem;'>" + data.role + "</p>" +
         "<div style='font-size:0.84rem; color:var(--accent-ink); font-weight:600; margin-bottom:1rem;'>🏛️ Architectural Principle: " + data.principles + "</div>" +
-        "<pre style='background:var(--code-bg); padding:0.85rem 1rem; border-radius:6px; border:1px solid var(--border); font-family:var(--font-mono); font-size:0.82rem; overflow-x:auto; margin:0;'><code>" + data.code + "</code></pre>";
+        "<div class='ide-window' style='margin:0;'>" +
+          "<div class='ide-header'>" +
+            "<div class='ide-controls'><span class='ide-dot ide-dot-red'></span><span class='ide-dot ide-dot-yellow'></span><span class='ide-dot ide-dot-green'></span></div>" +
+            "<div class='ide-tab'><svg class='ide-file-icon' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'><path d='M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z'></path><polyline points='13 2 13 9 20 9'></polyline></svg><span>" + data.badge + ".java</span></div>" +
+            "<button type='button' class='ide-copy-btn'><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'><rect x='9' y='9' width='13' height='13' rx='2' ry='2'></rect><path d='M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1'></path></svg><span class='copy-text'>Copy</span></button>" +
+          "</div>" +
+          "<pre class='ide-code'><code>" + data.code + "</code></pre>" +
+        "</div>";
 
       showToast("Inspecting " + data.title);
     });
@@ -932,4 +939,89 @@
       });
     });
   }
+
+  // ==========================================================================
+  // IDE CODE BLOCK CLIPBOARD COPYING
+  // ==========================================================================
+  document.addEventListener("click", function (e) {
+    var btn = e.target.closest(".ide-copy-btn");
+    if (!btn) return;
+    var ideWindow = btn.closest(".ide-window");
+    if (!ideWindow) return;
+    var codeElem = ideWindow.querySelector("code");
+    if (!codeElem) return;
+
+    var text = codeElem.innerText;
+    navigator.clipboard.writeText(text).then(function () {
+      btn.classList.add("copied");
+      var textSpan = btn.querySelector(".copy-text");
+      var origText = textSpan ? textSpan.textContent : "Copy";
+      if (textSpan) textSpan.textContent = "Copied!";
+      showToast("Code copied to clipboard!");
+      setTimeout(function () {
+        btn.classList.remove("copied");
+        if (textSpan) textSpan.textContent = origText;
+      }, 2000);
+    }).catch(function () {
+      showToast("Press Ctrl+C to copy");
+    });
+  });
+
+  // ==========================================================================
+  // STAGE MASTERY PROGRESSION TRACKING
+  // ==========================================================================
+  (function initStageMastery() {
+    var masteryBtns = document.querySelectorAll(".stage-mastery-btn");
+    if (!masteryBtns.length) return;
+
+    masteryBtns.forEach(function (btn) {
+      var stageId = btn.getAttribute("data-stage");
+      var isMastered = localStorage.getItem("posa-mastery-" + stageId) === "true";
+      if (isMastered) updateMasteryUI(btn, stageId, true);
+
+      btn.addEventListener("click", function () {
+        var current = btn.classList.contains("mastered");
+        var nextState = !current;
+        localStorage.setItem("posa-mastery-" + stageId, nextState ? "true" : "false");
+        updateMasteryUI(btn, stageId, nextState);
+        showToast(nextState ? "🎯 Stage marked as Mastered!" : "Stage status reset to In Progress");
+      });
+    });
+
+    function updateMasteryUI(btn, stageId, state) {
+      btn.classList.toggle("mastered", state);
+      var icon = btn.querySelector(".mastery-check");
+      var label = btn.querySelector(".mastery-label");
+      if (icon) icon.textContent = state ? "✓" : "○";
+      if (label) label.textContent = state ? "Mastered" : "Mark Mastered";
+
+      // Also update top stage pill
+      var pill = document.querySelector(".stage-pill[data-stage='" + stageId + "']");
+      if (pill) {
+        var existingBadge = pill.querySelector(".pill-check");
+        if (state) {
+          if (!existingBadge) {
+            var b = document.createElement("span");
+            b.className = "pill-check";
+            b.style.cssText = "color:#10b981; font-weight:800; margin-left:2px;";
+            b.textContent = "✓";
+            pill.appendChild(b);
+          }
+        } else if (existingBadge) {
+          existingBadge.remove();
+        }
+      }
+    }
+  })();
+
+  // ==========================================================================
+  // READING PROGRESS BAR SYNC
+  // ==========================================================================
+  window.addEventListener("scroll", function () {
+    var bar = document.getElementById("readingProgressBar");
+    if (!bar) return;
+    var total = document.documentElement.scrollHeight - window.innerHeight;
+    var pct = total > 0 ? (window.pageYOffset / total) * 100 : 0;
+    bar.style.width = Math.min(100, Math.max(0, pct)) + "%";
+  }, { passive: true });
 })();
