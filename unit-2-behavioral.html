@@ -4,12 +4,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Unit 2: Template Method &amp; Command Patterns | POSA 2026 Masterclass</title>
-<meta name="description" content="Unit 2 of Pattern-Oriented Software Architecture by Prof. Dr. Jörg Schäfer: Template Method, Hollywood Principle, Command Pattern, undo/redo stacks, and official exam self-study drills.">
+<meta name="description" content="Unit 2 of Pattern-Oriented Software Architecture by Prof. Dr. Jörg Schäfer: Template Method, Hollywood Principle, Command Pattern, reversible undo/redo stacks, and official exam self-study drills.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%236366f1'/%3E%3Cpath d='M8 10h16M8 16h16M8 22h10' stroke='%23fff' stroke-width='2.2' stroke-linecap='round'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/style.css">
+<link rel="stylesheet" href="assets/style.css?v=2026.15">
 <style>
   .quote-card {
     margin: 1.5rem 0 2rem;
@@ -84,28 +84,32 @@
     margin: 2rem 0;
   }
   .light-bulb-indicator {
-    width: 68px;
-    height: 68px;
+    width: 72px;
+    height: 72px;
     border-radius: 50%;
     margin: 0 auto 1rem;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 2rem;
+    font-size: 2.2rem;
     background: #1e293b;
     color: #94a3b8;
-    transition: all 0.3s ease;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
     box-shadow: 0 2px 8px rgba(0,0,0,0.3);
   }
   .light-bulb-indicator.on {
     background: #fef08a;
     color: #ca8a04;
-    box-shadow: 0 0 35px rgba(234, 179, 8, 0.7);
+    box-shadow: 0 0 35px rgba(234, 179, 8, 0.75);
+    transform: scale(1.05);
   }
 </style>
 <script>(function(){try{var t=localStorage.getItem('posa-theme')||'dark';document.documentElement.setAttribute('data-theme',t);var m=localStorage.getItem('posa-mode')||'concept';document.documentElement.setAttribute('data-mode',m);}catch(e){}})();</script>
 </head>
 <body class="mode-stage-focused">
+
+<!-- Enterprise Reading Progress Bar (Stripe / Vercel style) -->
+<div class="reading-progress-bar" id="readingProgressBar" aria-hidden="true"></div>
 
 <!-- Top Navigation Header -->
 <nav class="sitenav">
@@ -118,6 +122,7 @@
       <a href="index.html">Curriculum Hub</a>
       <a href="unit-1-strategy.html">1 · Strategy Pattern</a>
       <a href="unit-2-behavioral.html" class="active">2 · Template &amp; Command</a>
+      <a href="unit-3-structural.html">3 · Structural Patterns</a>
       <a href="unit-6-solid.html">6 · SOLID Architecture</a>
       <a href="unit-7-packaging.html">7 · Packaging &amp; Metrics</a>
       <a href="past-papers.html">Past Papers Hub</a>
@@ -173,10 +178,17 @@
 </nav>
 
 <div class="page-shell">
+  <!-- Desktop Sticky Sidebar -->
   <aside class="sidebar-toc">
     <div class="sidebar-block">
-      <span class="sidebar-label">Masterclass Stages</span>
-      <a href="#stage-1-template" class="jump-stage-btn" data-target-stage="stage-1-template"><span class="toc-num">1</span>Template Method &amp; IoC</a>
+      <span class="sidebar-label">Part 1 · Architectural Rubric</span>
+      <a href="#blueprintSuite" class="sidebar-blueprint-trigger" id="sidebarBlueprintBtn">
+        <span class="toc-num" style="background:#6366f1; color:#fff;">★</span>
+        <span>8-Pillar Pattern Blueprint</span>
+      </a>
+
+      <span class="sidebar-label" style="margin-top:1.25rem;">Part 2 · 5-Stage Curriculum</span>
+      <a href="#stage-1-template" class="jump-stage-btn active" data-target-stage="stage-1-template"><span class="toc-num">1</span>Template Method &amp; IoC</a>
       <a href="#stage-2-command" class="jump-stage-btn" data-target-stage="stage-2-command"><span class="toc-num">2</span>The Command Pattern</a>
       <a href="#stage-3-interactive" class="jump-stage-btn" data-target-stage="stage-3-interactive"><span class="toc-num">3</span>Interactive Remote Sandbox</a>
       <a href="#stage-4-macro" class="jump-stage-btn" data-target-stage="stage-4-macro"><span class="toc-num">4</span>Undo Stack &amp; Thread Pools</a>
@@ -197,70 +209,712 @@
 
   <div class="page">
     
-    <!-- Masthead -->
+    <!-- Hero Masthead -->
     <header class="masthead">
       <div>
-        <div class="eyebrow">Unit 2 · Behavioral Architectures</div>
-        <h1 class="title">Template Method &amp; Command Patterns</h1>
+        <div class="eyebrow">Behavioral Architecture Masterclass · GoF Patterns 2 &amp; 3 of 23</div>
+        <h1 class="title">Unit 2: Template Method &amp; Command Patterns</h1>
         <p class="dek">
           Mastering algorithm skeletons, Inversion of Control (The Hollywood Principle), encapsulating requests as first-class objects, and reversible multi-level Undo/Redo.
         </p>
 
         <!-- Course Meta Metric Chips -->
-        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(160px, 1fr)); gap:0.85rem; margin:1.75rem 0 1.25rem;">
-          <div style="background:var(--bg-raised); border:1px solid var(--border); border-radius:var(--radius-md); padding:0.85rem 1rem;">
-            <div style="font-size:0.75rem; font-weight:700; text-transform:uppercase; color:var(--text-muted);">⏱️ Study Time</div>
-            <div style="font-size:1.15rem; font-weight:800; color:#38bdf8; font-family:var(--font-mono); margin-top:0.2rem;">40 Minutes</div>
+        <div class="masthead-metrics-grid">
+          <div class="metric-chip">
+            <div class="metric-chip-label">⏱️ Study Time</div>
+            <div class="metric-chip-val" style="color:#38bdf8;">40 Minutes</div>
           </div>
-          <div style="background:var(--bg-raised); border:1px solid var(--border); border-radius:var(--radius-md); padding:0.85rem 1rem;">
-            <div style="font-size:0.75rem; font-weight:700; text-transform:uppercase; color:var(--text-muted);">🎯 Exam Target</div>
-            <div style="font-size:1.15rem; font-weight:800; color:#10b981; font-family:var(--font-mono); margin-top:0.2rem;">15 Pts (Grade 1.0)</div>
+          <div class="metric-chip">
+            <div class="metric-chip-label">🎯 Exam Target</div>
+            <div class="metric-chip-val" style="color:#10b981;">15 Pts (Grade 1.0)</div>
           </div>
-          <div style="background:var(--bg-raised); border:1px solid var(--border); border-radius:var(--radius-md); padding:0.85rem 1rem;">
-            <div style="font-size:0.75rem; font-weight:700; text-transform:uppercase; color:var(--text-muted);">🏛️ GoF Category</div>
-            <div style="font-size:1.15rem; font-weight:800; color:#a5b4fc; font-family:var(--font-mono); margin-top:0.2rem;">Behavioral / Class &amp; Obj</div>
+          <div class="metric-chip">
+            <div class="metric-chip-label">🏛️ GoF Category</div>
+            <div class="metric-chip-val" style="color:#a5b4fc;">Behavioral / Class &amp; Obj</div>
           </div>
-          <div style="background:var(--bg-raised); border:1px solid var(--border); border-radius:var(--radius-md); padding:0.85rem 1rem;">
-            <div style="font-size:0.75rem; font-weight:700; text-transform:uppercase; color:var(--text-muted);">⚙️ Interactive Lab</div>
-            <div style="font-size:1.15rem; font-weight:800; color:#f59e0b; font-family:var(--font-mono); margin-top:0.2rem;">Remote Control</div>
+          <div class="metric-chip">
+            <div class="metric-chip-label">⚙️ Interactive Lab</div>
+            <div class="metric-chip-val" style="color:#f59e0b;">Remote Sandbox</div>
           </div>
         </div>
       </div>
     </header>
 
-    <!-- Masterclass Stage Bar -->
-    <nav class="masterclass-stage-nav" aria-label="Learning Stages">
-      <div class="stage-nav-inner">
-        <div class="stage-pills-wrap">
-          <button type="button" class="stage-pill active" data-stage="stage-1-template">
-            <span>☕ 1. Template Method</span>
+    <!-- ====================================================================
+         SECTION 1: 8-PILLAR ARCHITECTURAL BLUEPRINT (UNIVERSAL RUBRIC)
+         ==================================================================== -->
+    <!-- Prominent Section Divider for Part 1 -->
+    <div class="masterclass-section-divider" style="margin: 2.5rem 0 1.5rem;">
+      <div class="section-divider-line"></div>
+      <div class="section-divider-chip">
+        <span>PART 1 · ARCHITECTURAL RUBRIC</span>
+      </div>
+      <div class="section-divider-line"></div>
+    </div>
+
+    <section class="blueprint-suite" id="blueprintSuite" aria-label="8-Pillar Architecture Rubric">
+      <div class="blueprint-suite-top">
+        <div>
+          <div class="blueprint-suite-badge">
+            <span class="section-badge-pill">SECTION 1 OF 2</span>
+            <span class="badge-sep">·</span>
+            <span>📐 Universal Pattern Rubric</span>
+            <span class="badge-sep">·</span>
+            <span>Template Method &amp; Command</span>
+          </div>
+          <h3 class="blueprint-suite-title">The 8 Pillars of Behavioral Pattern Mastery</h3>
+          <p class="blueprint-suite-desc">
+            When analyzing or being examined on Template Method or Command (Prof. Schäfer's POSA curriculum or enterprise architectural reviews), you must master these 8 dimensions. Switch between the <strong>Interactive Explorer</strong> and the <strong>Full 8-Pillar Matrix</strong>.
+          </p>
+        </div>
+        <div class="blueprint-suite-actions">
+          <div class="blueprint-view-toggles" style="display:inline-flex; gap:0.4rem;">
+            <button type="button" class="btn-suite-toggle active" id="btnViewExplorer" onclick="setBlueprintView('explorer')" title="Explore one pillar at a time with interactive details">
+              <span>⚡ Interactive Explorer</span>
+            </button>
+            <button type="button" class="btn-suite-toggle" id="btnViewMatrix" onclick="setBlueprintView('matrix')" title="View all 8 pillars simultaneously in an executive grid">
+              <span>📊 Full Matrix</span>
+            </button>
+          </div>
+          <button type="button" class="btn-copy-rubric" id="btnCopyRubricSuite" onclick="copyBlueprintRubric()" title="Copy entire 8-pillar markdown study rubric to clipboard">
+            <span>📋</span>
+            <span id="copyRubricSuiteLabel">Copy Rubric</span>
           </button>
-          <button type="button" class="stage-pill" data-stage="stage-2-command">
-            <span>🎮 2. Command Pattern</span>
-          </button>
-          <button type="button" class="stage-pill" data-stage="stage-3-interactive">
-            <span>⚡ 3. Remote Sandbox</span>
-          </button>
-          <button type="button" class="stage-pill" data-stage="stage-4-macro">
-            <span>🔄 4. Undo &amp; Macros</span>
-          </button>
-          <button type="button" class="stage-pill" data-stage="stage-5-exam">
-            <span>🎓 5. Exam Drills</span>
+          <button type="button" class="btn-section-collapse" id="btnCollapseBlueprint" onclick="toggleBlueprintCollapse()" aria-expanded="true" title="Collapse or expand the 8-Pillar section">
+            <span class="collapse-icon">▲</span>
+            <span class="collapse-label">Collapse Rubric</span>
           </button>
         </div>
-        <button type="button" class="stage-mode-btn" id="stageModeToggle" title="Toggle between Step-by-Step focus and Full document scroll">
-          📑 Focused Stage Mode
+      </div>
+
+      <!-- Subtle Collapsed Hint Bar (Visible when section is collapsed) -->
+      <div class="blueprint-collapsed-hint" id="blueprintCollapsedHint" style="display:none; padding:0.85rem 1.75rem; background:var(--bg-subtle); border-top:1px dashed var(--border); font-size:0.85rem; color:var(--text-muted); align-items:center; justify-content:space-between; flex-wrap:wrap; gap:0.5rem;">
+        <div style="display:flex; align-items:center; gap:0.5rem;">
+          <span>📐</span>
+          <span><strong>8 Architectural Pillars Collapsed</strong> (Click "Expand Rubric" anytime to inspect)</span>
+        </div>
+        <button type="button" class="btn-suite-toggle" onclick="toggleBlueprintCollapse(false)" style="padding:0.25rem 0.65rem; font-size:0.78rem;">
+          <span>▼ Expand</span>
         </button>
       </div>
-    </nav>
+
+      <!-- Collapsible Body Wrapper for Section 1 -->
+      <div class="blueprint-collapsible-body" id="blueprintCollapsibleBody">
+        <!-- TAB STRIP FOR INTERACTIVE EXPLORER -->
+        <div class="blueprint-pills-bar" id="blueprintPillsBar" role="tablist">
+          <button type="button" class="pillar-tab-btn active" data-pillar="p1" role="tab" aria-selected="true" onclick="selectPillar('p1')">
+            <span>🎯 01 · Intent &amp; Motivation</span>
+          </button>
+          <button type="button" class="pillar-tab-btn" data-pillar="p2" role="tab" aria-selected="false" onclick="selectPillar('p2')">
+            <span>🧩 02 · Structural Roles</span>
+          </button>
+          <button type="button" class="pillar-tab-btn" data-pillar="p3" role="tab" aria-selected="false" onclick="selectPillar('p3')">
+            <span>📐 03 · UML Anatomy</span>
+          </button>
+          <button type="button" class="pillar-tab-btn" data-pillar="p4" role="tab" aria-selected="false" onclick="selectPillar('p4')">
+            <span>🛡️ 04 · Hollywood Principle</span>
+          </button>
+          <button type="button" class="pillar-tab-btn" data-pillar="p5" role="tab" aria-selected="false" onclick="selectPillar('p5')">
+            <span>⚡ 05 · Runtime Undo &amp; Slots</span>
+          </button>
+          <button type="button" class="pillar-tab-btn" data-pillar="p6" role="tab" aria-selected="false" onclick="selectPillar('p6')">
+            <span>⚖️ 06 · Trade-offs &amp; Cost</span>
+          </button>
+          <button type="button" class="pillar-tab-btn" data-pillar="p7" role="tab" aria-selected="false" onclick="selectPillar('p7')">
+            <span>🧭 07 · Rival Matrix</span>
+          </button>
+          <button type="button" class="pillar-tab-btn" data-pillar="p8" role="tab" aria-selected="false" onclick="selectPillar('p8')">
+            <span>🔍 08 · Exam Gotchas</span>
+          </button>
+        </div>
+
+        <div class="blueprint-content-area" id="blueprintContentArea">
+          <!-- PANE 1: INTENT -->
+          <div class="pillar-pane active" id="pane-p1" role="tabpanel">
+            <div class="pillar-hero-box">
+              <div class="pillar-rule-card">
+                <div class="pillar-rule-header">
+                  <span class="pillar-rule-tag">Universal Architectural Standard</span>
+                  <span style="font-family:var(--font-mono); font-size:0.75rem; color:var(--text-muted);">Pillar 01</span>
+                </div>
+                <h4 class="pillar-rule-title">Intent &amp; Failure Mode Elimination</h4>
+                <p class="pillar-rule-desc">
+                  Behavioral patterns coordinate workflows and control flow across decoupled collaborators:
+                </p>
+                <ul class="pillar-criteria-list">
+                  <li><span class="check">✓</span> <span><strong>Template Method Intent:</strong> Define an invariant algorithm skeleton in an operation, deferring custom steps to subclasses without altering overall workflow structure.</span></li>
+                  <li><span class="check">✓</span> <span><strong>Command Intent:</strong> Encapsulate a request as an object, parameterizing callers with different requests, queueing/logging tasks, and enabling reversible multi-level Undo.</span></li>
+                  <li><span class="cross">✕</span> <span><strong>Failure Mode Eliminated:</strong> Duplicated copy-paste procedural workflows (Template) and tight coupling between caller UI buttons and receiver domain services (Command).</span></li>
+                </ul>
+              </div>
+              <div class="pillar-app-card">
+                <span class="pillar-app-tag">Unit 2: Behavioral Invariants</span>
+                <h4 class="pillar-app-title">Recipe Skeleton vs. Remote Control</h4>
+                
+                <div class="ide-window" style="margin: 0.5rem 0 0.85rem;">
+                  <div class="ide-header">
+                    <div class="ide-dots">
+                      <span class="ide-dot ide-dot-red"></span>
+                      <span class="ide-dot ide-dot-yellow"></span>
+                      <span class="ide-dot ide-dot-green"></span>
+                    </div>
+                    <span class="ide-title">TemplateMethodSkeleton.java · Invariant Workflow</span>
+                    <button type="button" class="ide-copy-btn" onclick="copySnippet(this)" aria-label="Copy code">
+                      <span class="copy-icon">📋</span> Copy
+                    </button>
+                  </div>
+                  <pre class="ide-code"><code class="language-java">public abstract class CaffeineBeverage {
+    // Invariant algorithm skeleton: declared FINAL so subclasses cannot alter order!
+    public final void prepareRecipe() {
+        boilWater();
+        brew(); // Primitive abstract step
+        pourInCup();
+        if (customerWantsCondiments()) { // Concrete Hook with default implementation
+            addCondiments();
+        }
+    }
+    abstract void brew();
+    abstract void addCondiments();
+    void boilWater() { System.out.println("Boiling water"); }
+    void pourInCup() { System.out.println("Pouring into cup"); }
+    boolean customerWantsCondiments() { return true; } // Hook
+}</code></pre>
+                </div>
+
+                <div class="pillar-exam-tip">
+                  🎯 <strong>Prof. Schäfer Exam Criteria:</strong> You will be asked: <em>"Why must the template method be declared final?"</em> Answer: To enforce algorithm integrity so subclasses cannot override the sequence of operations.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- PANE 2: ROLES -->
+          <div class="pillar-pane" id="pane-p2" role="tabpanel">
+            <div class="pillar-hero-box">
+              <div class="pillar-rule-card">
+                <div class="pillar-rule-header">
+                  <span class="pillar-rule-tag">Universal Architectural Standard</span>
+                  <span style="font-family:var(--font-mono); font-size:0.75rem; color:var(--text-muted);">Pillar 02</span>
+                </div>
+                <h4 class="pillar-rule-title">Structural Participants &amp; Responsibility</h4>
+                <p class="pillar-rule-desc">
+                  Isolate roles strictly between who dictates the skeleton, who requests action, and who executes logic:
+                </p>
+                <ul class="pillar-criteria-list">
+                  <li><span class="check">✓</span> <span><strong>AbstractClass (Template):</strong> Declares invariant template method and primitive step hooks.</span></li>
+                  <li><span class="check">✓</span> <span><strong>ConcreteClass (Template):</strong> Implements abstract primitive steps without altering workflow timing.</span></li>
+                  <li><span class="check">✓</span> <span><strong>Invoker (Command):</strong> Remote Control or UI Menu. Holds command slot and calls <code>command.execute()</code>.</span></li>
+                  <li><span class="check">✓</span> <span><strong>Command Interface:</strong> Declares <code>void execute()</code> and <code>void undo()</code>.</span></li>
+                  <li><span class="check">✓</span> <span><strong>Receiver:</strong> The domain entity (Light, GarageDoor) performing actual work.</span></li>
+                </ul>
+              </div>
+              <div class="pillar-app-card">
+                <span class="pillar-app-tag">Unit 2: Participant Mapping</span>
+                <h4 class="pillar-app-title">Remote Control Collaborators</h4>
+                <ul class="pillar-criteria-list" style="margin-top:0.5rem;">
+                  <li><span class="check">✓</span> <span><strong>Invoker:</strong> <code>RemoteControl</code> (holds an array of Command slots and an undo reference).</span></li>
+                  <li><span class="check">✓</span> <span><strong>Command Contract:</strong> <code>Command</code> interface (<code>execute()</code>, <code>undo()</code>).</span></li>
+                  <li><span class="check">✓</span> <span><strong>ConcreteCommand:</strong> <code>LightOnCommand</code>, <code>LightOffCommand</code>, <code>CeilingFanHighCommand</code>.</span></li>
+                  <li><span class="check">✓</span> <span><strong>Receiver:</strong> <code>Light</code>, <code>CeilingFan</code> (domain hardware entities).</span></li>
+                  <li><span class="check">✓</span> <span><strong>Client:</strong> <code>RemoteLoader</code> (wires Receivers into Commands and slots into Invoker).</span></li>
+                </ul>
+                <div class="pillar-exam-tip">
+                  🎯 <strong>Exam Trap:</strong> The Invoker must NEVER hold a direct reference to the Receiver! The Invoker only speaks to the Command interface.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- PANE 3: UML -->
+          <div class="pillar-pane" id="pane-p3" role="tabpanel">
+            <div class="pillar-hero-box">
+              <div class="pillar-rule-card">
+                <div class="pillar-rule-header">
+                  <span class="pillar-rule-tag">Universal Architectural Standard</span>
+                  <span style="font-family:var(--font-mono); font-size:0.75rem; color:var(--text-muted);">Pillar 03</span>
+                </div>
+                <h4 class="pillar-rule-title">Formal UML 2.5 Connector Semantics</h4>
+                <p class="pillar-rule-desc">
+                  Notice the critical difference between class derivation (Template) and object delegation (Command):
+                </p>
+                <ul class="pillar-criteria-list">
+                  <li><span class="check">✓</span> <span><strong>Generalization / Inheritance (──▷):</strong> Solid line with hollow triangle pointing up to <code>AbstractClass</code> in Template Method.</span></li>
+                  <li><span class="check">✓</span> <span><strong>Realization / Implementation (···▷):</strong> Dashed line with hollow triangle pointing to <code>&lt;&lt;interface&gt;&gt; Command</code>.</span></li>
+                  <li><span class="check">✓</span> <span><strong>Directed Association (──&gt;):</strong> Invoker points to Command with multiplicity <code>1</code>; ConcreteCommand points to Receiver.</span></li>
+                </ul>
+              </div>
+              <div class="pillar-app-card">
+                <span class="pillar-app-tag">Unit 2: Vector UML Architecture</span>
+                <h4 class="pillar-app-title">Template Method &amp; Command Architecture</h4>
+                
+                <!-- Pure Vector SVG Diagram - ZERO ASCII ART -->
+                <div class="pillar-svg-box">
+                  <svg viewBox="0 0 540 220" width="100%" height="auto" preserveAspectRatio="xMidYMid meet" role="img" aria-label="UML 2.5 Class Diagram for Template Method and Command Patterns">
+                    <defs>
+                      <marker id="u2AssocArrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                        <path d="M 0 1.5 L 9 5 L 0 8.5" fill="none" stroke="#38BDF8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                      </marker>
+                      <marker id="u2RealizeTriangle" viewBox="0 0 12 12" refX="1" refY="6" markerWidth="9" markerHeight="9" orient="auto">
+                        <polygon points="12,1 1,6 12,11" fill="var(--bg-raised)" stroke="#10B981" stroke-width="2"/>
+                      </marker>
+                      <marker id="u2InheritTriangle" viewBox="0 0 12 12" refX="1" refY="6" markerWidth="9" markerHeight="9" orient="auto">
+                        <polygon points="12,1 1,6 12,11" fill="var(--bg-raised)" stroke="#A5B4FC" stroke-width="2"/>
+                      </marker>
+                    </defs>
+
+                    <!-- Left Half: Template Method (Inheritance) -->
+                    <g class="uml-template-method">
+                      <!-- AbstractClass Node -->
+                      <rect x="15" y="15" width="170" height="95" rx="6" fill="var(--bg-subtle)" stroke="#6366F1" stroke-width="1.8"/>
+                      <rect x="15" y="15" width="170" height="26" rx="6" fill="var(--bg-raised)"/>
+                      <text x="100" y="32" text-anchor="middle" font-family="var(--font-display)" font-size="11" font-weight="800" font-style="italic" fill="var(--text)">CaffeineBeverage</text>
+                      <line x1="15" y1="41" x2="185" y2="41" stroke="var(--border)" stroke-width="1"/>
+                      <text x="25" y="58" font-family="var(--font-mono)" font-size="10" font-weight="700" fill="#38BDF8">+ prepareRecipe(): final</text>
+                      <text x="25" y="74" font-family="var(--font-mono)" font-size="9" font-style="italic" fill="var(--text-muted)"># brew(): abstract</text>
+                      <text x="25" y="90" font-family="var(--font-mono)" font-size="9" font-style="italic" fill="var(--text-muted)"># addCondiments(): abstract</text>
+                      <text x="25" y="104" font-family="var(--font-mono)" font-size="9" fill="#10B981"># hook(): boolean</text>
+
+                      <!-- Solid Inheritance Line -->
+                      <path d="M 100 110 L 100 145" stroke="#A5B4FC" stroke-width="1.8" marker-start="url(#u2InheritTriangle)"/>
+
+                      <!-- ConcreteClass Subclass -->
+                      <rect x="25" y="150" width="150" height="55" rx="6" fill="var(--bg-subtle)" stroke="var(--border-strong)" stroke-width="1.5"/>
+                      <text x="100" y="170" text-anchor="middle" font-family="var(--font-display)" font-size="11" font-weight="700" fill="var(--text)">Coffee</text>
+                      <line x1="25" y1="178" x2="175" y2="178" stroke="var(--border)" stroke-width="1"/>
+                      <text x="35" y="195" font-family="var(--font-mono)" font-size="9" fill="#10B981">+ brew(), addCondiments()</text>
+                    </g>
+
+                    <!-- Divider Line between patterns -->
+                    <line x1="210" y1="15" x2="210" y2="205" stroke="var(--border)" stroke-width="1" stroke-dasharray="3,3"/>
+
+                    <!-- Right Half: Command Pattern (Delegation) -->
+                    <g class="uml-command-pattern">
+                      <!-- Invoker -->
+                      <rect x="230" y="25" width="115" height="65" rx="6" fill="var(--bg-subtle)" stroke="var(--border-strong)" stroke-width="1.5"/>
+                      <text x="287" y="44" text-anchor="middle" font-family="var(--font-display)" font-size="11" font-weight="700" fill="var(--text)">Invoker (Remote)</text>
+                      <line x1="230" y1="52" x2="345" y2="52" stroke="var(--border)" stroke-width="1"/>
+                      <text x="240" y="72" font-family="var(--font-mono)" font-size="9" fill="var(--accent-ink)">- slot: Command</text>
+                      <text x="240" y="84" font-family="var(--font-mono)" font-size="9" fill="var(--text-muted)">+ buttonWasPressed()</text>
+
+                      <!-- Association Invoker -> Command -->
+                      <path d="M 345 57 L 385 57" stroke="#38BDF8" stroke-width="1.8" marker-end="url(#u2AssocArrow)"/>
+
+                      <!-- Command Interface -->
+                      <rect x="390" y="20" width="135" height="75" rx="6" fill="var(--bg-subtle)" stroke="#10B981" stroke-width="1.8"/>
+                      <text x="457" y="36" text-anchor="middle" font-family="var(--font-mono)" font-size="9" font-weight="700" fill="#6EE7B7">&lt;&lt;interface&gt;&gt;</text>
+                      <text x="457" y="50" text-anchor="middle" font-family="var(--font-display)" font-size="11" font-weight="800" fill="var(--text)">Command</text>
+                      <line x1="390" y1="58" x2="525" y2="58" stroke="var(--border)" stroke-width="1"/>
+                      <text x="402" y="74" font-family="var(--font-mono)" font-size="10" font-weight="700" fill="#10B981">+ execute(): void</text>
+                      <text x="402" y="88" font-family="var(--font-mono)" font-size="10" font-weight="700" fill="#38BDF8">+ undo(): void</text>
+
+                      <!-- Realization Dashed Line -->
+                      <path d="M 457 95 L 457 140" stroke="#10B981" stroke-width="1.8" stroke-dasharray="5,4" marker-start="url(#u2RealizeTriangle)"/>
+
+                      <!-- ConcreteCommand -->
+                      <rect x="385" y="145" width="145" height="60" rx="6" fill="var(--bg-subtle)" stroke="var(--border-strong)" stroke-width="1.5"/>
+                      <text x="457" y="165" text-anchor="middle" font-family="var(--font-display)" font-size="11" font-weight="700" fill="var(--text)">LightOnCommand</text>
+                      <line x1="385" y1="173" x2="530" y2="173" stroke="var(--border)" stroke-width="1"/>
+                      <text x="395" y="190" font-family="var(--font-mono)" font-size="9" fill="var(--text-muted)">- light: Light</text>
+                      <text x="395" y="201" font-family="var(--font-mono)" font-size="9" fill="#10B981">+ execute() { light.on(); }</text>
+                    </g>
+                  </svg>
+                </div>
+
+                <div class="pillar-exam-tip">
+                  🎯 <strong>UML Checklist:</strong> Template Method relies on <strong>class derivation</strong> (solid inheritance triangle). Command relies on <strong>object composition &amp; interface realization</strong> (dashed triangle).
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- PANE 4: SOLID -->
+          <div class="pillar-pane" id="pane-p4" role="tabpanel">
+            <div class="pillar-hero-box">
+              <div class="pillar-rule-card">
+                <div class="pillar-rule-header">
+                  <span class="pillar-rule-tag">Universal Architectural Standard</span>
+                  <span style="font-family:var(--font-mono); font-size:0.75rem; color:var(--text-muted);">Pillar 04</span>
+                </div>
+                <h4 class="pillar-rule-title">The Hollywood Principle &amp; Inversion of Control</h4>
+                <p class="pillar-rule-desc">
+                  Low-level components participate in algorithms, but high-level classes control <em>when and how</em>:
+                </p>
+                <ul class="pillar-criteria-list">
+                  <li><span class="check">✓</span> <span><strong>The Hollywood Principle:</strong> <em>“Don’t call us, we’ll call you.”</em> Prevents dependency rot and circular callback graphs.</span></li>
+                  <li><span class="check">✓</span> <span><strong>Single Responsibility Principle (SRP):</strong> The Invoker doesn't know what turning on a light entails; Receiver doesn't know who pushed the button.</span></li>
+                  <li><span class="check">✓</span> <span><strong>Open/Closed Principle (OCP):</strong> Adding a new command (e.g. <code>GarageDoorOpenCommand</code>) requires zero edits to <code>RemoteControl</code>.</span></li>
+                </ul>
+              </div>
+              <div class="pillar-app-card">
+                <span class="pillar-app-tag">Unit 2: Behavioral Invariants</span>
+                <h4 class="pillar-app-title">IoC in Action: Framework Design</h4>
+                <p style="font-size:0.88rem; line-height:1.6; color:var(--text); margin:0 0 0.5rem;">
+                  Every major enterprise framework (Spring MVC, JUnit, Android Activity lifecycle) relies on the Hollywood Principle. You register hooks; the framework engine calls them.
+                </p>
+                <div class="pillar-exam-tip">
+                  🎯 <strong>Exam Question:</strong> <em>"How does the Hollywood Principle relate to Dependency Inversion (DIP)?"</em> Both favor high-level abstraction, but Hollywood specifically dictates that high-level modules orchestrate the lifecycle of low-level modules, never vice versa.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- PANE 5: HOT-SWAP -->
+          <div class="pillar-pane" id="pane-p5" role="tabpanel">
+            <div class="pillar-hero-box">
+              <div class="pillar-rule-card">
+                <div class="pillar-rule-header">
+                  <span class="pillar-rule-tag">Universal Architectural Standard</span>
+                  <span style="font-family:var(--font-mono); font-size:0.75rem; color:var(--text-muted);">Pillar 05</span>
+                </div>
+                <h4 class="pillar-rule-title">Implementation Mechanics &amp; Null Object Pattern</h4>
+                <p class="pillar-rule-desc">
+                  Enterprise command dispatchers must eliminate <code>null</code> checks and manage state history:
+                </p>
+                <ul class="pillar-criteria-list">
+                  <li><span class="check">✓</span> <span><strong>Null Object Pattern (<code>NoCommand</code>):</strong> Initializing slots with a do-nothing command eliminates tedious <code>if (slot != null)</code> checks.</span></li>
+                  <li><span class="check">✓</span> <span><strong>Single-Level Undo:</strong> Tracking <code>undoCommand = slot;</code> allows immediate one-step rollback.</span></li>
+                  <li><span class="check">✓</span> <span><strong>Multi-Level Undo:</strong> Storing executed commands in a <code>Deque&lt;Command&gt;</code> LIFO stack enables browser-like history backtracks.</span></li>
+                </ul>
+              </div>
+              <div class="pillar-app-card">
+                <span class="pillar-app-tag">Unit 2: Behavioral Invariants</span>
+                <h4 class="pillar-app-title">Remote Slot Assignment &amp; Undo Stack</h4>
+                
+                <div class="ide-window" style="margin: 0.5rem 0 0.85rem;">
+                  <div class="ide-header">
+                    <div class="ide-dots">
+                      <span class="ide-dot ide-dot-red"></span>
+                      <span class="ide-dot ide-dot-yellow"></span>
+                      <span class="ide-dot ide-dot-green"></span>
+                    </div>
+                    <span class="ide-title">RemoteControlWithUndo.java · Robust Invoker</span>
+                    <button type="button" class="ide-copy-btn" onclick="copySnippet(this)" aria-label="Copy code">
+                      <span class="copy-icon">📋</span> Copy
+                    </button>
+                  </div>
+                  <pre class="ide-code"><code class="language-java">public class RemoteControlWithUndo {
+    Command[] onCommands;
+    Command[] offCommands;
+    Command undoCommand; // Tracks the last executed action
+
+    public RemoteControlWithUndo() {
+        onCommands = new Command[7];
+        offCommands = new Command[7];
+        Command noCommand = () -> {}; // Null Object (Lambda!)
+        for (int i = 0; i < 7; i++) {
+            onCommands[i] = noCommand;
+            offCommands[i] = noCommand;
+        }
+        undoCommand = noCommand;
+    }
+    public void onButtonWasPushed(int slot) {
+        onCommands[slot].execute();
+        undoCommand = onCommands[slot]; // Saved for undo
+    }
+    public void undoButtonWasPushed() {
+        undoCommand.undo();
+    }
+}</code></pre>
+                </div>
+
+                <div class="pillar-exam-tip">
+                  🎯 <strong>Exam Trap:</strong> Forgetting the Null Object pattern causes <code>NullPointerException</code> on unprogrammed remote buttons.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- PANE 6: TRADE-OFFS -->
+          <div class="pillar-pane" id="pane-p6" role="tabpanel">
+            <div class="pillar-hero-box">
+              <div class="pillar-rule-card">
+                <div class="pillar-rule-header">
+                  <span class="pillar-rule-tag">Universal Architectural Standard</span>
+                  <span style="font-family:var(--font-mono); font-size:0.75rem; color:var(--text-muted);">Pillar 06</span>
+                </div>
+                <h4 class="pillar-rule-title">Architectural Costs &amp; Trade-offs</h4>
+                <p class="pillar-rule-desc">
+                  Every pattern balances decoupling flexibility against structural weight:
+                </p>
+                <ul class="pillar-criteria-list">
+                  <li><span class="check">✓</span> <span><strong>Template Method Benefits:</strong> Maximum code reuse, rigid workflow enforcement, simple compile-time dispatch.</span></li>
+                  <li><span class="cross">✕</span> <span><strong>Template Method Costs:</strong> Class Bloat ($N$ classes for $N$ variants), compile-time lock (cannot swap steps at runtime).</span></li>
+                  <li><span class="check">✓</span> <span><strong>Command Benefits:</strong> Decouples Invoker from Receiver, supports queueing, scheduling, logging, and undo.</span></li>
+                  <li><span class="cross">✕</span> <span><strong>Command Costs:</strong> Class Explosion (every tiny action needs a Command class). Mitigated in modern Java with lambdas.</span></li>
+                </ul>
+              </div>
+              <div class="pillar-app-card">
+                <span class="pillar-app-tag">Unit 2: Behavioral Invariants</span>
+                <h4 class="pillar-app-title">Mitigating Command Class Bloat</h4>
+                
+                <div class="ide-window" style="margin: 0.5rem 0 0.85rem;">
+                  <div class="ide-header">
+                    <div class="ide-dots">
+                      <span class="ide-dot ide-dot-red"></span>
+                      <span class="ide-dot ide-dot-yellow"></span>
+                      <span class="ide-dot ide-dot-green"></span>
+                    </div>
+                    <span class="ide-title">LambdaCommands.java · Modern Java 8+</span>
+                    <button type="button" class="ide-copy-btn" onclick="copySnippet(this)" aria-label="Copy code">
+                      <span class="copy-icon">📋</span> Copy
+                    </button>
+                  </div>
+                  <pre class="ide-code"><code class="language-java">// Zero concrete class files needed for simple one-way actions:
+remote.setCommand(0, light::on, light::off);
+remote.setCommand(1, stereo::on, stereo::off);
+
+// For complex stateful undo, instantiate a state-capturing ConcreteCommand.</code></pre>
+                </div>
+
+                <div class="pillar-exam-tip">
+                  🎯 <strong>Senior Architect Insight:</strong> When undo requires storing previous receiver state, a dedicated class with a state variable (e.g. <code>prevSpeed</code>) is mandatory.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- PANE 7: RIVALS -->
+          <div class="pillar-pane" id="pane-p7" role="tabpanel">
+            <div class="pillar-hero-box">
+              <div class="pillar-rule-card">
+                <div class="pillar-rule-header">
+                  <span class="pillar-rule-tag">Universal Architectural Standard</span>
+                  <span style="font-family:var(--font-mono); font-size:0.75rem; color:var(--text-muted);">Pillar 07</span>
+                </div>
+                <h4 class="pillar-rule-title">Rival Pattern Decision Matrix</h4>
+                <p class="pillar-rule-desc">
+                  Discriminating between Strategy, Template Method, and Command is a core POSA exam target:
+                </p>
+                <ul class="pillar-criteria-list">
+                  <li><span class="check">✓</span> <span><strong>Template vs. Strategy:</strong> Template uses inheritance to vary parts of an algorithm. Strategy uses composition to vary an entire algorithm at runtime.</span></li>
+                  <li><span class="check">✓</span> <span><strong>Command vs. Strategy:</strong> Command encapsulates a <em>request / action</em> (with undo &amp; queueing). Strategy encapsulates an <em>algorithm</em>.</span></li>
+                  <li><span class="check">✓</span> <span><strong>Command vs. Observer:</strong> Observer broadcasts events to many listeners without return values. Command represents a discrete, targeted action intended for a specific receiver.</span></li>
+                </ul>
+              </div>
+              <div class="pillar-app-card">
+                <span class="pillar-app-tag">Unit 2: Behavioral Invariants</span>
+                <h4 class="pillar-app-title">Behavioral Pattern Comparison Matrix</h4>
+                
+                <div style="overflow-x:auto; -webkit-overflow-scrolling:touch; margin:0.5rem 0 0.85rem;">
+                  <table class="pillar-matrix-table">
+                    <thead>
+                      <tr>
+                        <th>Architectural Need</th>
+                        <th>Pattern</th>
+                        <th>Coupling Mechanism</th>
+                        <th>Core Distinction</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>Fixed skeleton, subclasses vary steps</td>
+                        <td><span class="badge-pattern template">Template Method</span></td>
+                        <td>Inheritance (<code>IS-A</code>)</td>
+                        <td>Compile-time skeleton; Hollywood IoC</td>
+                      </tr>
+                      <tr>
+                        <td>Swap interchangeable algorithms at runtime</td>
+                        <td><span class="badge-pattern strategy">Strategy</span></td>
+                        <td>Composition (<code>HAS-A</code>)</td>
+                        <td>Client configures algorithm variant</td>
+                      </tr>
+                      <tr>
+                        <td>Encapsulate request, queueing, undo/redo</td>
+                        <td><span class="badge-pattern command">Command</span></td>
+                        <td>Request Object</td>
+                        <td>Decouples Invoker from Receiver</td>
+                      </tr>
+                      <tr>
+                        <td>Object lifecycle creation deferral</td>
+                        <td><span class="badge-pattern state">Factory Method</span></td>
+                        <td>Template Method on creation</td>
+                        <td>Subclasses decide which class to instantiate</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+
+                <div class="pillar-exam-tip">
+                  🎯 <strong>Prof. Schäfer Classic Question:</strong> <em>"Factory Method is actually a specialized form of which behavioral pattern?"</em> Answer: Template Method! (The creator's factory method is an abstract primitive hook called inside a template method).
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- PANE 8: EXAM DRILLS -->
+          <div class="pillar-pane" id="pane-p8" role="tabpanel">
+            <div class="pillar-hero-box">
+              <div class="pillar-rule-card">
+                <div class="pillar-rule-header">
+                  <span class="pillar-rule-tag">Universal Architectural Standard</span>
+                  <span style="font-family:var(--font-mono); font-size:0.75rem; color:var(--text-muted);">Pillar 08</span>
+                </div>
+                <h4 class="pillar-rule-title">Real-World JDK Reference &amp; Exam Traps</h4>
+                <p class="pillar-rule-desc">
+                  Template Method and Command form the bedrock of standard Java frameworks:
+                </p>
+                <ul class="pillar-criteria-list">
+                  <li><span class="check">✓</span> <span><strong><code>java.util.AbstractList</code>:</strong> Template method; subclasses only implement <code>get()</code> and <code>size()</code>.</span></li>
+                  <li><span class="check">✓</span> <span><strong><code>java.lang.Runnable</code> &amp; <code>Callable</code>:</strong> Standard JDK Command interfaces executed by <code>ExecutorService</code> thread pools.</span></li>
+                  <li><span class="check">✓</span> <span><strong>Spring <code>JdbcTemplate</code>:</strong> Manages connection opening, statement closing, and exception translation while user passes SQL mapper callbacks.</span></li>
+                </ul>
+              </div>
+              <div class="pillar-app-card">
+                <span class="pillar-app-tag">Unit 2: Behavioral Invariants</span>
+                <h4 class="pillar-app-title">Top 3 Exam Traps to Avoid</h4>
+                <ul class="pillar-criteria-list" style="margin-top:0.5rem;">
+                  <li><span class="cross">✕</span> <span><strong>Trap 1: MacroCommand Undo Forward Loop.</strong> Executing <code>undo()</code> in forward order (1 $\to$ 2 $\to$ 3) corrupts dependent state. Must iterate in <strong>reverse LIFO order (3 $\to$ 2 $\to$ 1)</strong>!</span></li>
+                  <li><span class="cross">✕</span> <span><strong>Trap 2: Forgetting <code>final</code> on Template Method.</strong> Without <code>final</code>, subclasses can override the skeleton itself, breaking algorithm integrity.</span></li>
+                  <li><span class="cross">✕</span> <span><strong>Trap 3: Invoker Knowing the Receiver.</strong> Passing the Receiver instance directly to the Invoker breaks encapsulation.</span></li>
+                </ul>
+                <div class="pillar-exam-tip">
+                  🎯 <strong>Exam Target:</strong> Scoring 15/15 points requires demonstrating strict LIFO MacroCommand undo and Hollywood Principle IoC.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- FULL MATRIX MODE GRID (ALL 8 AT ONCE) -->
+        <div class="blueprint-content-area" id="blueprintMatrixArea" style="display:none; padding-top:0;">
+          <div class="blueprint-matrix-grid active">
+            <div class="matrix-card">
+              <div class="matrix-card-header"><span class="matrix-card-num">Pillar 01</span><span>🎯</span></div>
+              <h4 class="matrix-card-title">Intent &amp; Motivation</h4>
+              <p class="matrix-card-desc">Template Method freezes algorithm skeletons; Command encapsulates requests into standalone objects with undo.</p>
+              <div class="matrix-card-example">Eliminates duplicate workflow code and decouples UI callers from hardware receivers.</div>
+            </div>
+            <div class="matrix-card">
+              <div class="matrix-card-header"><span class="matrix-card-num">Pillar 02</span><span>🧩</span></div>
+              <h4 class="matrix-card-title">Structural Roles</h4>
+              <p class="matrix-card-desc">AbstractClass vs ConcreteClass (Template); Invoker, Command, ConcreteCommand, Receiver, Client (Command).</p>
+              <div class="matrix-card-example">Invoker only calls command.execute(); zero coupling to Receiver.</div>
+            </div>
+            <div class="matrix-card">
+              <div class="matrix-card-header"><span class="matrix-card-num">Pillar 03</span><span>📐</span></div>
+              <h4 class="matrix-card-title">UML 2.5 Anatomy</h4>
+              <p class="matrix-card-desc">Template Method uses solid inheritance arrow (──▷); Command uses directed association (──&gt;) and realization (···▷).</p>
+              <div class="matrix-card-example">Never confuse class derivation (Template) with object delegation (Command).</div>
+            </div>
+            <div class="matrix-card">
+              <div class="matrix-card-header"><span class="matrix-card-num">Pillar 04</span><span>🛡️</span></div>
+              <h4 class="matrix-card-title">Hollywood Principle</h4>
+              <p class="matrix-card-desc">"Don't call us, we'll call you" enforces high-level framework control over low-level step execution.</p>
+              <div class="matrix-card-example">Inversion of Control (IoC) prevents circular dependency rot.</div>
+            </div>
+            <div class="matrix-card">
+              <div class="matrix-card-header"><span class="matrix-card-num">Pillar 05</span><span>⚡</span></div>
+              <h4 class="matrix-card-title">Runtime Undo &amp; Slots</h4>
+              <p class="matrix-card-desc">Null Object (NoCommand) avoids null checks; LIFO stacks enable multi-level undo operations.</p>
+              <div class="matrix-card-example">Supports Java 8+ method references (light::on).</div>
+            </div>
+            <div class="matrix-card">
+              <div class="matrix-card-header"><span class="matrix-card-num">Pillar 06</span><span>⚖️</span></div>
+              <h4 class="matrix-card-title">Trade-offs &amp; Cost</h4>
+              <p class="matrix-card-desc">Compile-time inheritance lock (Template) and class explosion (Command) vs. high decoupling and undoability.</p>
+              <div class="matrix-card-example">Mitigate Command class bloat via stateless lambdas.</div>
+            </div>
+            <div class="matrix-card">
+              <div class="matrix-card-header"><span class="matrix-card-num">Pillar 07</span><span>🧭</span></div>
+              <h4 class="matrix-card-title">Rival Matrix</h4>
+              <p class="matrix-card-desc">Template Method (inheritance) vs. Strategy (composition) vs. Command (request object) vs. Factory Method.</p>
+              <div class="matrix-card-example">Factory Method is a Template Method specialized for object creation.</div>
+            </div>
+            <div class="matrix-card">
+              <div class="matrix-card-header"><span class="matrix-card-num">Pillar 08</span><span>🔍</span></div>
+              <h4 class="matrix-card-title">Real-World &amp; Traps</h4>
+              <p class="matrix-card-desc">JDK AbstractList, Runnable, Spring JdbcTemplate. Traps: MacroCommand forward undo loop, missing final on skeleton.</p>
+              <div class="matrix-card-example">MacroCommand undo MUST strictly execute in reverse LIFO order!</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         SECTION 2: 5-STAGE HANDS-ON MASTERCLASS CURRICULUM
+         ==================================================================== -->
+    <section class="masterclass-curriculum-container" id="curriculumContainer" aria-label="Masterclass Learning Stages">
+      
+      <!-- Prominent Section Divider -->
+      <div class="masterclass-section-divider">
+        <div class="section-divider-line"></div>
+        <div class="section-divider-chip">
+          <span>PART 2 · HANDS-ON CURRICULUM</span>
+        </div>
+        <div class="section-divider-line"></div>
+      </div>
+
+      <!-- Enterprise Curriculum Super Header -->
+      <header class="curriculum-super-header" id="curriculumHeader">
+        <div class="curriculum-eyebrow">
+          <span class="section-badge-pill accent">SECTION 2 OF 2</span>
+          <span class="badge-sep">·</span>
+          <span>🎓 STEP-BY-STEP LEARNING TRACK</span>
+          <span class="badge-sep">·</span>
+          <span>5 INTERACTIVE STAGES</span>
+        </div>
+        <h2 class="curriculum-main-title">Hands-On Behavioral Masterclass: 5 Learning Stages</h2>
+        <p class="curriculum-main-desc">
+          Master the dual behavioral powerhouses: Template Method for invariant algorithmic control, and Command for request decoupling, thread-pool scheduling, and reversible undo.
+        </p>
+
+        <!-- Course Meta Badges -->
+        <div class="curriculum-meta-row" style="display:flex; align-items:center; gap:0.65rem; flex-wrap:wrap; margin-top:0.75rem;">
+          <div style="display:inline-flex; align-items:center; gap:0.35rem; font-family:var(--font-mono); font-size:0.74rem; color:var(--text-muted); background:var(--bg-subtle); padding:0.25rem 0.65rem; border-radius:4px; border:1px solid var(--border);">
+            <span>⏱️ 40 Min Total</span>
+          </div>
+          <div style="display:inline-flex; align-items:center; gap:0.35rem; font-family:var(--font-mono); font-size:0.74rem; color:#10B981; background:rgba(16,185,129,0.1); padding:0.25rem 0.65rem; border-radius:4px; border:1px solid rgba(16,185,129,0.25);">
+            <span>🎯 15 Exam Points Target</span>
+          </div>
+          <div style="display:inline-flex; align-items:center; gap:0.35rem; font-family:var(--font-mono); font-size:0.74rem; color:#38BDF8; background:rgba(56,189,248,0.1); padding:0.25rem 0.65rem; border-radius:4px; border:1px solid rgba(56,189,248,0.25);">
+            <span>🏛️ Prof. Dr. Jörg Schäfer (Frankfurt UAS)</span>
+          </div>
+        </div>
+      </header>
+
+      <!-- Masterclass Stage Bar -->
+      <nav class="masterclass-stage-nav" aria-label="Learning Stages">
+        <div class="stage-nav-inner">
+          <div class="stage-pills-wrap">
+            <button type="button" class="stage-pill active" data-stage="stage-1-template">
+              <span>☕ 1. Template Method</span>
+            </button>
+            <button type="button" class="stage-pill" data-stage="stage-2-command">
+              <span>🎮 2. Command Pattern</span>
+            </button>
+            <button type="button" class="stage-pill" data-stage="stage-3-interactive">
+              <span>⚡ 3. Remote Sandbox</span>
+            </button>
+            <button type="button" class="stage-pill" data-stage="stage-4-macro">
+              <span>🔄 4. Undo &amp; Macros</span>
+            </button>
+            <button type="button" class="stage-pill" data-stage="stage-5-exam">
+              <span>🎓 5. Exam Drills</span>
+            </button>
+          </div>
+          <button type="button" class="stage-mode-btn" id="stageModeToggle" title="Toggle between Step-by-Step focus and Full document scroll">
+            📑 Focused Stage Mode
+          </button>
+        </div>
+      </nav>
 
     <!-- STAGE 1: TEMPLATE METHOD -->
     <div class="stage-view active" id="stage-1-template">
       
-      <div class="chapter-head">
-        <span class="chapter-num">Stage 1</span>
-        <h2>The Template Method Pattern &amp; The Hollywood Principle</h2>
+      <div class="stage-header-top">
+        <div class="stage-eyebrow-pill">
+          <span class="stage-eyebrow-dot"></span>
+          <span class="stage-eyebrow-num">Stage 01</span>
+          <span class="stage-eyebrow-sep">·</span>
+          <span class="stage-eyebrow-topic">Invariant Skeletons &amp; IoC</span>
+        </div>
+        <button type="button" class="stage-mastery-btn" data-stage="stage-1-template">
+          <span class="mastery-check">○</span>
+          <span class="mastery-label">Mark Mastered</span>
+        </button>
       </div>
+      <h2 class="stage-title">The Template Method Pattern &amp; The Hollywood Principle</h2>
       <p class="chapter-dek">
         Eliminate duplicate algorithmic workflows by freezing the invariant skeleton in a superclass while letting subclasses implement custom steps.
       </p>
@@ -288,7 +942,7 @@
       </div>
 
       <p style="font-size:0.95rem; line-height:1.65; color:var(--text);">
-        In traditional top-down procedural programming, low-level modules call high-level utility functions. Under the Hollywood Principle, control flow is completely inverted (<strong>IoC</strong>):
+        In traditional procedural programming, low-level modules call high-level utility functions. Under the Hollywood Principle, control flow is completely inverted (<strong>IoC</strong>):
       </p>
       <ul style="font-size:0.92rem; line-height:1.7; color:var(--text-muted); margin-bottom:1.5rem;">
         <li>The high-level abstract class declares a <code>final</code> template method that dictates <em>when</em> each step executes.</li>
@@ -296,10 +950,68 @@
         <li>This eliminates dependency rot and prevents fragile callback loops.</li>
       </ul>
 
-      <!-- Action Button to Advance -->
-      <div style="text-align:right; margin:3rem 0 1rem;">
-        <button type="button" class="btn-stepper btn-stepper-next jump-stage-btn" data-target-stage="stage-2-command" style="padding:0.85rem 1.75rem; font-size:0.95rem;">
-          Proceed to Stage 2: The Command Pattern →
+      <!-- Stage 1 Key Takeaways Box -->
+      <section class="stage-takeaways-box" aria-label="Stage 1 Key Architectural Principles">
+        <div class="takeaways-header">
+          <div class="takeaways-eyebrow">
+            <span class="takeaways-dot"></span>
+            <span>STAGE 1 KEY TAKEAWAYS</span>
+            <span style="opacity:0.4;">·</span>
+            <span>INVERSION OF CONTROL AXIOMS</span>
+          </div>
+          <h3 class="takeaways-title">The 3 Architectural Rules of Template Method</h3>
+          <p class="takeaways-desc">
+            The Template Method pattern establishes strict boundaries between invariant flow control and variant subclass customization:
+          </p>
+        </div>
+
+        <div class="golden-rules-grid">
+          <div class="golden-rule-card rule-blue">
+            <div class="golden-rule-header-row">
+              <span class="golden-rule-tag">Rule 1 · Final Skeleton</span>
+              <div class="golden-rule-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+              </div>
+            </div>
+            <h4 class="golden-rule-title">Freeze the Workflow</h4>
+            <p class="golden-rule-desc">Declare the template method as <code>final</code> in the abstract base class to guarantee that no subclass can alter the sequence of execution.</p>
+          </div>
+
+          <div class="golden-rule-card rule-emerald">
+            <div class="golden-rule-header-row">
+              <span class="golden-rule-tag">Rule 2 · Hollywood IoC</span>
+              <div class="golden-rule-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+              </div>
+            </div>
+            <h4 class="golden-rule-title">Don't Call Us</h4>
+            <p class="golden-rule-desc">High-level components invoke low-level components, never the reverse. Subclasses fill in blanks without controlling lifecycle timing.</p>
+          </div>
+
+          <div class="golden-rule-card rule-purple">
+            <div class="golden-rule-header-row">
+              <span class="golden-rule-tag">Rule 3 · Optional Hooks</span>
+              <div class="golden-rule-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+              </div>
+            </div>
+            <h4 class="golden-rule-title">Hooks vs. Abstracts</h4>
+            <p class="golden-rule-desc">Use abstract methods for mandatory steps subclasses must supply; use concrete empty hooks for optional behavioral overrides.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Up Next Card to Advance to Stage 2 -->
+      <div class="stage-next-card">
+        <div class="stage-next-left">
+          <span class="stage-next-tag">UP NEXT · STAGE 2 OF 5</span>
+          <h4 class="stage-next-title">The Command Pattern: Modeling Verbs as First-Class Objects</h4>
+          <p class="stage-next-desc">
+            Discover how to turn function calls into decoupled object instances, enabling asynchronous scheduling, queueing, and undoability.
+          </p>
+        </div>
+        <button type="button" class="btn-stage-advance jump-stage-btn" data-target-stage="stage-2-command">
+          Proceed to Stage 2 →
         </button>
       </div>
 
@@ -308,30 +1020,92 @@
     <!-- STAGE 2: COMMAND PATTERN -->
     <div class="stage-view" id="stage-2-command">
       
-      <div class="chapter-head">
-        <span class="chapter-num">Stage 2</span>
-        <h2>The Command Pattern: Modeling Verbs as Objects</h2>
+      <div class="stage-header-top">
+        <div class="stage-eyebrow-pill">
+          <span class="stage-eyebrow-dot"></span>
+          <span class="stage-eyebrow-num">Stage 02</span>
+          <span class="stage-eyebrow-sep">·</span>
+          <span class="stage-eyebrow-topic">First-Class Request Objects</span>
+        </div>
+        <button type="button" class="stage-mastery-btn" data-stage="stage-2-command">
+          <span class="mastery-check">○</span>
+          <span class="mastery-label">Mark Mastered</span>
+        </button>
       </div>
+      <h2 class="stage-title">The Command Pattern: Modeling Verbs as Objects</h2>
       <p class="chapter-dek">
         Decouple the sender of a request (Invoker) from the object that actually executes the business action (Receiver).
       </p>
 
-      <div style="background:var(--bg-raised); border:1px solid var(--border); border-radius:var(--radius-md); padding:1.5rem; margin-bottom:1.5rem;">
-        <h4 style="margin:0 0 0.5rem; color:#38bdf8;">Gang of Four Specification</h4>
-        <p style="font-size:0.92rem; color:var(--text); line-height:1.6; margin:0 0 1rem;">
+      <div style="background:var(--bg-raised); border:1px solid var(--border-strong); border-radius:var(--radius-lg); padding:1.75rem; margin-bottom:1.5rem;">
+        <h4 style="margin:0 0 0.5rem; color:#38bdf8; font-family:var(--font-display); font-size:1.15rem;">Gang of Four Specification</h4>
+        <p style="font-size:0.95rem; color:var(--text); line-height:1.6; margin:0 0 1.25rem;">
           <em>“Encapsulate a request as an object, thereby letting you parameterize clients with different requests, queue or log requests, and support undoable operations.”</em>
         </p>
-        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:1rem; font-size:0.85rem;">
-          <div><strong style="color:var(--text);">Invoker:</strong> Remote control button or UI menu item. Only calls <code>command.execute()</code>. Zero knowledge of Receiver.</div>
-          <div><strong style="color:var(--text);">Command Interface:</strong> Declares <code>execute()</code> and optional <code>undo()</code>.</div>
-          <div><strong style="color:var(--text);">Receiver:</strong> The actual appliance (Light, Stereo, GarageDoor) performing the real work.</div>
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(240px, 1fr)); gap:1.25rem; font-size:0.88rem;">
+          <div style="background:var(--bg-subtle); padding:1rem; border-radius:var(--radius-md); border:1px solid var(--border);">
+            <strong style="color:#38bdf8; display:block; margin-bottom:0.35rem;">Invoker (Caller):</strong>
+            Remote control button or UI menu item. Only holds a Command reference and triggers <code>command.execute()</code>. Zero knowledge of Receiver hardware.
+          </div>
+          <div style="background:var(--bg-subtle); padding:1rem; border-radius:var(--radius-md); border:1px solid var(--border);">
+            <strong style="color:#10b981; display:block; margin-bottom:0.35rem;">Command Interface:</strong>
+            Uniform contract declaring <code>void execute()</code> and optional <code>void undo()</code>. Eliminates type variance.
+          </div>
+          <div style="background:var(--bg-subtle); padding:1rem; border-radius:var(--radius-md); border:1px solid var(--border);">
+            <strong style="color:#a5b4fc; display:block; margin-bottom:0.35rem;">Receiver (Performer):</strong>
+            The actual hardware appliance (Light, Stereo, GarageDoor) performing the real domain work.
+          </div>
         </div>
       </div>
 
-      <!-- Action Button to Advance -->
-      <div style="text-align:right; margin:3rem 0 1rem;">
-        <button type="button" class="btn-stepper btn-stepper-next jump-stage-btn" data-target-stage="stage-3-interactive" style="padding:0.85rem 1.75rem; font-size:0.95rem;">
-          Proceed to Stage 3: Interactive Remote Control Sandbox →
+      <!-- IDE Window for Command Code -->
+      <div class="ide-window" style="margin: 1.5rem 0 2rem;">
+        <div class="ide-header">
+          <div class="ide-dots">
+            <span class="ide-dot ide-dot-red"></span>
+            <span class="ide-dot ide-dot-yellow"></span>
+            <span class="ide-dot ide-dot-green"></span>
+          </div>
+          <span class="ide-title">CommandPatternWiring.java · Complete Contract</span>
+          <button type="button" class="ide-copy-btn" onclick="copySnippet(this)" aria-label="Copy code">
+            <span class="copy-icon">📋</span> Copy
+          </button>
+        </div>
+        <pre class="ide-code"><code class="language-java">// 1. Command Interface Contract
+public interface Command {
+    void execute();
+    void undo();
+}
+
+// 2. ConcreteCommand encapsulating action on Receiver
+public class LightOnCommand implements Command {
+    private final Light light; // Reference to Receiver
+
+    public LightOnCommand(Light light) {
+        this.light = light;
+    }
+    @Override
+    public void execute() {
+        light.on(); // Delegated to Receiver
+    }
+    @Override
+    public void undo() {
+        light.off(); // Symmetrical reversal
+    }
+}</code></pre>
+      </div>
+
+      <!-- Up Next Card to Advance to Stage 3 -->
+      <div class="stage-next-card">
+        <div class="stage-next-left">
+          <span class="stage-next-tag">UP NEXT · STAGE 3 OF 5</span>
+          <h4 class="stage-next-title">Interactive Smart Home Remote Control Sandbox</h4>
+          <p class="stage-next-desc">
+            Test the live hardware simulator, trigger real-time command slots, inspect light states, and verify undo stack rollback.
+          </p>
+        </div>
+        <button type="button" class="btn-stage-advance jump-stage-btn" data-target-stage="stage-3-interactive">
+          Proceed to Stage 3 →
         </button>
       </div>
 
@@ -340,10 +1114,19 @@
     <!-- STAGE 3: INTERACTIVE REMOTE SANDBOX -->
     <div class="stage-view" id="stage-3-interactive">
       
-      <div class="chapter-head">
-        <span class="chapter-num">Stage 3</span>
-        <h2>Interactive Smart Home Remote Control Sandbox</h2>
+      <div class="stage-header-top">
+        <div class="stage-eyebrow-pill">
+          <span class="stage-eyebrow-dot"></span>
+          <span class="stage-eyebrow-num">Stage 03</span>
+          <span class="stage-eyebrow-sep">·</span>
+          <span class="stage-eyebrow-topic">Live Hardware Simulation</span>
+        </div>
+        <button type="button" class="stage-mastery-btn" data-stage="stage-3-interactive">
+          <span class="mastery-check">○</span>
+          <span class="mastery-label">Mark Mastered</span>
+        </button>
       </div>
+      <h2 class="stage-title">Interactive Smart Home Remote Control Sandbox</h2>
       <p class="chapter-dek">
         Test the Command Pattern live. Execute commands, inspect receiver state, and test reversible Undo operations.
       </p>
@@ -369,10 +1152,17 @@
         <div class="sim-console" id="cmdConsole">> Smart Home Receiver initialized. Remote slots loaded with Command instances.</div>
       </div>
 
-      <!-- Action Button to Advance -->
-      <div style="text-align:right; margin:3rem 0 1rem;">
-        <button type="button" class="btn-stepper btn-stepper-next jump-stage-btn" data-target-stage="stage-4-macro" style="padding:0.85rem 1.75rem; font-size:0.95rem;">
-          Proceed to Stage 4: Multi-Level Undo &amp; Macros →
+      <!-- Up Next Card to Advance to Stage 4 -->
+      <div class="stage-next-card">
+        <div class="stage-next-left">
+          <span class="stage-next-tag">UP NEXT · STAGE 4 OF 5</span>
+          <h4 class="stage-next-title">Macro Commands, Multi-Level Undo &amp; Thread Pools</h4>
+          <p class="stage-next-desc">
+            Explore composite party modes, the strict LIFO reverse-loop undo law, and asynchronous task scheduling.
+          </p>
+        </div>
+        <button type="button" class="btn-stage-advance jump-stage-btn" data-target-stage="stage-4-macro">
+          Proceed to Stage 4 →
         </button>
       </div>
 
@@ -381,25 +1171,76 @@
     <!-- STAGE 4: UNDO & MACROS -->
     <div class="stage-view" id="stage-4-macro">
       
-      <div class="chapter-head">
-        <span class="chapter-num">Stage 4</span>
-        <h2>Macro Commands, Multi-Level Undo &amp; Thread Pools</h2>
+      <div class="stage-header-top">
+        <div class="stage-eyebrow-pill">
+          <span class="stage-eyebrow-dot"></span>
+          <span class="stage-eyebrow-num">Stage 04</span>
+          <span class="stage-eyebrow-sep">·</span>
+          <span class="stage-eyebrow-topic">LIFO Stacks &amp; Concurrency</span>
+        </div>
+        <button type="button" class="stage-mastery-btn" data-stage="stage-4-macro">
+          <span class="mastery-check">○</span>
+          <span class="mastery-label">Mark Mastered</span>
+        </button>
       </div>
+      <h2 class="stage-title">Macro Commands, Multi-Level Undo &amp; Thread Pools</h2>
       <p class="chapter-dek">
         Executing composite command sequences and decoupling work items in concurrent thread pools.
       </p>
 
-      <div style="background:var(--bg-raised); border:1px solid var(--border); border-radius:var(--radius-md); padding:1.5rem; margin-bottom:1.5rem;">
-        <h4 style="margin:0 0 0.5rem; color:#f59e0b;">CRITICAL EXAM RULE: Reverse Undo Ordering</h4>
-        <p style="font-size:0.92rem; color:var(--text); line-height:1.6; margin:0;">
+      <div style="background:var(--bg-raised); border:1px solid var(--border-strong); border-left:4px solid #f59e0b; border-radius:var(--radius-lg); padding:1.75rem; margin-bottom:1.5rem;">
+        <h4 style="margin:0 0 0.5rem; color:#f59e0b; font-family:var(--font-display); font-size:1.15rem;">CRITICAL EXAM RULE: Reverse Undo Ordering (LIFO)</h4>
+        <p style="font-size:0.92rem; color:var(--text); line-height:1.6; margin:0 0 1rem;">
           When executing a <strong>MacroCommand</strong> (Composite Pattern), commands execute in forward order (1 $\to$ 2 $\to$ 3). However, when calling <code>undo()</code>, the sequence <strong>MUST strictly execute in reverse order (3 $\to$ 2 $\to$ 1)</strong> using a LIFO Stack or reverse iterator. Otherwise, state dependencies will be corrupted!
         </p>
+        
+        <div class="ide-window" style="margin: 0.5rem 0 0.5rem;">
+          <div class="ide-header">
+            <div class="ide-dots">
+              <span class="ide-dot ide-dot-red"></span>
+              <span class="ide-dot ide-dot-yellow"></span>
+              <span class="ide-dot ide-dot-green"></span>
+            </div>
+            <span class="ide-title">MacroCommand.java · Reverse LIFO Loop</span>
+            <button type="button" class="ide-copy-btn" onclick="copySnippet(this)" aria-label="Copy code">
+              <span class="copy-icon">📋</span> Copy
+            </button>
+          </div>
+          <pre class="ide-code"><code class="language-java">public class MacroCommand implements Command {
+    private final Command[] commands;
+
+    public MacroCommand(Command[] commands) {
+        this.commands = commands;
+    }
+    @Override
+    public void execute() {
+        for (Command cmd : commands) { // Forward chronological order: 1 -> 2 -> 3
+            cmd.execute();
+        }
+    }
+    @Override
+    public void undo() {
+        // FATAL EXAM ERROR: Looping forward!
+        // CORRECT: Reverse loop 3 -> 2 -> 1 (LIFO)
+        for (int i = commands.length - 1; i >= 0; i--) {
+            commands[i].undo();
+        }
+    }
+}</code></pre>
+        </div>
       </div>
 
-      <!-- Action Button to Advance -->
-      <div style="text-align:right; margin:3rem 0 1rem;">
-        <button type="button" class="btn-stepper btn-stepper-next jump-stage-btn" data-target-stage="stage-5-exam" style="padding:0.85rem 1.75rem; font-size:0.95rem;">
-          Proceed to Stage 5: Prof. Schäfer Exam Drills →
+      <!-- Up Next Card to Advance to Stage 5 -->
+      <div class="stage-next-card">
+        <div class="stage-next-left">
+          <span class="stage-next-tag">UP NEXT · STAGE 5 OF 5</span>
+          <h4 class="stage-next-title">Prof. Dr. Jörg Schäfer Exam Drills &amp; Gotcha Defense</h4>
+          <p class="stage-next-desc">
+            Verify your mastery of dumb vs smart commands, reverse undo ordering, and official Frankfurt UAS exam questions.
+          </p>
+        </div>
+        <button type="button" class="btn-stage-advance jump-stage-btn" data-target-stage="stage-5-exam">
+          Proceed to Stage 5 →
         </button>
       </div>
 
@@ -408,10 +1249,19 @@
     <!-- STAGE 5: EXAM MASTERY -->
     <div class="stage-view" id="stage-5-exam">
       
-      <div class="chapter-head">
-        <span class="chapter-num">Stage 5</span>
-        <h2>Prof. Dr. Jörg Schäfer Exam Mastery &amp; Quiz</h2>
+      <div class="stage-header-top">
+        <div class="stage-eyebrow-pill">
+          <span class="stage-eyebrow-dot"></span>
+          <span class="stage-eyebrow-num">Stage 05</span>
+          <span class="stage-eyebrow-sep">·</span>
+          <span class="stage-eyebrow-topic">Frankfurt UAS Exam Drills</span>
+        </div>
+        <button type="button" class="stage-mastery-btn" data-stage="stage-5-exam">
+          <span class="mastery-check">○</span>
+          <span class="mastery-label">Mark Mastered</span>
+        </button>
       </div>
+      <h2 class="stage-title">Prof. Dr. Jörg Schäfer Exam Mastery &amp; Quiz</h2>
       <p class="chapter-dek">
         Official self-study questions and verified Frankfurt UAS exam questions.
       </p>
@@ -482,6 +1332,7 @@
       </div>
 
     </div>
+    </section>
 
     <!-- Navigation Footer -->
     <footer class="page-footer" style="margin-top: 4rem; padding-top: 2rem; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
@@ -496,6 +1347,228 @@
   </div>
 </div>
 
-<script src="assets/site.js" defer></script>
+<script>
+// 8-Pillar Architecture Blueprint Command Center Controller
+function selectPillar(pillarId) {
+  var btns = document.querySelectorAll(".pillar-tab-btn");
+  var panes = document.querySelectorAll(".pillar-pane");
+  
+  btns.forEach(function (b) {
+    var match = b.getAttribute("data-pillar") === pillarId;
+    b.classList.toggle("active", match);
+    b.setAttribute("aria-selected", match ? "true" : "false");
+  });
+
+  panes.forEach(function (p) {
+    p.classList.toggle("active", p.getAttribute("id") === "pane-" + pillarId);
+  });
+}
+
+function setBlueprintView(view) {
+  var explorerBtn = document.getElementById("btnViewExplorer");
+  var matrixBtn = document.getElementById("btnViewMatrix");
+  var pillsBar = document.getElementById("blueprintPillsBar");
+  var contentArea = document.getElementById("blueprintContentArea");
+  var matrixArea = document.getElementById("blueprintMatrixArea");
+
+  if (view === "matrix") {
+    if (explorerBtn) explorerBtn.classList.remove("active");
+    if (matrixBtn) matrixBtn.classList.add("active");
+    if (pillsBar) pillsBar.style.display = "none";
+    if (contentArea) contentArea.style.display = "none";
+    if (matrixArea) matrixArea.style.display = "block";
+  } else {
+    if (explorerBtn) explorerBtn.classList.add("active");
+    if (matrixBtn) matrixBtn.classList.remove("active");
+    if (pillsBar) pillsBar.style.display = "flex";
+    if (contentArea) contentArea.style.display = "block";
+    if (matrixArea) matrixArea.style.display = "none";
+  }
+}
+
+var _lastInlineCollapseTime = 0;
+function toggleBlueprintCollapse(forceState) {
+  var now = Date.now();
+  if (typeof forceState !== "boolean" && now - _lastInlineCollapseTime < 250) {
+    return;
+  }
+  _lastInlineCollapseTime = now;
+
+  var suite = document.getElementById("blueprintSuite");
+  var collapseBtn = document.getElementById("btnCollapseBlueprint");
+  var body = document.getElementById("blueprintCollapsibleBody");
+  var hint = document.getElementById("blueprintCollapsedHint");
+  if (!suite) return;
+
+  var isCurrentlyCollapsed = suite.classList.contains("is-collapsed");
+  var willCollapse = (typeof forceState === "boolean") ? forceState : !isCurrentlyCollapsed;
+
+  if (willCollapse) {
+    suite.classList.add("is-collapsed");
+    if (body) body.style.display = "none";
+    if (hint) hint.style.display = "flex";
+  } else {
+    suite.classList.remove("is-collapsed");
+    if (body) body.style.display = "block";
+    if (hint) hint.style.display = "none";
+  }
+
+  if (collapseBtn) {
+    var icon = collapseBtn.querySelector(".collapse-icon");
+    var label = collapseBtn.querySelector(".collapse-label");
+    if (willCollapse) {
+      if (icon) icon.textContent = "▼";
+      if (label) label.textContent = "Expand Rubric";
+      collapseBtn.setAttribute("aria-expanded", "false");
+      collapseBtn.title = "Expand the 8-Pillar Architecture Rubric";
+    } else {
+      if (icon) icon.textContent = "▲";
+      if (label) label.textContent = "Collapse Rubric";
+      collapseBtn.setAttribute("aria-expanded", "true");
+      collapseBtn.title = "Collapse the 8-Pillar Architecture Rubric";
+    }
+  }
+}
+
+function copyBlueprintRubric() {
+  var copyLabel = document.getElementById("copyRubricSuiteLabel");
+  var rubricMarkdown = 
+    "# Software Pattern Mastery: The 8-Pillar Architectural Rubric\n" +
+    "*(Standard for POSA Exams & Technical Architecture Reviews)*\n\n" +
+    "## Pattern Names: Template Method & Command Patterns\n\n" +
+    "### 1. Intent & Architectural Motivation\n" +
+    "- **Template Method**: Define skeleton of an algorithm in an operation, deferring steps to subclasses.\n" +
+    "- **Command**: Encapsulate a request as an object, enabling parameterization, queues, and undo.\n\n" +
+    "### 2. Structural Roles & Participants\n" +
+    "- **Template Method**: AbstractClass, ConcreteClass.\n" +
+    "- **Command**: Invoker, Command Interface, ConcreteCommand, Receiver, Client.\n\n" +
+    "### 3. Formal UML Anatomy & Relationships\n" +
+    "- **Template Method**: Solid inheritance arrow (`──▷`).\n" +
+    "- **Command**: Invoker directed association (`──>`) to Command; ConcreteCommand realization (`···▷`).\n\n" +
+    "### 4. Core Design Principles Enforced\n" +
+    "- **The Hollywood Principle**: \"Don't call us, we'll call you\" (Inversion of Control).\n" +
+    "- **Single Responsibility & Open/Closed**: Invoker decoupled from Receiver; new commands added without modifying Invoker.\n\n" +
+    "### 5. Implementation Mechanics & Runtime Undo\n" +
+    "- Null Object pattern (`NoCommand`) eliminates `null` checks.\n" +
+    "- LIFO stack (`undoCommand` or `Deque<Command>`) enables reversible rollback.\n\n" +
+    "### 6. Architectural Costs & Trade-offs\n" +
+    "- **Pros**: High decoupling, reversible undo, algorithm integrity.\n" +
+    "- **Cons**: Class explosion (mitigated via Java 8 lambdas); compile-time inheritance binding.\n\n" +
+    "### 7. Rival Pattern Decision Matrix\n" +
+    "- **Template Method vs Strategy**: Inheritance vs Composition.\n" +
+    "- **Command vs Strategy**: Request / Action with undo vs interchangeable algorithm.\n\n" +
+    "### 8. Real-World JDK Reference & Exam Traps\n" +
+    "- **JDK Standard**: `java.util.AbstractList`, `java.lang.Runnable`, `Spring JdbcTemplate`.\n" +
+    "- **Exam Traps**: Forgetting `final` on template method; executing MacroCommand undo in forward order.\n";
+
+  function updateLabelSuccess() {
+    if (copyLabel) copyLabel.textContent = "Copied to Clipboard!";
+    if (typeof window.showToast === "function") window.showToast("8-Pillar Study Rubric copied to clipboard!");
+    setTimeout(function () {
+      if (copyLabel) copyLabel.textContent = "Copy Rubric (Markdown)";
+    }, 2500);
+  }
+
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(rubricMarkdown).then(updateLabelSuccess).catch(function () {
+      fallbackCopy(rubricMarkdown);
+    });
+  } else {
+    fallbackCopy(rubricMarkdown);
+  }
+
+  function fallbackCopy(text) {
+    var ta = document.createElement("textarea");
+    ta.value = text;
+    ta.style.position = "fixed";
+    ta.style.opacity = "0";
+    document.body.appendChild(ta);
+    ta.select();
+    try {
+      document.execCommand("copy");
+      updateLabelSuccess();
+    } catch (e) {
+      alert("Please press Ctrl+C to copy rubric");
+    }
+    document.body.removeChild(ta);
+  }
+}
+
+// Interactive Smart Home Remote Simulator Controller
+(function initRemoteSandbox() {
+  var light = document.getElementById("demoLight");
+  var statusText = document.getElementById("demoLightStatus");
+  var consoleEl = document.getElementById("cmdConsole");
+  var onBtn = document.getElementById("cmdOnBtn");
+  var offBtn = document.getElementById("cmdOffBtn");
+  var undoBtn = document.getElementById("cmdUndoBtn");
+
+  if (!light || !statusText || !consoleEl || !onBtn || !offBtn || !undoBtn) return;
+
+  var isLightOn = false;
+  var undoStack = [];
+
+  function updateUI(isOn) {
+    isLightOn = isOn;
+    if (isOn) {
+      light.classList.add("on");
+      light.textContent = "💡";
+      statusText.textContent = "Living Room Light: ON (100% Lux)";
+      statusText.style.color = "#facc15";
+    } else {
+      light.classList.remove("on");
+      light.textContent = "🌑";
+      statusText.textContent = "Living Room Light: OFF";
+      statusText.style.color = "var(--text)";
+    }
+  }
+
+  function log(msg) {
+    consoleEl.textContent = ">> " + msg;
+  }
+
+  onBtn.addEventListener("click", function () {
+    if (isLightOn) {
+      log("[LightOnCommand::execute()] Receiver already ON. Idempotent call.");
+      return;
+    }
+    updateUI(true);
+    undoStack.push("turnOff");
+    log("[RemoteControl] Slot 0 pushed -> LightOnCommand::execute() -> Receiver: LivingRoomLight ON");
+  });
+
+  offBtn.addEventListener("click", function () {
+    if (!isLightOn) {
+      log("[LightOffCommand::execute()] Receiver already OFF. Idempotent call.");
+      return;
+    }
+    updateUI(false);
+    undoStack.push("turnOn");
+    log("[RemoteControl] Slot 1 pushed -> LightOffCommand::execute() -> Receiver: LivingRoomLight OFF");
+  });
+
+  undoBtn.addEventListener("click", function () {
+    if (undoStack.length === 0) {
+      log("[RemoteControl::pressUndo()] LIFO Undo stack is empty! NoCommand executed.");
+      return;
+    }
+    var action = undoStack.pop();
+    if (action === "turnOff") {
+      updateUI(false);
+      log("[RemoteControl::pressUndo()] LIFO Stack pop -> LightOnCommand::undo() -> Reverted to OFF");
+    } else {
+      updateUI(true);
+      log("[RemoteControl::pressUndo()] LIFO Stack pop -> LightOffCommand::undo() -> Reverted to ON");
+    }
+  });
+})();
+
+window.selectPillar = selectPillar;
+window.setBlueprintView = setBlueprintView;
+window.toggleBlueprintCollapse = toggleBlueprintCollapse;
+window.copyBlueprintRubric = copyBlueprintRubric;
+</script>
+
+<script src="assets/site.js?v=2026.15" defer></script>
 </body>
 </html>
