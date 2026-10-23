@@ -2,66 +2,157 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Unit 3: Structural Patterns (Iterator &amp; Composite) | POSA 2026</title>
-<meta name="description" content="Unit 3 of Pattern-Oriented Software Architecture by Prof. Dr. Jörg Schäfer: Iterator, Composite, uniform client handling, and self-study questions.">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230c7a73'/%3E%3Cpath d='M8 10h16M8 16h16M8 22h10' stroke='%23fff' stroke-width='2.2' stroke-linecap='round'/%3E%3C/svg%3E">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Unit 3: Structural Patterns (Composite &amp; Iterator) | POSA 2026 Masterclass</title>
+<meta name="description" content="Master GoF Structural Patterns: Composite and Iterator. Part-Whole hierarchies, uniform client handling, Transparency vs Safety trade-offs, and POSA exam drills with Prof. Dr. Jörg Schäfer.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230284c7'/%3E%3Cpath d='M8 10h16M8 16h16M8 22h10' stroke='%23fff' stroke-width='2.2' stroke-linecap='round'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/style.css">
+<link rel="stylesheet" href="assets/style.css?v=2026.15">
 <style>
-  .quote-card {
-    margin: 1.5rem 0 2rem;
-    padding: 1.25rem 1.5rem;
-    background: var(--accent-soft);
-    border-left: 4px solid var(--accent);
-    border-radius: 0 var(--radius-md) var(--radius-md) 0;
-    font-style: italic;
-    color: var(--accent-ink);
+  .reading-progress-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #0284c7 0%, #38bdf8 50%, #10b981 100%);
+    width: 0%;
+    z-index: 9999;
+    transition: width 0.1s ease-out;
   }
-  .quote-author {
-    display: block;
-    margin-top: 0.5rem;
-    font-style: normal;
-    font-weight: 700;
-    font-size: 0.85rem;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-  }
-  .code-container {
-    margin: 1.5rem 0;
+  .stage-takeaways-box {
+    background: rgba(2, 132, 199, 0.05);
+    border: 1px solid rgba(2, 132, 199, 0.2);
     border-radius: var(--radius-md);
-    overflow: hidden;
-    background: var(--code-bg);
+    padding: 1.5rem;
+    margin: 2rem 0;
+  }
+  [data-theme="light"] .stage-takeaways-box {
+    background: #f0f9ff;
+    border-color: #bae6fd;
+  }
+  .stage-takeaways-title {
+    font-weight: 800;
+    color: #0284c7;
+    margin-bottom: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1.05rem;
+  }
+  .takeaway-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+  .takeaway-item {
+    background: var(--bg-raised);
+    padding: 1rem;
+    border-radius: var(--radius-sm);
     border: 1px solid var(--border);
   }
-  .code-header {
-    background: rgba(0,0,0,0.05);
-    padding: 0.5rem 1rem;
-    display: flex;
-    justify-content: space-between;
-    font-family: var(--font-mono);
-    font-size: 0.8rem;
-    color: var(--text-muted);
+  .takeaway-item strong {
+    color: var(--text);
+    display: block;
+    margin-bottom: 0.35rem;
+    font-size: 0.92rem;
   }
-  .code-body {
-    padding: 1rem;
+  .takeaway-item p {
     margin: 0;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    line-height: 1.5;
+  }
+  /* Interactive Menu & Iterator Simulator */
+  .tree-sandbox-card {
+    background: var(--bg-raised);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 1.5rem;
+    margin: 2rem 0;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+  }
+  .tree-node-view {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin: 1.25rem 0;
     font-family: var(--font-mono);
     font-size: 0.88rem;
+  }
+  .tree-item-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.65rem 1rem;
+    background: var(--bg-subtle);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    transition: all 0.2s ease;
+  }
+  .tree-item-row.is-active-cursor {
+    border-color: #38bdf8;
+    background: rgba(56, 189, 248, 0.12);
+    box-shadow: 0 0 12px rgba(56, 189, 248, 0.3);
+    transform: translateX(4px);
+  }
+  .tree-item-row.is-composite {
+    border-left: 4px solid #8b5cf6;
+    font-weight: 700;
+  }
+  .tree-item-row.is-leaf {
+    border-left: 4px solid #0284c7;
+    margin-left: 1.5rem;
+  }
+  .tree-item-row.is-subleaf {
+    border-left: 4px solid #10b981;
+    margin-left: 3rem;
+  }
+  .tree-node-badge {
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+  .badge-composite {
+    background: rgba(139, 92, 246, 0.2);
+    color: #a78bfa;
+    border: 1px solid rgba(139, 92, 246, 0.3);
+  }
+  .badge-leaf {
+    background: rgba(2, 132, 199, 0.2);
+    color: #38bdf8;
+    border: 1px solid rgba(2, 132, 199, 0.3);
+  }
+  .terminal-output {
+    background: #090d16;
+    color: #38bdf8;
+    font-family: var(--font-mono);
+    padding: 0.85rem 1.25rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.82rem;
+    min-height: 48px;
+    display: flex;
+    align-items: center;
+    border: 1px solid #1e293b;
+    margin-top: 1rem;
     overflow-x: auto;
-    line-height: 1.5;
   }
 </style>
 <script>(function(){try{var t=localStorage.getItem('posa-theme')||'dark';document.documentElement.setAttribute('data-theme',t);var m=localStorage.getItem('posa-mode')||'concept';document.documentElement.setAttribute('data-mode',m);}catch(e){}})();</script>
 </head>
-<body>
+<body class="mode-stage-focused">
+
+<div class="reading-progress-bar" id="readingProgressBar"></div>
 
 <nav class="sitenav">
   <div class="sitenav-inner">
     <a class="sitenav-home" href="index.html">
-      <span style="background:linear-gradient(135deg, #6366f1 0%, #38bdf8 100%);color:#fff;padding:0.2rem 0.55rem;border-radius:6px;font-size:0.82rem;font-weight:800;letter-spacing:0.04em;">POSA</span>
+      <span style="background:linear-gradient(135deg, #0284c7 0%, #38bdf8 100%);color:#fff;padding:0.2rem 0.55rem;border-radius:6px;font-size:0.82rem;font-weight:800;letter-spacing:0.04em;">POSA</span>
       <span style="font-weight:800;letter-spacing:-0.02em;">2026</span>
     </a>
     <div class="sitenav-links">
@@ -69,6 +160,8 @@
       <a href="unit-1-strategy.html">1 · Strategy</a>
       <a href="unit-2-behavioral.html">2 · Behavioral</a>
       <a href="unit-3-structural.html" class="active">3 · Structural</a>
+      <a href="unit-6-solid.html">6 · SOLID</a>
+      <a href="unit-7-packaging.html">7 · Packaging</a>
       <a href="mock-1.html">📝 Mock 1</a>
     </div>
     <button class="nav-toggle" id="navToggle" type="button" aria-expanded="false" aria-controls="navPanel">
@@ -86,8 +179,10 @@
       <span class="nav-panel-label">Course Navigation</span>
       <a href="index.html">Overview</a>
       <a href="unit-1-strategy.html">Unit 1 · Strategy</a>
-      <a href="unit-2-behavioral.html">Unit 2 · Behavioral</a>
+      <a href="unit-2-behavioral.html">Unit 2 · Behavioral Patterns</a>
       <a href="unit-3-structural.html" class="active">Unit 3 · Structural Patterns</a>
+      <a href="unit-6-solid.html">Unit 6 · SOLID Principles</a>
+      <a href="unit-7-packaging.html">Unit 7 · Packaging &amp; Modularity</a>
       <a href="mock-1.html">📝 Mock Exam 1</a>
     </div>
   </div>
@@ -95,274 +190,1326 @@
 
 <!-- Mobile Native Bottom Dock (iOS App Bar) -->
 <nav class="mobile-bottom-dock" aria-label="Mobile Navigation Dock">
-  <a href="#iterator-pattern" class="dock-item active">
-    <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
-    <span>Iterator</span>
+  <a href="#stage-1-problem" class="dock-item active">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+    <span>1 · Problem</span>
   </a>
-  <a href="#composite-pattern" class="dock-item">
-    <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
-    <span>Composite</span>
+  <a href="#stage-2-uml" class="dock-item">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line><line x1="9" y1="21" x2="9" y2="9"></line></svg>
+    <span>2 · UML</span>
   </a>
-  <a href="#eliminating-conditionals" class="dock-item">
-    <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"></line></svg>
-    <span>Polymorphism</span>
+  <a href="#stage-3-sandbox" class="dock-item">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+    <span>3 · Sandbox</span>
   </a>
-  <a href="#self-study" class="dock-item">
-    <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
-    <span>Gotchas</span>
+  <a href="#stage-4-code" class="dock-item">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+    <span>4 · Code</span>
   </a>
-  <a href="unit-1-strategy.html" class="dock-item">
-    <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg>
-    <span>Unit 1</span>
+  <a href="#stage-5-exam" class="dock-item">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+    <span>5 · Drills</span>
   </a>
 </nav>
 
 <div class="page-shell">
   <aside class="sidebar-toc">
     <div class="sidebar-block">
-      <span class="sidebar-label">On This Page</span>
-      <a href="#iterator-pattern"><span class="toc-num">1</span>Iterator: Walking Structures</a>
-      <a href="#composite-pattern"><span class="toc-num">2</span>Composite: Part-Whole Trees</a>
-      <a href="#eliminating-conditionals"><span class="toc-num">3</span>Eliminating Conditionals</a>
-      <a href="#self-study"><span class="toc-num">4</span>Self-Study Exam Questions</a>
+      <span class="sidebar-label">Curriculum Navigation</span>
+      <a href="#stage-1-problem" class="jump-stage-btn" data-target-stage="stage-1-problem"><span class="toc-num">1</span>Theory &amp; Part-Whole Trees</a>
+      <a href="#stage-2-uml" class="jump-stage-btn" data-target-stage="stage-2-uml"><span class="toc-num">2</span>UML 2.5 &amp; Structural Roles</a>
+      <a href="#stage-3-sandbox" class="jump-stage-btn" data-target-stage="stage-3-sandbox"><span class="toc-num">3</span>Interactive Tree &amp; Iterator Lab</a>
+      <a href="#stage-4-code" class="jump-stage-btn" data-target-stage="stage-4-code"><span class="toc-num">4</span>Production Code &amp; Mechanics</a>
+      <a href="#stage-5-exam" class="jump-stage-btn" data-target-stage="stage-5-exam"><span class="toc-num">5</span>Exam Traps &amp; Self-Study</a>
     </div>
     <div class="sidebar-block">
-      <span class="sidebar-label">Instructor</span>
-      <p style="font-size: 0.85rem; color: var(--text-muted); margin: 0;">
-        Prof. Dr. Jörg Schäfer<br>
-        <em>Frankfurt University of Applied Sciences</em>
+      <span class="sidebar-label">Course Origin</span>
+      <p style="font-size: 0.85rem; color: var(--text-muted); margin: 0 0 0.5rem; line-height: 1.5;">
+        <strong>Prof. Dr. Jörg Schäfer</strong><br>
+        Frankfurt University of Applied Sciences<br>
+        Fachbereich 2: Informatik
       </p>
+      <div style="font-size:0.75rem; font-weight:700; color:#38bdf8; background:rgba(56,189,248,0.12); border:1px solid rgba(56,189,248,0.25); padding:0.25rem 0.5rem; border-radius:4px; display:inline-block; margin-top:0.4rem;">
+        ⏱️ 45 Min · 15 Exam Pts
+      </div>
     </div>
   </aside>
 
   <div class="page">
-    <div class="masthead">
+    
+    <!-- Hero Masthead -->
+    <header class="masthead">
       <div>
-        <div class="eyebrow">Unit 3 · Structural Patterns</div>
-        <h1 class="title">Iterator &amp; Composite Pattern</h1>
-      </div>
-    </div>
-
-    <div class="quote-card">
-      “Evidently, then, a larger part of the ‘structure’ of a building or town consists of patterns of relationships.”
-      <span class="quote-author">— Christopher Alexander</span>
-    </div>
-
-    <p class="dek">
-      Building robust tree hierarchies and separating traversal mechanics from underlying collection data structures.
-    </p>
-
-    <!-- Section 1: Iterator -->
-    <section class="chapter" id="iterator-pattern">
-      <div class="chapter-head">
-        <span class="chapter-num">1</span>
-        <h2>3.3 The Iterator Pattern</h2>
-      </div>
-      <p class="chapter-dek">Sequential access without exposing internal memory representations.</p>
-
-      <div style="background: var(--bg-raised); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 1.5rem; margin-bottom: 1.5rem;">
-        <p><strong>GoF Intent:</strong> Provide a way to access the elements of an aggregate object sequentially without exposing its underlying representation.</p>
-        <p><strong>Problem:</strong> Lou’s Diner stores menu items in an <code>ArrayList</code>, while Mel’s Diner stores menu items in a fixed-size <code>MenuItem[]</code> array. The client waitress has to write two completely different, tightly-coupled loops to print the menus!</p>
-        <p><strong>Solution:</strong> Encapsulate traversal inside an <code>Iterator</code> interface (<code>hasNext()</code>, <code>next()</code>). The aggregate implements <code>createIterator()</code>. Client code only iterates through the abstraction.</p>
-      </div>
-
-      <div class="uml-svg-container">
-        <svg viewBox="0 0 760 250" width="100%" height="auto" xmlns="http://www.w3.org/2000/svg" style="font-family:'JetBrains Mono', 'SF Mono', monospace; font-size:12px;">
-          <defs>
-            <marker id="u3-arrow" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-              <path d="M 0 1 L 10 5 L 0 9 z" fill="#0c7a73"/>
-            </marker>
-            <marker id="u3-tri" viewBox="0 0 12 12" refX="12" refY="6" markerWidth="10" markerHeight="10" orient="auto-start-reverse">
-              <polygon points="0,0 12,6 0,12" fill="#ffffff" stroke="#0c7a73" stroke-width="1.8"/>
-            </marker>
-          </defs>
-
-          <!-- Aggregate Interface -->
-          <rect x="40" y="20" width="240" height="85" rx="6" fill="var(--bg-raised, #ffffff)" stroke="#0c7a73" stroke-width="2"/>
-          <rect x="40" y="20" width="240" height="28" rx="6" fill="#0c7a73"/>
-          <text x="160" y="38" fill="#ffffff" font-weight="700" text-anchor="middle">&lt;&lt;interface&gt;&gt; Aggregate</text>
-          <text x="55" y="70" fill="var(--text, #1e293b)">+ createIterator() : Iterator</text>
-
-          <!-- Iterator Interface -->
-          <rect x="460" y="20" width="260" height="95" rx="6" fill="var(--bg-raised, #ffffff)" stroke="#0c7a73" stroke-width="2"/>
-          <rect x="460" y="20" width="260" height="28" rx="6" fill="#0c7a73"/>
-          <text x="590" y="38" fill="#ffffff" font-weight="700" text-anchor="middle">&lt;&lt;interface&gt;&gt; Iterator</text>
-          <text x="475" y="68" fill="var(--text, #1e293b)">+ hasNext() : boolean</text>
-          <text x="475" y="88" fill="var(--text, #1e293b)">+ next() : Object</text>
-
-          <!-- Arrow -->
-          <line x1="280" y1="60" x2="450" y2="60" stroke="#0c7a73" stroke-width="2" marker-end="url(#u3-arrow)"/>
-          <text x="365" y="52" fill="#0c7a73" font-size="10" text-anchor="middle">creates</text>
-
-          <!-- ConcreteAggregate -->
-          <line x1="160" y1="105" x2="160" y2="150" stroke="#0c7a73" stroke-width="1.8" stroke-dasharray="4,4" marker-start="url(#u3-tri)"/>
-          <rect x="40" y="150" width="240" height="80" rx="6" fill="var(--bg-raised, #ffffff)" stroke="#3b82f6" stroke-width="1.8"/>
-          <rect x="40" y="150" width="240" height="26" rx="6" fill="#3b82f6"/>
-          <text x="160" y="168" fill="#ffffff" font-weight="700" text-anchor="middle">ConcreteAggregate</text>
-          <text x="55" y="200" fill="var(--text, #1e293b)">+ createIterator()</text>
-
-          <!-- ConcreteIterator -->
-          <line x1="590" y1="115" x2="590" y2="150" stroke="#0c7a73" stroke-width="1.8" stroke-dasharray="4,4" marker-start="url(#u3-tri)"/>
-          <rect x="460" y="150" width="260" height="85" rx="6" fill="var(--bg-raised, #ffffff)" stroke="#3b82f6" stroke-width="1.8"/>
-          <rect x="460" y="150" width="260" height="26" rx="6" fill="#3b82f6"/>
-          <text x="590" y="168" fill="#ffffff" font-weight="700" text-anchor="middle">ConcreteIterator</text>
-          <text x="475" y="195" fill="var(--text, #1e293b)">- aggregate: ConcreteAggregate</text>
-          <text x="475" y="215" fill="var(--text, #1e293b)">+ hasNext() | + next()</text>
-
-          <line x1="280" y1="190" x2="450" y2="190" stroke="#3b82f6" stroke-width="1.8" marker-end="url(#u3-arrow)"/>
-          <text x="365" y="182" fill="#3b82f6" font-size="10" text-anchor="middle">instantiates</text>
-        </svg>
-      </div>
-
-      <div style="padding: 1.25rem; background: var(--bg-raised); border-radius: var(--radius-sm); border: 1px solid var(--border); margin: 1.5rem 0;">
-        <strong style="color: var(--accent);">Single Responsibility Principle (SRP) Connection:</strong>
-        <p style="font-size: 0.9rem; color: var(--text-muted); margin-top: 0.3rem;">
-          A collection should only have <strong>one responsibility</strong>: storing and managing elements. Managing traversal state (current index, filtering) is an orthogonal responsibility delegated to the <code>Iterator</code>.
+        <div class="eyebrow">
+          <span>Structural Architecture Masterclass · GoF Structural &amp; Behavioral</span>
+        </div>
+        <h1 class="title">Unit 3: Structural Patterns (Composite &amp; Iterator)</h1>
+        <p class="dek" style="font-size:1.05rem; line-height:1.65; max-width:68ch; color:var(--text-muted);">
+          Master part-whole tree hierarchies, uniform client handling, sequential collection traversal without exposing internal memory layouts, and the fundamental tension between Transparency and Safety.
         </p>
+
+        <!-- Course Meta Metric Chips -->
+        <div class="masthead-metrics-grid">
+          <div class="metric-chip">
+            <div class="metric-chip-label">⏱️ Study Time</div>
+            <div class="metric-chip-val" style="color:#38bdf8;">45 Minutes</div>
+          </div>
+          <div class="metric-chip">
+            <div class="metric-chip-label">🎯 Exam Weight</div>
+            <div class="metric-chip-val" style="color:#10b981;">15 Pts (Grade 1.0)</div>
+          </div>
+          <div class="metric-chip">
+            <div class="metric-chip-label">🏛️ GoF Category</div>
+            <div class="metric-chip-val" style="color:#a5b4fc;">Structural &amp; Behavioral</div>
+          </div>
+          <div class="metric-chip">
+            <div class="metric-chip-label">⚙️ Visual Sandbox</div>
+            <div class="metric-chip-val" style="color:#f59e0b;">Tree &amp; Iterator Stepper</div>
+          </div>
+        </div>
+
+      </div>
+    </header>
+
+    <!-- ====================================================================
+         SECTION 1: 8-PILLAR ARCHITECTURAL BLUEPRINT (UNIVERSAL RUBRIC)
+         ==================================================================== -->
+    <div class="masterclass-section-divider" style="margin: 2.5rem 0 1.5rem;">
+      <div class="section-divider-line"></div>
+      <div class="section-divider-chip">
+        <span>PART 1 · ARCHITECTURAL RUBRIC</span>
+      </div>
+      <div class="section-divider-line"></div>
+    </div>
+
+    <section class="blueprint-suite" id="blueprintSuite" aria-label="8-Pillar Architecture Rubric">
+      <div class="blueprint-suite-top">
+        <div>
+          <div class="blueprint-suite-badge">
+            <span class="section-badge-pill">SECTION 1 OF 2</span>
+            <span class="badge-sep">·</span>
+            <span>📐 Universal Pattern Rubric</span>
+            <span class="badge-sep">·</span>
+            <span>Exam &amp; Production Standard</span>
+          </div>
+          <h3 class="blueprint-suite-title">The 8 Pillars of Software Pattern Mastery</h3>
+          <p class="blueprint-suite-desc">
+            The rigorous architectural rubric required for Prof. Schäfer's POSA examinations and senior software engineering reviews. Switch between the <strong>Interactive Explorer</strong> and the <strong>Full 8-Pillar Matrix</strong>.
+          </p>
+        </div>
+        <div class="blueprint-suite-actions">
+          <div class="blueprint-view-toggles" style="display:inline-flex; gap:0.4rem;">
+            <button type="button" class="btn-suite-toggle active" id="btnViewExplorer" onclick="setBlueprintView('explorer')" title="Explore one pillar at a time with interactive details">
+              <span>⚡ Interactive Explorer</span>
+            </button>
+            <button type="button" class="btn-suite-toggle" id="btnViewMatrix" onclick="setBlueprintView('matrix')" title="View all 8 pillars simultaneously in an executive grid">
+              <span>📊 Full Matrix</span>
+            </button>
+          </div>
+          <button type="button" class="btn-copy-rubric" id="btnCopyRubricSuite" onclick="copyBlueprintRubric()" title="Copy entire 8-pillar markdown study rubric to clipboard">
+            <span>📋</span>
+            <span id="copyRubricSuiteLabel">Copy Rubric</span>
+          </button>
+          <button type="button" class="btn-section-collapse" id="btnCollapseBlueprint" onclick="toggleBlueprintCollapse()" aria-expanded="true" title="Collapse or expand the 8-Pillar section">
+            <span class="collapse-icon">▲</span>
+            <span class="collapse-label">Collapse Rubric</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Collapsed Hint Bar -->
+      <div class="blueprint-collapsed-hint" id="blueprintCollapsedHint" style="display:none; padding:0.85rem 1.75rem; background:var(--bg-subtle); border-top:1px dashed var(--border); font-size:0.85rem; color:var(--text-muted); align-items:center; justify-content:space-between; flex-wrap:wrap; gap:0.5rem;">
+        <div style="display:flex; align-items:center; gap:0.6rem;">
+          <span style="font-size:1.1rem;">📐</span>
+          <span><strong>8-Pillar Architecture Rubric is Collapsed</strong> (Template Method, Command, Composite, Iterator). Click to restore instant reference.</span>
+        </div>
+        <button type="button" class="btn-restore-rubric" onclick="toggleBlueprintCollapse(false)" style="background:var(--accent); color:#fff; border:none; padding:0.35rem 0.85rem; border-radius:6px; font-weight:700; cursor:pointer; font-size:0.8rem;">
+          Restore Rubric ▲
+        </button>
+      </div>
+
+      <div class="blueprint-collapsible-body" id="blueprintCollapsibleBody">
+        <!-- Explorer View -->
+        <div class="blueprint-explorer" id="blueprintExplorer">
+          <nav class="blueprint-pillar-tabs" role="tablist" aria-label="8 Pillars Navigation">
+            <button type="button" class="pillar-tab-btn active" role="tab" aria-selected="true" onclick="selectPillar(1)">
+              <span class="pillar-tab-num">1</span>
+              <span class="pillar-tab-label">Intent</span>
+            </button>
+            <button type="button" class="pillar-tab-btn" role="tab" aria-selected="false" onclick="selectPillar(2)">
+              <span class="pillar-tab-num">2</span>
+              <span class="pillar-tab-label">Roles</span>
+            </button>
+            <button type="button" class="pillar-tab-btn" role="tab" aria-selected="false" onclick="selectPillar(3)">
+              <span class="pillar-tab-num">3</span>
+              <span class="pillar-tab-label">UML</span>
+            </button>
+            <button type="button" class="pillar-tab-btn" role="tab" aria-selected="false" onclick="selectPillar(4)">
+              <span class="pillar-tab-num">4</span>
+              <span class="pillar-tab-label">Principles</span>
+            </button>
+            <button type="button" class="pillar-tab-btn" role="tab" aria-selected="false" onclick="selectPillar(5)">
+              <span class="pillar-tab-num">5</span>
+              <span class="pillar-tab-label">Mechanics</span>
+            </button>
+            <button type="button" class="pillar-tab-btn" role="tab" aria-selected="false" onclick="selectPillar(6)">
+              <span class="pillar-tab-num">6</span>
+              <span class="pillar-tab-label">Trade-offs</span>
+            </button>
+            <button type="button" class="pillar-tab-btn" role="tab" aria-selected="false" onclick="selectPillar(7)">
+              <span class="pillar-tab-num">7</span>
+              <span class="pillar-tab-label">Rivals</span>
+            </button>
+            <button type="button" class="pillar-tab-btn" role="tab" aria-selected="false" onclick="selectPillar(8)">
+              <span class="pillar-tab-num">8</span>
+              <span class="pillar-tab-label">Exam Traps</span>
+            </button>
+          </nav>
+
+          <div class="blueprint-active-pillar-card" id="pillarActiveCard">
+            <!-- Dynamically populated or switchable -->
+            <div class="pillar-panel active" id="pillarPanel1">
+              <div class="pillar-panel-badge">PILLAR 1 OF 8 · INTENT &amp; MOTIVATION</div>
+              <h4 class="pillar-panel-title">Architectural Intent &amp; Business Driver</h4>
+              <p style="font-size:0.95rem; line-height:1.6; color:var(--text); margin-bottom:1rem;">
+                Structural composition solves the problem of building scalable tree hierarchies without forcing clients into brittle, recursive type-checking loops (<code>instanceof</code>). Traversal abstraction decouples data structure representation from iterative navigation algorithms.
+              </p>
+              <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:1rem;">
+                <div style="background:var(--bg-subtle); padding:1rem; border-radius:6px; border-left:3px solid #0284c7;">
+                  <strong style="color:#0284c7; display:block; margin-bottom:0.35rem;">GoF Composite Intent</strong>
+                  <p style="font-size:0.85rem; color:var(--text-muted); margin:0;">
+                    Compose objects into tree structures to represent part-whole hierarchies. Composite lets clients treat individual objects (leaves) and compositions of objects (composites) uniformly.
+                  </p>
+                </div>
+                <div style="background:var(--bg-subtle); padding:1rem; border-radius:6px; border-left:3px solid #10b981;">
+                  <strong style="color:#10b981; display:block; margin-bottom:0.35rem;">GoF Iterator Intent</strong>
+                  <p style="font-size:0.85rem; color:var(--text-muted); margin:0;">
+                    Provide a way to access the elements of an aggregate object sequentially without exposing its underlying representation (array, linked list, tree, hash map).
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div class="pillar-panel" id="pillarPanel2" style="display:none;">
+              <div class="pillar-panel-badge">PILLAR 2 OF 8 · PARTICIPANTS &amp; ROLES</div>
+              <h4 class="pillar-panel-title">Structural Roles &amp; Responsibilities</h4>
+              <div class="pillar-matrix-table-wrap">
+                <table class="pillar-matrix-table">
+                  <thead>
+                    <tr>
+                      <th>Pattern</th>
+                      <th>Participant</th>
+                      <th>Architectural Responsibility</th>
+                      <th>Coupling Level</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><strong>Composite</strong></td>
+                      <td><code>Component</code></td>
+                      <td>Declares uniform interface for leaves and composites; implements default behavior (or throws <code>UnsupportedOperationException</code>).</td>
+                      <td>Abstract Base / Interface</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Composite</strong></td>
+                      <td><code>Leaf</code></td>
+                      <td>Represents terminal objects in the composition; has no children; executes concrete business operations.</td>
+                      <td>Realizes Component</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Composite</strong></td>
+                      <td><code>Composite</code></td>
+                      <td>Stores child components; implements child management (<code>add</code>, <code>remove</code>); delegates operations to children recursively.</td>
+                      <td>1-to-many recursive composition</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Iterator</strong></td>
+                      <td><code>Aggregate</code></td>
+                      <td>Defines an interface for creating an Iterator object (factory method <code>createIterator()</code>).</td>
+                      <td>Interface</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Iterator</strong></td>
+                      <td><code>Iterator</code></td>
+                      <td>Defines interface for accessing and traversing elements (<code>hasNext()</code>, <code>next()</code>, <code>remove()</code>).</td>
+                      <td>Interface</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div class="pillar-panel" id="pillarPanel3" style="display:none;">
+              <div class="pillar-panel-badge">PILLAR 3 OF 8 · FORMAL UML ANATOMY</div>
+              <h4 class="pillar-panel-title">Vector SVG UML 2.5 Relationships</h4>
+              <p style="font-size:0.88rem; color:var(--text-muted); margin-bottom:1rem;">
+                Notice the recursive 1-to-many self-aggregation arrow from <code>Composite</code> back to <code>Component</code>, and the decoupling between <code>Aggregate</code> and <code>Iterator</code>.
+              </p>
+              <div class="uml-svg-container" style="background:#0f172a; border-radius:8px; padding:1.5rem; text-align:center; overflow-x:auto;">
+                <svg viewBox="0 0 760 260" width="100%" height="auto" xmlns="http://www.w3.org/2000/svg" style="font-family:'JetBrains Mono', 'SF Mono', monospace; font-size:12px;">
+                  <defs>
+                    <marker id="u3-tri" viewBox="0 0 12 12" refX="12" refY="6" markerWidth="10" markerHeight="10" orient="auto-start-reverse">
+                      <polygon points="0,0 12,6 0,12" fill="#0f172a" stroke="#38bdf8" stroke-width="1.8"/>
+                    </marker>
+                    <marker id="u3-arrow" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                      <path d="M 0 1 L 10 5 L 0 9 z" fill="#38bdf8"/>
+                    </marker>
+                    <marker id="u3-diamond" viewBox="0 0 16 16" refX="16" refY="8" markerWidth="12" markerHeight="12" orient="auto-start-reverse">
+                      <polygon points="0,8 8,2 16,8 8,14" fill="#8b5cf6" stroke="#8b5cf6" stroke-width="1"/>
+                    </marker>
+                  </defs>
+
+                  <!-- Component -->
+                  <rect x="250" y="20" width="260" height="90" rx="6" fill="#1e293b" stroke="#38bdf8" stroke-width="2"/>
+                  <rect x="250" y="20" width="260" height="26" rx="6" fill="#0284c7"/>
+                  <text x="380" y="38" fill="#ffffff" font-weight="700" text-anchor="middle">&lt;&lt;abstract&gt;&gt; Component</text>
+                  <text x="265" y="65" fill="#f8fafc">+ operation() : void</text>
+                  <text x="265" y="85" fill="#94a3b8">+ add(c) | + remove(c) | + getChild(i)</text>
+
+                  <!-- Leaf -->
+                  <rect x="80" y="170" width="200" height="70" rx="6" fill="#1e293b" stroke="#38bdf8" stroke-width="1.8"/>
+                  <rect x="80" y="170" width="200" height="24" rx="6" fill="#0369a1"/>
+                  <text x="180" y="187" fill="#ffffff" font-weight="700" text-anchor="middle">Leaf</text>
+                  <text x="95" y="215" fill="#f8fafc">+ operation() // terminal</text>
+
+                  <!-- Composite -->
+                  <rect x="480" y="170" width="220" height="80" rx="6" fill="#1e293b" stroke="#8b5cf6" stroke-width="2"/>
+                  <rect x="480" y="170" width="220" height="24" rx="6" fill="#7c3aed"/>
+                  <text x="590" y="187" fill="#ffffff" font-weight="700" text-anchor="middle">Composite</text>
+                  <text x="495" y="213" fill="#f8fafc">+ operation() // delegates</text>
+                  <text x="495" y="233" fill="#c4b5fd">+ add(c) | + remove(c)</text>
+
+                  <!-- Generalization lines -->
+                  <line x1="380" y1="110" x2="380" y2="140" stroke="#38bdf8" stroke-width="1.8" marker-start="url(#u3-tri)"/>
+                  <line x1="180" y1="140" x2="590" y2="140" stroke="#38bdf8" stroke-width="1.8"/>
+                  <line x1="180" y1="140" x2="180" y2="170" stroke="#38bdf8" stroke-width="1.8"/>
+                  <line x1="590" y1="140" x2="590" y2="170" stroke="#38bdf8" stroke-width="1.8"/>
+
+                  <!-- Recursive Aggregation Loop -->
+                  <path d="M 700 210 L 730 210 L 730 65 L 510 65" fill="none" stroke="#8b5cf6" stroke-width="2" marker-start="url(#u3-diamond)" marker-end="url(#u3-arrow)"/>
+                  <text x="735" y="140" fill="#a78bfa" font-size="10" transform="rotate(90, 735, 140)">children: 0..*</text>
+                </svg>
+              </div>
+            </div>
+
+            <div class="pillar-panel" id="pillarPanel4" style="display:none;">
+              <div class="pillar-panel-badge">PILLAR 4 OF 8 · DESIGN PRINCIPLES</div>
+              <h4 class="pillar-panel-title">Core Axioms: Transparency vs Safety</h4>
+              <div class="takeaway-grid">
+                <div class="takeaway-item" style="border-left: 3px solid #f59e0b;">
+                  <strong>Transparency Principle (GoF Ideal)</strong>
+                  <p>Declare child-management methods (<code>add</code>, <code>remove</code>) directly on <code>Component</code>. Clients treat leaves and composites with 100% uniformity, without type inspection.</p>
+                </div>
+                <div class="takeaway-item" style="border-left: 3px solid #10b981;">
+                  <strong>Safety Principle</strong>
+                  <p>Declare child management only on <code>Composite</code>. Leaves cannot receive illegal method calls at compile time, but clients lose transparency and must cast.</p>
+                </div>
+                <div class="takeaway-item" style="border-left: 3px solid #38bdf8;">
+                  <strong>Single Responsibility (SRP) in Iterator</strong>
+                  <p>A collection must have only one reason to change: storage management. Traversal algorithms and state belong strictly in the <code>Iterator</code>.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="pillar-panel" id="pillarPanel5" style="display:none;">
+              <div class="pillar-panel-badge">PILLAR 5 OF 8 · IMPLEMENTATION MECHANICS</div>
+              <h4 class="pillar-panel-title">Fail-Fast Traversal &amp; Recursive Delegation</h4>
+              <div class="mac-ide-window" style="margin: 0.5rem 0;">
+                <div class="mac-ide-top">
+                  <div class="mac-ide-dots">
+                    <span class="mac-dot mac-dot-red"></span>
+                    <span class="mac-dot mac-dot-yellow"></span>
+                    <span class="mac-dot mac-dot-green"></span>
+                  </div>
+                  <div class="mac-ide-tab">CompositeTraversal.java</div>
+                  <button type="button" class="btn-copy-code" onclick="copySnippet('codeSnippetP5')">Copy Code</button>
+                </div>
+                <pre class="mac-ide-content" id="codeSnippetP5"><code>// 1. Recursive Composite Execution
+public void print() {
+    System.out.println(getName() + ": " + getDescription());
+    for (MenuComponent child : menuComponents) {
+        child.print(); // Recursive polymorphic call!
+    }
+}
+
+// 2. Fail-Fast Iterator Contract
+public Item next() {
+    if (expectedModCount != modCount) {
+        throw new ConcurrentModificationException("Collection altered during iteration");
+    }
+    if (!hasNext()) throw new NoSuchElementException();
+    return items[cursor++];
+}</code></pre>
+              </div>
+            </div>
+
+            <div class="pillar-panel" id="pillarPanel6" style="display:none;">
+              <div class="pillar-panel-badge">PILLAR 6 OF 8 · COSTS &amp; TRADE-OFFS</div>
+              <h4 class="pillar-panel-title">Architectural Trade-offs</h4>
+              <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+                <div style="background:rgba(16,185,129,0.06); border:1px solid rgba(16,185,129,0.25); border-radius:6px; padding:1rem;">
+                  <strong style="color:#10b981; display:block; margin-bottom:0.5rem;">✅ Architectural Benefits</strong>
+                  <ul style="margin:0; padding-left:1.2rem; font-size:0.85rem; color:var(--text); line-height:1.5;">
+                    <li>Eliminates nested <code>if (x instanceof Composite)</code> condition trees.</li>
+                    <li>Extensible: Add new Leaf or Composite types without breaking client loops.</li>
+                    <li>Iterators permit concurrent independent traversals over identical data structures.</li>
+                  </ul>
+                </div>
+                <div style="background:rgba(239,68,68,0.06); border:1px solid rgba(239,68,68,0.25); border-radius:6px; padding:1rem;">
+                  <strong style="color:#ef4444; display:block; margin-bottom:0.5rem;">⚠️ Architectural Liabilities</strong>
+                  <ul style="margin:0; padding-left:1.2rem; font-size:0.85rem; color:var(--text); line-height:1.5;">
+                    <li>Transparency violates strict type safety: Calling <code>leaf.add()</code> fails only at runtime.</li>
+                    <li>Difficult to restrict composite children (e.g. only certain leaf types allowed in sub-menus).</li>
+                    <li>Memory overhead: Each node holds pointers and collection references.</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <div class="pillar-panel" id="pillarPanel7" style="display:none;">
+              <div class="pillar-panel-badge">PILLAR 7 OF 8 · RIVAL PATTERN MATRIX</div>
+              <h4 class="pillar-panel-title">Disambiguation Decision Matrix</h4>
+              <div class="pillar-matrix-table-wrap">
+                <table class="pillar-matrix-table">
+                  <thead>
+                    <tr>
+                      <th>Pattern Rival</th>
+                      <th>Structural Cardinality</th>
+                      <th>Core Intent &amp; Selection Criteria</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><strong>Composite vs Decorator</strong></td>
+                      <td>Composite is 1-to-many (<code>0..*</code>); Decorator is 1-to-1 wrapping.</td>
+                      <td>Choose <em>Composite</em> to represent part-whole trees. Choose <em>Decorator</em> to attach dynamic responsibilities without sub-classing.</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Composite vs Flyweight</strong></td>
+                      <td>Complementary pairing.</td>
+                      <td>When a Composite tree has millions of leaf nodes (e.g. characters in a document), share immutable Leaf instances via <em>Flyweight</em>.</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Iterator vs Visitor</strong></td>
+                      <td>Traversal vs Operation.</td>
+                      <td><em>Iterator</em> traverses homogenous/collection elements. <em>Visitor</em> performs disparate operations across heterogeneous structures without altering class definitions.</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div class="pillar-panel" id="pillarPanel8" style="display:none;">
+              <div class="pillar-panel-badge">PILLAR 8 OF 8 · EXAM TRAPS &amp; JDK REFERENCES</div>
+              <h4 class="pillar-panel-title">Prof. Schäfer Exam Traps &amp; Production Benchmarks</h4>
+              <div style="background:rgba(245,158,11,0.08); border-left:4px solid #f59e0b; padding:1.25rem; border-radius:0 6px 6px 0; margin-bottom:1rem;">
+                <strong style="color:#f59e0b; font-size:0.92rem;">🚨 Frankfurt UAS Exam Trap #1: The Transparency Exception</strong>
+                <p style="font-size:0.86rem; color:var(--text); margin:0.35rem 0 0; line-height:1.5;">
+                  If asked: <em>"Why does the GoF Composite pattern deliberately violate type safety by declaring add() in Component?"</em><br>
+                  <strong>Model Answer:</strong> To achieve <strong>Transparency</strong>. If <code>add()</code> were only on <code>Composite</code>, clients would lose uniform handling and be forced to execute runtime type queries (<code>instanceof</code>) before managing nodes.
+                </p>
+              </div>
+              <div style="font-size:0.85rem; color:var(--text-muted);">
+                <strong>JDK Benchmark:</strong> <code>java.awt.Container</code> extends <code>java.awt.Component</code> (Composite). <code>java.util.Iterator</code> &amp; <code>java.lang.Iterable</code> (Iterator).
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Full Matrix View (Hidden by default) -->
+        <div class="blueprint-matrix-view" id="blueprintMatrix" style="display:none;">
+          <div class="pillar-matrix-table-wrap">
+            <table class="pillar-matrix-table">
+              <thead>
+                <tr>
+                  <th style="width:12%;">Pillar #</th>
+                  <th style="width:20%;">Mastery Dimension</th>
+                  <th style="width:34%;">Composite Pattern (Structural)</th>
+                  <th style="width:34%;">Iterator Pattern (Behavioral)</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Pillar 1</strong></td>
+                  <td><strong>Intent &amp; Motivation</strong></td>
+                  <td>Compose objects into part-whole tree hierarchies. Uniform treatment of leaves and composites.</td>
+                  <td>Sequentially access elements of an aggregate without exposing internal memory layout.</td>
+                </tr>
+                <tr>
+                  <td><strong>Pillar 2</strong></td>
+                  <td><strong>Participants &amp; Roles</strong></td>
+                  <td><code>Component</code>, <code>Leaf</code>, <code>Composite</code>, <code>Client</code>.</td>
+                  <td><code>Aggregate</code>, <code>ConcreteAggregate</code>, <code>Iterator</code>, <code>ConcreteIterator</code>.</td>
+                </tr>
+                <tr>
+                  <td><strong>Pillar 3</strong></td>
+                  <td><strong>UML Anatomy</strong></td>
+                  <td>1-to-many recursive composition arrow (<code>0..*</code>) from <code>Composite</code> back to <code>Component</code>.</td>
+                  <td>Directed association from <code>Aggregate</code> to <code>Iterator</code>; iterator tracks cursor.</td>
+                </tr>
+                <tr>
+                  <td><strong>Pillar 4</strong></td>
+                  <td><strong>Design Axioms</strong></td>
+                  <td><strong>Transparency vs Safety</strong> tension; uniform polymorphic dispatch.</td>
+                  <td><strong>Single Responsibility Principle (SRP)</strong>: Separate storage from traversal.</td>
+                </tr>
+                <tr>
+                  <td><strong>Pillar 5</strong></td>
+                  <td><strong>Mechanics</strong></td>
+                  <td>Recursive depth-first traversal; default <code>UnsupportedOperationException</code> on leaves.</td>
+                  <td><code>hasNext()</code>, <code>next()</code>, and fail-fast <code>ConcurrentModificationException</code> check.</td>
+                </tr>
+                <tr>
+                  <td><strong>Pillar 6</strong></td>
+                  <td><strong>Trade-offs</strong></td>
+                  <td>Loss of compile-time type safety in exchange for absolute client transparency.</td>
+                  <td>Extra class overhead; fail-fast synchronization overhead in multithreaded environments.</td>
+                </tr>
+                <tr>
+                  <td><strong>Pillar 7</strong></td>
+                  <td><strong>Rival Disambiguation</strong></td>
+                  <td>Decorator adds responsibilities (1-to-1). Composite models tree hierarchies (1-to-many).</td>
+                  <td>Visitor performs operations on heterogeneous trees. Iterator walks single collection.</td>
+                </tr>
+                <tr>
+                  <td><strong>Pillar 8</strong></td>
+                  <td><strong>JDK &amp; Exam Traps</strong></td>
+                  <td><code>java.awt.Container</code> / <code>Component</code>. Exam trap: Forgetting the transparency trade-off.</td>
+                  <td><code>java.util.Iterator</code>. Exam trap: Modifying collection while traversing without iterator.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
       </div>
     </section>
 
-    <!-- Section 2: Composite Pattern -->
-    <section class="chapter" id="composite-pattern">
-      <div class="chapter-head">
-        <span class="chapter-num">2</span>
-        <h2>3.4 The Composite Pattern</h2>
+    <!-- ====================================================================
+         SECTION 2: 5-STAGE HANDS-ON CURRICULUM
+         ==================================================================== -->
+    <div class="masterclass-section-divider" style="margin: 3.5rem 0 1.5rem;">
+      <div class="section-divider-line"></div>
+      <div class="section-divider-chip">
+        <span>PART 2 · HANDS-ON CURRICULUM</span>
       </div>
-      <p class="chapter-dek">Treating individual leaf objects and nested composite structures uniformly.</p>
+      <div class="section-divider-line"></div>
+    </div>
 
-      <div style="background: var(--bg-raised); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 1.5rem; margin-bottom: 1.5rem;">
-        <p><strong>GoF Intent:</strong> Compose objects into tree structures to represent part-whole hierarchies. Composite lets clients treat individual objects and compositions of objects uniformly.</p>
-        <p><strong>Problem:</strong> What if a Menu contains Sub-Menus (e.g. Dessert Menu inside Dinner Menu)? Treating leaves and branches with separate classes forces clients to write recursive type-checking checks (<code>instanceof</code>).</p>
+    <!-- Curriculum Super-Header with Metadata Chips -->
+    <div class="curriculum-super-header" id="curriculumHeader" style="margin-bottom:1.5rem; background:var(--bg-raised); border:1px solid var(--border); border-radius:var(--radius-md); padding:1.5rem;">
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem;">
+        <div>
+          <div style="font-size:0.75rem; font-weight:800; letter-spacing:0.08em; text-transform:uppercase; color:#0284c7; margin-bottom:0.25rem;">
+            STAGE-DRIVEN MASTERY PATH
+          </div>
+          <h2 style="font-size:1.4rem; font-weight:800; margin:0; letter-spacing:-0.02em;">
+            Structural Engineering: 5 Stages to Grade 1.0
+          </h2>
+        </div>
+        <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
+          <span style="background:rgba(2,132,199,0.12); color:#0284c7; font-size:0.78rem; font-weight:700; padding:0.35rem 0.75rem; border-radius:20px; border:1px solid rgba(2,132,199,0.25);">⏱️ 45 Min Total</span>
+          <span style="background:rgba(16,185,129,0.12); color:#10b981; font-size:0.78rem; font-weight:700; padding:0.35rem 0.75rem; border-radius:20px; border:1px solid rgba(16,185,129,0.25);">🎯 15 Exam Points</span>
+          <span style="background:rgba(139,92,246,0.12); color:#8b5cf6; font-size:0.78rem; font-weight:700; padding:0.35rem 0.75rem; border-radius:20px; border:1px solid rgba(139,92,246,0.25);">🏛️ Prof. Dr. Jörg Schäfer</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Masterclass Stage Navigation Bar -->
+    <nav class="masterclass-stage-nav" aria-label="Curriculum Stages">
+      <a href="#stage-1-problem" class="stage-nav-pill active" data-stage="1">
+        <span class="pill-number">1</span>
+        <span class="pill-title">Problem Space</span>
+      </a>
+      <a href="#stage-2-uml" class="stage-nav-pill" data-stage="2">
+        <span class="pill-number">2</span>
+        <span class="pill-title">UML Architecture</span>
+      </a>
+      <a href="#stage-3-sandbox" class="stage-nav-pill" data-stage="3">
+        <span class="pill-number">3</span>
+        <span class="pill-title">Interactive Lab</span>
+      </a>
+      <a href="#stage-4-code" class="stage-nav-pill" data-stage="4">
+        <span class="pill-number">4</span>
+        <span class="pill-title">Production Code</span>
+      </a>
+      <a href="#stage-5-exam" class="stage-nav-pill" data-stage="5">
+        <span class="pill-number">5</span>
+        <span class="pill-title">Exam Traps</span>
+      </a>
+    </nav>
+
+    <!-- ====================================================================
+         STAGE 1: PROBLEM SPACE & FOUNDATIONAL THEORY
+         ==================================================================== -->
+    <section class="masterclass-stage-section" id="stage-1-problem">
+      <div class="stage-header-top">
+        <div class="stage-eyebrow-pill">● Stage 01 · Problem Space &amp; Part-Whole Trees</div>
+        <button type="button" class="stage-mastery-btn" onclick="markStageComplete(1)">Mark Stage 1 Complete ✓</button>
+      </div>
+      <h2 class="stage-title">The Diner Merger &amp; The Recursive Hierarchy Crisis</h2>
+      
+      <p style="font-size:1rem; line-height:1.7; color:var(--text); margin-bottom:1.5rem;">
+        Imagine the classic Head First / POSA enterprise scenario: Lou’s Diner merges with Mel’s Diner. Lou stores breakfast menu items in an <code>ArrayList&lt;MenuItem&gt;</code>, while Mel stores dinner items in a fixed-size array <code>MenuItem[]</code>. The waitress client is forced to duplicate traversal loops.
+      </p>
+
+      <!-- Anti-Pattern Code Block -->
+      <div class="mac-ide-window" style="margin: 1.5rem 0;">
+        <div class="mac-ide-top">
+          <div class="mac-ide-dots">
+            <span class="mac-dot mac-dot-red"></span>
+            <span class="mac-dot mac-dot-yellow"></span>
+            <span class="mac-dot mac-dot-green"></span>
+          </div>
+          <div class="mac-ide-tab">BrittleWaitress.java · The Anti-Pattern</div>
+          <button type="button" class="btn-copy-code" onclick="copySnippet('codeSnippetAnti1')">Copy Code</button>
+        </div>
+        <pre class="mac-ide-content" id="codeSnippetAnti1"><code>// ANTI-PATTERN: Client coupled to internal collection types!
+public void printMenu() {
+    ArrayList&lt;MenuItem&gt; breakfastItems = louMenu.getItems();
+    MenuItem[] lunchItems = melMenu.getItems();
+
+    // Loop 1: For ArrayList
+    for (int i = 0; i &lt; breakfastItems.size(); i++) {
+        MenuItem item = breakfastItems.get(i);
+        System.out.println(item.getName() + " -- " + item.getPrice());
+    }
+
+    // Loop 2: For Array (Completely different loop construct!)
+    for (int j = 0; j &lt; lunchItems.length; j++) {
+        MenuItem item = lunchItems[j];
+        if (item != null) System.out.println(item.getName() + " -- " + item.getPrice());
+    }
+    // What if a third diner joins using a Hashtable? We must rewrite the client!
+}</code></pre>
       </div>
 
-      <h3 style="font-family: var(--font-display);">Composite Structure</h3>
-      <div class="uml-svg-container">
-        <svg viewBox="0 0 800 320" width="100%" height="auto" xmlns="http://www.w3.org/2000/svg" style="font-family:'JetBrains Mono', 'SF Mono', monospace; font-size:12px;">
+      <p style="font-size:1rem; line-height:1.7; color:var(--text); margin:1.5rem 0;">
+        To make matters worse, diners introduce <strong>sub-menus</strong>: a Dessert Menu nested inside the Dinner Menu, and a specialty Coffee Menu inside the Dessert Menu! Without the Composite pattern, traversing this requires horrifying nested <code>instanceof</code> checks.
+      </p>
+
+      <!-- Key Takeaways Box -->
+      <div class="stage-takeaways-box">
+        <div class="stage-takeaways-title">
+          <span>🧠 Key Takeaways: Core Architectural Axioms</span>
+        </div>
+        <div class="takeaway-grid">
+          <div class="takeaway-item">
+            <strong>Encapsulate Traversal</strong>
+            <p>An aggregate should provide access to its elements through an <code>Iterator</code> abstraction without exposing internal arrays or collections.</p>
+          </div>
+          <div class="takeaway-item">
+            <strong>Part-Whole Hierarchies</strong>
+            <p>A composite contains both individual items (leaves) and nested containers (composites) through polymorphic self-aggregation.</p>
+          </div>
+          <div class="takeaway-item">
+            <strong>Uniform Client Treatment</strong>
+            <p>Clients invoke operations on the root component interface without caring whether the target is a leaf or a deeply nested composite branch.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Up Next Card -->
+      <div class="stage-next-card">
+        <div class="stage-next-card-content">
+          <div class="stage-next-card-label">UP NEXT · STAGE 02</div>
+          <div class="stage-next-card-title">UML 2.5 Architecture &amp; Role Breakdown</div>
+          <p class="stage-next-card-desc">Examine the formal UML 2.5 diagrams, participant contracts, and recursive tree dispatch relationships.</p>
+        </div>
+        <a href="#stage-2-uml" class="stage-next-card-btn">Jump to Stage 2 →</a>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         STAGE 2: UML ARCHITECTURE & ROLE BREAKDOWN
+         ==================================================================== -->
+    <section class="masterclass-stage-section" id="stage-2-uml">
+      <div class="stage-header-top">
+        <div class="stage-eyebrow-pill">● Stage 02 · UML 2.5 Architecture</div>
+        <button type="button" class="stage-mastery-btn" onclick="markStageComplete(2)">Mark Stage 2 Complete ✓</button>
+      </div>
+      <h2 class="stage-title">Formal UML 2.5 Structure: The Part-Whole Tree</h2>
+
+      <p style="font-size:1rem; line-height:1.7; color:var(--text); margin-bottom:1.5rem;">
+        The power of the Composite pattern lies in its recursive composition: the <code>Menu</code> (Composite) holds a list of <code>MenuComponent</code> references, allowing it to contain both simple <code>MenuItem</code> leaves and other nested <code>Menu</code> composites.
+      </p>
+
+      <!-- High-Res Vector SVG UML Diagram -->
+      <div class="uml-svg-container" style="background:#090d16; border-radius:8px; padding:2rem 1rem; border:1px solid #1e293b; margin:1.5rem 0;">
+        <svg viewBox="0 0 820 340" width="100%" height="auto" xmlns="http://www.w3.org/2000/svg" style="font-family:'JetBrains Mono', 'SF Mono', monospace; font-size:12px;">
           <defs>
-            <marker id="u3-comp-tri" viewBox="0 0 12 12" refX="12" refY="6" markerWidth="10" markerHeight="10" orient="auto-start-reverse">
-              <polygon points="0,0 12,6 0,12" fill="#ffffff" stroke="#0c7a73" stroke-width="1.8"/>
+            <marker id="u3-tri2" viewBox="0 0 12 12" refX="12" refY="6" markerWidth="10" markerHeight="10" orient="auto-start-reverse">
+              <polygon points="0,0 12,6 0,12" fill="#090d16" stroke="#0284c7" stroke-width="1.8"/>
             </marker>
-            <marker id="u3-comp-arrow" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-              <path d="M 0 1 L 10 5 L 0 9 z" fill="#0c7a73"/>
+            <marker id="u3-arrow2" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+              <path d="M 0 1 L 10 5 L 0 9 z" fill="#0284c7"/>
+            </marker>
+            <marker id="u3-diamond2" viewBox="0 0 16 16" refX="16" refY="8" markerWidth="12" markerHeight="12" orient="auto-start-reverse">
+              <polygon points="0,8 8,2 16,8 8,14" fill="#8b5cf6" stroke="#8b5cf6" stroke-width="1.2"/>
             </marker>
           </defs>
 
-          <!-- Component Interface / Base -->
-          <rect x="260" y="20" width="280" height="110" rx="8" fill="var(--bg-raised, #ffffff)" stroke="#0c7a73" stroke-width="2"/>
-          <rect x="260" y="20" width="280" height="32" rx="8" fill="#0c7a73"/>
-          <text x="400" y="42" fill="#ffffff" font-weight="700" text-anchor="middle">&lt;&lt;Component&gt;&gt; MenuComponent</text>
-          <text x="275" y="72" fill="var(--text, #1e293b)">+ getName() | + getPrice()</text>
-          <text x="275" y="92" fill="var(--text, #1e293b)">+ add(c) | + remove(c)</text>
-          <text x="275" y="112" fill="var(--text, #1e293b)">+ print() : void</text>
+          <!-- Component -->
+          <rect x="270" y="20" width="280" height="110" rx="6" fill="#1e293b" stroke="#0284c7" stroke-width="2"/>
+          <rect x="270" y="20" width="280" height="28" rx="6" fill="#0284c7"/>
+          <text x="410" y="38" fill="#ffffff" font-weight="700" text-anchor="middle">&lt;&lt;abstract&gt;&gt; MenuComponent</text>
+          <text x="285" y="68" fill="#f8fafc">+ getName() : String | + getPrice() : double</text>
+          <text x="285" y="88" fill="#94a3b8">+ add(c) | + remove(c) | + getChild(i)</text>
+          <text x="285" y="108" fill="#38bdf8">+ print() : void | + createIterator()</text>
 
-          <!-- Subclass lines -->
-          <line x1="400" y1="130" x2="400" y2="165" stroke="#0c7a73" stroke-width="1.8" marker-start="url(#u3-comp-tri)"/>
-          <line x1="160" y1="165" x2="640" y2="165" stroke="#0c7a73" stroke-width="1.8"/>
-          <line x1="160" y1="165" x2="160" y2="190" stroke="#0c7a73" stroke-width="1.8"/>
-          <line x1="640" y1="165" x2="640" y2="190" stroke="#0c7a73" stroke-width="1.8"/>
+          <!-- Generalization Triangles -->
+          <line x1="410" y1="130" x2="410" y2="165" stroke="#0284c7" stroke-width="1.8" marker-start="url(#u3-tri2)"/>
+          <line x1="170" y1="165" x2="650" y2="165" stroke="#0284c7" stroke-width="1.8"/>
+          <line x1="170" y1="165" x2="170" y2="195" stroke="#0284c7" stroke-width="1.8"/>
+          <line x1="650" y1="165" x2="650" y2="195" stroke="#0284c7" stroke-width="1.8"/>
 
           <!-- Leaf: MenuItem -->
-          <rect x="50" y="190" width="220" height="95" rx="6" fill="var(--bg-raised, #ffffff)" stroke="#3b82f6" stroke-width="1.8"/>
-          <rect x="50" y="190" width="220" height="28" rx="6" fill="#3b82f6"/>
-          <text x="160" y="209" fill="#ffffff" font-weight="700" text-anchor="middle">&lt;&lt;Leaf&gt;&gt; MenuItem</text>
-          <text x="65" y="238" fill="var(--text, #1e293b)">+ getName() : String</text>
-          <text x="65" y="258" fill="var(--text, #1e293b)">+ getPrice() : double</text>
-          <text x="65" y="278" fill="var(--text, #1e293b)">+ print() // leaf output</text>
+          <rect x="50" y="195" width="240" height="100" rx="6" fill="#1e293b" stroke="#38bdf8" stroke-width="1.8"/>
+          <rect x="50" y="195" width="240" height="26" rx="6" fill="#0369a1"/>
+          <text x="170" y="213" fill="#ffffff" font-weight="700" text-anchor="middle">MenuItem (Leaf)</text>
+          <text x="65" y="240" fill="#94a3b8">- name: String | - price: double</text>
+          <text x="65" y="260" fill="#f8fafc">+ getName() | + getPrice()</text>
+          <text x="65" y="280" fill="#38bdf8">+ print() // outputs item row</text>
 
           <!-- Composite: Menu -->
-          <rect x="510" y="190" width="260" height="115" rx="6" fill="var(--bg-raised, #ffffff)" stroke="#8b5cf6" stroke-width="1.8"/>
-          <rect x="510" y="190" width="260" height="28" rx="6" fill="#8b5cf6"/>
-          <text x="640" y="209" fill="#ffffff" font-weight="700" text-anchor="middle">&lt;&lt;Composite&gt;&gt; Menu</text>
-          <text x="525" y="238" fill="var(--text, #1e293b)">- menuComponents : List</text>
-          <text x="525" y="258" fill="var(--text, #1e293b)">+ add(c) | + remove(c)</text>
-          <text x="525" y="278" fill="var(--text, #1e293b)">+ print() // delegates to children!</text>
+          <rect x="520" y="195" width="260" height="115" rx="6" fill="#1e293b" stroke="#8b5cf6" stroke-width="2"/>
+          <rect x="520" y="195" width="260" height="26" rx="6" fill="#7c3aed"/>
+          <text x="650" y="213" fill="#ffffff" font-weight="700" text-anchor="middle">Menu (Composite)</text>
+          <text x="535" y="240" fill="#c4b5fd">- menuComponents: List&lt;MenuComponent&gt;</text>
+          <text x="535" y="260" fill="#f8fafc">+ add(c) | + remove(c)</text>
+          <text x="535" y="280" fill="#f8fafc">+ print() // calls child.print()</text>
+          <text x="535" y="300" fill="#38bdf8">+ createIterator() : Iterator</text>
 
-          <!-- Self-aggregation loop back to Component -->
-          <path d="M 770 240 L 790 240 L 790 75 L 550 75" fill="none" stroke="#8b5cf6" stroke-width="1.8" marker-end="url(#u3-comp-arrow)"/>
-          <text x="795" y="150" fill="#8b5cf6" font-size="10" transform="rotate(90, 795, 150)">children: 0..*</text>
+          <!-- Recursive Aggregation Loop back to Component -->
+          <path d="M 780 250 L 805 250 L 805 75 L 550 75" fill="none" stroke="#8b5cf6" stroke-width="2" marker-start="url(#u3-diamond2)" marker-end="url(#u3-arrow2)"/>
+          <text x="810" y="160" fill="#a78bfa" font-size="10" transform="rotate(90, 810, 160)">children: 0..*</text>
         </svg>
       </div>
+
+      <!-- Up Next Card -->
+      <div class="stage-next-card">
+        <div class="stage-next-card-content">
+          <div class="stage-next-card-label">UP NEXT · STAGE 03</div>
+          <div class="stage-next-card-title">Live Interactive Laboratory: Tree &amp; Iterator Stepper</div>
+          <p class="stage-next-card-desc">Step through an active Restaurant Menu hierarchy in real time using an Iterator cursor and trigger recursive total price calculations.</p>
+        </div>
+        <a href="#stage-3-sandbox" class="stage-next-card-btn">Jump to Stage 3 →</a>
+      </div>
     </section>
 
-    <!-- Section 3: Eliminating Conditionals -->
-    <section class="chapter" id="eliminating-conditionals">
-      <div class="chapter-head">
-        <span class="chapter-num">3</span>
-        <h2>How Composite Eliminates Conditionals</h2>
+    <!-- ====================================================================
+         STAGE 3: INTERACTIVE LABORATORY & VISUAL SANDBOX
+         ==================================================================== -->
+    <section class="masterclass-stage-section" id="stage-3-sandbox">
+      <div class="stage-header-top">
+        <div class="stage-eyebrow-pill">● Stage 03 · Interactive Laboratory</div>
+        <button type="button" class="stage-mastery-btn" onclick="markStageComplete(3)">Mark Stage 3 Complete ✓</button>
       </div>
-      <p>
-        In naive code, traversing a tree structure requires ugly type checks:
+      <h2 class="stage-title">Interactive Menu Tree &amp; Iterator Simulator</h2>
+
+      <p style="font-size:1rem; line-height:1.7; color:var(--text); margin-bottom:1.5rem;">
+        Experience how an <strong>Iterator</strong> traverses a heterogeneous composite tree. Click <strong>"Step Next Element"</strong> to move the traversal cursor through Pancake House Menu items, Dinner Menu items, and the nested Dessert Sub-menu. Click <strong>"Calculate Total Bill"</strong> to observe recursive Composite execution.
       </p>
-      <div class="code-container">
-        <div class="code-header"><span>BadCode.java (Anti-pattern)</span><span>Without Composite</span></div>
-        <pre class="code-body"><code>for (Object item : items) {
-    if (item instanceof MenuItem) {
-        ((MenuItem) item).printDetails();
-    } else if (item instanceof SubMenu) {
-        ((SubMenu) item).displaySubMenu(); // UGLY CONDITIONALS!
-    }
-}</code></pre>
+
+      <div class="tree-sandbox-card">
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem; margin-bottom:1rem;">
+          <div>
+            <h4 style="margin:0 0 0.25rem; font-size:1.1rem; color:var(--text);">Restaurant Menu Composite Hierarchy</h4>
+            <span style="font-size:0.82rem; color:var(--text-muted);">Root Component: All Menus Combined</span>
+          </div>
+          <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
+            <button type="button" id="btnStepIterator" class="btn-suite-toggle active" style="font-weight:700;">
+              <span>⏩ Step Next Element</span>
+            </button>
+            <button type="button" id="btnResetIterator" class="btn-suite-toggle" style="font-weight:700;">
+              <span>🔄 Reset Cursor</span>
+            </button>
+            <button type="button" id="btnCalcRecursive" class="btn-copy-rubric" style="font-weight:700;">
+              <span>⚡ Recursive Total</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Visual Menu Tree Container -->
+        <div class="tree-node-view" id="menuTreeVisualizer">
+          <!-- Root -->
+          <div class="tree-item-row is-composite" data-index="0" data-name="ALL MENUS (ROOT)" data-price="0">
+            <div>
+              <span class="tree-node-badge badge-composite">Composite</span>
+              <strong style="margin-left:0.5rem;">📁 All Menus (Root)</strong>
+            </div>
+            <span style="color:var(--text-muted); font-size:0.8rem;">Contains 2 Sub-Menus</span>
+          </div>
+
+          <!-- Pancake Menu -->
+          <div class="tree-item-row is-composite is-leaf" data-index="1" data-name="PANCAKE HOUSE MENU" data-price="0">
+            <div>
+              <span class="tree-node-badge badge-composite">Composite</span>
+              <strong style="margin-left:0.5rem;">🥞 Pancake House Menu</strong>
+            </div>
+            <span style="color:var(--text-muted); font-size:0.8rem;">Sub-Menu (2 Items)</span>
+          </div>
+          <div class="tree-item-row is-leaf is-subleaf" data-index="2" data-name="Blueberry Pancakes" data-price="4.99">
+            <div>
+              <span class="tree-node-badge badge-leaf">Leaf</span>
+              <span style="margin-left:0.5rem;">Blueberry Pancakes</span>
+            </div>
+            <strong>$4.99</strong>
+          </div>
+          <div class="tree-item-row is-leaf is-subleaf" data-index="3" data-name="Waffles with Maple Syrup" data-price="5.49">
+            <div>
+              <span class="tree-node-badge badge-leaf">Leaf</span>
+              <span style="margin-left:0.5rem;">Waffles with Maple Syrup</span>
+            </div>
+            <strong>$5.49</strong>
+          </div>
+
+          <!-- Diner Menu -->
+          <div class="tree-item-row is-composite is-leaf" data-index="4" data-name="DINER MENU" data-price="0">
+            <div>
+              <span class="tree-node-badge badge-composite">Composite</span>
+              <strong style="margin-left:0.5rem;">🍽️ Diner Menu</strong>
+            </div>
+            <span style="color:var(--text-muted); font-size:0.8rem;">Sub-Menu + Nested Dessert</span>
+          </div>
+          <div class="tree-item-row is-leaf is-subleaf" data-index="5" data-name="Vegetarian BLT" data-price="3.99">
+            <div>
+              <span class="tree-node-badge badge-leaf">Leaf</span>
+              <span style="margin-left:0.5rem;">Vegetarian BLT</span>
+            </div>
+            <strong>$3.99</strong>
+          </div>
+
+          <!-- Nested Dessert Menu inside Diner Menu -->
+          <div class="tree-item-row is-composite is-subleaf" data-index="6" data-name="DESSERT SUB-MENU" data-price="0">
+            <div>
+              <span class="tree-node-badge badge-composite">Composite</span>
+              <strong style="margin-left:0.5rem;">🍨 Dessert Sub-Menu</strong>
+            </div>
+            <span style="color:var(--text-muted); font-size:0.8rem;">Nested Inside Diner Menu</span>
+          </div>
+          <div class="tree-item-row is-leaf" style="margin-left:4.5rem; border-left:4px solid #f59e0b;" data-index="7" data-name="Apple Pie with Vanilla Ice Cream" data-price="2.50">
+            <div>
+              <span class="tree-node-badge" style="background:rgba(245,158,11,0.2); color:#f59e0b;">Leaf</span>
+              <span style="margin-left:0.5rem;">Apple Pie with Vanilla Ice Cream</span>
+            </div>
+            <strong>$2.50</strong>
+          </div>
+        </div>
+
+        <!-- Terminal Output Window -->
+        <div class="terminal-output" id="sandboxConsole">
+          >> [System Initialized] Cursor at start. Click 'Step Next Element' to invoke Iterator.hasNext() -> next().
+        </div>
       </div>
 
-      <p>With the <strong>Composite Pattern</strong>, polymorphism handles the recursion natively:</p>
-      <div class="code-container">
-        <div class="code-header"><span>GoodCode.java (Clean Architecture)</span><span>With Composite</span></div>
-        <pre class="code-body"><code>// The client simply calls print() on the root component!
-menuComponent.print();
-
-// Inside Menu (Composite):
-public void print() {
-    System.out.println(getName() + " -- " + getDescription());
-    for (MenuComponent component : menuComponents) {
-        component.print(); // Recursive polymorphic dispatch!
-    }
-}</code></pre>
+      <!-- Up Next Card -->
+      <div class="stage-next-card">
+        <div class="stage-next-card-content">
+          <div class="stage-next-card-label">UP NEXT · STAGE 04</div>
+          <div class="stage-next-card-title">Enterprise Production Code: Java 17+ Implementation</div>
+          <p class="stage-next-card-desc">Inspect clean, production-grade Java code showing the default UnsupportedOperationException pattern and the Waitress client.</p>
+        </div>
+        <a href="#stage-4-code" class="stage-next-card-btn">Jump to Stage 4 →</a>
       </div>
     </section>
 
-    <!-- Section 4: Self Study Questions -->
-    <section class="chapter" id="self-study">
-      <div class="chapter-head">
-        <span class="chapter-num">4</span>
-        <h2>3.6 Exercise: Questions for Self-Study (Exam Practice)</h2>
+    <!-- ====================================================================
+         STAGE 4: ENTERPRISE PRODUCTION CODE & IMPLEMENTATION MECHANICS
+         ==================================================================== -->
+    <section class="masterclass-stage-section" id="stage-4-code">
+      <div class="stage-header-top">
+        <div class="stage-eyebrow-pill">● Stage 04 · Enterprise Production Code</div>
+        <button type="button" class="stage-mastery-btn" onclick="markStageComplete(4)">Mark Stage 4 Complete ✓</button>
       </div>
+      <h2 class="stage-title">Production Code: Eliminating Conditionals</h2>
+
+      <p style="font-size:1rem; line-height:1.7; color:var(--text); margin-bottom:1.5rem;">
+        Here is the industry-standard implementation of the Composite Pattern. Notice how <code>MenuComponent</code> provides default implementations that throw <code>UnsupportedOperationException</code>. This provides <strong>Transparency</strong> while ensuring invalid leaf operations fail fast.
+      </p>
+
+      <!-- Code Window: MenuComponent.java -->
+      <div class="mac-ide-window" style="margin: 1.5rem 0;">
+        <div class="mac-ide-top">
+          <div class="mac-ide-dots">
+            <span class="mac-dot mac-dot-red"></span>
+            <span class="mac-dot mac-dot-yellow"></span>
+            <span class="mac-dot mac-dot-green"></span>
+          </div>
+          <div class="mac-ide-tab">MenuComponent.java (Abstract Base)</div>
+          <button type="button" class="btn-copy-code" onclick="copySnippet('codeSnippetComp')">Copy Code</button>
+        </div>
+        <pre class="mac-ide-content" id="codeSnippetComp"><code>package de.frankfurt.posa.structural;
+
+import java.util.Iterator;
+
+public abstract class MenuComponent {
+    // Child management operations (default: unsupported)
+    public void add(MenuComponent menuComponent) {
+        throw new UnsupportedOperationException("add() not supported by " + getClass().getSimpleName());
+    }
+
+    public void remove(MenuComponent menuComponent) {
+        throw new UnsupportedOperationException("remove() not supported by " + getClass().getSimpleName());
+    }
+
+    public MenuComponent getChild(int i) {
+        throw new UnsupportedOperationException("getChild() not supported by " + getClass().getSimpleName());
+    }
+
+    // Leaf getter operations
+    public String getName() {
+        throw new UnsupportedOperationException();
+    }
+
+    public String getDescription() {
+        throw new UnsupportedOperationException();
+    }
+
+    public double getPrice() {
+        throw new UnsupportedOperationException();
+    }
+
+    public boolean isVegetarian() {
+        throw new UnsupportedOperationException();
+    }
+
+    // Operation executed by both Leaf and Composite
+    public void print() {
+        throw new UnsupportedOperationException();
+    }
+
+    public abstract Iterator&lt;MenuComponent&gt; createIterator();
+}</code></pre>
+      </div>
+
+      <!-- Code Window: Menu.java (Composite) -->
+      <div class="mac-ide-window" style="margin: 1.5rem 0;">
+        <div class="mac-ide-top">
+          <div class="mac-ide-dots">
+            <span class="mac-dot mac-dot-red"></span>
+            <span class="mac-dot mac-dot-yellow"></span>
+            <span class="mac-dot mac-dot-green"></span>
+          </div>
+          <div class="mac-ide-tab">Menu.java (Composite Container)</div>
+          <button type="button" class="btn-copy-code" onclick="copySnippet('codeSnippetMenu')">Copy Code</button>
+        </div>
+        <pre class="mac-ide-content" id="codeSnippetMenu"><code>package de.frankfurt.posa.structural;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
+public class Menu extends MenuComponent {
+    private final List&lt;MenuComponent&gt; menuComponents = new ArrayList&lt;&gt;();
+    private final String name;
+    private final String description;
+
+    public Menu(String name, String description) {
+        this.name = name;
+        this.description = description;
+    }
+
+    @Override
+    public void add(MenuComponent menuComponent) {
+        menuComponents.add(menuComponent);
+    }
+
+    @Override
+    public void remove(MenuComponent menuComponent) {
+        menuComponents.remove(menuComponent);
+    }
+
+    @Override
+    public MenuComponent getChild(int i) {
+        return menuComponents.get(i);
+    }
+
+    @Override
+    public String getName() { return name; }
+
+    @Override
+    public String getDescription() { return description; }
+
+    @Override
+    public void print() {
+        System.out.println("\n" + getName().toUpperCase() + ", " + getDescription());
+        System.out.println("----------------------------------------------");
+        // Recursive polymorphic iteration: handles both Leaves and Sub-Menus!
+        for (MenuComponent component : menuComponents) {
+            component.print();
+        }
+    }
+
+    @Override
+    public Iterator&lt;MenuComponent&gt; createIterator() {
+        return menuComponents.iterator();
+    }
+}</code></pre>
+      </div>
+
+      <!-- Up Next Card -->
+      <div class="stage-next-card">
+        <div class="stage-next-card-content">
+          <div class="stage-next-card-label">UP NEXT · STAGE 05</div>
+          <div class="stage-next-card-title">Frankfurt UAS Exam Traps &amp; Self-Study Questions</div>
+          <p class="stage-next-card-desc">Practice real exam questions formulated by Prof. Dr. Jörg Schäfer covering Transparency vs Safety and Fail-Fast Iteration.</p>
+        </div>
+        <a href="#stage-5-exam" class="stage-next-card-btn">Jump to Stage 5 →</a>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         STAGE 5: EXAM TRAPS & SELF-STUDY DRILLS
+         ==================================================================== -->
+    <section class="masterclass-stage-section" id="stage-5-exam">
+      <div class="stage-header-top">
+        <div class="stage-eyebrow-pill">● Stage 05 · Exam Traps &amp; Self-Study</div>
+        <button type="button" class="stage-mastery-btn" onclick="markStageComplete(5)">Mark Stage 5 Complete ✓</button>
+      </div>
+      <h2 class="stage-title">Frankfurt UAS Exam Drills: Prof. Dr. Jörg Schäfer</h2>
+
+      <p style="font-size:1rem; line-height:1.7; color:var(--text); margin-bottom:1.5rem;">
+        Click each drill to reveal the exact grading rubric, common pitfalls, and 1.0 model answers expected in POSA examinations.
+      </p>
 
       <div class="drill-list">
+        <!-- Drill 1 -->
         <details class="drill-item" open>
           <summary>
-            <span class="drill-tag">Self-Study Q1</span>
-            <span class="drill-q">What are the trade-offs between "Transparency" and "Safety" in the Composite Pattern?</span>
+            <span class="drill-tag">Exam Drill 1</span>
+            <span class="drill-q">What are the architectural trade-offs between Transparency and Safety in the Composite Pattern? (6 Exam Points)</span>
             <span class="drill-reveal-hint"></span>
           </summary>
           <div class="drill-a">
-            <p><strong>The Core Tension:</strong></p>
+            <p><strong>The Core Tension (Prof. Schäfer Exam Solution):</strong></p>
             <ul>
               <li>
                 <strong>Transparency (GoF Default):</strong>
-                Define child-management methods (<code>add()</code>, <code>remove()</code>, <code>getChild()</code>) in the root <code>Component</code> interface.
-                <br><em>Advantage:</em> 100% uniformity. Clients treat Leaf and Composite identically without casting.
-                <br><em>Disadvantage (Loss of Type Safety):</em> Calling <code>add()</code> on a Leaf is semantically invalid at runtime (throws <code>UnsupportedOperationException</code>).
+                Define child-management methods (<code>add()</code>, <code>remove()</code>, <code>getChild()</code>) in the root <code>Component</code> base class.
+                <br><em>Advantage:</em> 100% uniformity. Clients treat Leaf and Composite identically without type checks or casting.
+                <br><em>Disadvantage:</em> Loss of compile-time type safety. Calling <code>add()</code> on a Leaf compiles cleanly but triggers a runtime <code>UnsupportedOperationException</code>.
               </li>
               <li>
                 <strong>Safety:</strong>
-                Declare <code>add()</code> and <code>remove()</code> ONLY in the <code>Composite</code> class.
-                <br><em>Advantage:</em> Compile-time type safety; impossible to call <code>add()</code> on a Leaf.
-                <br><em>Disadvantage (Loss of Transparency):</em> Clients must check types and cast before managing children, reintroducing conditionals.
+                Declare child management ONLY in the <code>Composite</code> class.
+                <br><em>Advantage:</em> Compile-time type safety; impossible to accidentally call <code>add()</code> on a Leaf.
+                <br><em>Disadvantage:</em> Loss of transparency. Clients must inspect types with <code>instanceof</code> and downcast before adding children, reintroducing conditionals.
               </li>
             </ul>
           </div>
         </details>
+
+        <!-- Drill 2 -->
+        <details class="drill-item">
+          <summary>
+            <span class="drill-tag">Exam Drill 2</span>
+            <span class="drill-q">How does Java's Fail-Fast Iterator detect concurrent modifications, and why does it throw ConcurrentModificationException? (5 Exam Points)</span>
+            <span class="drill-reveal-hint"></span>
+          </summary>
+          <div class="drill-a">
+            <p><strong>Fail-Fast Mechanics:</strong></p>
+            <p>The collection maintains an internal modification counter: <code>modCount</code>, which is incremented upon every structural change (e.g., <code>add()</code>, <code>remove()</code>). When an <code>Iterator</code> is created, it captures <code>expectedModCount = modCount</code>.</p>
+            <p>On every call to <code>next()</code> or <code>hasNext()</code>, the iterator validates:
+            <pre style="background:var(--bg-subtle); padding:0.5rem; border-radius:4px; font-family:var(--font-mono); font-size:0.85rem;">if (modCount != expectedModCount) {
+    throw new ConcurrentModificationException();
+}</pre>
+            If a thread or external loop alters the collection without using the iterator's own <code>iterator.remove()</code>, the iterator immediately aborts rather than risking non-deterministic behavior.</p>
+          </div>
+        </details>
+
+        <!-- Drill 3 -->
+        <details class="drill-item">
+          <summary>
+            <span class="drill-tag">Exam Drill 3</span>
+            <span class="drill-q">How does the Composite Pattern enforce the Open/Closed Principle (OCP)? (4 Exam Points)</span>
+            <span class="drill-reveal-hint"></span>
+          </summary>
+          <div class="drill-a">
+            <p><strong>OCP Justification:</strong></p>
+            <p>New component types (e.g. <code>SeasonalDiscountMenu</code>, <code>ComboMealLeaf</code>) can be introduced at any depth in the tree without altering existing <code>MenuComponent</code>, <code>MenuItem</code>, or client <code>Waitress</code> code.</p>
+            <p>The client continues to call <code>rootComponent.print()</code>, relying completely on polymorphic dispatch rather than hardcoded class references.</p>
+          </div>
+        </details>
+      </div>
+
+      <!-- Final Masterclass Roadmap Transition Card -->
+      <div class="stage-next-card" style="margin-top:2.5rem; border:1px solid #6366f1; background:rgba(99,102,241,0.06);">
+        <div class="stage-next-card-content">
+          <div class="stage-next-card-label" style="color:#6366f1;">NEXT CHAPTER IN CURRICULUM · UNIT 6</div>
+          <div class="stage-next-card-title">Unit 6: SOLID Principles &amp; Design Smells</div>
+          <p class="stage-next-card-desc">Delve into Uncle Bob's 5 foundational design principles, the 7 classic code smells, and formal Barbara Liskov Substitution invariance proofs.</p>
+        </div>
+        <a href="unit-6-solid.html" class="stage-next-card-btn" style="background:#6366f1;">Go to Unit 6: SOLID →</a>
       </div>
     </section>
 
-    <footer class="page-footer" style="margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--border); display: flex; justify-content: space-between;">
-      <span><a href="unit-2-behavioral.html">← Previous: Unit 2 Behavioral</a></span>
-      <span><a href="unit-6-solid.html">Next: Unit 6 SOLID Principles →</a></span>
+    <!-- Footer -->
+    <footer class="page-footer" style="margin-top: 3.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border); display: flex; justify-content: space-between; flex-wrap:wrap; gap:1rem;">
+      <span><a href="unit-2-behavioral.html" style="color:var(--text-muted); font-weight:600;">← Previous: Unit 2 Behavioral Patterns</a></span>
+      <span><a href="unit-6-solid.html" style="color:var(--accent); font-weight:700;">Next: Unit 6 SOLID Principles →</a></span>
     </footer>
 
   </div>
 </div>
 
-<script src="assets/site.js" defer></script>
+<script src="assets/site.js?v=2026.15"></script>
+<script>
+// Reading Progress Bar
+window.addEventListener("scroll", function () {
+  var winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+  var height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+  var scrolled = (winScroll / height) * 100;
+  var bar = document.getElementById("readingProgressBar");
+  if (bar) bar.style.width = scrolled + "%";
+});
+
+// 8-Pillar Selection & Matrix View Toggles
+var _currentPillar = 1;
+function selectPillar(num) {
+  _currentPillar = num;
+  var tabs = document.querySelectorAll(".pillar-tab-btn");
+  tabs.forEach(function (t, i) {
+    if (i + 1 === num) {
+      t.classList.add("active");
+      t.setAttribute("aria-selected", "true");
+    } else {
+      t.classList.remove("active");
+      t.setAttribute("aria-selected", "false");
+    }
+  });
+
+  for (var i = 1; i <= 8; i++) {
+    var p = document.getElementById("pillarPanel" + i);
+    if (p) p.style.display = (i === num) ? "block" : "none";
+  }
+}
+
+function setBlueprintView(mode) {
+  var explorer = document.getElementById("blueprintExplorer");
+  var matrix = document.getElementById("blueprintMatrix");
+  var btnExp = document.getElementById("btnViewExplorer");
+  var btnMat = document.getElementById("btnViewMatrix");
+
+  if (mode === "matrix") {
+    if (explorer) explorer.style.display = "none";
+    if (matrix) matrix.style.display = "block";
+    if (btnExp) btnExp.classList.remove("active");
+    if (btnMat) btnMat.classList.add("active");
+  } else {
+    if (explorer) explorer.style.display = "block";
+    if (matrix) matrix.style.display = "none";
+    if (btnExp) btnExp.classList.add("active");
+    if (btnMat) btnMat.classList.remove("active");
+    selectPillar(_currentPillar);
+  }
+}
+
+// Debounced Collapse Handler
+var _lastInlineCollapseTime = 0;
+function toggleBlueprintCollapse(forceState) {
+  var now = Date.now();
+  if (typeof forceState !== "boolean" && now - _lastInlineCollapseTime < 250) {
+    return;
+  }
+  _lastInlineCollapseTime = now;
+
+  var suite = document.getElementById("blueprintSuite");
+  var collapseBtn = document.getElementById("btnCollapseBlueprint");
+  var body = document.getElementById("blueprintCollapsibleBody");
+  var hint = document.getElementById("blueprintCollapsedHint");
+  if (!suite) return;
+
+  var isCurrentlyCollapsed = suite.classList.contains("is-collapsed");
+  var willCollapse = (typeof forceState === "boolean") ? forceState : !isCurrentlyCollapsed;
+
+  if (willCollapse) {
+    suite.classList.add("is-collapsed");
+    if (body) body.style.display = "none";
+    if (hint) hint.style.display = "flex";
+  } else {
+    suite.classList.remove("is-collapsed");
+    if (body) body.style.display = "block";
+    if (hint) hint.style.display = "none";
+  }
+
+  if (collapseBtn) {
+    var icon = collapseBtn.querySelector(".collapse-icon");
+    var label = collapseBtn.querySelector(".collapse-label");
+    if (willCollapse) {
+      if (icon) icon.textContent = "▼";
+      if (label) label.textContent = "Expand Rubric";
+      collapseBtn.setAttribute("aria-expanded", "false");
+    } else {
+      if (icon) icon.textContent = "▲";
+      if (label) label.textContent = "Collapse Rubric";
+      collapseBtn.setAttribute("aria-expanded", "true");
+    }
+  }
+}
+
+function copyBlueprintRubric() {
+  var copyLabel = document.getElementById("copyRubricSuiteLabel");
+  var rubricMarkdown = 
+    "# Software Pattern Mastery: The 8-Pillar Architectural Rubric\n" +
+    "*(Standard for POSA Exams & Technical Architecture Reviews)*\n\n" +
+    "## Pattern Names: Composite & Iterator Patterns (Structural & Behavioral)\n\n" +
+    "### 1. Intent & Architectural Motivation\n" +
+    "- **Composite**: Compose objects into tree structures to represent part-whole hierarchies. Treat leaves and composites uniformly.\n" +
+    "- **Iterator**: Sequentially access elements of an aggregate object without exposing its underlying memory representation.\n\n" +
+    "### 2. Structural Roles & Participants\n" +
+    "- **Composite**: Component (uniform base interface), Leaf (terminal node), Composite (container with child list), Client.\n" +
+    "- **Iterator**: Aggregate (defines createIterator), ConcreteAggregate, Iterator (interface), ConcreteIterator (cursor tracker).\n\n" +
+    "### 3. Formal UML Anatomy & Relationships\n" +
+    "- **Composite**: 1-to-many recursive self-aggregation (`0..*`) from Composite back to Component.\n" +
+    "- **Iterator**: Realizes Iterator interface; Aggregate factory creates Iterator instance.\n\n" +
+    "### 4. Core Design Principles Enforced\n" +
+    "- **Transparency vs Safety**: Transparency declares child methods in Component (GoF default); Safety declares them in Composite.\n" +
+    "- **Single Responsibility Principle (SRP)**: Data storage decoupled from iteration mechanics.\n\n" +
+    "### 5. Implementation Mechanics\n" +
+    "- Recursive tree dispatch (`child.print()`).\n" +
+    "- Default `UnsupportedOperationException` on leaves.\n" +
+    "- Fail-fast `ConcurrentModificationException` when `modCount != expectedModCount`.\n\n" +
+    "### 6. Architectural Costs & Trade-offs\n" +
+    "- **Pros**: Eliminates cascaded `if-else` conditionals; uniform polymorphic code.\n" +
+    "- **Cons**: Runtime exceptions on invalid leaf operations; overhead of recursive calls.\n\n" +
+    "### 7. Rival Pattern Decision Matrix\n" +
+    "- **Composite vs Decorator**: 1-to-many part-whole tree vs 1-to-1 dynamic responsibility wrapping.\n" +
+    "- **Iterator vs Visitor**: Traversal of collection vs operations across heterogeneous structures.\n\n" +
+    "### 8. Real-World JDK Reference & Exam Traps\n" +
+    "- **JDK**: `java.awt.Container` & `java.awt.Component` (Swing Composite); `java.util.Iterator`.\n" +
+    "- **Exam Traps**: Confusing transparency with safety; mutating collection during iteration.\n";
+
+  function updateLabelSuccess() {
+    if (copyLabel) copyLabel.textContent = "Copied to Clipboard!";
+    if (typeof window.showToast === "function") window.showToast("8-Pillar Study Rubric copied to clipboard!");
+    setTimeout(function () {
+      if (copyLabel) copyLabel.textContent = "Copy Rubric (Markdown)";
+    }, 2500);
+  }
+
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(rubricMarkdown).then(updateLabelSuccess).catch(function () {
+      fallbackCopy(rubricMarkdown);
+    });
+  } else {
+    fallbackCopy(rubricMarkdown);
+  }
+
+  function fallbackCopy(text) {
+    var ta = document.createElement("textarea");
+    ta.value = text;
+    ta.style.position = "fixed";
+    ta.style.opacity = "0";
+    document.body.appendChild(ta);
+    ta.select();
+    try {
+      document.execCommand("copy");
+      updateLabelSuccess();
+    } catch (e) {
+      alert("Please press Ctrl+C to copy rubric");
+    }
+    document.body.removeChild(ta);
+  }
+}
+
+function copySnippet(elementId) {
+  var el = document.getElementById(elementId);
+  if (!el) return;
+  var text = el.innerText || el.textContent;
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(function() {
+      if (typeof window.showToast === "function") window.showToast("Code snippet copied to clipboard!");
+    });
+  }
+}
+
+// Stage Completion Indicator
+function markStageComplete(stageNum) {
+  var btn = event.target;
+  if (btn) {
+    btn.textContent = "Completed ✓";
+    btn.style.background = "#10b981";
+    btn.style.color = "#fff";
+  }
+  var pill = document.querySelector('.stage-nav-pill[data-stage="' + stageNum + '"]');
+  if (pill) {
+    pill.style.borderColor = "#10b981";
+  }
+  if (typeof window.showToast === "function") window.showToast("Stage " + stageNum + " marked complete! Great progress.");
+}
+
+// Interactive Tree & Iterator Sandbox Controller
+(function initTreeSandbox() {
+  var rows = document.querySelectorAll("#menuTreeVisualizer .tree-item-row");
+  var btnStep = document.getElementById("btnStepIterator");
+  var btnReset = document.getElementById("btnResetIterator");
+  var btnCalc = document.getElementById("btnCalcRecursive");
+  var consoleEl = document.getElementById("sandboxConsole");
+
+  if (!rows.length || !btnStep || !btnReset || !btnCalc || !consoleEl) return;
+
+  var currentCursor = -1;
+
+  function clearActive() {
+    rows.forEach(function (r) {
+      r.classList.remove("is-active-cursor");
+    });
+  }
+
+  function log(msg) {
+    consoleEl.textContent = ">> " + msg;
+  }
+
+  btnStep.addEventListener("click", function () {
+    currentCursor++;
+    if (currentCursor >= rows.length) {
+      clearActive();
+      log("[Iterator::hasNext() == false] End of tree traversal reached. Resetting cursor.");
+      currentCursor = -1;
+      return;
+    }
+    clearActive();
+    var activeRow = rows[currentCursor];
+    activeRow.classList.add("is-active-cursor");
+    var name = activeRow.getAttribute("data-name");
+    var price = activeRow.getAttribute("data-price");
+    var isComp = activeRow.classList.contains("is-composite");
+
+    if (isComp) {
+      log("[Iterator::next()] Visited Composite Node: '" + name + "'. Calling children.iterator().");
+    } else {
+      log("[Iterator::next()] Visited Leaf Node: '" + name + "' | Price: $" + price);
+    }
+  });
+
+  btnReset.addEventListener("click", function () {
+    currentCursor = -1;
+    clearActive();
+    log("[Iterator::reset()] Cursor reset to start of Root Menu Aggregate.");
+  });
+
+  btnCalc.addEventListener("click", function () {
+    var total = 0;
+    var leafCount = 0;
+    rows.forEach(function (r) {
+      var price = parseFloat(r.getAttribute("data-price") || "0");
+      if (price > 0) {
+        total += price;
+        leafCount++;
+      }
+    });
+    clearActive();
+    currentCursor = -1;
+    log("[Composite::getPrice() Recursive Traversal] Aggregated " + leafCount + " leaf items across all menus. Total Bill: $" + total.toFixed(2));
+  });
+})();
+
+window.selectPillar = selectPillar;
+window.setBlueprintView = setBlueprintView;
+window.toggleBlueprintCollapse = toggleBlueprintCollapse;
+window.copyBlueprintRubric = copyBlueprintRubric;
+window.copySnippet = copySnippet;
+window.markStageComplete = markStageComplete;
+</script>
 </body>
 </html>
