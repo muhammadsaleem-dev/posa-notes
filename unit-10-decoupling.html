@@ -2,65 +2,133 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Unit 10: Decoupling Patterns (Observer &amp; Chain of Responsibility) | POSA 2026</title>
-<meta name="description" content="Unit 10 of Pattern-Oriented Software Architecture by Prof. Dr. Jörg Schäfer: Observer (Push vs Pull, Lapsed Listener), Chain of Responsibility (Servlet Filters), and self-study questions.">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230c7a73'/%3E%3Cpath d='M8 10h16M8 16h16M8 22h10' stroke='%23fff' stroke-width='2.2' stroke-linecap='round'/%3E%3C/svg%3E">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Unit 10: Decoupling Patterns (Observer &amp; Chain of Responsibility) | POSA 2026 Masterclass</title>
+<meta name="description" content="Master GoF Decoupling Patterns: Observer (Push vs Pull, Lapsed Listener Memory Leaks), Chain of Responsibility pipelines, and POSA exam drills with Prof. Dr. Jörg Schäfer.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2306b6d4'/%3E%3Cpath d='M8 10h16M8 16h16M8 22h10' stroke='%23fff' stroke-width='2.2' stroke-linecap='round'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/style.css">
+<link rel="stylesheet" href="assets/style.css?v=2026.15">
 <style>
-  .quote-card {
-    margin: 1.5rem 0 2rem;
-    padding: 1.25rem 1.5rem;
-    background: var(--accent-soft);
-    border-left: 4px solid var(--accent);
-    border-radius: 0 var(--radius-md) var(--radius-md) 0;
-    font-style: italic;
-    color: var(--accent-ink);
+  .reading-progress-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #06b6d4 0%, #38bdf8 50%, #8b5cf6 100%);
+    width: 0%;
+    z-index: 9999;
+    transition: width 0.1s ease-out;
   }
-  .quote-author {
-    display: block;
-    margin-top: 0.5rem;
-    font-style: normal;
-    font-weight: 700;
-    font-size: 0.85rem;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
+  .stage-takeaways-box {
+    background: rgba(6, 182, 212, 0.05);
+    border: 1px solid rgba(6, 182, 212, 0.2);
+    border-radius: var(--radius-md);
+    padding: 1.5rem;
+    margin: 2rem 0;
   }
-  .pipeline-step {
+  [data-theme="light"] .stage-takeaways-box {
+    background: #ecfeff;
+    border-color: #a5f3fc;
+  }
+  .stage-takeaways-title {
+    font-weight: 800;
+    color: #0891b2;
+    margin-bottom: 0.75rem;
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    margin: 0.75rem 0;
-    flex-wrap: wrap;
+    font-size: 1.05rem;
   }
-  .pipeline-node {
-    padding: 0.6rem 1rem;
+  .takeaway-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+  .takeaway-item {
+    background: var(--bg-raised);
+    padding: 1rem;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+  }
+  .takeaway-item strong {
+    color: var(--text);
+    display: block;
+    margin-bottom: 0.35rem;
+    font-size: 0.92rem;
+  }
+  .takeaway-item p {
+    margin: 0;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    line-height: 1.5;
+  }
+  /* Interactive Decoupling Sandbox */
+  .decoupling-sandbox-card {
     background: var(--bg-raised);
     border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
-    font-weight: 600;
-    font-size: 0.88rem;
+    border-radius: var(--radius-md);
+    padding: 1.5rem;
+    margin: 2rem 0;
+  }
+  .observer-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin: 1.25rem 0;
+  }
+  .observer-node {
+    background: #090d16;
+    border: 1px solid #1e293b;
+    border-radius: 8px;
+    padding: 1rem;
+    text-align: center;
     font-family: var(--font-mono);
+    transition: all 0.25s ease;
+  }
+  .observer-node.flash-notify {
+    border-color: #06b6d4;
+    box-shadow: 0 0 15px rgba(6, 182, 212, 0.4);
+    transform: translateY(-2px);
+  }
+  .terminal-output {
+    background: #090d16;
+    color: #38bdf8;
+    font-family: var(--font-mono);
+    padding: 0.85rem 1.25rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.82rem;
+    min-height: 48px;
+    display: flex;
+    align-items: center;
+    border: 1px solid #1e293b;
+    margin-top: 1rem;
+    overflow-x: auto;
   }
 </style>
 <script>(function(){try{var t=localStorage.getItem('posa-theme')||'dark';document.documentElement.setAttribute('data-theme',t);var m=localStorage.getItem('posa-mode')||'concept';document.documentElement.setAttribute('data-mode',m);}catch(e){}})();</script>
 </head>
-<body>
+<body class="mode-stage-focused">
+
+<div class="reading-progress-bar" id="readingProgressBar"></div>
 
 <nav class="sitenav">
   <div class="sitenav-inner">
     <a class="sitenav-home" href="index.html">
-      <span style="background:linear-gradient(135deg, #6366f1 0%, #38bdf8 100%);color:#fff;padding:0.2rem 0.55rem;border-radius:6px;font-size:0.82rem;font-weight:800;letter-spacing:0.04em;">POSA</span>
+      <span style="background:linear-gradient(135deg, #06b6d4 0%, #38bdf8 100%);color:#fff;padding:0.2rem 0.55rem;border-radius:6px;font-size:0.82rem;font-weight:800;letter-spacing:0.04em;">POSA</span>
       <span style="font-weight:800;letter-spacing:-0.02em;">2026</span>
     </a>
     <div class="sitenav-links">
       <a href="index.html">Overview</a>
-      <a href="unit-9-flexibility.html">9 · Flexibility</a>
+      <a href="unit-1-strategy.html">1 · Strategy</a>
+      <a href="unit-2-behavioral.html">2 · Behavioral</a>
+      <a href="unit-3-structural.html">3 · Structural</a>
+      <a href="unit-6-solid.html">6 · SOLID</a>
+      <a href="unit-7-packaging.html">7 · Packaging</a>
+      <a href="unit-8-creational.html">8 · Creational</a>
       <a href="unit-10-decoupling.html" class="active">10 · Decoupling</a>
-      <a href="unit-11-mvc.html">11 · MVC</a>
       <a href="mock-1.html">📝 Mock 1</a>
     </div>
     <button class="nav-toggle" id="navToggle" type="button" aria-expanded="false" aria-controls="navPanel">
@@ -77,7 +145,8 @@
     <div class="nav-panel-section">
       <span class="nav-panel-label">Course Navigation</span>
       <a href="index.html">Overview</a>
-      <a href="unit-9-flexibility.html">Unit 9 · Flexibility Patterns</a>
+      <a href="unit-1-strategy.html">Unit 1 · Strategy</a>
+      <a href="unit-8-creational.html">Unit 8 · Creational Patterns</a>
       <a href="unit-10-decoupling.html" class="active">Unit 10 · Decoupling Patterns</a>
       <a href="unit-11-mvc.html">Unit 11 · Case Study MVC</a>
       <a href="mock-1.html">📝 Mock Exam 1</a>
@@ -87,211 +156,1198 @@
 
 <!-- Mobile Native Bottom Dock (iOS App Bar) -->
 <nav class="mobile-bottom-dock" aria-label="Mobile Navigation Dock">
-  <a href="#mediator-pattern" class="dock-item active">
-    <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
-    <span>Mediator</span>
-  </a>
-  <a href="#observer-pattern" class="dock-item">
+  <a href="#stage-1-problem" class="dock-item active">
     <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 14 14"></polyline></svg>
-    <span>Observer</span>
+    <span>1 · Problem</span>
   </a>
-  <a href="#decoupling-metrics" class="dock-item">
-    <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
-    <span>Metrics</span>
+  <a href="#stage-2-uml" class="dock-item">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line><line x1="9" y1="21" x2="9" y2="9"></line></svg>
+    <span>2 · UML</span>
   </a>
-  <a href="#self-study" class="dock-item">
+  <a href="#stage-3-sandbox" class="dock-item">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+    <span>3 · Sandbox</span>
+  </a>
+  <a href="#stage-4-code" class="dock-item">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+    <span>4 · Code</span>
+  </a>
+  <a href="#stage-5-exam" class="dock-item">
     <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
-    <span>Gotchas</span>
+    <span>5 · Drills</span>
   </a>
-  <a href="unit-1-strategy.html" class="dock-item">
-    <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg>
-    <span>Unit 1</span>
-  </a>
-</nav>
 </nav>
 
 <div class="page-shell">
   <aside class="sidebar-toc">
     <div class="sidebar-block">
-      <span class="sidebar-label">On This Page</span>
-      <a href="#observer-pattern"><span class="toc-num">1</span>Observer: Publisher-Subscriber</a>
-      <a href="#lapsed-listener"><span class="toc-num">2</span>The Lapsed Listener Memory Leak</a>
-      <a href="#chain-of-responsibility"><span class="toc-num">3</span>Chain of Responsibility &amp; Filters</a>
-      <a href="#self-study"><span class="toc-num">4</span>Self-Study Exam Questions</a>
+      <span class="sidebar-label">Curriculum Navigation</span>
+      <a href="#stage-1-problem" class="jump-stage-btn" data-target-stage="stage-1-problem"><span class="toc-num">1</span>Event Coupling Dilemmas</a>
+      <a href="#stage-2-uml" class="jump-stage-btn" data-target-stage="stage-2-uml"><span class="toc-num">2</span>UML 2.5: Observer &amp; Pipelines</a>
+      <a href="#stage-3-sandbox" class="jump-stage-btn" data-target-stage="stage-3-sandbox"><span class="toc-num">3</span>Interactive Broadcast Lab</a>
+      <a href="#stage-4-code" class="jump-stage-btn" data-target-stage="stage-4-code"><span class="toc-num">4</span>Lapsed Listener &amp; WeakRefs</a>
+      <a href="#stage-5-exam" class="jump-stage-btn" data-target-stage="stage-5-exam"><span class="toc-num">5</span>Exam Traps &amp; Push vs Pull</a>
     </div>
     <div class="sidebar-block">
-      <span class="sidebar-label">Instructor</span>
-      <p style="font-size: 0.85rem; color: var(--text-muted); margin: 0;">
-        Prof. Dr. Jörg Schäfer<br>
-        <em>Frankfurt University of Applied Sciences</em>
+      <span class="sidebar-label">Course Origin</span>
+      <p style="font-size: 0.85rem; color: var(--text-muted); margin: 0 0 0.5rem; line-height: 1.5;">
+        <strong>Prof. Dr. Jörg Schäfer</strong><br>
+        Frankfurt University of Applied Sciences<br>
+        Fachbereich 2: Informatik
       </p>
+      <div style="font-size:0.75rem; font-weight:700; color:#06b6d4; background:rgba(6,182,212,0.12); border:1px solid rgba(6,182,212,0.25); padding:0.25rem 0.5rem; border-radius:4px; display:inline-block; margin-top:0.4rem;">
+        ⏱️ 45 Min · 20 Exam Pts
+      </div>
     </div>
   </aside>
 
   <div class="page">
-    <div class="masthead">
+    
+    <!-- Hero Masthead -->
+    <header class="masthead">
       <div>
-        <div class="eyebrow">Unit 10 · Decoupling &amp; Event Handling</div>
-        <h1 class="title">Observer &amp; Chain of Responsibility</h1>
+        <div class="eyebrow">
+          <span>Decoupling &amp; Event Architecture · GoF Behavioral Patterns</span>
+        </div>
+        <h1 class="title">Unit 10: Decoupling Patterns (Observer &amp; Chain of Responsibility)</h1>
+        <p class="dek" style="font-size:1.05rem; line-height:1.65; max-width:68ch; color:var(--text-muted);">
+          Master publish-subscribe event architectures, push vs pull notification models, the dreaded "Lapsed Listener" memory leak, and sequential responsibility delegation pipelines.
+        </p>
+
+        <!-- Course Meta Metric Chips -->
+        <div class="masthead-metrics-grid">
+          <div class="metric-chip">
+            <div class="metric-chip-label">⏱️ Study Time</div>
+            <div class="metric-chip-val" style="color:#38bdf8;">45 Minutes</div>
+          </div>
+          <div class="metric-chip">
+            <div class="metric-chip-label">🎯 Exam Weight</div>
+            <div class="metric-chip-val" style="color:#10b981;">20 Pts (Grade 1.0)</div>
+          </div>
+          <div class="metric-chip">
+            <div class="metric-chip-label">🏛️ Category</div>
+            <div class="metric-chip-val" style="color:#a5b4fc;">Decoupling / Events</div>
+          </div>
+          <div class="metric-chip">
+            <div class="metric-chip-label">⚙️ Visual Sandbox</div>
+            <div class="metric-chip-val" style="color:#f59e0b;">Broadcast Event Simulator</div>
+          </div>
+        </div>
+
+      </div>
+    </header>
+
+    <!-- ====================================================================
+         SECTION 1: 8-PILLAR ARCHITECTURAL BLUEPRINT (UNIVERSAL RUBRIC)
+         ==================================================================== -->
+    <div class="masterclass-section-divider" style="margin: 2.5rem 0 1.5rem;">
+      <div class="section-divider-line"></div>
+      <div class="section-divider-chip">
+        <span>PART 1 · ARCHITECTURAL RUBRIC</span>
+      </div>
+      <div class="section-divider-line"></div>
+    </div>
+
+    <section class="blueprint-suite" id="blueprintSuite" aria-label="8-Pillar Architecture Rubric">
+      <div class="blueprint-suite-top">
+        <div>
+          <div class="blueprint-suite-badge">
+            <span class="section-badge-pill">SECTION 1 OF 2</span>
+            <span class="badge-sep">·</span>
+            <span>📐 Universal Pattern Rubric</span>
+            <span class="badge-sep">·</span>
+            <span>Exam &amp; Production Standard</span>
+          </div>
+          <h3 class="blueprint-suite-title">The 8 Pillars of Software Pattern Mastery</h3>
+          <p class="blueprint-suite-desc">
+            The definitive architectural rubric for Observer and Chain of Responsibility patterns in event-driven systems and Frankfurt UAS examinations.
+          </p>
+        </div>
+        <div class="blueprint-suite-actions">
+          <div class="blueprint-view-toggles" style="display:inline-flex; gap:0.4rem;">
+            <button type="button" class="btn-suite-toggle active" id="btnViewExplorer" onclick="setBlueprintView('explorer')" title="Explore one pillar at a time with interactive details">
+              <span>⚡ Interactive Explorer</span>
+            </button>
+            <button type="button" class="btn-suite-toggle" id="btnViewMatrix" onclick="setBlueprintView('matrix')" title="View all 8 pillars simultaneously in an executive grid">
+              <span>📊 Full Matrix</span>
+            </button>
+          </div>
+          <button type="button" class="btn-copy-rubric" id="btnCopyRubricSuite" onclick="copyBlueprintRubric()" title="Copy entire 8-pillar markdown study rubric to clipboard">
+            <span>📋</span>
+            <span id="copyRubricSuiteLabel">Copy Rubric</span>
+          </button>
+          <button type="button" class="btn-section-collapse" id="btnCollapseBlueprint" onclick="toggleBlueprintCollapse()" aria-expanded="true" title="Collapse or expand the 8-Pillar section">
+            <span class="collapse-icon">▲</span>
+            <span class="collapse-label">Collapse Rubric</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Collapsed Hint Bar -->
+      <div class="blueprint-collapsed-hint" id="blueprintCollapsedHint" style="display:none; padding:0.85rem 1.75rem; background:var(--bg-subtle); border-top:1px dashed var(--border); font-size:0.85rem; color:var(--text-muted); align-items:center; justify-content:space-between; flex-wrap:wrap; gap:0.5rem;">
+        <div style="display:flex; align-items:center; gap:0.6rem;">
+          <span style="font-size:1.1rem;">📐</span>
+          <span><strong>8-Pillar Architecture Rubric is Collapsed</strong> (Observer &amp; Chain of Responsibility). Click to restore instant reference.</span>
+        </div>
+        <button type="button" class="btn-restore-rubric" onclick="toggleBlueprintCollapse(false)" style="background:var(--accent); color:#fff; border:none; padding:0.35rem 0.85rem; border-radius:6px; font-weight:700; cursor:pointer; font-size:0.8rem;">
+          Restore Rubric ▲
+        </button>
+      </div>
+
+      <div class="blueprint-collapsible-body" id="blueprintCollapsibleBody">
+        <!-- Explorer View -->
+        <div class="blueprint-explorer" id="blueprintExplorer">
+          <nav class="blueprint-pillar-tabs" role="tablist" aria-label="8 Pillars Navigation">
+            <button type="button" class="pillar-tab-btn active" role="tab" aria-selected="true" onclick="selectPillar(1)">
+              <span class="pillar-tab-num">1</span>
+              <span class="pillar-tab-label">Intent</span>
+            </button>
+            <button type="button" class="pillar-tab-btn" role="tab" aria-selected="false" onclick="selectPillar(2)">
+              <span class="pillar-tab-num">2</span>
+              <span class="pillar-tab-label">Roles</span>
+            </button>
+            <button type="button" class="pillar-tab-btn" role="tab" aria-selected="false" onclick="selectPillar(3)">
+              <span class="pillar-tab-num">3</span>
+              <span class="pillar-tab-label">UML</span>
+            </button>
+            <button type="button" class="pillar-tab-btn" role="tab" aria-selected="false" onclick="selectPillar(4)">
+              <span class="pillar-tab-num">4</span>
+              <span class="pillar-tab-label">Principles</span>
+            </button>
+            <button type="button" class="pillar-tab-btn" role="tab" aria-selected="false" onclick="selectPillar(5)">
+              <span class="pillar-tab-num">5</span>
+              <span class="pillar-tab-label">Mechanics</span>
+            </button>
+            <button type="button" class="pillar-tab-btn" role="tab" aria-selected="false" onclick="selectPillar(6)">
+              <span class="pillar-tab-num">6</span>
+              <span class="pillar-tab-label">Trade-offs</span>
+            </button>
+            <button type="button" class="pillar-tab-btn" role="tab" aria-selected="false" onclick="selectPillar(7)">
+              <span class="pillar-tab-num">7</span>
+              <span class="pillar-tab-label">Rivals</span>
+            </button>
+            <button type="button" class="pillar-tab-btn" role="tab" aria-selected="false" onclick="selectPillar(8)">
+              <span class="pillar-tab-num">8</span>
+              <span class="pillar-tab-label">Exam Traps</span>
+            </button>
+          </nav>
+
+          <div class="blueprint-active-pillar-card" id="pillarActiveCard">
+            <div class="pillar-panel active" id="pillarPanel1">
+              <div class="pillar-panel-badge">PILLAR 1 OF 8 · INTENT &amp; MOTIVATION</div>
+              <h4 class="pillar-panel-title">Publish-Subscribe &amp; Request Delegation</h4>
+              <p style="font-size:0.95rem; line-height:1.6; color:var(--text); margin-bottom:1rem;">
+                Hardcoding dependencies between event producers and consumers paralyzes codebases. Decoupling patterns allow systems to broadcast state changes to dynamic sets of listeners or route incoming requests through an extensible handler pipeline.
+              </p>
+              <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:1rem;">
+                <div style="background:var(--bg-subtle); padding:1rem; border-radius:6px; border-left:3px solid #06b6d4;">
+                  <strong style="color:#0891b2; display:block; margin-bottom:0.35rem;">Observer Intent</strong>
+                  <p style="font-size:0.85rem; color:var(--text-muted); margin:0;">
+                    Define a one-to-many dependency between objects so that when one object changes state, all its dependents are notified and updated automatically.
+                  </p>
+                </div>
+                <div style="background:var(--bg-subtle); padding:1rem; border-radius:6px; border-left:3px solid #8b5cf6;">
+                  <strong style="color:#8b5cf6; display:block; margin-bottom:0.35rem;">Chain of Responsibility Intent</strong>
+                  <p style="font-size:0.85rem; color:var(--text-muted); margin:0;">
+                    Avoid coupling the sender of a request to its receiver by giving more than one object a chance to handle the request. Chain receiving objects and pass the request along the chain.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div class="pillar-panel" id="pillarPanel2" style="display:none;">
+              <div class="pillar-panel-badge">PILLAR 2 OF 8 · PARTICIPANTS &amp; ROLES</div>
+              <h4 class="pillar-panel-title">Structural Roles &amp; Responsibilities</h4>
+              <div class="pillar-matrix-table-wrap">
+                <table class="pillar-matrix-table">
+                  <thead>
+                    <tr>
+                      <th>Pattern</th>
+                      <th>Participant</th>
+                      <th>Architectural Responsibility</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><strong>Observer</strong></td>
+                      <td><code>Subject</code> (Publisher)</td>
+                      <td>Maintains registry of observers; provides <code>attach</code>, <code>detach</code>, and <code>notifyObservers</code>.</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Observer</strong></td>
+                      <td><code>Observer</code> (Subscriber)</td>
+                      <td>Declares update callback (Push: <code>update(data)</code>, Pull: <code>update(subject)</code>).</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Chain of Resp.</strong></td>
+                      <td><code>Handler</code> (Abstract)</td>
+                      <td>Defines an interface for handling requests; holds a reference to the <code>successor</code>.</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Chain of Resp.</strong></td>
+                      <td><code>ConcreteHandler</code></td>
+                      <td>Handles requests it is responsible for, or forwards them to its successor in the pipeline.</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div class="pillar-panel" id="pillarPanel3" style="display:none;">
+              <div class="pillar-panel-badge">PILLAR 3 OF 8 · FORMAL UML ANATOMY</div>
+              <h4 class="pillar-panel-title">Vector SVG UML: Observer &amp; Subject Topology</h4>
+              <p style="font-size:0.88rem; color:var(--text-muted); margin-bottom:1rem;">
+                The Subject holds a 1-to-many directed association (`0..*`) to the abstract `Observer` interface.
+              </p>
+              <div class="uml-svg-container" style="background:#090d16; border-radius:8px; padding:1.5rem; text-align:center; overflow-x:auto;">
+                <svg viewBox="0 0 760 230" width="100%" height="auto" xmlns="http://www.w3.org/2000/svg" style="font-family:'JetBrains Mono', 'SF Mono', monospace; font-size:12px;">
+                  <defs>
+                    <marker id="u10-tri" viewBox="0 0 12 12" refX="12" refY="6" markerWidth="10" markerHeight="10" orient="auto-start-reverse">
+                      <polygon points="0,0 12,6 0,12" fill="#090d16" stroke="#06b6d4" stroke-width="1.8"/>
+                    </marker>
+                    <marker id="u10-arrow" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                      <path d="M 0 1 L 10 5 L 0 9 z" fill="#06b6d4"/>
+                    </marker>
+                  </defs>
+
+                  <!-- Subject Interface -->
+                  <rect x="50" y="20" width="280" height="95" rx="6" fill="#1e293b" stroke="#06b6d4" stroke-width="2"/>
+                  <rect x="50" y="20" width="280" height="24" rx="6" fill="#0891b2"/>
+                  <text x="190" y="37" fill="#ffffff" font-weight="700" text-anchor="middle">&lt;&lt;interface&gt;&gt; Subject</text>
+                  <text x="65" y="65" fill="#f8fafc">+ registerObserver(o : Observer)</text>
+                  <text x="65" y="85" fill="#f8fafc">+ removeObserver(o : Observer)</text>
+                  <text x="65" y="105" fill="#f8fafc">+ notifyObservers()</text>
+
+                  <!-- Observer Interface -->
+                  <rect x="470" y="20" width="240" height="80" rx="6" fill="#1e293b" stroke="#06b6d4" stroke-width="2"/>
+                  <rect x="470" y="20" width="240" height="24" rx="6" fill="#0891b2"/>
+                  <text x="590" y="37" fill="#ffffff" font-weight="700" text-anchor="middle">&lt;&lt;interface&gt;&gt; Observer</text>
+                  <text x="485" y="68" fill="#f8fafc">+ update(data : EventData)</text>
+
+                  <!-- Association Line -->
+                  <line x1="330" y1="67" x2="460" y2="67" stroke="#06b6d4" stroke-width="2" marker-end="url(#u10-arrow)"/>
+                  <text x="395" y="58" fill="#06b6d4" font-size="10" text-anchor="middle">notifies 0..*</text>
+
+                  <!-- Concrete Subject -->
+                  <rect x="50" y="150" width="280" height="65" rx="6" fill="#1e293b" stroke="#38bdf8" stroke-width="1.8"/>
+                  <rect x="50" y="150" width="280" height="22" rx="6" fill="#0284c7"/>
+                  <text x="190" y="166" fill="#ffffff" font-weight="700" text-anchor="middle">WeatherData (ConcreteSubject)</text>
+                  <text x="65" y="195" fill="#bae6fd">- observers: List&lt;Observer&gt;</text>
+
+                  <!-- Concrete Observer -->
+                  <rect x="470" y="150" width="240" height="65" rx="6" fill="#1e293b" stroke="#38bdf8" stroke-width="1.8"/>
+                  <rect x="470" y="150" width="240" height="22" rx="6" fill="#0284c7"/>
+                  <text x="590" y="166" fill="#ffffff" font-weight="700" text-anchor="middle">CurrentConditionsDisplay</text>
+                  <text x="485" y="195" fill="#bae6fd">+ update() | + display()</text>
+
+                  <!-- Realization Lines -->
+                  <line x1="190" y1="115" x2="190" y2="150" stroke="#06b6d4" stroke-width="1.8" stroke-dasharray="4,4" marker-end="url(#u10-tri)"/>
+                  <line x1="590" y1="100" x2="590" y2="150" stroke="#06b6d4" stroke-width="1.8" stroke-dasharray="4,4" marker-end="url(#u10-tri)"/>
+                </svg>
+              </div>
+            </div>
+
+            <div class="pillar-panel" id="pillarPanel4" style="display:none;">
+              <div class="pillar-panel-badge">PILLAR 4 OF 8 · DESIGN PRINCIPLES</div>
+              <h4 class="pillar-panel-title">Loose Coupling &amp; The Hollywood Principle</h4>
+              <div class="takeaway-grid">
+                <div class="takeaway-item" style="border-left:3px solid #06b6d4;">
+                  <strong>Loose Coupling Principle</strong>
+                  <p>Strive for loosely coupled designs between objects that interact. Subject knows only that observers implement the <code>Observer</code> interface.</p>
+                </div>
+                <div class="takeaway-item" style="border-left:3px solid #8b5cf6;">
+                  <strong>The Hollywood Principle</strong>
+                  <p><em>“Don’t call us, we’ll call you.”</em> Low-level observers never poll high-level subjects; subjects invoke observers asynchronously.</p>
+                </div>
+                <div class="takeaway-item" style="border-left:3px solid #f59e0b;">
+                  <strong>Single Responsibility in Pipelines</strong>
+                  <p>Chain of Responsibility isolates individual validation, authentication, or logging tasks into separate handlers.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="pillar-panel" id="pillarPanel5" style="display:none;">
+              <div class="pillar-panel-badge">PILLAR 5 OF 8 · IMPLEMENTATION MECHANICS</div>
+              <h4 class="pillar-panel-title">Push vs Pull &amp; WeakReference Cleanup</h4>
+              <div class="mac-ide-window" style="margin: 0.5rem 0;">
+                <div class="mac-ide-top">
+                  <div class="mac-ide-dots">
+                    <span class="mac-dot mac-dot-red"></span>
+                    <span class="mac-dot mac-dot-yellow"></span>
+                    <span class="mac-dot mac-dot-green"></span>
+                  </div>
+                  <div class="mac-ide-tab">WeakObserverList.java · Preventing Leaks</div>
+                  <button type="button" class="btn-copy-code" onclick="copySnippet('codeSnippetP5Decoupling')">Copy Code</button>
+                </div>
+                <pre class="mac-ide-content" id="codeSnippetP5Decoupling"><code>// Solution to Lapsed Listener Problem: Weak References
+public class SafeSubject {
+    // WeakHashMap or List<WeakReference<Observer>> prevents GC retention!
+    private final List&lt;WeakReference&lt;Observer&gt;&gt; observers = new ArrayList&lt;&gt;();
+
+    public void register(Observer o) {
+        observers.add(new WeakReference&lt;&gt;(o));
+    }
+
+    public void notifyObservers() {
+        observers.removeIf(ref -&gt; ref.get() == null); // Purge collected listeners
+        for (WeakReference&lt;Observer&gt; ref : observers) {
+            Observer o = ref.get();
+            if (o != null) o.update(this); // Clean Pull Model!
+        }
+    }
+}</code></pre>
+              </div>
+            </div>
+
+            <div class="pillar-panel" id="pillarPanel6" style="display:none;">
+              <div class="pillar-panel-badge">PILLAR 6 OF 8 · COSTS &amp; TRADE-OFFS</div>
+              <h4 class="pillar-panel-title">Architectural Trade-offs</h4>
+              <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+                <div style="background:rgba(16,185,129,0.06); border:1px solid rgba(16,185,129,0.25); border-radius:6px; padding:1rem;">
+                  <strong style="color:#10b981; display:block; margin-bottom:0.5rem;">✅ Decoupling Benefits</strong>
+                  <ul style="margin:0; padding-left:1.2rem; font-size:0.85rem; color:var(--text); line-height:1.5;">
+                    <li>Add/remove subscribers dynamically at runtime without restarting servers.</li>
+                    <li>Open/Closed Principle: Add new displays or processors with zero changes to Subject.</li>
+                    <li>Chain of Responsibility permits dynamic pipeline re-ordering.</li>
+                  </ul>
+                </div>
+                <div style="background:rgba(239,68,68,0.06); border:1px solid rgba(239,68,68,0.25); border-radius:6px; padding:1rem;">
+                  <strong style="color:#ef4444; display:block; margin-bottom:0.5rem;">⚠️ Architectural Liabilities</strong>
+                  <ul style="margin:0; padding-left:1.2rem; font-size:0.85rem; color:var(--text); line-height:1.5;">
+                    <li><strong>Lapsed Listener memory leaks:</strong> Discarded listeners remain in memory forever.</li>
+                    <li>Unpredictable update orders: Observers cannot rely on execution sequencing.</li>
+                    <li>Cascading update storms if an observer modifies subject state inside update().</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <div class="pillar-panel" id="pillarPanel7" style="display:none;">
+              <div class="pillar-panel-badge">PILLAR 7 OF 8 · RIVAL PATTERN MATRIX</div>
+              <h4 class="pillar-panel-title">Observer vs Mediator vs Chain of Responsibility</h4>
+              <div class="pillar-matrix-table-wrap">
+                <table class="pillar-matrix-table">
+                  <thead>
+                    <tr>
+                      <th>Dimension</th>
+                      <th>Observer Pattern</th>
+                      <th>Mediator Pattern</th>
+                      <th>Chain of Responsibility</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><strong>Communication</strong></td>
+                      <td>One-to-many broadcast (1:N)</td>
+                      <td>Many-to-many hub coordinator (M:N)</td>
+                      <td>Linear sequential pipeline (1:1 chained)</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Control Flow</strong></td>
+                      <td>Decentralized notification</td>
+                      <td>Centralized control inside Mediator</td>
+                      <td>Pass-along with short-circuit termination</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Typical Use</strong></td>
+                      <td>Event handling, reactive UI, state change</td>
+                      <td>Complex dialog UI forms, Air Traffic Control</td>
+                      <td>HTTP Servlet filters, logging, middleware</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div class="pillar-panel" id="pillarPanel8" style="display:none;">
+              <div class="pillar-panel-badge">PILLAR 8 OF 8 · EXAM TRAPS &amp; BENCHMARKS</div>
+              <h4 class="pillar-panel-title">Prof. Schäfer Exam Traps: The Lapsed Listener Leak</h4>
+              <div style="background:rgba(245,158,11,0.08); border-left:4px solid #f59e0b; padding:1.25rem; border-radius:0 6px 6px 0; margin-bottom:1rem;">
+                <strong style="color:#f59e0b; font-size:0.92rem;">🚨 Frankfurt UAS Exam Trap #1: The Lapsed Listener Problem</strong>
+                <p style="font-size:0.86rem; color:var(--text); margin:0.35rem 0 0; line-height:1.5;">
+                  Question: <em>"Why does an application running the Observer pattern eventually crash with an OutOfMemoryError if listeners are not explicitly deregistered?"</em><br>
+                  <strong>Model Answer:</strong> The Subject holds strong references to all registered Observers in its internal collection. Even if client code discards its own references to an observer, the Subject’s strong reference keeps the observer alive as a GC root, preventing garbage collection. Over time, millions of dead listeners accumulate, exhausting heap memory.
+                </p>
+              </div>
+              <div style="font-size:0.85rem; color:var(--text-muted);">
+                <strong>JDK Benchmark:</strong> <code>java.util.concurrent.Flow</code>, <code>javax.servlet.Filter</code>, <code>java.awt.event.ActionListener</code>.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Full Matrix View (Hidden by default) -->
+        <div class="blueprint-matrix-view" id="blueprintMatrix" style="display:none;">
+          <div class="pillar-matrix-table-wrap">
+            <table class="pillar-matrix-table">
+              <thead>
+                <tr>
+                  <th style="width:12%;">Pillar #</th>
+                  <th style="width:20%;">Mastery Dimension</th>
+                  <th style="width:34%;">Observer Pattern (Publish-Subscribe)</th>
+                  <th style="width:34%;">Chain of Responsibility Pattern</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Pillar 1</strong></td>
+                  <td><strong>Intent &amp; Motivation</strong></td>
+                  <td>One-to-many state broadcast with zero coupling between subject and observers.</td>
+                  <td>Pass requests along a pipeline of handlers; sender decoupled from receiver.</td>
+                </tr>
+                <tr>
+                  <td><strong>Pillar 2</strong></td>
+                  <td><strong>Participants</strong></td>
+                  <td><code>Subject</code>, <code>ConcreteSubject</code>, <code>Observer</code>, <code>ConcreteObserver</code>.</td>
+                  <td><code>Handler</code> (abstract successor), <code>ConcreteHandler</code>, <code>Client</code>.</td>
+                </tr>
+                <tr>
+                  <td><strong>Pillar 3</strong></td>
+                  <td><strong>UML Anatomy</strong></td>
+                  <td>1-to-many directed association (`0..*`) from Subject to abstract Observer.</td>
+                  <td>Recursive self-aggregation (`successor`) from Handler to Handler.</td>
+                </tr>
+                <tr>
+                  <td><strong>Pillar 4</strong></td>
+                  <td><strong>Design Principles</strong></td>
+                  <td>Loose Coupling; Hollywood Principle ("Don't call us, we'll call you").</td>
+                  <td>Single Responsibility (each handler has one job); Open/Closed for new steps.</td>
+                </tr>
+                <tr>
+                  <td><strong>Pillar 5</strong></td>
+                  <td><strong>Mechanics</strong></td>
+                  <td>Push model (data payload) vs Pull model (subject reference); WeakReferences.</td>
+                  <td><code>chain.handleRequest()</code>; short-circuiting on validation/auth failure.</td>
+                </tr>
+                <tr>
+                  <td><strong>Pillar 6</strong></td>
+                  <td><strong>Trade-offs</strong></td>
+                  <td>Lapsed listener memory leaks; cascading notification storms.</td>
+                  <td>Requests may reach the end of the chain unhandled; debugging latency.</td>
+                </tr>
+                <tr>
+                  <td><strong>Pillar 7</strong></td>
+                  <td><strong>Rival Disambiguation</strong></td>
+                  <td>Observer (1:N broadcast) vs Mediator (M:N hub) vs Chain of Resp (1:1 pipeline).</td>
+                  <td>Chain of Responsibility (delegates or terminates) vs Decorator (augments all).</td>
+                </tr>
+                <tr>
+                  <td><strong>Pillar 8</strong></td>
+                  <td><strong>Exam Traps</strong></td>
+                  <td>The Lapsed Listener Memory Leak; Push vs Pull design trade-offs.</td>
+                  <td>Confusing Chain of Responsibility with Decorator in architectural exam essays.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         SECTION 2: 5-STAGE HANDS-ON CURRICULUM
+         ==================================================================== -->
+    <div class="masterclass-section-divider" style="margin: 3.5rem 0 1.5rem;">
+      <div class="section-divider-line"></div>
+      <div class="section-divider-chip">
+        <span>PART 2 · HANDS-ON CURRICULUM</span>
+      </div>
+      <div class="section-divider-line"></div>
+    </div>
+
+    <!-- Curriculum Super-Header with Metadata Chips -->
+    <div class="curriculum-super-header" id="curriculumHeader" style="margin-bottom:1.5rem; background:var(--bg-raised); border:1px solid var(--border); border-radius:var(--radius-md); padding:1.5rem;">
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem;">
+        <div>
+          <div style="font-size:0.75rem; font-weight:800; letter-spacing:0.08em; text-transform:uppercase; color:#06b6d4; margin-bottom:0.25rem;">
+            STAGE-DRIVEN MASTERY PATH
+          </div>
+          <h2 style="font-size:1.4rem; font-weight:800; margin:0; letter-spacing:-0.02em;">
+            Decoupling Architecture: 5 Stages to Grade 1.0
+          </h2>
+        </div>
+        <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
+          <span style="background:rgba(6,182,212,0.12); color:#0891b2; font-size:0.78rem; font-weight:700; padding:0.35rem 0.75rem; border-radius:20px; border:1px solid rgba(6,182,212,0.25);">⏱️ 45 Min Total</span>
+          <span style="background:rgba(16,185,129,0.12); color:#10b981; font-size:0.78rem; font-weight:700; padding:0.35rem 0.75rem; border-radius:20px; border:1px solid rgba(16,185,129,0.25);">🎯 20 Exam Points</span>
+          <span style="background:rgba(139,92,246,0.12); color:#8b5cf6; font-size:0.78rem; font-weight:700; padding:0.35rem 0.75rem; border-radius:20px; border:1px solid rgba(139,92,246,0.25);">🏛️ Prof. Dr. Jörg Schäfer</span>
+        </div>
       </div>
     </div>
 
-    <div class="quote-card">
-      “Don’t call us, we’ll call you.”
-      <span class="quote-author">— The Hollywood Principle</span>
-    </div>
+    <!-- Masterclass Stage Navigation Bar -->
+    <nav class="masterclass-stage-nav" aria-label="Curriculum Stages">
+      <a href="#stage-1-problem" class="stage-nav-pill active" data-stage="1">
+        <span class="pill-number">1</span>
+        <span class="pill-title">Event Coupling</span>
+      </a>
+      <a href="#stage-2-uml" class="stage-nav-pill" data-stage="2">
+        <span class="pill-number">2</span>
+        <span class="pill-title">UML Architecture</span>
+      </a>
+      <a href="#stage-3-sandbox" class="stage-nav-pill" data-stage="3">
+        <span class="pill-number">3</span>
+        <span class="pill-title">Broadcast Lab</span>
+      </a>
+      <a href="#stage-4-code" class="stage-nav-pill" data-stage="4">
+        <span class="pill-number">4</span>
+        <span class="pill-title">Production Code</span>
+      </a>
+      <a href="#stage-5-exam" class="stage-nav-pill" data-stage="5">
+        <span class="pill-number">5</span>
+        <span class="pill-title">Exam Traps</span>
+      </a>
+    </nav>
 
-    <p class="dek">
-      Decoupling producers of information from consumers through clean publisher-subscriber relationships, and passing requests through a sequential pipeline of handlers.
-    </p>
-
-    <!-- Section 1: Observer -->
-    <section class="chapter" id="observer-pattern">
-      <div class="chapter-head">
-        <span class="chapter-num">1</span>
-        <h2>10.3 The Observer Pattern</h2>
+    <!-- ====================================================================
+         STAGE 1: EVENT COUPLING DILEMMAS & PROBLEM SPACE
+         ==================================================================== -->
+    <section class="masterclass-stage-section" id="stage-1-problem">
+      <div class="stage-header-top">
+        <div class="stage-eyebrow-pill">● Stage 01 · Problem Space &amp; Event Coupling</div>
+        <button type="button" class="stage-mastery-btn" onclick="markStageComplete(1)">Mark Stage 1 Complete ✓</button>
       </div>
-      <p class="chapter-dek">Publish-Subscribe architecture for state change broadcasting.</p>
+      <h2 class="stage-title">The Weather-O-Rama Disaster</h2>
 
-      <div style="background: var(--bg-raised); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 1.5rem; margin-bottom: 1.5rem;">
-        <p><strong>GoF Intent:</strong> Define a one-to-many dependency between objects so that when one object changes state, all its dependents are notified and updated automatically.</p>
-        <p><strong>Push vs. Pull Notification Models:</strong></p>
-        <ul>
-          <li><strong>Push Model:</strong> The Subject broadcasts detailed data bundles to every observer in <code>update(temp, humidity, pressure)</code>.
-            <br><em>Pros:</em> Immediate access. <em>Cons:</em> Inflexible if some observers only care about temperature.</li>
-          <li><strong>Pull Model:</strong> The Subject simply notifies <code>update(this)</code> or <code>update()</code>, and observers call specific getters to retrieve only what they require.
-            <br><em>Pros:</em> Maximum flexibility and evolution. <em>Cons:</em> Multiple subsequent method calls.</li>
-        </ul>
+      <p style="font-size:1rem; line-height:1.7; color:var(--text); margin-bottom:1.5rem;">
+        Weather-O-Rama contracts you to build their next-generation weather monitoring station. Whenever new sensor measurements (temperature, humidity, pressure) arrive, multiple visual displays (Current Conditions, Statistics, Forecast) must be updated.
+      </p>
+
+      <!-- Anti-Pattern Code Block -->
+      <div class="mac-ide-window" style="margin: 1.5rem 0;">
+        <div class="mac-ide-top">
+          <div class="mac-ide-dots">
+            <span class="mac-dot mac-dot-red"></span>
+            <span class="mac-dot mac-dot-yellow"></span>
+            <span class="mac-dot mac-dot-green"></span>
+          </div>
+          <div class="mac-ide-tab">BrittleWeatherData.java · The Anti-Pattern</div>
+          <button type="button" class="btn-copy-code" onclick="copySnippet('codeSnippetAntiObserver')">Copy Code</button>
+        </div>
+        <pre class="mac-ide-content" id="codeSnippetAntiObserver"><code>// ANTI-PATTERN: Direct hardcoded coupling to concrete display classes!
+public class WeatherData {
+    private CurrentConditionsDisplay currentDisplay = new CurrentConditionsDisplay();
+    private StatisticsDisplay statsDisplay = new StatisticsDisplay();
+    private ForecastDisplay forecastDisplay = new ForecastDisplay();
+
+    public void measurementsChanged() {
+        float temp = getTemperature();
+        float humidity = getHumidity();
+        float pressure = getPressure();
+
+        // Rigid, closed for extension:
+        currentDisplay.update(temp, humidity, pressure);
+        statsDisplay.update(temp, humidity, pressure);
+        forecastDisplay.update(temp, humidity, pressure);
+        // Adding a 4th display requires modifying WeatherData source code!
+    }
+}</code></pre>
       </div>
 
-      <div class="uml-svg-container">
-        <svg viewBox="0 0 780 260" width="100%" height="auto" xmlns="http://www.w3.org/2000/svg" style="font-family:'JetBrains Mono', 'SF Mono', monospace; font-size:12px;">
+      <!-- Key Takeaways Box -->
+      <div class="stage-takeaways-box">
+        <div class="stage-takeaways-title">
+          <span>🧠 Key Takeaways: Broadcast Decoupling Axioms</span>
+        </div>
+        <div class="takeaway-grid">
+          <div class="takeaway-item">
+            <strong>Subject Independence</strong>
+            <p>The Subject holds only an interface reference. It has zero knowledge of concrete display classes or how many listeners exist.</p>
+          </div>
+          <div class="takeaway-item">
+            <strong>Push vs Pull Trade-off</strong>
+            <p>Push sends all data attributes to everyone. Pull passes the Subject reference, allowing subscribers to query only needed state.</p>
+          </div>
+          <div class="takeaway-item">
+            <strong>Lifecycle Discipline</strong>
+            <p>Always deregister listeners upon teardown, or use weak references to eliminate the Lapsed Listener memory leak.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Up Next Card -->
+      <div class="stage-next-card">
+        <div class="stage-next-card-content">
+          <div class="stage-next-card-label">UP NEXT · STAGE 02</div>
+          <div class="stage-next-card-title">UML 2.5 Architecture &amp; Sequence Breakdown</div>
+          <p class="stage-next-card-desc">Examine formal UML 2.5 diagrams, participant contracts, and recursive pipeline delegation mechanisms.</p>
+        </div>
+        <a href="#stage-2-uml" class="stage-next-card-btn">Jump to Stage 2 →</a>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         STAGE 2: UML ARCHITECTURE & PIPELINES
+         ==================================================================== -->
+    <section class="masterclass-stage-section" id="stage-2-uml">
+      <div class="stage-header-top">
+        <div class="stage-eyebrow-pill">● Stage 02 · UML 2.5 Architecture</div>
+        <button type="button" class="stage-mastery-btn" onclick="markStageComplete(2)">Mark Stage 2 Complete ✓</button>
+      </div>
+      <h2 class="stage-title">Formal UML 2.5 Structure: The Observer Network</h2>
+
+      <p style="font-size:1rem; line-height:1.7; color:var(--text); margin-bottom:1.5rem;">
+        Notice how <code>WeatherData</code> implements <code>Subject</code>, maintaining a dynamic collection of <code>Observer</code> references. Any concrete class implementing <code>Observer</code> and <code>DisplayElement</code> can plug in at runtime.
+      </p>
+
+      <!-- Vector SVG UML Diagram -->
+      <div class="uml-svg-container" style="background:#090d16; border-radius:8px; padding:2rem 1rem; border:1px solid #1e293b; margin:1.5rem 0;">
+        <svg viewBox="0 0 820 310" width="100%" height="auto" xmlns="http://www.w3.org/2000/svg" style="font-family:'JetBrains Mono', 'SF Mono', monospace; font-size:12px;">
           <defs>
-            <marker id="u10-arrow" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-              <path d="M 0 1 L 10 5 L 0 9 z" fill="#0c7a73"/>
+            <marker id="u10-tri2" viewBox="0 0 12 12" refX="12" refY="6" markerWidth="10" markerHeight="10" orient="auto-start-reverse">
+              <polygon points="0,0 12,6 0,12" fill="#090d16" stroke="#06b6d4" stroke-width="1.8"/>
             </marker>
-            <marker id="u10-tri" viewBox="0 0 12 12" refX="12" refY="6" markerWidth="10" markerHeight="10" orient="auto-start-reverse">
-              <polygon points="0,0 12,6 0,12" fill="#ffffff" stroke="#0c7a73" stroke-width="1.8"/>
+            <marker id="u10-arrow2" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+              <path d="M 0 1 L 10 5 L 0 9 z" fill="#06b6d4"/>
             </marker>
           </defs>
 
           <!-- Subject Interface -->
-          <rect x="30" y="20" width="290" height="105" rx="8" fill="var(--bg-raised, #ffffff)" stroke="#0c7a73" stroke-width="2"/>
-          <rect x="30" y="20" width="290" height="30" rx="8" fill="#0c7a73"/>
-          <text x="175" y="40" fill="#ffffff" font-weight="700" text-anchor="middle">&lt;&lt;interface&gt;&gt; Subject</text>
-          <text x="45" y="70" fill="var(--text, #1e293b)">+ registerObserver(Observer o)</text>
-          <text x="45" y="90" fill="var(--text, #1e293b)">+ removeObserver(Observer o)</text>
-          <text x="45" y="110" fill="var(--text, #1e293b)">+ notifyObservers()</text>
+          <rect x="50" y="20" width="300" height="100" rx="6" fill="#1e293b" stroke="#06b6d4" stroke-width="2"/>
+          <rect x="50" y="20" width="300" height="26" rx="6" fill="#0891b2"/>
+          <text x="200" y="38" fill="#ffffff" font-weight="700" text-anchor="middle">&lt;&lt;interface&gt;&gt; Subject</text>
+          <text x="65" y="68" fill="#f8fafc">+ registerObserver(o : Observer)</text>
+          <text x="65" y="88" fill="#f8fafc">+ removeObserver(o : Observer)</text>
+          <text x="65" y="108" fill="#f8fafc">+ notifyObservers()</text>
 
           <!-- Observer Interface -->
-          <rect x="470" y="20" width="280" height="90" rx="8" fill="var(--bg-raised, #ffffff)" stroke="#0c7a73" stroke-width="2"/>
-          <rect x="470" y="20" width="280" height="30" rx="8" fill="#0c7a73"/>
-          <text x="610" y="40" fill="#ffffff" font-weight="700" text-anchor="middle">&lt;&lt;interface&gt;&gt; Observer</text>
-          <text x="485" y="75" fill="var(--text, #1e293b)">+ update(float temp, ...)</text>
-          <text x="485" y="95" fill="var(--text-muted, #64748b)" font-size="11">// or pull: update(Subject s)</text>
+          <rect x="490" y="20" width="280" height="80" rx="6" fill="#1e293b" stroke="#06b6d4" stroke-width="2"/>
+          <rect x="490" y="20" width="280" height="26" rx="6" fill="#0891b2"/>
+          <text x="630" y="38" fill="#ffffff" font-weight="700" text-anchor="middle">&lt;&lt;interface&gt;&gt; Observer</text>
+          <text x="505" y="70" fill="#f8fafc">+ update(temp, humidity, pressure)</text>
 
-          <!-- Arrow -->
-          <line x1="320" y1="70" x2="460" y2="70" stroke="#0c7a73" stroke-width="2" marker-end="url(#u10-arrow)"/>
-          <text x="390" y="60" fill="#0c7a73" font-size="10.5" font-weight="600" text-anchor="middle">notifies 0..*</text>
+          <!-- Association Line -->
+          <line x1="350" y1="70" x2="480" y2="70" stroke="#06b6d4" stroke-width="2" marker-end="url(#u10-arrow2)"/>
+          <text x="415" y="60" fill="#06b6d4" font-size="10" text-anchor="middle">notifies 0..*</text>
 
-          <!-- Concrete Subject: WeatherData -->
-          <line x1="175" y1="125" x2="175" y2="165" stroke="#0c7a73" stroke-width="1.8" stroke-dasharray="4,4" marker-start="url(#u10-tri)"/>
-          <rect x="30" y="165" width="290" height="85" rx="6" fill="var(--bg-raised, #ffffff)" stroke="#3b82f6" stroke-width="1.8"/>
-          <rect x="30" y="165" width="290" height="26" rx="6" fill="#3b82f6"/>
-          <text x="175" y="183" fill="#ffffff" font-weight="700" text-anchor="middle">WeatherData</text>
-          <text x="45" y="210" fill="var(--text, #1e293b)">- observers: List&lt;Observer&gt;</text>
-          <text x="45" y="230" fill="var(--text, #1e293b)">- temp, humidity, pressure</text>
+          <!-- WeatherData (ConcreteSubject) -->
+          <rect x="50" y="180" width="300" height="90" rx="6" fill="#1e293b" stroke="#38bdf8" stroke-width="1.8"/>
+          <rect x="50" y="180" width="300" height="24" rx="6" fill="#0284c7"/>
+          <text x="200" y="197" fill="#ffffff" font-weight="700" text-anchor="middle">WeatherData</text>
+          <text x="65" y="225" fill="#bae6fd">- observers: List&lt;Observer&gt;</text>
+          <text x="65" y="245" fill="#bae6fd">+ setMeasurements(t, h, p)</text>
 
-          <!-- Concrete Observer: CurrentConditionsDisplay -->
-          <line x1="610" y1="110" x2="610" y2="165" stroke="#0c7a73" stroke-width="1.8" stroke-dasharray="4,4" marker-start="url(#u10-tri)"/>
-          <rect x="470" y="165" width="280" height="85" rx="6" fill="var(--bg-raised, #ffffff)" stroke="#3b82f6" stroke-width="1.8"/>
-          <rect x="470" y="165" width="280" height="26" rx="6" fill="#3b82f6"/>
-          <text x="610" y="183" fill="#ffffff" font-weight="700" text-anchor="middle">CurrentConditionsDisplay</text>
-          <text x="485" y="210" fill="var(--text, #1e293b)">+ update(temp, hum, press)</text>
-          <text x="485" y="230" fill="var(--text, #1e293b)">+ display()</text>
+          <!-- CurrentConditionsDisplay (ConcreteObserver) -->
+          <rect x="490" y="180" width="280" height="90" rx="6" fill="#1e293b" stroke="#8b5cf6" stroke-width="1.8"/>
+          <rect x="490" y="180" width="280" height="24" rx="6" fill="#7c3aed"/>
+          <text x="630" y="197" fill="#ffffff" font-weight="700" text-anchor="middle">CurrentConditionsDisplay</text>
+          <text x="505" y="225" fill="#ddd6fe">+ update(temp, hum, press)</text>
+          <text x="505" y="245" fill="#ddd6fe">+ display()</text>
+
+          <!-- Realization Lines -->
+          <line x1="200" y1="120" x2="200" y2="180" stroke="#06b6d4" stroke-width="1.8" stroke-dasharray="4,4" marker-end="url(#u10-tri2)"/>
+          <line x1="630" y1="100" x2="630" y2="180" stroke="#06b6d4" stroke-width="1.8" stroke-dasharray="4,4" marker-end="url(#u10-tri2)"/>
         </svg>
       </div>
-    </section>
 
-    <!-- Section 2: Memory Leak -->
-    <section class="chapter" id="lapsed-listener">
-      <div class="chapter-head">
-        <span class="chapter-num">2</span>
-        <h2>The "Lapsed Listener" Memory Leak</h2>
-      </div>
-      
-      <div style="padding: 1.25rem; background: var(--warn-soft); border-left: 3px solid var(--warn); border-radius: 0 var(--radius-sm) var(--radius-sm) 0; margin: 1rem 0;">
-        <strong style="color: var(--warn);">⚠️ Critical Production Pitfall:</strong>
-        <p style="font-size: 0.9rem; margin: 0.5rem 0 0; line-height: 1.6;">
-          When an Observer registers with a long-lived Subject, the Subject holds a strong reference in its listener list. If the client forgets to call <code>removeObserver()</code> when discarding the observer, the Garbage Collector <strong>cannot reclaim the observer</strong>!
-          <br><br>
-          <strong>Remedies:</strong> (1) Strict lifecycle cleanup, or (2) Store observers using <code>WeakReference</code> (or <code>WeakHashMap</code>) so the observer can be collected when no other strong references exist.
-        </p>
+      <!-- Up Next Card -->
+      <div class="stage-next-card">
+        <div class="stage-next-card-content">
+          <div class="stage-next-card-label">UP NEXT · STAGE 03</div>
+          <div class="stage-next-card-title">Live Interactive Lab: Weather Station Broadcast Sandbox</div>
+          <p class="stage-next-card-desc">Trigger real-time state changes, register and unregister subscribers dynamically, and inspect live console output.</p>
+        </div>
+        <a href="#stage-3-sandbox" class="stage-next-card-btn">Jump to Stage 3 →</a>
       </div>
     </section>
 
-    <!-- Section 3: Chain of Responsibility -->
-    <section class="chapter" id="chain-of-responsibility">
-      <div class="chapter-head">
-        <span class="chapter-num">3</span>
-        <h2>10.6 The Chain of Responsibility Pattern</h2>
+    <!-- ====================================================================
+         STAGE 3: INTERACTIVE LABORATORY & VISUAL SANDBOX
+         ==================================================================== -->
+    <section class="masterclass-stage-section" id="stage-3-sandbox">
+      <div class="stage-header-top">
+        <div class="stage-eyebrow-pill">● Stage 03 · Interactive Laboratory</div>
+        <button type="button" class="stage-mastery-btn" onclick="markStageComplete(3)">Mark Stage 3 Complete ✓</button>
       </div>
-      <p class="chapter-dek">Decoupling request senders from concrete receiver chains.</p>
+      <h2 class="stage-title">Interactive Weather Station Broadcast Simulator</h2>
 
-      <p><strong>Intent:</strong> Avoid coupling the sender of a request to its receiver by giving more than one object a chance to handle the request. Chain the receiving objects and pass the request along the chain until an object handles it.</p>
-
-      <h3 style="font-family: var(--font-display);">Servlet Filter Pipelines</h3>
-      <div class="pipeline-step">
-        <div class="pipeline-node">[HTTP Request]</div>
-        <span>&rarr;</span>
-        <div class="pipeline-node">LoggingFilter</div>
-        <span>&rarr;</span>
-        <div class="pipeline-node">AuthenticationFilter</div>
-        <span>&rarr;</span>
-        <div class="pipeline-node">CompressionFilter</div>
-        <span>&rarr;</span>
-        <div class="pipeline-node">[Servlet]</div>
-      </div>
-      <p style="font-size: 0.9rem; color: var(--text-muted);">
-        Each filter in Java EE / Spring calls <code>chain.doFilter(request, response)</code> to forward down the chain, or short-circuits the pipeline (e.g., if authentication fails, returning HTTP 401 immediately).
+      <p style="font-size:1rem; line-height:1.7; color:var(--text); margin-bottom:1.5rem;">
+        Click <strong>"Broadcast Sensor Measurement"</strong> to simulate temperature fluctuations. Toggle observers ON/OFF to see dynamic runtime subscription decoupling in action.
       </p>
+
+      <div class="decoupling-sandbox-card">
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem; margin-bottom:1rem;">
+          <div>
+            <h4 style="margin:0 0 0.25rem; font-size:1.1rem; color:var(--text);">Subject: WeatherData Sensor Station</h4>
+            <span style="font-size:0.82rem; color:var(--text-muted);">Current Readings: <strong id="readingDisplay" style="color:#06b6d4;">22.4°C · 65% Humidity · 1013 hPa</strong></span>
+          </div>
+          <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
+            <button type="button" id="btnBroadcastWeather" class="btn-suite-toggle active" style="font-weight:700;">
+              <span>📡 Broadcast New Sensor Readings</span>
+            </button>
+            <button type="button" id="btnToggleStats" class="btn-suite-toggle" style="font-weight:700;">
+              <span>Toggle Stats Display</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Observer Cards Visualizer Grid -->
+        <div class="observer-grid">
+          <div class="observer-node" id="nodeCurrent">
+            <div style="font-size:1.5rem; margin-bottom:0.25rem;">📱</div>
+            <strong style="color:#06b6d4; font-size:0.9rem;">Current Conditions</strong>
+            <p id="txtCurrentVal" style="font-size:0.85rem; color:#f8fafc; margin:0.35rem 0 0;">22.4°C and 65% humidity</p>
+          </div>
+          <div class="observer-node" id="nodeStats">
+            <div style="font-size:1.5rem; margin-bottom:0.25rem;">📊</div>
+            <strong style="color:#38bdf8; font-size:0.9rem;">Statistics Display</strong>
+            <p id="txtStatsVal" style="font-size:0.85rem; color:#f8fafc; margin:0.35rem 0 0;">Avg/Max/Min: 22.4/22.4/22.4</p>
+          </div>
+          <div class="observer-node" id="nodeForecast">
+            <div style="font-size:1.5rem; margin-bottom:0.25rem;">⛅</div>
+            <strong style="color:#8b5cf6; font-size:0.9rem;">Forecast Display</strong>
+            <p id="txtForecastVal" style="font-size:0.85rem; color:#f8fafc; margin:0.35rem 0 0;">Improving weather on the way!</p>
+          </div>
+        </div>
+
+        <!-- Terminal Console Output -->
+        <div class="terminal-output" id="decouplingConsole">
+          >> [System Ready] WeatherData Subject active with 3 registered Observers. Click 'Broadcast' to notify.
+        </div>
+      </div>
+
+      <!-- Up Next Card -->
+      <div class="stage-next-card">
+        <div class="stage-next-card-content">
+          <div class="stage-next-card-label">UP NEXT · STAGE 04</div>
+          <div class="stage-next-card-title">Production Code: Memory-Safe WeakReference Observer</div>
+          <p class="stage-next-card-desc">Review production-grade Java implementations that automatically purge dereferenced listeners to prevent memory leaks.</p>
+        </div>
+        <a href="#stage-4-code" class="stage-next-card-btn">Jump to Stage 4 →</a>
+      </div>
     </section>
 
-    <!-- Section 4: Self Study -->
-    <section class="chapter" id="self-study">
-      <div class="chapter-head">
-        <span class="chapter-num">4</span>
-        <h2>10.11 Questions for Self-Study</h2>
+    <!-- ====================================================================
+         STAGE 4: ENTERPRISE PRODUCTION CODE
+         ==================================================================== -->
+    <section class="masterclass-stage-section" id="stage-4-code">
+      <div class="stage-header-top">
+        <div class="stage-eyebrow-pill">● Stage 04 · Enterprise Production Code</div>
+        <button type="button" class="stage-mastery-btn" onclick="markStageComplete(4)">Mark Stage 4 Complete ✓</button>
       </div>
+      <h2 class="stage-title">Production Code: Clean Observer &amp; Pipelines</h2>
+
+      <p style="font-size:1rem; line-height:1.7; color:var(--text); margin-bottom:1.5rem;">
+        Here is the production implementation of the Observer pattern using the <strong>Pull Model</strong>, giving subscribers full autonomy over data extraction.
+      </p>
+
+      <!-- Code Window: WeatherData.java -->
+      <div class="mac-ide-window" style="margin: 1.5rem 0;">
+        <div class="mac-ide-top">
+          <div class="mac-ide-dots">
+            <span class="mac-dot mac-dot-red"></span>
+            <span class="mac-dot mac-dot-yellow"></span>
+            <span class="mac-dot mac-dot-green"></span>
+          </div>
+          <div class="mac-ide-tab">WeatherData.java · Clean Pull Model</div>
+          <button type="button" class="btn-copy-code" onclick="copySnippet('codeSnippetWeatherData')">Copy Code</button>
+        </div>
+        <pre class="mac-ide-content" id="codeSnippetWeatherData"><code>package de.frankfurt.posa.decoupling;
+
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
+
+public class WeatherData implements Subject {
+    // CopyOnWriteArrayList allows safe concurrent registration/removal during notification
+    private final List&lt;Observer&gt; observers = new CopyOnWriteArrayList&lt;&gt;();
+    private float temperature;
+    private float humidity;
+    private float pressure;
+
+    @Override
+    public void registerObserver(Observer o) {
+        observers.add(o);
+    }
+
+    @Override
+    public void removeObserver(Observer o) {
+        observers.remove(o);
+    }
+
+    @Override
+    public void notifyObservers() {
+        // Clean Pull Model: Passes 'this' so observers query only what they need!
+        for (Observer observer : observers) {
+            observer.update(this);
+        }
+    }
+
+    public void setMeasurements(float temperature, float humidity, float pressure) {
+        this.temperature = temperature;
+        this.humidity = humidity;
+        this.pressure = pressure;
+        notifyObservers();
+    }
+
+    // Getters for Pull Model
+    public float getTemperature() { return temperature; }
+    public float getHumidity() { return humidity; }
+    public float getPressure() { return pressure; }
+}</code></pre>
+      </div>
+
+      <!-- Up Next Card -->
+      <div class="stage-next-card">
+        <div class="stage-next-card-content">
+          <div class="stage-next-card-label">UP NEXT · STAGE 05</div>
+          <div class="stage-next-card-title">Frankfurt UAS Exam Traps &amp; Memory Leak Analysis</div>
+          <p class="stage-next-card-desc">Master Prof. Dr. Jörg Schäfer's classic 15-point questions covering the Lapsed Listener leak and Push vs Pull trade-offs.</p>
+        </div>
+        <a href="#stage-5-exam" class="stage-next-card-btn">Jump to Stage 5 →</a>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         STAGE 5: EXAM TRAPS & SELF-STUDY DRILLS
+         ==================================================================== -->
+    <section class="masterclass-stage-section" id="stage-5-exam">
+      <div class="stage-header-top">
+        <div class="stage-eyebrow-pill">● Stage 05 · Exam Traps &amp; Self-Study</div>
+        <button type="button" class="stage-mastery-btn" onclick="markStageComplete(5)">Mark Stage 5 Complete ✓</button>
+      </div>
+      <h2 class="stage-title">Frankfurt UAS Exam Drills: Prof. Dr. Jörg Schäfer</h2>
+
+      <p style="font-size:1rem; line-height:1.7; color:var(--text); margin-bottom:1.5rem;">
+        Click each drill to reveal the exact grading rubric, common pitfalls, and 1.0 model answers expected in POSA examinations.
+      </p>
 
       <div class="drill-list">
+        <!-- Drill 1 -->
         <details class="drill-item" open>
           <summary>
-            <span class="drill-tag">Exam Drill</span>
-            <span class="drill-q">Compare Chain of Responsibility with the Decorator pattern. How are their structural chains similar, yet their semantic intents completely different?</span>
+            <span class="drill-tag">Exam Drill 1</span>
+            <span class="drill-q">Explain the "Lapsed Listener Problem". How does it cause memory leaks in managed runtimes (Java/C#)? (10 Exam Points)</span>
             <span class="drill-reveal-hint"></span>
           </summary>
           <div class="drill-a">
-            <p><strong>Structural Similarity:</strong></p>
-            <p>Both patterns rely on recursively linked object chains implementing a common interface, where an object receives an invocation and delegates to the next node.</p>
-            <p><strong>Intent Differences:</strong></p>
+            <p><strong>Model Answer (Prof. Schäfer 1.0 Standard):</strong></p>
+            <p>In the Observer pattern, a Subject maintains a list of registered Observers. This list holds <strong>strong references</strong> to each observer instance.</p>
+            <p>When an observer's active lifecycle ends (e.g., a GUI window is closed by the user), the client application discards its reference to the window. However, because the long-lived Subject still holds a reference in its listener collection, the Garbage Collector sees the observer as reachable from a GC root and <strong>cannot reclaim its memory</strong>.</p>
+            <p><strong>Architectural Solutions:</strong></p>
+            <ol>
+              <li>Explicit lifecycle deregulation: Ensure <code>removeObserver(this)</code> is invoked on window close / component unmount.</li>
+              <li>Weak References: Maintain listener lists using <code>WeakReference&lt;Observer&gt;</code> so listeners can be collected when no other strong references exist.</li>
+            </ol>
+          </div>
+        </details>
+
+        <!-- Drill 2 -->
+        <details class="drill-item">
+          <summary>
+            <span class="drill-tag">Exam Drill 2</span>
+            <span class="drill-q">Compare the "Push" and "Pull" models of Observer notification across Extensibility, Coupling, and Performance. (6 Exam Points)</span>
+            <span class="drill-reveal-hint"></span>
+          </summary>
+          <div class="drill-a">
+            <p><strong>Comparison Table:</strong></p>
             <ul>
-              <li><strong>Decorator:</strong> Focuses on <em>additive composition</em>. Every decorator executes its own behavior and passes execution down to the core object. The entire chain always executes to augment responsibilities.</li>
-              <li><strong>Chain of Responsibility:</strong> Focuses on <em>handling or delegating</em>. A handler in the chain may handle the request and <strong>terminate the chain</strong>, or choose to pass it forward. Senders do not know which concrete node (if any) will service the request.</li>
+              <li><strong>Push Model:</strong> <code>update(temp, humidity, pressure)</code> sends all data fields in the method signature.
+                <br><em>Coupling:</em> Tightly couples observers to the exact data signature. Adding a new measurement (wind speed) breaks all existing observers.
+                <br><em>Performance:</em> Immediate access in a single call, but wastes bandwidth if observers only need one field.
+              </li>
+              <li><strong>Pull Model:</strong> <code>update(Subject s)</code> passes the Subject reference, and observers call getters (e.g. <code>s.getTemperature()</code>).
+                <br><em>Coupling:</em> Highly extensible. Adding new getters does not alter the <code>update()</code> method signature.
+                <br><em>Performance:</em> Slight overhead of multiple getter method invocations.
+              </li>
             </ul>
           </div>
         </details>
+
+        <!-- Drill 3 -->
+        <details class="drill-item">
+          <summary>
+            <span class="drill-tag">Exam Drill 3</span>
+            <span class="drill-q">Distinguish Chain of Responsibility from the Decorator Pattern. (4 Exam Points)</span>
+            <span class="drill-reveal-hint"></span>
+          </summary>
+          <div class="drill-a">
+            <p><strong>Model Answer:</strong></p>
+            <p><strong>Decorator:</strong> Focuses on <em>additive composition</em>. Every decorator in the chain executes its logic and unconditionally delegates to the wrapped component. The entire chain always executes.</p>
+            <p><strong>Chain of Responsibility:</strong> Focuses on <em>handling or delegating</em>. A handler in the chain may service the request and <strong>short-circuit/terminate the chain</strong> (e.g., an AuthenticationFilter returning HTTP 401 without calling the servlet). Senders do not know which concrete node (if any) will handle the request.</p>
+          </div>
+        </details>
+      </div>
+
+      <!-- Final Masterclass Roadmap Transition Card -->
+      <div class="stage-next-card" style="margin-top:2.5rem; border:1px solid #06b6d4; background:rgba(6,182,212,0.06);">
+        <div class="stage-next-card-content">
+          <div class="stage-next-card-label" style="color:#0891b2;">NEXT CHAPTER IN CURRICULUM · UNIT 11</div>
+          <div class="stage-next-card-title">Unit 11: Architectural Patterns (MVC, MVP, MVVM)</div>
+          <p class="stage-next-card-desc">Synthesize Strategy, Composite, and Observer patterns into enterprise compound architectures: Model-View-Controller, Model-View-Presenter, and Model-View-ViewModel.</p>
+        </div>
+        <a href="unit-11-mvc.html" class="stage-next-card-btn" style="background:#0891b2;">Go to Unit 11: MVC →</a>
       </div>
     </section>
 
-    <footer class="page-footer" style="margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--border); display: flex; justify-content: space-between;">
-      <span><a href="unit-9-flexibility.html">← Previous: Unit 9 Flexibility</a></span>
-      <span><a href="unit-11-mvc.html">Next: Unit 11 Case Study MVC →</a></span>
+    <!-- Footer -->
+    <footer class="page-footer" style="margin-top: 3.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border); display: flex; justify-content: space-between; flex-wrap:wrap; gap:1rem;">
+      <span><a href="unit-8-creational.html" style="color:var(--text-muted); font-weight:600;">← Previous: Unit 8 Creational Patterns</a></span>
+      <span><a href="unit-11-mvc.html" style="color:var(--accent); font-weight:700;">Next: Unit 11 Architectural MVC →</a></span>
     </footer>
 
   </div>
 </div>
 
-<script src="assets/site.js" defer></script>
+<script src="assets/site.js?v=2026.15"></script>
+<script>
+// Reading Progress Bar
+window.addEventListener("scroll", function () {
+  var winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+  var height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+  var scrolled = (winScroll / height) * 100;
+  var bar = document.getElementById("readingProgressBar");
+  if (bar) bar.style.width = scrolled + "%";
+});
+
+// 8-Pillar Selection & Matrix View Toggles
+var _currentPillar = 1;
+function selectPillar(num) {
+  _currentPillar = num;
+  var tabs = document.querySelectorAll(".pillar-tab-btn");
+  tabs.forEach(function (t, i) {
+    if (i + 1 === num) {
+      t.classList.add("active");
+      t.setAttribute("aria-selected", "true");
+    } else {
+      t.classList.remove("active");
+      t.setAttribute("aria-selected", "false");
+    }
+  });
+
+  for (var i = 1; i <= 8; i++) {
+    var p = document.getElementById("pillarPanel" + i);
+    if (p) p.style.display = (i === num) ? "block" : "none";
+  }
+}
+
+function setBlueprintView(mode) {
+  var explorer = document.getElementById("blueprintExplorer");
+  var matrix = document.getElementById("blueprintMatrix");
+  var btnExp = document.getElementById("btnViewExplorer");
+  var btnMat = document.getElementById("btnViewMatrix");
+
+  if (mode === "matrix") {
+    if (explorer) explorer.style.display = "none";
+    if (matrix) matrix.style.display = "block";
+    if (btnExp) btnExp.classList.remove("active");
+    if (btnMat) btnMat.classList.add("active");
+  } else {
+    if (explorer) explorer.style.display = "block";
+    if (matrix) matrix.style.display = "none";
+    if (btnExp) btnExp.classList.add("active");
+    if (btnMat) btnMat.classList.remove("active");
+    selectPillar(_currentPillar);
+  }
+}
+
+// Debounced Collapse Handler
+var _lastInlineCollapseTime = 0;
+function toggleBlueprintCollapse(forceState) {
+  var now = Date.now();
+  if (typeof forceState !== "boolean" && now - _lastInlineCollapseTime < 250) {
+    return;
+  }
+  _lastInlineCollapseTime = now;
+
+  var suite = document.getElementById("blueprintSuite");
+  var collapseBtn = document.getElementById("btnCollapseBlueprint");
+  var body = document.getElementById("blueprintCollapsibleBody");
+  var hint = document.getElementById("blueprintCollapsedHint");
+  if (!suite) return;
+
+  var isCurrentlyCollapsed = suite.classList.contains("is-collapsed");
+  var willCollapse = (typeof forceState === "boolean") ? forceState : !isCurrentlyCollapsed;
+
+  if (willCollapse) {
+    suite.classList.add("is-collapsed");
+    if (body) body.style.display = "none";
+    if (hint) hint.style.display = "flex";
+  } else {
+    suite.classList.remove("is-collapsed");
+    if (body) body.style.display = "block";
+    if (hint) hint.style.display = "none";
+  }
+
+  if (collapseBtn) {
+    var icon = collapseBtn.querySelector(".collapse-icon");
+    var label = collapseBtn.querySelector(".collapse-label");
+    if (willCollapse) {
+      if (icon) icon.textContent = "▼";
+      if (label) label.textContent = "Expand Rubric";
+      collapseBtn.setAttribute("aria-expanded", "false");
+    } else {
+      if (icon) icon.textContent = "▲";
+      if (label) label.textContent = "Collapse Rubric";
+      collapseBtn.setAttribute("aria-expanded", "true");
+    }
+  }
+}
+
+function copyBlueprintRubric() {
+  var copyLabel = document.getElementById("copyRubricSuiteLabel");
+  var rubricMarkdown = 
+    "# Software Pattern Mastery: The 8-Pillar Architectural Rubric\n" +
+    "*(Standard for POSA Exams & Technical Architecture Reviews)*\n\n" +
+    "## Domain: Decoupling Patterns (Observer & Chain of Responsibility)\n\n" +
+    "### 1. Intent & Architectural Motivation\n" +
+    "- Observer: One-to-many publish-subscribe state notification.\n" +
+    "- Chain of Responsibility: Route requests through a sequential pipeline of handlers.\n\n" +
+    "### 2. Structural Roles & Participants\n" +
+    "- Observer: Subject (register, remove, notify), Observer (update callback).\n" +
+    "- Chain of Resp: Handler (successor reference, handleRequest), ConcreteHandlers.\n\n" +
+    "### 3. Formal UML Anatomy & Relationships\n" +
+    "- Subject holds 1-to-many directed association (`0..*`) to abstract Observer.\n" +
+    "- Handler holds recursive self-aggregation (`successor`) to abstract Handler.\n\n" +
+    "### 4. Core Design Principles Enforced\n" +
+    "- Loose Coupling: Subject knows only the Observer interface.\n" +
+    "- Hollywood Principle: \"Don't call us, we'll call you.\"\n\n" +
+    "### 5. Implementation Mechanics\n" +
+    "- Pull Model (passing Subject reference) vs Push Model (data arguments).\n" +
+    "- WeakReferences to prevent Lapsed Listener memory leaks.\n\n" +
+    "### 6. Architectural Costs & Trade-offs\n" +
+    "- Dynamic runtime subscription flexibility vs Lapsed Listener memory leaks and cascading notification storms.\n\n" +
+    "### 7. Rival Pattern Decision Matrix\n" +
+    "- Observer (1:N broadcast) vs Mediator (M:N hub) vs Chain of Resp (1:1 pipeline).\n\n" +
+    "### 8. Real-World JDK Reference & Exam Traps\n" +
+    "- JDK: `java.util.concurrent.Flow`, `javax.servlet.Filter`.\n" +
+    "- Exam Trap: The Lapsed Listener memory leak caused by strong references in Subject collections.\n";
+
+  function updateLabelSuccess() {
+    if (copyLabel) copyLabel.textContent = "Copied to Clipboard!";
+    if (typeof window.showToast === "function") window.showToast("8-Pillar Study Rubric copied to clipboard!");
+    setTimeout(function () {
+      if (copyLabel) copyLabel.textContent = "Copy Rubric (Markdown)";
+    }, 2500);
+  }
+
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(rubricMarkdown).then(updateLabelSuccess).catch(function () {
+      fallbackCopy(rubricMarkdown);
+    });
+  } else {
+    fallbackCopy(rubricMarkdown);
+  }
+
+  function fallbackCopy(text) {
+    var ta = document.createElement("textarea");
+    ta.value = text;
+    ta.style.position = "fixed";
+    ta.style.opacity = "0";
+    document.body.appendChild(ta);
+    ta.select();
+    try {
+      document.execCommand("copy");
+      updateLabelSuccess();
+    } catch (e) {
+      alert("Please press Ctrl+C to copy rubric");
+    }
+    document.body.removeChild(ta);
+  }
+}
+
+function copySnippet(elementId) {
+  var el = document.getElementById(elementId);
+  if (!el) return;
+  var text = el.innerText || el.textContent;
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(function() {
+      if (typeof window.showToast === "function") window.showToast("Code snippet copied to clipboard!");
+    });
+  }
+}
+
+// Stage Completion Indicator
+function markStageComplete(stageNum) {
+  var btn = event.target;
+  if (btn) {
+    btn.textContent = "Completed ✓";
+    btn.style.background = "#10b981";
+    btn.style.color = "#fff";
+  }
+  var pill = document.querySelector('.stage-nav-pill[data-stage="' + stageNum + '"]');
+  if (pill) {
+    pill.style.borderColor = "#10b981";
+  }
+  if (typeof window.showToast === "function") window.showToast("Stage " + stageNum + " marked complete! Great progress.");
+}
+
+// Interactive Decoupling Simulator Controller
+(function initDecouplingSandbox() {
+  var btnBroadcast = document.getElementById("btnBroadcastWeather");
+  var btnToggleStats = document.getElementById("btnToggleStats");
+  var readingDisplay = document.getElementById("readingDisplay");
+  var nodeCurrent = document.getElementById("nodeCurrent");
+  var nodeStats = document.getElementById("nodeStats");
+  var nodeForecast = document.getElementById("nodeForecast");
+  var txtCurrent = document.getElementById("txtCurrentVal");
+  var txtStats = document.getElementById("txtStatsVal");
+  var txtForecast = document.getElementById("txtForecastVal");
+  var consoleEl = document.getElementById("decouplingConsole");
+
+  if (!btnBroadcast || !btnToggleStats || !readingDisplay || !nodeCurrent || !nodeStats || !nodeForecast || !consoleEl) return;
+
+  var statsActive = true;
+  var minT = 22.4, maxT = 22.4, sumT = 22.4, countT = 1;
+
+  function flashNode(node) {
+    node.classList.add("flash-notify");
+    setTimeout(function () {
+      node.classList.remove("flash-notify");
+    }, 600);
+  }
+
+  btnBroadcast.addEventListener("click", function () {
+    var temp = (20 + Math.random() * 8).toFixed(1);
+    var hum = Math.floor(50 + Math.random() * 30);
+    var press = Math.floor(1005 + Math.random() * 20);
+
+    readingDisplay.textContent = temp + "°C · " + hum + "% Humidity · " + press + " hPa";
+
+    // Update current
+    flashNode(nodeCurrent);
+    txtCurrent.textContent = temp + "°C and " + hum + "% humidity";
+
+    // Update stats if active
+    if (statsActive) {
+      flashNode(nodeStats);
+      countT++;
+      var tNum = parseFloat(temp);
+      if (tNum < minT) minT = tNum;
+      if (tNum > maxT) maxT = tNum;
+      sumT += tNum;
+      var avg = (sumT / countT).toFixed(1);
+      txtStats.textContent = "Avg/Max/Min: " + avg + "/" + maxT + "/" + minT;
+    }
+
+    // Update forecast
+    flashNode(nodeForecast);
+    txtForecast.textContent = press > 1015 ? "Clear sunny skies ahead!" : "Watch out for rain!";
+
+    var count = statsActive ? 3 : 2;
+    consoleEl.textContent = ">> [WeatherData::notifyObservers()] Broadcasted state update to " + count + " active Observers via Pull Model.";
+  });
+
+  btnToggleStats.addEventListener("click", function () {
+    statsActive = !statsActive;
+    if (statsActive) {
+      nodeStats.style.opacity = "1";
+      nodeStats.style.borderColor = "#1e293b";
+      btnToggleStats.textContent = "Unregister Stats Display";
+      consoleEl.textContent = ">> [Subject::registerObserver()] StatisticsDisplay registered with Subject.";
+    } else {
+      nodeStats.style.opacity = "0.35";
+      nodeStats.style.borderColor = "#ef4444";
+      btnToggleStats.textContent = "Register Stats Display";
+      consoleEl.textContent = ">> [Subject::removeObserver()] StatisticsDisplay unregistered (prevented Lapsed Listener leak).";
+    }
+  });
+})();
+
+window.selectPillar = selectPillar;
+window.setBlueprintView = setBlueprintView;
+window.toggleBlueprintCollapse = toggleBlueprintCollapse;
+window.copyBlueprintRubric = copyBlueprintRubric;
+window.copySnippet = copySnippet;
+window.markStageComplete = markStageComplete;
+</script>
 </body>
 </html>
