@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/style.css?v=2026.9">
+<link rel="stylesheet" href="assets/style.css?v=2026.10">
 <style>
   .quote-card {
     margin: 1.5rem 0 2rem;
@@ -145,27 +145,30 @@
         </p>
 
         <!-- Course Meta Metric Chips -->
-        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(160px, 1fr)); gap:0.85rem; margin:1.75rem 0 1.25rem;">
-          <div style="background:var(--bg-raised); border:1px solid var(--border); border-radius:var(--radius-md); padding:0.85rem 1rem;">
-            <div style="font-size:0.75rem; font-weight:700; text-transform:uppercase; color:var(--text-muted);">⏱️ Study Time</div>
-            <div style="font-size:1.15rem; font-weight:800; color:#38bdf8; font-family:var(--font-mono); margin-top:0.2rem;">45 Minutes</div>
+        <div class="masthead-metrics-grid">
+          <div class="metric-chip">
+            <div class="metric-chip-label">⏱️ Study Time</div>
+            <div class="metric-chip-val" style="color:#38bdf8;">45 Minutes</div>
           </div>
-          <div style="background:var(--bg-raised); border:1px solid var(--border); border-radius:var(--radius-md); padding:0.85rem 1rem;">
-            <div style="font-size:0.75rem; font-weight:700; text-transform:uppercase; color:var(--text-muted);">🎯 Exam Target</div>
-            <div style="font-size:1.15rem; font-weight:800; color:#10b981; font-family:var(--font-mono); margin-top:0.2rem;">15 Pts (Grade 1.0)</div>
+          <div class="metric-chip">
+            <div class="metric-chip-label">🎯 Exam Target</div>
+            <div class="metric-chip-val" style="color:#10b981;">15 Pts (Grade 1.0)</div>
           </div>
-          <div style="background:var(--bg-raised); border:1px solid var(--border); border-radius:var(--radius-md); padding:0.85rem 1rem;">
-            <div style="font-size:0.75rem; font-weight:700; text-transform:uppercase; color:var(--text-muted);">🏛️ GoF Category</div>
-            <div style="font-size:1.15rem; font-weight:800; color:#a5b4fc; font-family:var(--font-mono); margin-top:0.2rem;">Behavioral / Object</div>
+          <div class="metric-chip">
+            <div class="metric-chip-label">🏛️ GoF Category</div>
+            <div class="metric-chip-val" style="color:#a5b4fc;">Behavioral / Object</div>
           </div>
-          <div style="background:var(--bg-raised); border:1px solid var(--border); border-radius:var(--radius-md); padding:0.85rem 1rem;">
-            <div style="font-size:0.75rem; font-weight:700; text-transform:uppercase; color:var(--text-muted);">⚙️ Refactoring Lab</div>
-            <div style="font-size:1.15rem; font-weight:800; color:#f59e0b; font-family:var(--font-mono); margin-top:0.2rem;">Sorter Pipeline</div>
+          <div class="metric-chip">
+            <div class="metric-chip-label">⚙️ Refactoring Lab</div>
+            <div class="metric-chip-val" style="color:#f59e0b;">Sorter Pipeline</div>
           </div>
         </div>
 
-        <!-- 8-PILLAR ARCHITECTURE BLUEPRINT COMMAND CENTER (NATIVE INLINE DASHBOARD) -->
-        <section class="blueprint-suite" id="blueprintSuite" aria-label="8-Pillar Architecture Rubric">
+      </div>
+    </header>
+
+    <!-- 8-PILLAR ARCHITECTURE BLUEPRINT COMMAND CENTER (NATIVE INLINE DASHBOARD) -->
+    <section class="blueprint-suite" id="blueprintSuite" aria-label="8-Pillar Architecture Rubric">
           <div class="blueprint-suite-top">
             <div>
               <div class="blueprint-suite-badge">
@@ -562,9 +565,6 @@ Need undo/redo, queuing, or macro commands?  --&gt; Command
             </div>
           </div>
         </section>
-
-      </div>
-    </header>
 
     <!-- Masterclass Stage Bar (App-like Switcher) -->
     <nav class="masterclass-stage-nav" aria-label="Learning Stages">
@@ -1629,6 +1629,6 @@ window.setBlueprintView = setBlueprintView;
 window.copyBlueprintRubric = copyBlueprintRubric;
 </script>
 
-<script src="assets/site.js?v=2026.9" defer></script>
+<script src="assets/site.js?v=2026.10" defer></script>
 </body>
 </html>
