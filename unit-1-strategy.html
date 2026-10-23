@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/style.css?v=2026.14">
+<link rel="stylesheet" href="assets/style.css?v=2026.15">
 <style>
   .quote-card {
     margin: 1.5rem 0 2rem;
@@ -1099,50 +1099,65 @@ duck.setFlyBehavior(FlyBehaviors.NO_WAY); // Reuses 1 shared instance, 0 GC allo
 
       </div>
 
-      <!-- Executive 3 Golden Rules Takeaway Cards (Vercel / Stripe Style) -->
-      <div class="golden-rules-grid">
-        <div class="golden-rule-card rule-blue">
-          <div class="golden-rule-header-row">
-            <span class="golden-rule-tag">Principle 1 · OCP</span>
-            <div class="golden-rule-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
-                <polyline points="2 17 12 22 22 17"></polyline>
-                <polyline points="2 12 12 17 22 12"></polyline>
-              </svg>
-            </div>
+      <!-- Stage 1 Key Takeaways / Executive Synthesis -->
+      <section class="stage-takeaways-box" aria-label="Stage 1 Key Architectural Principles">
+        <div class="takeaways-header">
+          <div class="takeaways-eyebrow">
+            <span class="takeaways-dot"></span>
+            <span>STAGE 1 KEY TAKEAWAYS</span>
+            <span style="opacity:0.4;">·</span>
+            <span>FOUNDATIONAL DESIGN PRINCIPLES</span>
           </div>
-          <h4 class="golden-rule-title">Encapsulate What Varies</h4>
-          <p class="golden-rule-desc">Isolate volatile business algorithms into dedicated interfaces so they never contaminate or break stable client domains.</p>
+          <h3 class="takeaways-title">The 3 Architectural Axioms Derived from This Story</h3>
+          <p class="takeaways-desc">
+            The failure of inheritance and the emergence of the Strategy pattern establish three universal object-oriented design principles. Memorize these for Prof. Schäfer's POSA exam:
+          </p>
         </div>
 
-        <div class="golden-rule-card rule-emerald">
-          <div class="golden-rule-header-row">
-            <span class="golden-rule-tag">Principle 2 · GoF #1</span>
-            <div class="golden-rule-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <circle cx="12" cy="12" r="10"></circle>
-                <path d="M12 8v8M8 12h8"></path>
-              </svg>
+        <div class="golden-rules-grid">
+          <div class="golden-rule-card rule-blue">
+            <div class="golden-rule-header-row">
+              <span class="golden-rule-tag">Principle 1 · OCP</span>
+              <div class="golden-rule-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+                  <polyline points="2 17 12 22 22 17"></polyline>
+                  <polyline points="2 12 12 17 22 12"></polyline>
+                </svg>
+              </div>
             </div>
+            <h4 class="golden-rule-title">Encapsulate What Varies</h4>
+            <p class="golden-rule-desc">Isolate volatile business algorithms into dedicated interfaces so they never contaminate or break stable client domains.</p>
           </div>
-          <h4 class="golden-rule-title">Composition Over Inheritance</h4>
-          <p class="golden-rule-desc">A flexible "HAS-A" relationship enables dynamic runtime behavior changes without touching rigid class inheritance trees.</p>
-        </div>
 
-        <div class="golden-rule-card rule-purple">
-          <div class="golden-rule-header-row">
-            <span class="golden-rule-tag">Principle 3 · DIP</span>
-            <div class="golden-rule-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
-              </svg>
+          <div class="golden-rule-card rule-emerald">
+            <div class="golden-rule-header-row">
+              <span class="golden-rule-tag">Principle 2 · GoF #1</span>
+              <div class="golden-rule-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <path d="M12 8v8M8 12h8"></path>
+                </svg>
+              </div>
             </div>
+            <h4 class="golden-rule-title">Composition Over Inheritance</h4>
+            <p class="golden-rule-desc">A flexible "HAS-A" relationship enables dynamic runtime behavior changes without touching rigid class inheritance trees.</p>
           </div>
-          <h4 class="golden-rule-title">Program to Interfaces</h4>
-          <p class="golden-rule-desc">High-level modules must depend strictly on abstract contracts, completely decoupling callers from concrete implementations.</p>
+
+          <div class="golden-rule-card rule-purple">
+            <div class="golden-rule-header-row">
+              <span class="golden-rule-tag">Principle 3 · DIP</span>
+              <div class="golden-rule-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                </svg>
+              </div>
+            </div>
+            <h4 class="golden-rule-title">Program to Interfaces</h4>
+            <p class="golden-rule-desc">High-level modules must depend strictly on abstract contracts, completely decoupling callers from concrete implementations.</p>
+          </div>
         </div>
-      </div>
+      </section>
 
       <!-- Up Next Card to Advance to Stage 2 -->
       <div class="stage-next-card">
@@ -1931,6 +1946,6 @@ window.toggleBlueprintCollapse = toggleBlueprintCollapse;
 window.copyBlueprintRubric = copyBlueprintRubric;
 </script>
 
-<script src="assets/site.js?v=2026.14" defer></script>
+<script src="assets/site.js?v=2026.15" defer></script>
 </body>
 </html>
