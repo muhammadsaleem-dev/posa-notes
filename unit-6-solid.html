@@ -68,15 +68,15 @@
     margin-right: 0.5rem;
   }
 </style>
-<script>(function(){try{var t=localStorage.getItem('posa-theme')||'light';document.documentElement.setAttribute('data-theme',t);var m=localStorage.getItem('posa-mode')||'concept';document.documentElement.setAttribute('data-mode',m);}catch(e){}})();</script>
+<script>(function(){try{var t=localStorage.getItem('posa-theme')||'dark';document.documentElement.setAttribute('data-theme',t);var m=localStorage.getItem('posa-mode')||'concept';document.documentElement.setAttribute('data-mode',m);}catch(e){}})();</script>
 </head>
 <body>
 
 <nav class="sitenav">
   <div class="sitenav-inner">
     <a class="sitenav-home" href="index.html">
-      <span style="background:var(--accent);color:#fff;padding:0.15rem 0.45rem;border-radius:4px;font-size:0.8rem;font-weight:800;letter-spacing:0.04em;">POSA</span>
-      <span>2026</span>
+      <span style="background:linear-gradient(135deg, #6366f1 0%, #38bdf8 100%);color:#fff;padding:0.2rem 0.55rem;border-radius:6px;font-size:0.82rem;font-weight:800;letter-spacing:0.04em;">POSA</span>
+      <span style="font-weight:800;letter-spacing:-0.02em;">2026</span>
     </a>
     <div class="sitenav-links">
       <a href="index.html">Overview</a>
@@ -107,6 +107,30 @@
       <a href="mock-1.html">📝 Mock Exam 1</a>
     </div>
   </div>
+</nav>
+
+<!-- Mobile Native Bottom Dock (iOS App Bar) -->
+<nav class="mobile-bottom-dock" aria-label="Mobile Navigation Dock">
+  <a href="#design-smells" class="dock-item active">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+    <span>Smells</span>
+  </a>
+  <a href="#solid-principles" class="dock-item">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+    <span>SOLID</span>
+  </a>
+  <a href="#liskov-substitution" class="dock-item">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="9" y1="3" x2="9" y2="21"></line></svg>
+    <span>LSP Drill</span>
+  </a>
+  <a href="#self-study" class="dock-item">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+    <span>Gotchas</span>
+  </a>
+  <a href="unit-1-strategy.html" class="dock-item">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg>
+    <span>Unit 1</span>
+  </a>
 </nav>
 
 <div class="page-shell">

@@ -33,15 +33,15 @@
     border-color: var(--accent);
   }
 </style>
-<script>(function(){try{var t=localStorage.getItem('posa-theme')||'light';document.documentElement.setAttribute('data-theme',t);var m=localStorage.getItem('posa-mode')||'concept';document.documentElement.setAttribute('data-mode',m);}catch(e){}})();</script>
+<script>(function(){try{var t=localStorage.getItem('posa-theme')||'dark';document.documentElement.setAttribute('data-theme',t);var m=localStorage.getItem('posa-mode')||'concept';document.documentElement.setAttribute('data-mode',m);}catch(e){}})();</script>
 </head>
 <body>
 
 <nav class="sitenav">
   <div class="sitenav-inner">
     <a class="sitenav-home" href="index.html">
-      <span style="background:var(--accent);color:#fff;padding:0.15rem 0.45rem;border-radius:4px;font-size:0.8rem;font-weight:800;letter-spacing:0.04em;">POSA</span>
-      <span>2026</span>
+      <span style="background:linear-gradient(135deg, #6366f1 0%, #38bdf8 100%);color:#fff;padding:0.2rem 0.55rem;border-radius:6px;font-size:0.82rem;font-weight:800;letter-spacing:0.04em;">POSA</span>
+      <span style="font-weight:800;letter-spacing:-0.02em;">2026</span>
     </a>
     <div class="sitenav-links">
       <a href="index.html">Overview</a>
@@ -69,6 +69,30 @@
       <a href="mock-2.html">Mock 2 (95 pts)</a>
     </div>
   </div>
+</nav>
+
+<!-- Mobile Native Bottom Dock (iOS App Bar) -->
+<nav class="mobile-bottom-dock" aria-label="Mobile Navigation Dock">
+  <a href="index.html" class="dock-item">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+    <span>Home</span>
+  </a>
+  <a href="past-papers.html" class="dock-item active">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+    <span>Hub</span>
+  </a>
+  <a href="mock-1.html" class="dock-item">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+    <span>Mock 1</span>
+  </a>
+  <a href="mock-2.html" class="dock-item">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+    <span>Mock 2</span>
+  </a>
+  <a href="unit-1-strategy.html" class="dock-item">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+    <span>Unit 1</span>
+  </a>
 </nav>
 
 <div class="page-shell">

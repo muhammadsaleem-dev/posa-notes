@@ -481,3 +481,236 @@
     }
   });
 })();
+
+// ==========================================================================
+// €1,500 MASTERCLASS SUITE: MOBILE DOCK, WIZARD, SMELL DRILL & PLAYGROUND
+// ==========================================================================
+
+// 1. Mobile Bottom Dock Intersection Observer
+(function initMobileDock() {
+  var dockItems = document.querySelectorAll(".dock-item");
+  if (!dockItems.length) return;
+
+  var observer = new IntersectionObserver(function (entries) {
+    entries.forEach(function (entry) {
+      if (entry.isIntersecting) {
+        var id = entry.target.getAttribute("id");
+        dockItems.forEach(function (item) {
+          var href = item.getAttribute("href");
+          if (href === "#" + id) {
+            item.classList.add("active");
+          } else {
+            item.classList.remove("active");
+          }
+        });
+      }
+    });
+  }, { threshold: 0.25 });
+
+  document.querySelectorAll("section.chapter").forEach(function (sec) {
+    observer.observe(sec);
+  });
+})();
+
+// 2. Pattern Decision Wizard Engine
+(function initPatternWizard() {
+  var wizard = document.getElementById("patternWizard");
+  if (!wizard) return;
+
+  var state = {
+    scope: null,      // 'algorithm' | 'step' | 'state' | 'command'
+    runtime: null,    // 'yes' | 'no'
+    structure: null   // 'delegation' | 'inheritance'
+  };
+
+  wizard.addEventListener("click", function (e) {
+    var card = e.target.closest(".wizard-opt-card");
+    if (!card) return;
+
+    var group = card.getAttribute("data-group");
+    var val = card.getAttribute("data-val");
+
+    card.parentNode.querySelectorAll(".wizard-opt-card").forEach(function (c) {
+      c.classList.remove("selected");
+    });
+    card.classList.add("selected");
+    state[group] = val;
+
+    checkWizardCompletion();
+  });
+
+  function checkWizardCompletion() {
+    if (!state.scope || !state.runtime) return;
+
+    var resultBox = document.getElementById("wizardResult");
+    if (!resultBox) return;
+
+    var title = "Strategy Pattern (Policy)";
+    var badge = "100% Match";
+    var rationale = "You need to swap entire algorithms polymorphically at runtime via delegation.";
+    var tradeOffs = "Flexibility: High (10/10) · Decoupling: High (9/10) · Memory Cost: O(1) pointer";
+    var code = 
+      "// Context chassis delegates to interface strategy\n" +
+      "public class Context {\n" +
+      "    private Strategy strategy;\n" +
+      "    public void setStrategy(Strategy s) { this.strategy = s; }\n" +
+      "    public void execute() { strategy.algorithm(); }\n" +
+      "}";
+
+    if (state.scope === "step") {
+      title = "Template Method Pattern";
+      badge = "98% Match";
+      rationale = "You have an invariant algorithm skeleton and only need subclasses to override specific primitive steps.";
+      tradeOffs = "Flexibility: Moderate (5/10) · Decoupling: Low (Inheritance coupling) · Runtime Cost: Zero dispatch overhead";
+      code = 
+        "public abstract class AlgorithmSkeleton {\n" +
+        "    public final void templateMethod() { stepOne(); stepTwo(); }\n" +
+        "    protected abstract void stepTwo(); // Subclass hook\n" +
+        "}";
+    } else if (state.scope === "state") {
+      title = "State Pattern";
+      badge = "96% Match";
+      rationale = "Object behavior changes dynamically based on internal state transitions without explicit conditional logic.";
+      tradeOffs = "Flexibility: High (9/10) · State Transition Coupling: Medium · Memory Cost: O(State Count)";
+      code = 
+        "public class StateContext {\n" +
+        "    private State currentState;\n" +
+        "    public void request() { currentState.handle(this); }\n" +
+        "}";
+    } else if (state.scope === "command") {
+      title = "Command Pattern";
+      badge = "95% Match";
+      rationale = "You want to encapsulate method calls as standalone objects to support undo/redo, queuing, and macro dispatch.";
+      tradeOffs = "Flexibility: High (9/10) · Decoupling: Exceptional · Storage Cost: Command queues";
+      code = 
+        "public interface Command { void execute(); void undo(); }";
+    }
+
+    resultBox.innerHTML = 
+      "<div style='display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem; margin-bottom:1rem;'>" +
+        "<h3 style='margin:0; font-size:1.35rem; color:#38BDF8; font-family:var(--font-display);'>🎯 Recommended: " + title + "</h3>" +
+        "<span style='font-family:var(--font-mono); font-size:0.75rem; font-weight:800; background:rgba(56,189,248,0.15); color:#38BDF8; padding:0.25rem 0.65rem; border-radius:999px; border:1px solid rgba(56,189,248,0.3);'>" + badge + "</span>" +
+      "</div>" +
+      "<p style='font-size:0.95rem; line-height:1.6; color:var(--text); margin-bottom:1rem;'>" + rationale + "</p>" +
+      "<div style='font-family:var(--font-mono); font-size:0.8rem; background:rgba(255,255,255,0.04); padding:0.6rem 0.85rem; border-radius:6px; border:1px solid var(--border); color:var(--accent-ink); margin-bottom:1.25rem;'>" + tradeOffs + "</div>" +
+      "<pre style='background:var(--code-bg); padding:1rem; border-radius:8px; border:1px solid var(--border); font-family:var(--font-mono); font-size:0.82rem; overflow-x:auto; color:#F8FAFC;'><code>" + code + "</code></pre>";
+
+    resultBox.className = "wizard-result-box show";
+    showToast("Architectural Pattern Calculated");
+  }
+})();
+
+// 3. Architectural Smell Drill Engine
+(function initSmellDrills() {
+  document.addEventListener("click", function (e) {
+    var btn = e.target.closest(".smell-btn");
+    if (!btn) return;
+    var group = btn.closest(".smell-case-card");
+    if (!group) return;
+
+    var isCorrect = btn.getAttribute("data-correct") === "true";
+    var feedback = group.querySelector(".smell-feedback-text");
+
+    group.querySelectorAll(".smell-btn").forEach(function (b) {
+      b.classList.remove("correct", "wrong");
+    });
+
+    if (isCorrect) {
+      btn.classList.add("correct");
+      if (feedback) {
+        feedback.innerHTML = "<strong>✅ Diagnostic Correct!</strong> " + (btn.getAttribute("data-reason") || "Accurately diagnosed.");
+        feedback.className = "smell-feedback-text show";
+        feedback.style.borderColor = "var(--emerald)";
+        feedback.style.color = "#34D399";
+      }
+      showToast("Diagnostic Confirmed!");
+    } else {
+      btn.classList.add("wrong");
+      var correctBtn = group.querySelector('.smell-btn[data-correct="true"]');
+      if (correctBtn) correctBtn.classList.add("correct");
+      if (feedback) {
+        feedback.innerHTML = "<strong>❌ Misdiagnosis.</strong> " + (btn.getAttribute("data-reason") || "Examine class coupling and LSP obligations.");
+        feedback.className = "smell-feedback-text show";
+        feedback.style.borderColor = "var(--rose)";
+        feedback.style.color = "#F87171";
+      }
+    }
+  });
+})();
+
+// 4. Algorithm Strategy Interactive Playground
+(function initStrategyPlayground() {
+  var playground = document.getElementById("strategyPlayground");
+  if (!playground) return;
+
+  var currentStrat = "QuickSort";
+  var timeMeter = document.getElementById("stratTimeMeter");
+  var spaceMeter = document.getElementById("stratSpaceMeter");
+  var stabilityMeter = document.getElementById("stratStabilityMeter");
+  var consoleOut = document.getElementById("stratConsole");
+
+  playground.querySelectorAll(".strategy-pill-btn").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      playground.querySelectorAll(".strategy-pill-btn").forEach(function (b) { b.classList.remove("active"); });
+      btn.classList.add("active");
+      currentStrat = btn.getAttribute("data-strat");
+      updatePlaygroundState();
+    });
+  });
+
+  var executeBtn = document.getElementById("stratExecBtn");
+  if (executeBtn) {
+    executeBtn.addEventListener("click", function () {
+      executePlaygroundRun();
+    });
+  }
+
+  function updatePlaygroundState() {
+    var time = "O(N log N)";
+    var space = "O(log N)";
+    var stability = "Unstable";
+    var note = "Pivot partitioning; cache-friendly in-place sorting.";
+
+    if (currentStrat === "MergeSort") {
+      time = "O(N log N)";
+      space = "O(N)";
+      stability = "Stable";
+      note = "Divide-and-conquer; guarantees worst-case O(N log N) at memory trade-off.";
+    } else if (currentStrat === "TimSort") {
+      time = "O(N) best / O(N log N)";
+      space = "O(N)";
+      stability = "Stable";
+      note = "Hybrid sort (Insertion + Merge); standard algorithm for Java & Python.";
+    } else if (currentStrat === "HeapSort") {
+      time = "O(N log N)";
+      space = "O(1)";
+      stability = "Unstable";
+      note = "Binary heap selection; strictly O(1) auxiliary space.";
+    }
+
+    if (timeMeter) timeMeter.textContent = time;
+    if (spaceMeter) spaceMeter.textContent = space;
+    if (stabilityMeter) stabilityMeter.textContent = stability;
+
+    if (consoleOut) {
+      consoleOut.textContent = 
+        ">> Dynamic Context Re-binding Triggered:\n" +
+        ">> sorter.setStrategy(new " + currentStrat + "Strategy());\n" +
+        ">> Ready to sort 50,000 dataset records.\n" +
+        ">> Architectural Strategy Profile: " + note;
+    }
+    showToast("Strategy Swapped to " + currentStrat);
+  }
+
+  function executePlaygroundRun() {
+    if (!consoleOut) return;
+    var duration = (Math.random() * 8 + 4).toFixed(2);
+    consoleOut.textContent = 
+      ">> EXECUTING: sorter.sort(largeDataset)\n" +
+      ">> Context Chassis: DatasetSorter<T> [State: INVARIANT]\n" +
+      ">> Delegated To: " + currentStrat + "::sort(List<T>)\n" +
+      ">> Execution Metrics: Processed 50,000 records in " + duration + " ms\n" +
+      ">> Zero Modification to Context Source Code (OCP Compliant)";
+    showToast("Executed " + currentStrat + " in " + duration + "ms");
+  }
+})();

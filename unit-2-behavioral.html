@@ -84,15 +84,15 @@
     box-shadow: 0 0 25px rgba(234, 179, 8, 0.6);
   }
 </style>
-<script>(function(){try{var t=localStorage.getItem('posa-theme')||'light';document.documentElement.setAttribute('data-theme',t);var m=localStorage.getItem('posa-mode')||'concept';document.documentElement.setAttribute('data-mode',m);}catch(e){}})();</script>
+<script>(function(){try{var t=localStorage.getItem('posa-theme')||'dark';document.documentElement.setAttribute('data-theme',t);var m=localStorage.getItem('posa-mode')||'concept';document.documentElement.setAttribute('data-mode',m);}catch(e){}})();</script>
 </head>
 <body>
 
 <nav class="sitenav">
   <div class="sitenav-inner">
     <a class="sitenav-home" href="index.html">
-      <span style="background:var(--accent);color:#fff;padding:0.15rem 0.45rem;border-radius:4px;font-size:0.8rem;font-weight:800;letter-spacing:0.04em;">POSA</span>
-      <span>2026</span>
+      <span style="background:linear-gradient(135deg, #6366f1 0%, #38bdf8 100%);color:#fff;padding:0.2rem 0.55rem;border-radius:6px;font-size:0.82rem;font-weight:800;letter-spacing:0.04em;">POSA</span>
+      <span style="font-weight:800;letter-spacing:-0.02em;">2026</span>
     </a>
     <div class="sitenav-links">
       <a href="index.html">Overview</a>
@@ -125,6 +125,30 @@
       <a href="mock-1.html">Mock Exam 1</a>
     </div>
   </div>
+</nav>
+
+<!-- Mobile Native Bottom Dock (iOS App Bar) -->
+<nav class="mobile-bottom-dock" aria-label="Mobile Navigation Dock">
+  <a href="#template-method" class="dock-item active">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+    <span>Template</span>
+  </a>
+  <a href="#hollywood-principle" class="dock-item">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 14 14"></polyline></svg>
+    <span>Hollywood</span>
+  </a>
+  <a href="#command-pattern" class="dock-item">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+    <span>Command</span>
+  </a>
+  <a href="#macro-commands" class="dock-item">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
+    <span>Macro</span>
+  </a>
+  <a href="#quiz" class="dock-item">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+    <span>Quiz</span>
+  </a>
 </nav>
 
 <div class="page-shell">
