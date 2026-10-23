@@ -714,3 +714,206 @@
     showToast("Executed " + currentStrat + " in " + duration + "ms");
   }
 })();
+
+// ==========================================================================
+// €1,500 FOCUSED MASTERCLASS STAGE SYSTEM CONTROLLER
+// ==========================================================================
+(function initMasterclassStages() {
+  var stageNav = document.querySelector(".masterclass-stage-nav");
+  if (!stageNav) return;
+
+  var pills = stageNav.querySelectorAll(".stage-pill");
+  var stages = document.querySelectorAll(".stage-view");
+  var modeBtn = document.getElementById("stageModeToggle");
+
+  // Load user preference for view mode (default: focused)
+  var isFocused = localStorage.getItem("posa-stage-mode") !== "full";
+  if (isFocused) {
+    document.body.classList.add("mode-stage-focused");
+    if (modeBtn) modeBtn.textContent = "📑 Focused Stage Mode";
+  } else {
+    document.body.classList.remove("mode-stage-focused");
+    if (modeBtn) modeBtn.textContent = "📜 Full Document Mode";
+  }
+
+  if (modeBtn) {
+    modeBtn.addEventListener("click", function () {
+      var nowFocused = document.body.classList.toggle("mode-stage-focused");
+      localStorage.setItem("posa-stage-mode", nowFocused ? "focused" : "full");
+      modeBtn.textContent = nowFocused ? "📑 Focused Stage Mode" : "📜 Full Document Mode";
+      showToast(nowFocused ? "Focused Stage Mode Active (1 Stage at a time)" : "Full Document Mode Active (All stages visible)");
+    });
+  }
+
+  // Handle stage pill clicks
+  pills.forEach(function (pill) {
+    pill.addEventListener("click", function (e) {
+      e.preventDefault();
+      var targetId = pill.getAttribute("data-stage");
+      switchStage(targetId);
+    });
+  });
+
+  // Handle "Next Stage" and "Prev Stage" action buttons
+  document.addEventListener("click", function (e) {
+    var jumpBtn = e.target.closest(".jump-stage-btn");
+    if (!jumpBtn) return;
+    var targetId = jumpBtn.getAttribute("data-target-stage");
+    if (targetId) switchStage(targetId);
+  });
+
+  function switchStage(stageId) {
+    pills.forEach(function (p) {
+      p.classList.toggle("active", p.getAttribute("data-stage") === stageId);
+    });
+
+    stages.forEach(function (s) {
+      s.classList.toggle("active", s.getAttribute("id") === stageId);
+    });
+
+    var targetElement = document.getElementById(stageId);
+    if (targetElement) {
+      var headerOffset = 110;
+      var elementPosition = targetElement.getBoundingClientRect().top;
+      var offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+      window.scrollTo({ top: offsetPosition, behavior: "smooth" });
+    }
+  }
+
+  // ==========================================================================
+  // INTERACTIVE 5-STEP STORY STEPPER
+  // ==========================================================================
+  var stepperBox = document.querySelector(".story-stepper-box");
+  if (stepperBox) {
+    var currentStep = 1;
+    var totalSteps = 5;
+    var stepNodes = stepperBox.querySelectorAll(".stepper-step-node");
+    var slides = stepperBox.querySelectorAll(".stepper-slide");
+    var prevBtn = stepperBox.querySelector(".btn-stepper-prev");
+    var nextBtn = stepperBox.querySelector(".btn-stepper-next");
+
+    function updateStepper(step) {
+      currentStep = step;
+      stepNodes.forEach(function (node) {
+        var num = parseInt(node.getAttribute("data-step"), 10);
+        node.classList.toggle("active", num === step);
+        node.classList.toggle("completed", num < step);
+      });
+
+      slides.forEach(function (slide) {
+        var num = parseInt(slide.getAttribute("data-step"), 10);
+        slide.classList.toggle("active", num === step);
+      });
+
+      if (prevBtn) prevBtn.style.visibility = step === 1 ? "hidden" : "visible";
+      if (nextBtn) {
+        nextBtn.innerHTML = step === totalSteps 
+          ? "Proceed to Stage 2: Architecture Blueprint →" 
+          : "Next: Step " + (step + 1) + " →";
+      }
+    }
+
+    stepNodes.forEach(function (node) {
+      node.addEventListener("click", function () {
+        var step = parseInt(node.getAttribute("data-step"), 10);
+        updateStepper(step);
+      });
+    });
+
+    if (prevBtn) {
+      prevBtn.addEventListener("click", function () {
+        if (currentStep > 1) updateStepper(currentStep - 1);
+      });
+    }
+
+    if (nextBtn) {
+      nextBtn.addEventListener("click", function () {
+        if (currentStep < totalSteps) {
+          updateStepper(currentStep + 1);
+        } else {
+          switchStage("stage-2-architecture");
+        }
+      });
+    }
+
+    updateStepper(1);
+  }
+
+  // ==========================================================================
+  // INTERACTIVE VECTOR UML INSPECTOR
+  // ==========================================================================
+  var umlNodes = document.querySelectorAll(".uml-interactive-node");
+  var inspectorCard = document.getElementById("umlInspectorCard");
+
+  var componentData = {
+    "context": {
+      title: "Context (The Stable Domain Chassis)",
+      badge: "Maintains Interface Pointer",
+      role: "Represents the primary domain class (e.g. Duck, PaymentGateway, DatasetSorter). Holds a reference to a Strategy interface. Completely closed for modification when new algorithms are invented.",
+      principles: "Open-Closed Principle (OCP) & Dependency Inversion Principle (DIP).",
+      code: "public abstract class Duck {\n    protected FlyBehavior flyBehavior; // Interface pointer!\n    public void performFly() { flyBehavior.fly(); } // Delegates!\n    public void setFlyBehavior(FlyBehavior fb) { this.flyBehavior = fb; }\n}"
+    },
+    "strategy": {
+      title: "Strategy Interface (The Algorithmic Contract)",
+      badge: "Polymorphic Abstraction",
+      role: "Defines the common algorithm interface recognized by Context. Decouples the client context from the underlying implementation algorithms.",
+      principles: "Program to an Interface, Not an Implementation.",
+      code: "@FunctionalInterface\npublic interface FlyBehavior {\n    void fly(); // All concrete algorithms must fulfill this contract\n}"
+    },
+    "concreteA": {
+      title: "ConcreteStrategyA (FlyWithWings)",
+      badge: "Encapsulated Variant A",
+      role: "Implements the standard biological wing flight algorithm. Fully encapsulates internal aerodynamic mathematics and properties without leaking to Duck.",
+      principles: "Single Responsibility Principle (SRP).",
+      code: "public class FlyWithWings implements FlyBehavior {\n    @Override\n    public void fly() {\n        System.out.println(\"Gliding through the air with biological wings!\");\n    }\n}"
+    },
+    "concreteB": {
+      title: "ConcreteStrategyB (FlyNoWay)",
+      badge: "Encapsulated Variant B",
+      role: "Represents entities that cannot fly (Rubber Ducks, Decoys). Fulfills the interface contract safely without broken empty no-op methods inside Duck.",
+      principles: "Liskov Substitution Principle (LSP Compliant).",
+      code: "public class FlyNoWay implements FlyBehavior {\n    @Override\n    public void fly() {\n        System.out.println(\"<< Silence >> Grounded or floating peacefully.\");\n    }\n}"
+    }
+  };
+
+  umlNodes.forEach(function (node) {
+    node.addEventListener("click", function () {
+      var compKey = node.getAttribute("data-component");
+      var data = componentData[compKey];
+      if (!data || !inspectorCard) return;
+
+      umlNodes.forEach(function (n) { n.classList.remove("inspect-active"); });
+      node.classList.add("inspect-active");
+
+      inspectorCard.innerHTML = 
+        "<div style='display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem; margin-bottom:0.75rem;'>" +
+          "<h4 style='margin:0; font-size:1.15rem; color:#38BDF8; font-family:var(--font-display);'>" + data.title + "</h4>" +
+          "<span style='font-family:var(--font-mono); font-size:0.72rem; font-weight:700; background:rgba(56,189,248,0.14); color:#38BDF8; padding:0.2rem 0.6rem; border-radius:999px;'>" + data.badge + "</span>" +
+        "</div>" +
+        "<p style='font-size:0.92rem; color:var(--text); line-height:1.6; margin-bottom:0.75rem;'>" + data.role + "</p>" +
+        "<div style='font-size:0.84rem; color:var(--accent-ink); font-weight:600; margin-bottom:1rem;'>🏛️ Architectural Principle: " + data.principles + "</div>" +
+        "<pre style='background:var(--code-bg); padding:0.85rem 1rem; border-radius:6px; border:1px solid var(--border); font-family:var(--font-mono); font-size:0.82rem; overflow-x:auto; margin:0;'><code>" + data.code + "</code></pre>";
+
+      showToast("Inspecting " + data.title);
+    });
+  });
+
+  // ==========================================================================
+  // BEFORE & AFTER REFACTORING SWITCHER
+  // ==========================================================================
+  var baSeg = document.querySelector(".before-after-segmented");
+  if (baSeg) {
+    baSeg.addEventListener("click", function (e) {
+      var btn = e.target.closest(".ba-seg-btn");
+      if (!btn) return;
+      var target = btn.getAttribute("data-view");
+
+      baSeg.querySelectorAll(".ba-seg-btn").forEach(function (b) { b.classList.remove("active"); });
+      btn.classList.add("active");
+
+      document.querySelectorAll(".ba-panel").forEach(function (panel) {
+        panel.classList.toggle("active", panel.getAttribute("id") === target);
+      });
+    });
+  }
+})();

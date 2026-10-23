@@ -4624,3 +4624,312 @@ pre code.hljs {
   color: var(--text-dim);
   margin-top: 0.25rem;
 }
+
+/* ==========================================================================
+   €1,500 INTERACTIVE MASTERCLASS STAGE SYSTEM (FOCUSED PEDAGOGY)
+   ========================================================================== */
+
+/* Top Stage Mode Switcher & Progress Bar */
+.masterclass-stage-nav {
+  position: sticky;
+  top: 60px;
+  z-index: 900;
+  background: rgba(7, 9, 14, 0.92);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border);
+  padding: 0.75rem 0;
+  margin-bottom: 2rem;
+}
+
+.stage-nav-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+.stage-nav-inner::-webkit-scrollbar { display: none; }
+
+.stage-pills-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.stage-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.5rem 0.95rem;
+  border-radius: 999px;
+  background: var(--bg-raised);
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  font-family: var(--font-body);
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  text-decoration: none;
+}
+
+.stage-pill:hover {
+  border-color: var(--accent);
+  color: var(--text);
+  transform: translateY(-1px);
+}
+
+.stage-pill.active {
+  background: linear-gradient(135deg, #6366F1 0%, #38BDF8 100%);
+  color: #ffffff;
+  border-color: transparent;
+  box-shadow: 0 4px 15px rgba(99, 102, 241, 0.35);
+  font-weight: 700;
+}
+
+.stage-mode-btn {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  padding: 0.45rem 0.85rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.75rem;
+  font-family: var(--font-mono);
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+.stage-mode-btn:hover {
+  border-color: var(--accent);
+  color: var(--text);
+}
+
+/* Stage View Container */
+body.mode-stage-focused .stage-view {
+  display: none;
+}
+body.mode-stage-focused .stage-view.active {
+  display: block;
+  animation: stageFade 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes stageFade {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Interactive Story Stepper (Phase Walkthrough) */
+.story-stepper-box {
+  background: var(--bg-raised);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-lg);
+  padding: 2rem;
+  margin: 1.5rem 0 2rem;
+  box-shadow: var(--shadow-md);
+}
+
+.stepper-progress-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+  margin-bottom: 2rem;
+  padding: 0 1rem;
+}
+
+.stepper-progress-bar::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 2rem;
+  right: 2rem;
+  height: 2px;
+  background: var(--border);
+  z-index: 1;
+  transform: translateY(-50%);
+}
+
+.stepper-step-node {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+  cursor: pointer;
+  background: var(--bg-raised);
+  padding: 0 0.5rem;
+}
+
+.stepper-dot {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--bg);
+  border: 2px solid var(--border);
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 0.85rem;
+  transition: all 0.2s;
+}
+
+.stepper-step-node:hover .stepper-dot {
+  border-color: var(--accent);
+  color: var(--text);
+}
+
+.stepper-step-node.active .stepper-dot {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #ffffff;
+  box-shadow: 0 0 15px rgba(99, 102, 241, 0.5);
+  transform: scale(1.1);
+}
+
+.stepper-step-node.completed .stepper-dot {
+  background: #10B981;
+  border-color: #10B981;
+  color: #ffffff;
+}
+
+.stepper-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.stepper-step-node.active .stepper-label {
+  color: var(--text);
+  font-weight: 700;
+}
+
+.stepper-slide {
+  display: none;
+}
+.stepper-slide.active {
+  display: block;
+  animation: stageFade 0.3s ease-out;
+}
+
+.stepper-nav-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border);
+}
+
+.btn-stepper {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.65rem 1.25rem;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-body);
+  font-size: 0.88rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: none;
+}
+
+.btn-stepper-prev {
+  background: var(--bg);
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+.btn-stepper-prev:hover {
+  border-color: var(--border-strong);
+  background: var(--bg-subtle);
+}
+
+.btn-stepper-next {
+  background: linear-gradient(135deg, #6366F1 0%, #38BDF8 100%);
+  color: #ffffff;
+  box-shadow: 0 4px 15px rgba(99, 102, 241, 0.35);
+}
+.btn-stepper-next:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(99, 102, 241, 0.45);
+}
+
+/* Interactive UML Node Inspector */
+.uml-interactive-node {
+  cursor: pointer;
+  transition: transform 0.2s, filter 0.2s;
+}
+.uml-interactive-node:hover rect {
+  filter: drop-shadow(0 0 10px rgba(99, 102, 241, 0.6));
+}
+.uml-interactive-node.inspect-active rect {
+  stroke: #38BDF8 !important;
+  stroke-width: 2.5px !important;
+  filter: drop-shadow(0 0 12px rgba(56, 189, 248, 0.7));
+}
+
+.uml-inspector-card {
+  background: var(--bg);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-md);
+  padding: 1.5rem;
+  margin-top: 1.5rem;
+  animation: stageFade 0.25s ease-out;
+}
+
+/* Before & After Refactoring Switcher */
+.before-after-segmented {
+  display: flex;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 0.3rem;
+  width: fit-content;
+  margin: 1.5rem 0 1rem;
+}
+
+.ba-seg-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  padding: 0.5rem 1.25rem;
+  border-radius: 999px;
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.ba-seg-btn.active.bad {
+  background: rgba(244, 63, 94, 0.16);
+  color: #F43F5E;
+  border: 1px solid rgba(244, 63, 94, 0.35);
+}
+
+.ba-seg-btn.active.good {
+  background: rgba(16, 185, 129, 0.16);
+  color: #10B981;
+  border: 1px solid rgba(16, 185, 129, 0.35);
+}
+
+.ba-panel {
+  display: none;
+}
+.ba-panel.active {
+  display: block;
+  animation: stageFade 0.25s ease-out;
+}

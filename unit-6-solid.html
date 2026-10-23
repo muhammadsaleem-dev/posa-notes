@@ -2,10 +2,10 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Unit 6: OO Principles I (SOLID &amp; Design Smells) | POSA 2026</title>
-<meta name="description" content="Unit 6 of Pattern-Oriented Software Architecture by Prof. Dr. Jörg Schäfer: SOLID principles (SRP, OCP, LSP, ISP, DIP), 7 design smells, and exam questions.">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230c7a73'/%3E%3Cpath d='M8 10h16M8 16h16M8 22h10' stroke='%23fff' stroke-width='2.2' stroke-linecap='round'/%3E%3C/svg%3E">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Unit 6: SOLID Principles &amp; Design Smells | POSA 2026 Masterclass</title>
+<meta name="description" content="Unit 6 of Pattern-Oriented Software Architecture by Prof. Dr. Jörg Schäfer: The 7 classic design smells, SOLID principles (Uncle Bob), formal Liskov Substitution Principle (LSP), and exam drills.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%236366f1'/%3E%3Cpath d='M8 10h16M8 16h16M8 22h10' stroke='%23fff' stroke-width='2.2' stroke-linecap='round'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -14,38 +14,47 @@
   .quote-card {
     margin: 1.5rem 0 2rem;
     padding: 1.25rem 1.5rem;
-    background: var(--accent-soft);
+    background: rgba(99, 102, 241, 0.08);
     border-left: 4px solid var(--accent);
     border-radius: 0 var(--radius-md) var(--radius-md) 0;
     font-style: italic;
-    color: var(--accent-ink);
+    color: var(--text);
   }
   .quote-author {
     display: block;
     margin-top: 0.5rem;
     font-style: normal;
     font-weight: 700;
-    font-size: 0.85rem;
+    font-size: 0.82rem;
     text-transform: uppercase;
     letter-spacing: 0.05em;
+    color: var(--accent-ink);
   }
   .smell-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.25rem;
     margin: 1.5rem 0;
   }
   .smell-card {
     background: var(--bg-raised);
     border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
+    border-radius: var(--radius-md);
     padding: 1.25rem;
+    transition: transform 0.2s, border-color 0.2s;
+  }
+  .smell-card:hover {
+    border-color: #F43F5E;
+    transform: translateY(-2px);
   }
   .smell-name {
-    font-weight: 700;
-    color: var(--warn);
+    font-weight: 800;
+    color: #F43F5E;
     font-size: 1.05rem;
-    margin-bottom: 0.4rem;
+    margin-bottom: 0.35rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
   }
   .solid-card {
     background: var(--bg-raised);
@@ -55,23 +64,25 @@
     margin-bottom: 1.5rem;
   }
   .solid-letter {
-    display: inline-block;
-    width: 34px;
-    height: 34px;
-    line-height: 34px;
-    text-align: center;
-    background: var(--accent);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    background: linear-gradient(135deg, #6366F1 0%, #38BDF8 100%);
     color: #fff;
-    font-weight: 700;
+    font-weight: 800;
     border-radius: var(--radius-sm);
     font-family: var(--font-mono);
-    margin-right: 0.5rem;
+    margin-right: 0.75rem;
+    box-shadow: 0 2px 8px rgba(99,102,241,0.3);
   }
 </style>
 <script>(function(){try{var t=localStorage.getItem('posa-theme')||'dark';document.documentElement.setAttribute('data-theme',t);var m=localStorage.getItem('posa-mode')||'concept';document.documentElement.setAttribute('data-mode',m);}catch(e){}})();</script>
 </head>
-<body>
+<body class="mode-stage-focused">
 
+<!-- Top Navigation Header -->
 <nav class="sitenav">
   <div class="sitenav-inner">
     <a class="sitenav-home" href="index.html">
@@ -111,212 +122,403 @@
 
 <!-- Mobile Native Bottom Dock (iOS App Bar) -->
 <nav class="mobile-bottom-dock" aria-label="Mobile Navigation Dock">
-  <a href="#design-smells" class="dock-item active">
+  <a href="#stage-1-smells" class="dock-item jump-stage-btn active" data-target-stage="stage-1-smells">
     <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
     <span>Smells</span>
   </a>
-  <a href="#solid-principles" class="dock-item">
+  <a href="#stage-2-solid" class="dock-item jump-stage-btn" data-target-stage="stage-2-solid">
     <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
     <span>SOLID</span>
   </a>
-  <a href="#liskov-substitution" class="dock-item">
+  <a href="#stage-3-lsp" class="dock-item jump-stage-btn" data-target-stage="stage-3-lsp">
     <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="9" y1="3" x2="9" y2="21"></line></svg>
     <span>LSP Drill</span>
   </a>
-  <a href="#self-study" class="dock-item">
-    <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
-    <span>Gotchas</span>
+  <a href="#stage-4-matrix" class="dock-item jump-stage-btn" data-target-stage="stage-4-matrix">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 14 14"></polyline></svg>
+    <span>Matrix</span>
   </a>
-  <a href="unit-1-strategy.html" class="dock-item">
-    <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg>
-    <span>Unit 1</span>
+  <a href="#stage-5-exam" class="dock-item jump-stage-btn" data-target-stage="stage-5-exam">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+    <span>Drills</span>
   </a>
 </nav>
 
 <div class="page-shell">
   <aside class="sidebar-toc">
     <div class="sidebar-block">
-      <span class="sidebar-label">On This Page</span>
-      <a href="#design-smells"><span class="toc-num">1</span>The 7 Design Smells</a>
-      <a href="#solid-principles"><span class="toc-num">2</span>SOLID Deep Dive</a>
-      <a href="#liskov-substitution"><span class="toc-num">3</span>LSP: Rectangle vs. Square</a>
-      <a href="#self-study"><span class="toc-num">4</span>Self-Study Exam Questions</a>
+      <span class="sidebar-label">Masterclass Stages</span>
+      <a href="#stage-1-smells" class="jump-stage-btn" data-target-stage="stage-1-smells"><span class="toc-num">1</span>The 7 Design Smells</a>
+      <a href="#stage-2-solid" class="jump-stage-btn" data-target-stage="stage-2-solid"><span class="toc-num">2</span>The SOLID Principles</a>
+      <a href="#stage-3-lsp" class="jump-stage-btn" data-target-stage="stage-3-lsp"><span class="toc-num">3</span>Formal LSP &amp; Contracts</a>
+      <a href="#stage-4-matrix" class="jump-stage-btn" data-target-stage="stage-4-matrix"><span class="toc-num">4</span>Smell-to-Principle Matrix</a>
+      <a href="#stage-5-exam" class="jump-stage-btn" data-target-stage="stage-5-exam"><span class="toc-num">5</span>Prof. Schäfer Exam Drills</a>
     </div>
     <div class="sidebar-block">
-      <span class="sidebar-label">Instructor</span>
-      <p style="font-size: 0.85rem; color: var(--text-muted); margin: 0;">
-        Prof. Dr. Jörg Schäfer<br>
-        <em>Frankfurt University of Applied Sciences</em>
+      <span class="sidebar-label">Curriculum Origin</span>
+      <p style="font-size: 0.85rem; color: var(--text-muted); margin: 0 0 0.5rem; line-height: 1.5;">
+        <strong>Prof. Dr. Jörg Schäfer</strong><br>
+        Frankfurt University of Applied Sciences<br>
+        Fachbereich 2: Informatik
       </p>
+      <div style="font-size:0.75rem; font-weight:700; color:#38bdf8; background:rgba(56,189,248,0.12); border:1px solid rgba(56,189,248,0.25); padding:0.25rem 0.5rem; border-radius:4px; display:inline-block; margin-top:0.4rem;">
+        ⏱️ 45 Min · 25 Exam Pts
+      </div>
     </div>
   </aside>
 
   <div class="page">
-    <div class="masthead">
+    
+    <!-- Masthead -->
+    <header class="masthead">
       <div>
-        <div class="eyebrow">Unit 6 · Core Object-Oriented Principles</div>
+        <div class="eyebrow">Unit 6 · Foundational Object-Oriented Principles</div>
         <h1 class="title">OO Principles I: SOLID &amp; Design Smells</h1>
+        <p class="dek">
+          Robert C. Martin’s (Uncle Bob) design smells that signal architectural rot, and the 5 foundational SOLID principles that counteract them.
+        </p>
+
+        <!-- Course Meta Metric Chips -->
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(160px, 1fr)); gap:0.85rem; margin:1.75rem 0 1.25rem;">
+          <div style="background:var(--bg-raised); border:1px solid var(--border); border-radius:var(--radius-md); padding:0.85rem 1rem;">
+            <div style="font-size:0.75rem; font-weight:700; text-transform:uppercase; color:var(--text-muted);">⏱️ Study Time</div>
+            <div style="font-size:1.15rem; font-weight:800; color:#38bdf8; font-family:var(--font-mono); margin-top:0.2rem;">45 Minutes</div>
+          </div>
+          <div style="background:var(--bg-raised); border:1px solid var(--border); border-radius:var(--radius-md); padding:0.85rem 1rem;">
+            <div style="font-size:0.75rem; font-weight:700; text-transform:uppercase; color:var(--text-muted);">🎯 Exam Target</div>
+            <div style="font-size:1.15rem; font-weight:800; color:#10b981; font-family:var(--font-mono); margin-top:0.2rem;">25 Pts (Top Priority)</div>
+          </div>
+          <div style="background:var(--bg-raised); border:1px solid var(--border); border-radius:var(--radius-md); padding:0.85rem 1rem;">
+            <div style="font-size:0.75rem; font-weight:700; text-transform:uppercase; color:var(--text-muted);">🏛️ Domain</div>
+            <div style="font-size:1.15rem; font-weight:800; color:#a5b4fc; font-family:var(--font-mono); margin-top:0.2rem;">Architecture Metrics</div>
+          </div>
+          <div style="background:var(--bg-raised); border:1px solid var(--border); border-radius:var(--radius-md); padding:0.85rem 1rem;">
+            <div style="font-size:0.75rem; font-weight:700; text-transform:uppercase; color:var(--text-muted);">⚙️ Core Drill</div>
+            <div style="font-size:1.15rem; font-weight:800; color:#f59e0b; font-family:var(--font-mono); margin-top:0.2rem;">Square vs Rectangle</div>
+          </div>
+        </div>
       </div>
-    </div>
+    </header>
 
-    <div class="quote-card">
-      “The ‘bad’ patterns are unable to contain the forces which occur in them. In the end, the whole system must collapse.”
-      <span class="quote-author">— Christopher Alexander</span>
-    </div>
+    <!-- Masterclass Stage Bar -->
+    <nav class="masterclass-stage-nav" aria-label="Learning Stages">
+      <div class="stage-nav-inner">
+        <div class="stage-pills-wrap">
+          <button type="button" class="stage-pill active" data-stage="stage-1-smells">
+            <span>👃 1. The 7 Smells</span>
+          </button>
+          <button type="button" class="stage-pill" data-stage="stage-2-solid">
+            <span>🏛️ 2. SOLID Blueprint</span>
+          </button>
+          <button type="button" class="stage-pill" data-stage="stage-3-lsp">
+            <span>📐 3. Formal LSP Drill</span>
+          </button>
+          <button type="button" class="stage-pill" data-stage="stage-4-matrix">
+            <span>⚖️ 4. Solution Matrix</span>
+          </button>
+          <button type="button" class="stage-pill" data-stage="stage-5-exam">
+            <span>🎓 5. Exam Drills</span>
+          </button>
+        </div>
+        <button type="button" class="stage-mode-btn" id="stageModeToggle" title="Toggle between Step-by-Step focus and Full document scroll">
+          📑 Focused Stage Mode
+        </button>
+      </div>
+    </nav>
 
-    <p class="dek">
-      Robert C. Martin’s (Uncle Bob) design smells that signal architectural rot, and the 5 foundational SOLID principles that counteract them.
-    </p>
-
-    <!-- Section 1: 7 Design Smells -->
-    <section class="chapter" id="design-smells">
+    <!-- STAGE 1: THE 7 DESIGN SMELLS -->
+    <div class="stage-view active" id="stage-1-smells">
+      
       <div class="chapter-head">
-        <span class="chapter-num">1</span>
-        <h2>6.4 The 7 Classic Design Smells</h2>
+        <span class="chapter-num">Stage 1</span>
+        <h2>The 7 Classic Architectural Smells (Uncle Bob)</h2>
       </div>
-      <p class="chapter-dek">Symptoms of decaying, brittle software architectures.</p>
+      <p class="chapter-dek">Symptoms of decaying, brittle software architectures that lead to total system failure.</p>
 
       <div class="smell-grid">
         <div class="smell-card">
           <div class="smell-name">1. Rigidity</div>
-          <p style="font-size: 0.88rem; color: var(--text-muted); margin: 0;">
-            The tendency for software to be difficult to change. A single simple change causes a cascade of downstream changes in dependent modules.
+          <p style="font-size:0.88rem; color:var(--text-muted); line-height:1.6; margin:0;">
+            The system is hard to change because every single modification forces a cascading cascade of changes in dependent modules.
           </p>
         </div>
         <div class="smell-card">
           <div class="smell-name">2. Fragility</div>
-          <p style="font-size: 0.88rem; color: var(--text-muted); margin: 0;">
-            The software breaks in unexpected places that have no conceptual relationship to the area that was modified.
+          <p style="font-size:0.88rem; color:var(--text-muted); line-height:1.6; margin:0;">
+            Changes cause the system to break in places that have no conceptual relationship to the part that was changed.
           </p>
         </div>
         <div class="smell-card">
           <div class="smell-name">3. Immobility</div>
-          <p style="font-size: 0.88rem; color: var(--text-muted); margin: 0;">
-            The inability to reuse software from other projects or parts of the same project because it is too entangled with its current context.
+          <p style="font-size:0.88rem; color:var(--text-muted); line-height:1.6; margin:0;">
+            It is impossible to reuse software parts in other applications because components are entangled with local context.
           </p>
         </div>
         <div class="smell-card">
           <div class="smell-name">4. Viscosity</div>
-          <p style="font-size: 0.88rem; color: var(--text-muted); margin: 0;">
-            Doing things the right, architectural way is much harder than doing the quick-and-dirty hack or copy-pasting.
+          <p style="font-size:0.88rem; color:var(--text-muted); line-height:1.6; margin:0;">
+            It is easier to do the "hacky wrong thing" than to preserve architectural integrity (design viscosity vs. environment viscosity).
           </p>
         </div>
         <div class="smell-card">
           <div class="smell-name">5. Needless Complexity</div>
-          <p style="font-size: 0.88rem; color: var(--text-muted); margin: 0;">
-            Contains speculative design elements that anticipate problems that never actually occur (violating YAGNI).
+          <p style="font-size:0.88rem; color:var(--text-muted); line-height:1.6; margin:0;">
+            The design contains infrastructure and speculative abstractions that have no direct business value today ("YAGNI" violation).
           </p>
         </div>
         <div class="smell-card">
           <div class="smell-name">6. Needless Repetition</div>
-          <p style="font-size: 0.88rem; color: var(--text-muted); margin: 0;">
-            Copy-and-paste reuse, violating the DRY principle. Changes must be repeatedly applied across duplicated blocks.
+          <p style="font-size:0.88rem; color:var(--text-muted); line-height:1.6; margin:0;">
+            Copy-paste programming! Bug fixes in one place leave dozens of identical duplicate bugs alive elsewhere.
           </p>
         </div>
         <div class="smell-card">
           <div class="smell-name">7. Opacity</div>
-          <p style="font-size: 0.88rem; color: var(--text-muted); margin: 0;">
-            The tendency of a module to be difficult to read and understand. Convoluted logic and poor naming.
+          <p style="font-size:0.88rem; color:var(--text-muted); line-height:1.6; margin:0;">
+            The code is convoluted and expresses intent poorly, reading like an impenetrable riddle.
           </p>
         </div>
       </div>
-    </section>
 
-    <!-- Section 2: SOLID Principles -->
-    <section class="chapter" id="solid-principles">
-      <div class="chapter-head">
-        <span class="chapter-num">2</span>
-        <h2>6.5 The SOLID Principles (Uncle Bob)</h2>
+      <!-- Action Button to Advance -->
+      <div style="text-align:right; margin:3rem 0 1rem;">
+        <button type="button" class="btn-stepper btn-stepper-next jump-stage-btn" data-target-stage="stage-2-solid" style="padding:0.85rem 1.75rem; font-size:0.95rem;">
+          Proceed to Stage 2: The SOLID Principles Blueprint →
+        </button>
       </div>
+
+    </div>
+
+    <!-- STAGE 2: SOLID PRINCIPLES -->
+    <div class="stage-view" id="stage-2-solid">
+      
+      <div class="chapter-head">
+        <span class="chapter-num">Stage 2</span>
+        <h2>The SOLID Principles (Robert C. Martin)</h2>
+      </div>
+      <p class="chapter-dek">The 5 foundational laws that eliminate architectural rot.</p>
 
       <!-- SRP -->
       <div class="solid-card">
-        <h3><span class="solid-letter">S</span> SRP: Single Responsibility Principle</h3>
+        <h3><span class="solid-letter">S</span> Single Responsibility Principle (SRP)</h3>
         <p><strong>Rule:</strong> <em>“A class should have one, and only one, reason to change.”</em></p>
-        <p style="font-size: 0.9rem; color: var(--text-muted);">
-          Each class should encapsulate a single actor's requirements. If a class handles business calculations, database persistence, AND GUI formatting, changes to database schema or UI layout will force modifications to the core business logic.
+        <p style="font-size:0.92rem; color:var(--text-muted); line-height:1.6;">
+          Each class should encapsulate a single business actor's requirements. If a class calculates salaries, connects to the SQL database, AND renders HTML, changing the database schema will force modifications to core financial logic.
         </p>
       </div>
 
       <!-- OCP -->
       <div class="solid-card">
-        <h3><span class="solid-letter">O</span> OCP: Open Closed Principle</h3>
-        <p><strong>Rule:</strong> <em>“Software entities (classes, modules, functions) should be open for extension, but closed for modification.”</em> (Bertrand Meyer)</p>
-        <p style="font-size: 0.9rem; color: var(--text-muted);">
-          You should be able to extend the behavior of a module without modifying its source code. Achieved via abstraction (interfaces, abstract classes) and patterns like <strong>Strategy</strong> and <strong>Template Method</strong>.
+        <h3><span class="solid-letter">O</span> Open-Closed Principle (OCP)</h3>
+        <p><strong>Rule:</strong> <em>“Software entities should be open for extension, but closed for modification.”</em> (Bertrand Meyer)</p>
+        <p style="font-size:0.92rem; color:var(--text-muted); line-height:1.6;">
+          You should be able to extend the behavior of a module without modifying its source code. Achieved via abstraction (interfaces, abstract base classes) and patterns like <strong>Strategy</strong> and <strong>Template Method</strong>.
         </p>
       </div>
 
       <!-- LSP -->
-      <div class="solid-card" id="liskov-substitution">
-        <h3><span class="solid-letter">L</span> LSP: Liskov Substitution Principle</h3>
+      <div class="solid-card">
+        <h3><span class="solid-letter">L</span> Liskov Substitution Principle (LSP)</h3>
         <p><strong>Rule:</strong> <em>“Subtypes must be substitutable for their base types without altering program correctness.”</em> (Barbara Liskov)</p>
-        
-        <div style="margin: 1rem 0; padding: 1rem; background: var(--code-bg); border-radius: var(--radius-sm); border: 1px solid var(--border);">
-          <strong>The Classic Counterexample: The Rectangle and Square Problem</strong>
-          <p style="font-size: 0.88rem; color: var(--text-muted); margin: 0.5rem 0;">
-            In mathematics, a Square is a kind of Rectangle. But in object-oriented programming:
-          </p>
-          <pre style="margin: 0; font-family: var(--font-mono); font-size: 0.85rem;"><code>void clientFunction(Rectangle r) {
-    r.setWidth(5);
-    r.setHeight(4);
-    assert(r.getArea() == 20); // FAILS IF r IS A SQUARE!
-}</code></pre>
-          <p style="font-size: 0.88rem; color: var(--text-muted); margin-top: 0.5rem;">
-            If <code>Square extends Rectangle</code>, <code>setWidth(5)</code> sets both width and height to 5. Then <code>setHeight(4)</code> sets both to 4! The assertion fails. Subtypes must honor all behavioral guarantees of the parent.
-          </p>
-        </div>
+        <p style="font-size:0.92rem; color:var(--text-muted); line-height:1.6;">
+          A derived class must fulfill all behavioral promises made by its parent. It cannot throw unexpected runtime exceptions, weaken postconditions, or strengthen preconditions.
+        </p>
       </div>
 
       <!-- ISP -->
       <div class="solid-card">
-        <h3><span class="solid-letter">I</span> ISP: Interface Segregation Principle</h3>
+        <h3><span class="solid-letter">I</span> Interface Segregation Principle (ISP)</h3>
         <p><strong>Rule:</strong> <em>“Clients should not be forced to depend upon interfaces that they do not use.”</em></p>
-        <p style="font-size: 0.9rem; color: var(--text-muted);">
-          Many client-specific interfaces are much better than one bloated "fat" interface. Avoid "God Interfaces" that bundle printer, scanner, fax, and staple operations together when a client only wants to print.
+        <p style="font-size:0.92rem; color:var(--text-muted); line-height:1.6;">
+          Many client-specific interfaces are vastly superior to one bloated "fat" interface. Avoid "God Interfaces" that force a print-only client to implement scanner and fax methods.
         </p>
       </div>
 
       <!-- DIP -->
       <div class="solid-card">
-        <h3><span class="solid-letter">D</span> DIP: Dependency Inversion Principle</h3>
-        <p><strong>Rule:</strong></p>
-        <ol style="font-size: 0.9rem; color: var(--text-muted); line-height: 1.6;">
-          <li>High-level modules should not depend on low-level modules. Both should depend on abstractions.</li>
-          <li>Abstractions should not depend on details. Details (concrete implementations) should depend on abstractions.</li>
-        </ol>
+        <h3><span class="solid-letter">D</span> Dependency Inversion Principle (DIP)</h3>
+        <p><strong>Rule:</strong> <em>“High-level modules should not depend on low-level modules. Both must depend on abstractions.”</em></p>
+        <p style="font-size:0.92rem; color:var(--text-muted); line-height:1.6;">
+          Abstractions must not depend on details. Details (concrete implementations) must depend on abstractions.
+        </p>
       </div>
-    </section>
 
-    <!-- Section 4: Self-Study Questions -->
-    <section class="chapter" id="self-study">
+      <!-- Action Button to Advance -->
+      <div style="text-align:right; margin:3rem 0 1rem;">
+        <button type="button" class="btn-stepper btn-stepper-next jump-stage-btn" data-target-stage="stage-3-lsp" style="padding:0.85rem 1.75rem; font-size:0.95rem;">
+          Proceed to Stage 3: Formal LSP &amp; Contracts (The Exam Classic) →
+        </button>
+      </div>
+
+    </div>
+
+    <!-- STAGE 3: FORMAL LSP DRILL -->
+    <div class="stage-view" id="stage-3-lsp">
+      
       <div class="chapter-head">
-        <span class="chapter-num">3</span>
-        <h2>6.7 Questions for Self-Study (Exam Practice)</h2>
+        <span class="chapter-num">Stage 3</span>
+        <h2>Formal LSP &amp; The Rectangle/Square Counterexample</h2>
+      </div>
+      <p class="chapter-dek">Prof. Dr. Jörg Schäfer's most frequent 15-point exam question explained with mathematical precision.</p>
+
+      <div style="background:var(--bg-raised); border:1px solid var(--border-strong); border-radius:var(--radius-lg); padding:2rem; margin-bottom:2rem;">
+        <h4 style="margin:0 0 0.5rem; font-size:1.15rem; color:#38bdf8;">The Classical Paradox: "A Square IS-A Rectangle" in Mathematics</h4>
+        <p style="font-size:0.95rem; color:var(--text); line-height:1.65; margin:0 0 1rem;">
+          In high school geometry, a square is a special case of a rectangle. However, in software engineering, modeling <code>class Square extends Rectangle</code> violates the Liskov Substitution Principle!
+        </p>
+
+        <div class="bb-diff-box" style="margin:1rem 0;">
+          <span class="diff-line-del">// ❌ BROKEN BEHAVIORAL CONTRACT:</span>
+          void clientVerification(Rectangle r) {<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;r.setWidth(5);<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;r.setHeight(4);<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;<strong>assert(r.getArea() == 20); // 💥 FAILS IF r IS AN INSTANCE OF Square!</strong><br>
+          }
+        </div>
+
+        <div style="background:rgba(244,63,94,0.08); border-left:3px solid #F43F5E; padding:1rem; border-radius:0 6px 6px 0; font-size:0.9rem; line-height:1.6; color:var(--text);">
+          <strong>The Formal Reason (Design by Contract):</strong><br>
+          A <code>Rectangle</code> promises an independent postcondition: <em>"After <code>setWidth(w)</code>, the height is unchanged."</em><br>
+          A <code>Square</code> subclass cannot preserve this postcondition without violating its own invariant ($width == height$). Therefore, <code>Square</code> breaks client expectations and cannot be safely substituted for <code>Rectangle</code>.
+        </div>
       </div>
 
-      <div class="drill-list">
-        <details class="drill-item" open>
-          <summary>
-            <span class="drill-tag">Self-Study Q1</span>
-            <span class="drill-q">Explain why "A Square is a Rectangle" fails under the Liskov Substitution Principle (LSP).</span>
-            <span class="drill-reveal-hint"></span>
-          </summary>
-          <div class="drill-a">
-            <p>
-              In mathematics, a square has an invariant that width equals height. But a <code>Rectangle</code> class in software asserts an independent postcondition: after <code>setWidth(w)</code>, the height remains unchanged.
-            </p>
-            <p>
-              A <code>Square</code> subclass cannot preserve this postcondition without violating its own invariant. Because the Square subclass breaks the behavioral contract expected by clients of Rectangle, it violates LSP. <strong>IS-A relationship in real life does not equal IS-A in software behavior!</strong>
-            </p>
-          </div>
-        </details>
+      <!-- Action Button to Advance -->
+      <div style="text-align:right; margin:3rem 0 1rem;">
+        <button type="button" class="btn-stepper btn-stepper-next jump-stage-btn" data-target-stage="stage-4-matrix" style="padding:0.85rem 1.75rem; font-size:0.95rem;">
+          Proceed to Stage 4: Smell-to-Principle Solution Matrix →
+        </button>
       </div>
-    </section>
 
-    <footer class="page-footer" style="margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--border); display: flex; justify-content: space-between;">
-      <span><a href="unit-3-structural.html">← Previous: Unit 3 Structural</a></span>
-      <span><a href="unit-7-packaging.html">Next: Unit 7 Packaging Principles →</a></span>
+    </div>
+
+    <!-- STAGE 4: SMELL-TO-PRINCIPLE MATRIX -->
+    <div class="stage-view" id="stage-4-matrix">
+      
+      <div class="chapter-head">
+        <span class="chapter-num">Stage 4</span>
+        <h2>Smell-to-Principle Solution Matrix</h2>
+      </div>
+      <p class="chapter-dek">Which SOLID principle or design pattern cures each architectural smell?</p>
+
+      <div style="background:var(--bg-raised); border:1px solid var(--border); border-radius:var(--radius-lg); overflow:hidden; margin-bottom:2rem;">
+        <table style="width:100%; border-collapse:collapse; font-size:0.9rem;">
+          <thead>
+            <tr style="background:rgba(255,255,255,0.03); border-bottom:1px solid var(--border); text-align:left;">
+              <th style="padding:1rem; color:var(--text);">Architectural Smell</th>
+              <th style="padding:1rem; color:var(--text);">Direct Antidote</th>
+              <th style="padding:1rem; color:var(--text);">Pattern Applied</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="border-bottom:1px solid var(--border);">
+              <td style="padding:1rem; font-weight:700; color:#F43F5E;">Rigidity (Cascading edits)</td>
+              <td style="padding:1rem; color:#38bdf8; font-weight:700;">Open-Closed Principle (OCP)</td>
+              <td style="padding:1rem; color:var(--text-muted);">Strategy, Abstract Factory</td>
+            </tr>
+            <tr style="border-bottom:1px solid var(--border);">
+              <td style="padding:1rem; font-weight:700; color:#F43F5E;">Fragility (Unexpected breaks)</td>
+              <td style="padding:1rem; color:#10b981; font-weight:700;">Liskov Substitution (LSP)</td>
+              <td style="padding:1rem; color:var(--text-muted);">Composition over inheritance</td>
+            </tr>
+            <tr style="border-bottom:1px solid var(--border);">
+              <td style="padding:1rem; font-weight:700; color:#F43F5E;">Immobility (Cannot reuse)</td>
+              <td style="padding:1rem; color:#a5b4fc; font-weight:700;">Dependency Inversion (DIP)</td>
+              <td style="padding:1rem; color:var(--text-muted);">Adapter, Dependency Injection</td>
+            </tr>
+            <tr>
+              <td style="padding:1rem; font-weight:700; color:#F43F5E;">Needless Complexity</td>
+              <td style="padding:1rem; color:#f59e0b; font-weight:700;">Single Responsibility (SRP)</td>
+              <td style="padding:1rem; color:var(--text-muted);">Facade, Command</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Action Button to Advance -->
+      <div style="text-align:right; margin:3rem 0 1rem;">
+        <button type="button" class="btn-stepper btn-stepper-next jump-stage-btn" data-target-stage="stage-5-exam" style="padding:0.85rem 1.75rem; font-size:0.95rem;">
+          Proceed to Stage 5: Prof. Schäfer Exam Drills →
+        </button>
+      </div>
+
+    </div>
+
+    <!-- STAGE 5: EXAM DRILLS -->
+    <div class="stage-view" id="stage-5-exam">
+      
+      <div class="chapter-head">
+        <span class="chapter-num">Stage 5</span>
+        <h2>Prof. Dr. Jörg Schäfer Exam Mastery &amp; Drill</h2>
+      </div>
+      <p class="chapter-dek">Direct past-paper questions from Frankfurt University of Applied Sciences.</p>
+
+      <div class="cert-quiz-card">
+        <div class="cert-quiz-badge">Question 1 · Liskov Substitution Principle · 10 Pts</div>
+        <div class="cert-quiz-question">Why does "Square extends Rectangle" violate the Liskov Substitution Principle (LSP)?</div>
+        <div class="cert-quiz-options">
+          <button type="button" class="cert-opt" data-correct="false" data-reason="Compilers allow inheritance between any compatible classes.">
+            <span class="cert-opt-letter">A</span>
+            <span>Because Java compilers do not permit class inheritance for geometric shapes.</span>
+          </button>
+          <button type="button" class="cert-opt" data-correct="true" data-reason="Rectangle guarantees that setting width leaves height invariant. Square cannot preserve this postcondition without violating its own invariant (width == height).">
+            <span class="cert-opt-letter">B</span>
+            <span>Square breaks Rectangle's postcondition that setting width leaves height unchanged.</span>
+          </button>
+          <button type="button" class="cert-opt" data-correct="false" data-reason="LSP is about behavioral contracts, not heap memory allocation.">
+            <span class="cert-opt-letter">C</span>
+            <span>Because Square requires more memory than Rectangle.</span>
+          </button>
+        </div>
+        <div class="cert-feedback"></div>
+      </div>
+
+      <div class="cert-quiz-card">
+        <div class="cert-quiz-badge">Question 2 · Single Responsibility Principle · 10 Pts</div>
+        <div class="cert-quiz-question">According to Robert C. Martin, what is the definition of "a responsibility" in the Single Responsibility Principle?</div>
+        <div class="cert-quiz-options">
+          <button type="button" class="cert-opt" data-correct="false" data-reason="SRP is not about line count or method count.">
+            <span class="cert-opt-letter">A</span>
+            <span>A class should have no more than 100 lines of executable code.</span>
+          </button>
+          <button type="button" class="cert-opt" data-correct="true" data-reason="Martin explicitly defines a responsibility as 'a reason to change', which corresponds to a single stakeholder or actor in the business domain.">
+            <span class="cert-opt-letter">B</span>
+            <span>A reason to change (corresponding to a single business stakeholder or actor).</span>
+          </button>
+          <button type="button" class="cert-opt" data-correct="false" data-reason="Classes often contain multiple cohesive helper methods.">
+            <span class="cert-opt-letter">C</span>
+            <span>A class should contain only one public method.</span>
+          </button>
+        </div>
+        <div class="cert-feedback"></div>
+      </div>
+
+      <!-- Unit Completion Celebration Card -->
+      <div style="background:linear-gradient(135deg, rgba(99,102,241,0.15) 0%, rgba(56,189,248,0.15) 100%); border:1px solid var(--accent); border-radius:var(--radius-lg); padding:2rem; margin:2.5rem 0; text-align:center;">
+        <div style="font-size:2.5rem; margin-bottom:0.5rem;">🎉</div>
+        <h3 style="margin:0 0 0.5rem; font-size:1.4rem; color:var(--text); font-family:var(--font-display);">Unit 6 Mastered!</h3>
+        <p style="font-size:0.95rem; color:var(--text-muted); max-width:55ch; margin:0 auto 1.5rem; line-height:1.6;">
+          You have mastered the 7 classic design smells, the 5 SOLID principles, and the formal mathematical criteria of the Liskov Substitution Principle.
+        </p>
+        <div style="display:inline-flex; align-items:center; gap:0.5rem; font-family:var(--font-mono); font-size:0.85rem; font-weight:800; color:#10B981; background:rgba(16,185,129,0.15); padding:0.4rem 1rem; border-radius:999px; border:1px solid rgba(16,185,129,0.3); margin-bottom:1.5rem;">
+          ✓ 25 / 25 Exam Points Credited
+        </div>
+        <br>
+        <a href="unit-7-packaging.html" style="display:inline-flex; align-items:center; gap:0.5rem; background:linear-gradient(135deg, #6366F1 0%, #38BDF8 100%); color:#fff; text-decoration:none; padding:0.8rem 1.75rem; border-radius:var(--radius-sm); font-weight:700; font-size:0.95rem; box-shadow:0 4px 15px rgba(99,102,241,0.4);">
+          Continue to Unit 7: Packaging Principles &amp; Metrics (REP, CCP, CRP) →
+        </a>
+      </div>
+
+    </div>
+
+    <!-- Navigation Footer -->
+    <footer class="page-footer" style="margin-top: 4rem; padding-top: 2rem; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+      <a href="unit-3-structural.html" class="btn-studio-hot-swap" style="text-decoration:none; padding:0.6rem 1.25rem;">
+        ← Previous: Unit 3 · Structural Patterns
+      </a>
+      <a href="unit-7-packaging.html" class="btn-studio-run" style="text-decoration:none; padding:0.6rem 1.25rem;">
+        Next: Unit 7 · Packaging Architecture →
+      </a>
     </footer>
 
   </div>
