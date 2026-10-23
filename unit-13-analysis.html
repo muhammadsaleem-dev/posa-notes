@@ -2,46 +2,131 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Unit 13: Analysis Patterns &amp; Idioms | POSA 2026</title>
-<meta name="description" content="Unit 13 of Pattern-Oriented Software Architecture by Prof. Dr. Jörg Schäfer: Martin Fowler's Quantity, Measurement, Observation, and programming language idioms.">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230c7a73'/%3E%3Cpath d='M8 10h16M8 16h16M8 22h10' stroke='%23fff' stroke-width='2.2' stroke-linecap='round'/%3E%3C/svg%3E">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Unit 13: Analysis Patterns &amp; Domain Idioms | POSA 2026 Masterclass</title>
+<meta name="description" content="Master Martin Fowler's Analysis Patterns: The Quantity Pattern, Measurement & Observation, and low-level programming language idioms (RAII, Try-with-resources) with Prof. Dr. Jörg Schäfer.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2314b8a6'/%3E%3Cpath d='M8 10h16M8 16h16M8 22h10' stroke='%23fff' stroke-width='2.2' stroke-linecap='round'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/style.css">
+<link rel="stylesheet" href="assets/style.css?v=2026.15">
 <style>
-  .quote-card {
-    margin: 1.5rem 0 2rem;
-    padding: 1.25rem 1.5rem;
-    background: var(--accent-soft);
-    border-left: 4px solid var(--accent);
-    border-radius: 0 var(--radius-md) var(--radius-md) 0;
-    font-style: italic;
-    color: var(--accent-ink);
+  .reading-progress-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #14b8a6 0%, #38bdf8 50%, #6366f1 100%);
+    width: 0%;
+    z-index: 9999;
+    transition: width 0.1s ease-out;
   }
-  .quote-author {
+  .stage-takeaways-box {
+    background: rgba(20, 184, 166, 0.05);
+    border: 1px solid rgba(20, 184, 166, 0.2);
+    border-radius: var(--radius-md);
+    padding: 1.5rem;
+    margin: 2rem 0;
+  }
+  [data-theme="light"] .stage-takeaways-box {
+    background: #f0fdfa;
+    border-color: #99f6e4;
+  }
+  .stage-takeaways-title {
+    font-weight: 800;
+    color: #0d9488;
+    margin-bottom: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1.05rem;
+  }
+  .takeaway-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+  .takeaway-item {
+    background: var(--bg-raised);
+    padding: 1rem;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+  }
+  .takeaway-item strong {
+    color: var(--text);
     display: block;
-    margin-top: 0.5rem;
-    font-style: normal;
-    font-weight: 700;
+    margin-bottom: 0.35rem;
+    font-size: 0.92rem;
+  }
+  .takeaway-item p {
+    margin: 0;
     font-size: 0.85rem;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
+    color: var(--text-muted);
+    line-height: 1.5;
+  }
+  /* Interactive Quantity Sandbox */
+  .quantity-sandbox-card {
+    background: var(--bg-raised);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 1.5rem;
+    margin: 2rem 0;
+  }
+  .calc-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 1rem;
+    margin: 1.25rem 0;
+  }
+  .calc-input-group label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    display: block;
+    margin-bottom: 0.25rem;
+  }
+  .calc-input-group input, .calc-input-group select {
+    width: 100%;
+    padding: 0.55rem;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-mono);
+    font-size: 0.95rem;
+  }
+  .terminal-output {
+    background: #090d16;
+    color: #38bdf8;
+    font-family: var(--font-mono);
+    padding: 0.85rem 1.25rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.82rem;
+    min-height: 48px;
+    display: flex;
+    align-items: center;
+    border: 1px solid #1e293b;
+    margin-top: 1rem;
+    overflow-x: auto;
   }
 </style>
-<script>(function(){try{var t=localStorage.getItem('posa-theme')||'light';document.documentElement.setAttribute('data-theme',t);var m=localStorage.getItem('posa-mode')||'concept';document.documentElement.setAttribute('data-mode',m);}catch(e){}})();</script>
+<script>(function(){try{var t=localStorage.getItem('posa-theme')||'dark';document.documentElement.setAttribute('data-theme',t);var m=localStorage.getItem('posa-mode')||'concept';document.documentElement.setAttribute('data-mode',m);}catch(e){}})();</script>
 </head>
-<body>
+<body class="mode-stage-focused">
+
+<div class="reading-progress-bar" id="readingProgressBar"></div>
 
 <nav class="sitenav">
   <div class="sitenav-inner">
     <a class="sitenav-home" href="index.html">
-      <span style="background:var(--accent);color:#fff;padding:0.15rem 0.45rem;border-radius:4px;font-size:0.8rem;font-weight:800;letter-spacing:0.04em;">POSA</span>
-      <span>2026</span>
+      <span style="background:linear-gradient(135deg, #14b8a6 0%, #38bdf8 100%);color:#fff;padding:0.2rem 0.55rem;border-radius:6px;font-size:0.82rem;font-weight:800;letter-spacing:0.04em;">POSA</span>
+      <span style="font-weight:800;letter-spacing:-0.02em;">2026</span>
     </a>
     <div class="sitenav-links">
       <a href="index.html">Overview</a>
+      <a href="unit-1-strategy.html">1 · Strategy</a>
+      <a href="unit-11-mvc.html">11 · MVC</a>
       <a href="unit-12-architectural.html">12 · Architecture</a>
       <a href="unit-13-analysis.html" class="active">13 · Analysis</a>
       <a href="unit-14-testing.html">14 · Testing</a>
@@ -62,147 +147,1040 @@
       <span class="nav-panel-label">Course Navigation</span>
       <a href="index.html">Overview</a>
       <a href="unit-12-architectural.html">Unit 12 · Architectural Patterns</a>
-      <a href="unit-13-analysis.html" class="active">Unit 13 · Analysis &amp; Enterprise Patterns</a>
-      <a href="unit-14-testing.html">Unit 14 · Testing Patterns</a>
+      <a href="unit-13-analysis.html" class="active">Unit 13 · Analysis Patterns &amp; Idioms</a>
+      <a href="unit-14-testing.html">Unit 14 · Testing Architecture</a>
       <a href="mock-1.html">📝 Mock Exam 1</a>
     </div>
   </div>
 </nav>
 
+<!-- Mobile Native Bottom Dock (iOS App Bar) -->
+<nav class="mobile-bottom-dock" aria-label="Mobile Navigation Dock">
+  <a href="#stage-1-quantity" class="dock-item active">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+    <span>Quantity</span>
+  </a>
+  <a href="#stage-2-observation" class="dock-item">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line><line x1="9" y1="21" x2="9" y2="9"></line></svg>
+    <span>Observe</span>
+  </a>
+  <a href="#stage-3-sandbox" class="dock-item">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 14 14"></polyline></svg>
+    <span>Sandbox</span>
+  </a>
+  <a href="#stage-4-idioms" class="dock-item">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+    <span>Idioms</span>
+  </a>
+  <a href="#stage-5-exam" class="dock-item">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+    <span>Drills</span>
+  </a>
+</nav>
+
 <div class="page-shell">
   <aside class="sidebar-toc">
     <div class="sidebar-block">
-      <span class="sidebar-label">On This Page</span>
-      <a href="#quantity-pattern"><span class="toc-num">1</span>Martin Fowler: Quantity Pattern</a>
-      <a href="#observation-pattern"><span class="toc-num">2</span>Measurement &amp; Observation</a>
-      <a href="#language-idioms"><span class="toc-num">3</span>Programming Language Idioms</a>
-      <a href="#self-study"><span class="toc-num">4</span>Self-Study Exam Questions</a>
+      <span class="sidebar-label">Curriculum Navigation</span>
+      <a href="#stage-1-quantity" class="jump-stage-btn" data-target-stage="stage-1-quantity"><span class="toc-num">1</span>Martin Fowler: Quantity Pattern</a>
+      <a href="#stage-2-observation" class="jump-stage-btn" data-target-stage="stage-2-observation"><span class="toc-num">2</span>Measurement &amp; Observation</a>
+      <a href="#stage-3-sandbox" class="jump-stage-btn" data-target-stage="stage-3-sandbox"><span class="toc-num">3</span>Unit Conversion Sandbox Lab</a>
+      <a href="#stage-4-idioms" class="jump-stage-btn" data-target-stage="stage-4-idioms"><span class="toc-num">4</span>Language Idioms: RAII &amp; Clean</a>
+      <a href="#stage-5-exam" class="jump-stage-btn" data-target-stage="stage-5-exam"><span class="toc-num">5</span>Prof. Schäfer Exam Drills</a>
     </div>
     <div class="sidebar-block">
-      <span class="sidebar-label">Instructor</span>
-      <p style="font-size: 0.85rem; color: var(--text-muted); margin: 0;">
-        Prof. Dr. Jörg Schäfer<br>
-        <em>Frankfurt University of Applied Sciences</em>
+      <span class="sidebar-label">Course Origin</span>
+      <p style="font-size: 0.85rem; color: var(--text-muted); margin: 0 0 0.5rem; line-height: 1.5;">
+        <strong>Prof. Dr. Jörg Schäfer</strong><br>
+        Frankfurt University of Applied Sciences<br>
+        Fachbereich 2: Informatik
       </p>
+      <div style="font-size:0.75rem; font-weight:700; color:#14b8a6; background:rgba(20,184,166,0.12); border:1px solid rgba(20,184,166,0.25); padding:0.25rem 0.5rem; border-radius:4px; display:inline-block; margin-top:0.4rem;">
+        ⏱️ 45 Min · 20 Exam Pts
+      </div>
     </div>
   </aside>
 
   <div class="page">
-    <div class="masthead">
+    
+    <!-- Hero Masthead -->
+    <header class="masthead">
       <div>
-        <div class="eyebrow">Unit 13 · Domain Modeling &amp; Language Idioms</div>
-        <h1 class="title">Analysis Patterns &amp; Programming Idioms</h1>
+        <div class="eyebrow">
+          <span>Domain Modeling &amp; Idioms Masterclass · Martin Fowler Patterns</span>
+        </div>
+        <h1 class="title">Unit 13: Analysis Patterns &amp; Programming Idioms</h1>
+        <p class="dek" style="font-size:1.05rem; line-height:1.65; max-width:68ch; color:var(--text-muted);">
+          Martin Fowler’s foundational domain modeling patterns: the Quantity Pattern, dynamic Measurement &amp; Observation architectures, and low-level language idioms (RAII, Try-with-resources).
+        </p>
+
+        <!-- Course Meta Metric Chips -->
+        <div class="masthead-metrics-grid">
+          <div class="metric-chip">
+            <div class="metric-chip-label">⏱️ Study Time</div>
+            <div class="metric-chip-val" style="color:#38bdf8;">45 Minutes</div>
+          </div>
+          <div class="metric-chip">
+            <div class="metric-chip-label">🎯 Exam Weight</div>
+            <div class="metric-chip-val" style="color:#10b981;">20 Pts (Grade 1.0)</div>
+          </div>
+          <div class="metric-chip">
+            <div class="metric-chip-label">🏛️ Category</div>
+            <div class="metric-chip-val" style="color:#a5b4fc;">Domain Analysis</div>
+          </div>
+          <div class="metric-chip">
+            <div class="metric-chip-label">⚙️ Visual Sandbox</div>
+            <div class="metric-chip-val" style="color:#f59e0b;">Quantity &amp; Unit Converter Lab</div>
+          </div>
+        </div>
+
       </div>
+    </header>
+
+    <!-- ====================================================================
+         SECTION 1: 8-PILLAR ARCHITECTURAL BLUEPRINT (UNIVERSAL RUBRIC)
+         ==================================================================== -->
+    <div class="masterclass-section-divider" style="margin: 2.5rem 0 1.5rem;">
+      <div class="section-divider-line"></div>
+      <div class="section-divider-chip">
+        <span>PART 1 · ARCHITECTURAL RUBRIC</span>
+      </div>
+      <div class="section-divider-line"></div>
     </div>
 
-    <div class="quote-card">
-      “An ordinary language like English contains patterns of grammar and vocabulary. A software design language does the same for domain concepts.”
-      <span class="quote-author">— Martin Fowler (Analysis Patterns)</span>
-    </div>
-
-    <p class="dek">
-      Martin Fowler’s foundational business modeling patterns for quantities, currencies, and observational phenomena, paired with low-level implementation idioms in C++, Java, and Python.
-    </p>
-
-    <!-- Section 1: Quantity -->
-    <section class="chapter" id="quantity-pattern">
-      <div class="chapter-head">
-        <span class="chapter-num">1</span>
-        <h2>13.3 Martin Fowler’s Quantity Pattern</h2>
+    <section class="blueprint-suite" id="blueprintSuite" aria-label="8-Pillar Architecture Rubric">
+      <div class="blueprint-suite-top">
+        <div>
+          <div class="blueprint-suite-badge">
+            <span class="section-badge-pill">SECTION 1 OF 2</span>
+            <span class="badge-sep">·</span>
+            <span>📐 Universal Pattern Rubric</span>
+            <span class="badge-sep">·</span>
+            <span>Exam &amp; Production Standard</span>
+          </div>
+          <h3 class="blueprint-suite-title">The 8 Pillars of Software Pattern Mastery</h3>
+          <p class="blueprint-suite-desc">
+            The definitive architectural rubric for Martin Fowler's Analysis Patterns (Quantity, Unit, Observation) and low-level implementation idioms.
+          </p>
+        </div>
+        <div class="blueprint-suite-actions">
+          <div class="blueprint-view-toggles" style="display:inline-flex; gap:0.4rem;">
+            <button type="button" class="btn-suite-toggle active" id="btnViewExplorer" onclick="setBlueprintView('explorer')" title="Explore one pillar at a time with interactive details">
+              <span>⚡ Interactive Explorer</span>
+            </button>
+            <button type="button" class="btn-suite-toggle" id="btnViewMatrix" onclick="setBlueprintView('matrix')" title="View all 8 pillars simultaneously in an executive grid">
+              <span>📊 Full Matrix</span>
+            </button>
+          </div>
+          <button type="button" class="btn-copy-rubric" id="btnCopyRubricSuite" onclick="copyBlueprintRubric()" title="Copy entire 8-pillar markdown study rubric to clipboard">
+            <span>📋</span>
+            <span id="copyRubricSuiteLabel">Copy Rubric</span>
+          </button>
+          <button type="button" class="btn-section-collapse" id="btnCollapseBlueprint" onclick="toggleBlueprintCollapse()" aria-expanded="true" title="Collapse or expand the 8-Pillar section">
+            <span class="collapse-icon">▲</span>
+            <span class="collapse-label">Collapse Rubric</span>
+          </button>
+        </div>
       </div>
-      <p class="chapter-dek">Never represent physical or financial quantities as bare integers or floats.</p>
 
-      <div style="background: var(--bg-raised); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 1.5rem; margin-bottom: 1.5rem;">
-        <p><strong>The Catastrophe:</strong> In 1999, NASA’s \$327 million Mars Climate Orbiter was lost because one engineering team used imperial units (pound-seconds) while another used metric units (Newton-seconds). A bare <code>double thrust = 5.0;</code> carries no dimension!</p>
-        <p><strong>The Quantity Pattern:</strong> Bind an amount with its associated <code>Unit</code> (Currency, Meter, Kilogram, Second) into an immutable Value Object.</p>
+      <!-- Collapsed Hint Bar -->
+      <div class="blueprint-collapsed-hint" id="blueprintCollapsedHint" style="display:none; padding:0.85rem 1.75rem; background:var(--bg-subtle); border-top:1px dashed var(--border); font-size:0.85rem; color:var(--text-muted); align-items:center; justify-content:space-between; flex-wrap:wrap; gap:0.5rem;">
+        <div style="display:flex; align-items:center; gap:0.6rem;">
+          <span style="font-size:1.1rem;">📐</span>
+          <span><strong>8-Pillar Architecture Rubric is Collapsed</strong> (Analysis Patterns &amp; Idioms). Click to restore instant reference.</span>
+        </div>
+        <button type="button" class="btn-restore-rubric" onclick="toggleBlueprintCollapse(false)" style="background:var(--accent); color:#fff; border:none; padding:0.35rem 0.85rem; border-radius:6px; font-weight:700; cursor:pointer; font-size:0.8rem;">
+          Restore Rubric ▲
+        </button>
       </div>
 
-      <div class="arch-diagram-block">
-┌─────────────────────────────────┐               ┌─────────────────────────────────┐
-│            Quantity             │               │              Unit               │
-├─────────────────────────────────┤  has-a        ├─────────────────────────────────┤
-│ - amount: BigDecimal            │──────────────&gt;│ - name: String (EUR, USD, Meter)│
-│ - unit: Unit                    │               │ - symbol: String                │
-├─────────────────────────────────┤               └───────────────▲─────────────────┘
-│ + add(Quantity other) : Quantity│                               │
-│ + convertTo(Unit target)        │                               │ defines
-└─────────────────────────────────┘               ┌───────────────┴─────────────────┐
-                                                  │          UnitConverter          │
-                                                  ├─────────────────────────────────┤
-                                                  │ + convert(amount, fromUnit, to) │
-                                                  └─────────────────────────────────┘</div>
+      <div class="blueprint-collapsible-body" id="blueprintCollapsibleBody">
+        <!-- Explorer View -->
+        <div class="blueprint-explorer" id="blueprintExplorer">
+          <nav class="blueprint-pillar-tabs" role="tablist" aria-label="8 Pillars Navigation">
+            <button type="button" class="pillar-tab-btn active" role="tab" aria-selected="true" onclick="selectPillar(1)">
+              <span class="pillar-tab-num">1</span>
+              <span class="pillar-tab-label">Intent</span>
+            </button>
+            <button type="button" class="pillar-tab-btn" role="tab" aria-selected="false" onclick="selectPillar(2)">
+              <span class="pillar-tab-num">2</span>
+              <span class="pillar-tab-label">Roles</span>
+            </button>
+            <button type="button" class="pillar-tab-btn" role="tab" aria-selected="false" onclick="selectPillar(3)">
+              <span class="pillar-tab-num">3</span>
+              <span class="pillar-tab-label">UML</span>
+            </button>
+            <button type="button" class="pillar-tab-btn" role="tab" aria-selected="false" onclick="selectPillar(4)">
+              <span class="pillar-tab-num">4</span>
+              <span class="pillar-tab-label">Principles</span>
+            </button>
+            <button type="button" class="pillar-tab-btn" role="tab" aria-selected="false" onclick="selectPillar(5)">
+              <span class="pillar-tab-num">5</span>
+              <span class="pillar-tab-label">Mechanics</span>
+            </button>
+            <button type="button" class="pillar-tab-btn" role="tab" aria-selected="false" onclick="selectPillar(6)">
+              <span class="pillar-tab-num">6</span>
+              <span class="pillar-tab-label">Trade-offs</span>
+            </button>
+            <button type="button" class="pillar-tab-btn" role="tab" aria-selected="false" onclick="selectPillar(7)">
+              <span class="pillar-tab-num">7</span>
+              <span class="pillar-tab-label">Rivals</span>
+            </button>
+            <button type="button" class="pillar-tab-btn" role="tab" aria-selected="false" onclick="selectPillar(8)">
+              <span class="pillar-tab-num">8</span>
+              <span class="pillar-tab-label">Exam Traps</span>
+            </button>
+          </nav>
+
+          <div class="blueprint-active-pillar-card" id="pillarActiveCard">
+            <div class="pillar-panel active" id="pillarPanel1">
+              <div class="pillar-panel-badge">PILLAR 1 OF 8 · INTENT &amp; MOTIVATION</div>
+              <h4 class="pillar-panel-title">Domain Rigor: Eliminating Bare Primitives</h4>
+              <p style="font-size:0.95rem; line-height:1.6; color:var(--text); margin-bottom:1rem;">
+                In 1999, NASA lost the \$327 million Mars Climate Orbiter because one team modeled thrust as pound-seconds while another modeled Newton-seconds. Using a bare primitive <code>double thrust = 5.0;</code> carries no dimension. Analysis patterns bind mathematical quantities to physical and financial units.
+              </p>
+              <div style="background:var(--bg-subtle); padding:1rem; border-radius:6px; border-left:3px solid #14b8a6;">
+                <strong style="color:#0d9488; display:block; margin-bottom:0.35rem;">Quantity Pattern Intent</strong>
+                <p style="font-size:0.85rem; color:var(--text-muted); margin:0;">
+                  Represent a physical or monetary magnitude by binding an exact numerical amount with its associated measurement unit into an immutable Value Object.
+                </p>
+              </div>
+            </div>
+
+            <div class="pillar-panel" id="pillarPanel2" style="display:none;">
+              <div class="pillar-panel-badge">PILLAR 2 OF 8 · PARTICIPANTS &amp; ROLES</div>
+              <h4 class="pillar-panel-title">Structural Participants</h4>
+              <div class="pillar-matrix-table-wrap">
+                <table class="pillar-matrix-table">
+                  <thead>
+                    <tr>
+                      <th>Pattern</th>
+                      <th>Participant</th>
+                      <th>Domain Responsibility</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><strong>Quantity</strong></td>
+                      <td><code>Quantity</code></td>
+                      <td>Immutable Value Object combining <code>amount</code> (e.g. BigDecimal) with a <code>Unit</code>.</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Quantity</strong></td>
+                      <td><code>Unit</code></td>
+                      <td>Dimensional descriptor (Currency, Meter, Kilogram, Second) with conversion capabilities.</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Observation</strong></td>
+                      <td><code>Observation</code></td>
+                      <td>Dynamic measurement entity capturing an event, target entity, timestamp, and Quantity value.</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Observation</strong></td>
+                      <td><code>PhenomenonType</code></td>
+                      <td>Metadata category (e.g. "Blood Pressure", "Heart Rate", "Engine RPM") avoiding hardcoded schema columns.</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div class="pillar-panel" id="pillarPanel3" style="display:none;">
+              <div class="pillar-panel-badge">PILLAR 3 OF 8 · FORMAL UML ANATOMY</div>
+              <h4 class="pillar-panel-title">Vector SVG UML: Martin Fowler's Quantity Pattern</h4>
+              <p style="font-size:0.88rem; color:var(--text-muted); margin-bottom:1rem;">
+                Notice that <code>Quantity</code> holds a directed association to <code>Unit</code> and provides arithmetic methods that enforce dimensional consistency.
+              </p>
+              <div class="uml-svg-container" style="background:#090d16; border-radius:8px; padding:1.5rem; text-align:center; overflow-x:auto;">
+                <svg viewBox="0 0 760 220" width="100%" height="auto" xmlns="http://www.w3.org/2000/svg" style="font-family:'JetBrains Mono', 'SF Mono', monospace; font-size:12px;">
+                  <defs>
+                    <marker id="u13-arrow" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                      <path d="M 0 1 L 10 5 L 0 9 z" fill="#14b8a6"/>
+                    </marker>
+                  </defs>
+
+                  <!-- Quantity Class -->
+                  <rect x="50" y="30" width="300" height="110" rx="6" fill="#1e293b" stroke="#14b8a6" stroke-width="2"/>
+                  <rect x="50" y="30" width="300" height="24" rx="6" fill="#0d9488"/>
+                  <text x="200" y="47" fill="#ffffff" font-weight="700" text-anchor="middle">&lt;&lt;ValueObject&gt;&gt; Quantity</text>
+                  <text x="65" y="75" fill="#f8fafc">- amount : BigDecimal</text>
+                  <text x="65" y="95" fill="#f8fafc">- unit : Unit</text>
+                  <text x="65" y="120" fill="#a7f3d0">+ add(q : Quantity) : Quantity</text>
+                  <text x="65" y="135" fill="#a7f3d0">+ convertTo(target : Unit) : Quantity</text>
+
+                  <!-- Association Line -->
+                  <line x1="350" y1="85" x2="470" y2="85" stroke="#14b8a6" stroke-width="2" marker-end="url(#u13-arrow)"/>
+                  <text x="410" y="75" fill="#14b8a6" font-size="10" text-anchor="middle">has-a unit</text>
+
+                  <!-- Unit Class -->
+                  <rect x="480" y="30" width="240" height="110" rx="6" fill="#1e293b" stroke="#38bdf8" stroke-width="2"/>
+                  <rect x="480" y="30" width="240" height="24" rx="6" fill="#0284c7"/>
+                  <text x="600" y="47" fill="#ffffff" font-weight="700" text-anchor="middle">Unit</text>
+                  <text x="495" y="75" fill="#f8fafc">- name : String (EUR, Meter)</text>
+                  <text x="495" y="95" fill="#f8fafc">- symbol : String</text>
+                  <text x="495" y="120" fill="#bae6fd">+ getConversionFactor()</text>
+                </svg>
+              </div>
+            </div>
+
+            <div class="pillar-panel" id="pillarPanel4" style="display:none;">
+              <div class="pillar-panel-badge">PILLAR 4 OF 8 · DESIGN PRINCIPLES</div>
+              <h4 class="pillar-panel-title">Immutability &amp; Value Objects</h4>
+              <div class="takeaway-grid">
+                <div class="takeaway-item" style="border-left:3px solid #14b8a6;">
+                  <strong>Value Object Semantics</strong>
+                  <p>Quantities possess no identity; equality is determined strictly by value (e.g. 5 meters equals 5 meters). They are immutable.</p>
+                </div>
+                <div class="takeaway-item" style="border-left:3px solid #38bdf8;">
+                  <strong>Schema Extensibility (Observation)</strong>
+                  <p>Instead of adding columns to relational tables whenever new health metrics arise, Observations capture dynamic phenomena generically.</p>
+                </div>
+                <div class="takeaway-item" style="border-left:3px solid #f59e0b;">
+                  <strong>Idiom RAII (Resource Management)</strong>
+                  <p>Resource acquisition binds to object creation; automatic deterministic destruction prevents memory and handle leaks.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="pillar-panel" id="pillarPanel5" style="display:none;">
+              <div class="pillar-panel-badge">PILLAR 5 OF 8 · IMPLEMENTATION MECHANICS</div>
+              <h4 class="pillar-panel-title">Java 17+ Records &amp; Dimension Enforcing</h4>
+              <div class="mac-ide-window" style="margin: 0.5rem 0;">
+                <div class="mac-ide-top">
+                  <div class="mac-ide-dots">
+                    <span class="mac-dot mac-dot-red"></span>
+                    <span class="mac-dot mac-dot-yellow"></span>
+                    <span class="mac-dot mac-dot-green"></span>
+                  </div>
+                  <div class="mac-ide-tab">Quantity.java · Java Record Value Object</div>
+                  <button type="button" class="btn-copy-code" onclick="copySnippet('codeSnippetP5Quantity')">Copy Code</button>
+                </div>
+                <pre class="mac-ide-content" id="codeSnippetP5Quantity"><code>public record Quantity(BigDecimal amount, Unit unit) {
+    public Quantity {
+        Objects.requireNonNull(amount, "Amount cannot be null");
+        Objects.requireNonNull(unit, "Unit cannot be null");
+    }
+
+    public Quantity add(Quantity other) {
+        if (!this.unit.isCompatible(other.unit())) {
+            throw new IllegalArgumentException("Dimensional mismatch: Cannot add " + unit + " to " + other.unit());
+        }
+        Quantity converted = other.convertTo(this.unit);
+        return new Quantity(this.amount.add(converted.amount()), this.unit);
+    }
+}</code></pre>
+              </div>
+            </div>
+
+            <div class="pillar-panel" id="pillarPanel6" style="display:none;">
+              <div class="pillar-panel-badge">PILLAR 6 OF 8 · COSTS &amp; TRADE-OFFS</div>
+              <h4 class="pillar-panel-title">Architectural Trade-offs</h4>
+              <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+                <div style="background:rgba(16,185,129,0.06); border:1px solid rgba(16,185,129,0.25); border-radius:6px; padding:1rem;">
+                  <strong style="color:#10b981; display:block; margin-bottom:0.5rem;">✅ Domain Benefits</strong>
+                  <ul style="margin:0; padding-left:1.2rem; font-size:0.85rem; color:var(--text); line-height:1.5;">
+                    <li>Impossible to accidentally add Euros to Dollars or meters to seconds.</li>
+                    <li>Value Object immutability eliminates multi-threaded race conditions.</li>
+                    <li>Observations allow adding patient telemetry without SQL migrations.</li>
+                  </ul>
+                </div>
+                <div style="background:rgba(239,68,68,0.06); border:1px solid rgba(239,68,68,0.25); border-radius:6px; padding:1rem;">
+                  <strong style="color:#ef4444; display:block; margin-bottom:0.5rem;">⚠️ Architectural Costs</strong>
+                  <ul style="margin:0; padding-left:1.2rem; font-size:0.85rem; color:var(--text); line-height:1.5;">
+                    <li>Heap object allocation overhead compared to bare primitive doubles.</li>
+                    <li>Complex ORM mapping (e.g. JPA `@Embeddable` or separate unit columns).</li>
+                    <li>Observation pattern queries require SQL joins across metadata tables.</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <div class="pillar-panel" id="pillarPanel7" style="display:none;">
+              <div class="pillar-panel-badge">PILLAR 7 OF 8 · RIVAL CONCEPTS MATRIX</div>
+              <h4 class="pillar-panel-title">Patterns vs Idioms vs Frameworks</h4>
+              <div class="pillar-matrix-table-wrap">
+                <table class="pillar-matrix-table">
+                  <thead>
+                    <tr>
+                      <th>Concept Level</th>
+                      <th>Scope &amp; Portability</th>
+                      <th>Classic Examples</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><strong>Architectural Pattern</strong></td>
+                      <td>Macro system topology (technology independent)</td>
+                      <td>Pipes &amp; Filters, MVC, Broker, Microservices</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Design Pattern</strong></td>
+                      <td>Subsystem / Class level (language agnostic)</td>
+                      <td>Strategy, Observer, Composite, Abstract Factory</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Programming Idiom</strong></td>
+                      <td>Language syntax specific implementation trick</td>
+                      <td>C++ RAII, Java Try-With-Resources, Python `with`</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div class="pillar-panel" id="pillarPanel8" style="display:none;">
+              <div class="pillar-panel-badge">PILLAR 8 OF 8 · EXAM TRAPS &amp; BENCHMARKS</div>
+              <h4 class="pillar-panel-title">Prof. Schäfer Exam Traps: Primitive Obsession</h4>
+              <div style="background:rgba(245,158,11,0.08); border-left:4px solid #f59e0b; padding:1.25rem; border-radius:0 6px 6px 0; margin-bottom:1rem;">
+                <strong style="color:#f59e0b; font-size:0.92rem;">🚨 Frankfurt UAS Exam Trap #1: Primitive Obsession Anti-Pattern</strong>
+                <p style="font-size:0.86rem; color:var(--text); margin:0.35rem 0 0; line-height:1.5;">
+                  Question: <em>"Why is modeling financial balance as `double balance` a critical design smell?"</em><br>
+                  <strong>Model Answer:</strong> Two fatal reasons: (1) Binary floating-point math causes rounding inaccuracies (e.g. `0.1 + 0.2 == 0.30000000000000004`), corrupting financial ledgers; (2) Primitive obsession strips currency context—code can accidentally add ¥500 JPY to \$500 USD without compiler error. The Quantity pattern binds `BigDecimal` with a `Currency` Value Object.
+                </p>
+              </div>
+              <div style="font-size:0.85rem; color:var(--text-muted);">
+                <strong>Standard:</strong> JSR-385 (Units of Measurement API), Fowler's Analysis Patterns.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Full Matrix View (Hidden by default) -->
+        <div class="blueprint-matrix-view" id="blueprintMatrix" style="display:none;">
+          <div class="pillar-matrix-table-wrap">
+            <table class="pillar-matrix-table">
+              <thead>
+                <tr>
+                  <th style="width:12%;">Pillar #</th>
+                  <th style="width:20%;">Mastery Dimension</th>
+                  <th style="width:34%;">Martin Fowler's Quantity Pattern</th>
+                  <th style="width:34%;">Observation &amp; Language Idioms</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Pillar 1</strong></td>
+                  <td><strong>Intent &amp; Motivation</strong></td>
+                  <td>Eliminate primitive obsession by binding numbers to physical/monetary dimensions.</td>
+                  <td>Capture dynamic phenomena generically without database schema modifications.</td>
+                </tr>
+                <tr>
+                  <td><strong>Pillar 2</strong></td>
+                  <td><strong>Participants</strong></td>
+                  <td><code>Quantity</code> (Value Object), <code>Unit</code>, <code>UnitConverter</code>.</td>
+                  <td><code>Observation</code>, <code>PhenomenonType</code>, <code>Entity</code>, RAII Guard.</td>
+                </tr>
+                <tr>
+                  <td><strong>Pillar 3</strong></td>
+                  <td><strong>UML Anatomy</strong></td>
+                  <td>Quantity holds directed association to Unit with conversion arithmetic.</td>
+                  <td>Observation associates Entity, PhenomenonType, and Quantity value.</td>
+                </tr>
+                <tr>
+                  <td><strong>Pillar 4</strong></td>
+                  <td><strong>Design Principles</strong></td>
+                  <td>Immutability; Value Object semantics (equals and hashCode based on value).</td>
+                  <td>Resource Acquisition Is Initialization (RAII); Open/Closed schema evolution.</td>
+                </tr>
+                <tr>
+                  <td><strong>Pillar 5</strong></td>
+                  <td><strong>Mechanics</strong></td>
+                  <td>Dimensional validation inside arithmetic methods (e.g. <code>add</code>).</td>
+                  <td>Deterministic resource disposal via scoped compiler hooks (AutoCloseable).</td>
+                </tr>
+                <tr>
+                  <td><strong>Pillar 6</strong></td>
+                  <td><strong>Trade-offs</strong></td>
+                  <td>Small allocation overhead vs 100% compile-time and runtime safety.</td>
+                  <td>Relational query join complexity vs schema migration agility.</td>
+                </tr>
+                <tr>
+                  <td><strong>Pillar 7</strong></td>
+                  <td><strong>Rival Disambiguation</strong></td>
+                  <td>Quantity vs Primitive; Unit vs Bare String.</td>
+                  <td>Architectural Pattern vs Design Pattern vs Language Idiom.</td>
+                </tr>
+                <tr>
+                  <td><strong>Pillar 8</strong></td>
+                  <td><strong>Exam Traps</strong></td>
+                  <td>Floating point rounding errors in financial primitives; Mars Climate Orbiter crash.</td>
+                  <td>Confusing an Idiom (syntax specific) with a Design Pattern (universal).</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
     </section>
 
-    <!-- Section 2: Observation -->
-    <section class="chapter" id="observation-pattern">
-      <div class="chapter-head">
-        <span class="chapter-num">2</span>
-        <h2>Measurement &amp; Observation Patterns</h2>
+    <!-- ====================================================================
+         SECTION 2: 5-STAGE HANDS-ON CURRICULUM
+         ==================================================================== -->
+    <div class="masterclass-section-divider" style="margin: 3.5rem 0 1.5rem;">
+      <div class="section-divider-line"></div>
+      <div class="section-divider-chip">
+        <span>PART 2 · HANDS-ON CURRICULUM</span>
       </div>
-      <p style="font-size: 0.92rem; color: var(--text-muted); line-height: 1.6;">
-        Instead of modifying a <code>Patient</code> class to add <code>bloodPressure</code>, <code>cholesterol</code>, and <code>heartRate</code> attributes, the <strong>Observation</strong> pattern captures clinical or telemetry measurements dynamically:
-        an Observation records an <code>ObservationType</code>, a <code>Quantity</code>, an observer, and a timestamp. New health metrics can be introduced without database schema migrations.
+      <div class="section-divider-line"></div>
+    </div>
+
+    <!-- Curriculum Super-Header with Metadata Chips -->
+    <div class="curriculum-super-header" id="curriculumHeader" style="margin-bottom:1.5rem; background:var(--bg-raised); border:1px solid var(--border); border-radius:var(--radius-md); padding:1.5rem;">
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem;">
+        <div>
+          <div style="font-size:0.75rem; font-weight:800; letter-spacing:0.08em; text-transform:uppercase; color:#14b8a6; margin-bottom:0.25rem;">
+            STAGE-DRIVEN MASTERY PATH
+          </div>
+          <h2 style="font-size:1.4rem; font-weight:800; margin:0; letter-spacing:-0.02em;">
+            Domain Analysis &amp; Idioms: 5 Stages to Grade 1.0
+          </h2>
+        </div>
+        <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
+          <span style="background:rgba(20,184,166,0.12); color:#14b8a6; font-size:0.78rem; font-weight:700; padding:0.35rem 0.75rem; border-radius:20px; border:1px solid rgba(20,184,166,0.25);">⏱️ 45 Min Total</span>
+          <span style="background:rgba(16,185,129,0.12); color:#10b981; font-size:0.78rem; font-weight:700; padding:0.35rem 0.75rem; border-radius:20px; border:1px solid rgba(16,185,129,0.25);">🎯 20 Exam Points</span>
+          <span style="background:rgba(99,102,241,0.12); color:#6366f1; font-size:0.78rem; font-weight:700; padding:0.35rem 0.75rem; border-radius:20px; border:1px solid rgba(99,102,241,0.25);">🏛️ Prof. Dr. Jörg Schäfer</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Masterclass Stage Navigation Bar -->
+    <nav class="masterclass-stage-nav" aria-label="Curriculum Stages">
+      <a href="#stage-1-quantity" class="stage-nav-pill active" data-stage="1">
+        <span class="pill-number">1</span>
+        <span class="pill-title">The Quantity Pattern</span>
+      </a>
+      <a href="#stage-2-observation" class="stage-nav-pill" data-stage="2">
+        <span class="pill-number">2</span>
+        <span class="pill-title">Observation Patterns</span>
+      </a>
+      <a href="#stage-3-sandbox" class="stage-nav-pill" data-stage="3">
+        <span class="pill-number">3</span>
+        <span class="pill-title">Conversion Lab</span>
+      </a>
+      <a href="#stage-4-idioms" class="stage-nav-pill" data-stage="4">
+        <span class="pill-number">4</span>
+        <span class="pill-title">Language Idioms</span>
+      </a>
+      <a href="#stage-5-exam" class="stage-nav-pill" data-stage="5">
+        <span class="pill-number">5</span>
+        <span class="pill-title">Exam Traps</span>
+      </a>
+    </nav>
+
+    <!-- ====================================================================
+         STAGE 1: THE QUANTITY PATTERN
+         ==================================================================== -->
+    <section class="masterclass-stage-section" id="stage-1-quantity">
+      <div class="stage-header-top">
+        <div class="stage-eyebrow-pill">● Stage 01 · Martin Fowler's Quantity Pattern</div>
+        <button type="button" class="stage-mastery-btn" onclick="markStageComplete(1)">Mark Stage 1 Complete ✓</button>
+      </div>
+      <h2 class="stage-title">Primitive Obsession &amp; The Mars Climate Orbiter</h2>
+
+      <p style="font-size:1rem; line-height:1.7; color:var(--text); margin-bottom:1.5rem;">
+        The most notorious software engineering failure of the 20th century occurred on September 23, 1999, when NASA's Mars Climate Orbiter burned up in the Martian atmosphere. The root cause: Ground navigation software generated thruster firing commands in <strong>pound-seconds</strong> (English customary unit), while the orbiter's trajectory software expected <strong>Newton-seconds</strong> (metric SI unit).
       </p>
+
+      <!-- Anti-Pattern Code Block -->
+      <div class="mac-ide-window" style="margin: 1.5rem 0;">
+        <div class="mac-ide-top">
+          <div class="mac-ide-dots">
+            <span class="mac-dot mac-dot-red"></span>
+            <span class="mac-dot mac-dot-yellow"></span>
+            <span class="mac-dot mac-dot-green"></span>
+          </div>
+          <div class="mac-ide-tab">OrbiterThruster.java · The Primitive Obsession Trap</div>
+          <button type="button" class="btn-copy-code" onclick="copySnippet('codeSnippetAntiQuantity')">Copy Code</button>
+        </div>
+        <pre class="mac-ide-content" id="codeSnippetAntiQuantity"><code>// ANTI-PATTERN: Bare primitives convey zero dimensional meaning!
+public class RocketThruster {
+    public void fire(double impulse) {
+        // Did caller pass Newton-seconds or pound-seconds?
+        // 1 pound-second = 4.44822 Newton-seconds!
+        // A factor of 4.45 error plunged the orbiter directly into the planet!
+        this.velocity += impulse / mass;
+    }
+}</code></pre>
+      </div>
+
+      <!-- Key Takeaways Box -->
+      <div class="stage-takeaways-box">
+        <div class="stage-takeaways-title">
+          <span>🧠 Key Takeaways: Quantity Modeling Axioms</span>
+        </div>
+        <div class="takeaway-grid">
+          <div class="takeaway-item">
+            <strong>Bind Amount + Unit</strong>
+            <p>A magnitude without its unit of measurement is incomplete data. Wrap amount and unit into a single immutable Value Object.</p>
+          </div>
+          <div class="takeaway-item">
+            <strong>Enforce Dimensional Arithmetic</strong>
+            <p>Throw runtime or compile-time exceptions when attempting to add incompatible dimensions (e.g. Kilograms to Meters).</p>
+          </div>
+          <div class="takeaway-item">
+            <strong>BigDecimal for Finance</strong>
+            <p>Never represent monetary amounts as IEEE 754 floating-point <code>float</code> or <code>double</code> primitives.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Up Next Card -->
+      <div class="stage-next-card">
+        <div class="stage-next-card-content">
+          <div class="stage-next-card-label">UP NEXT · STAGE 02</div>
+          <div class="stage-next-card-title">Measurement &amp; Observation Patterns</div>
+          <p class="stage-next-card-desc">Learn how hospitals and telemetry platforms capture dynamic health records without database schema migrations.</p>
+        </div>
+        <a href="#stage-2-observation" class="stage-next-card-btn">Jump to Stage 2 →</a>
+      </div>
     </section>
 
-    <!-- Section 3: Idioms -->
-    <section class="chapter" id="language-idioms">
-      <div class="chapter-head">
-        <span class="chapter-num">3</span>
-        <h2>13.7 Programming Language Idioms</h2>
+    <!-- ====================================================================
+         STAGE 2: MEASUREMENT AND OBSERVATION
+         ==================================================================== -->
+    <section class="masterclass-stage-section" id="stage-2-observation">
+      <div class="stage-header-top">
+        <div class="stage-eyebrow-pill">● Stage 02 · Dynamic Domain Modeling</div>
+        <button type="button" class="stage-mastery-btn" onclick="markStageComplete(2)">Mark Stage 2 Complete ✓</button>
       </div>
-      <p class="chapter-dek">Idioms are patterns expressed within a specific programming language syntax.</p>
+      <h2 class="stage-title">Measurement &amp; Observation Patterns</h2>
 
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1.5rem 0;">
-        <div style="padding: 1.25rem; background: var(--bg-raised); border: 1px solid var(--border); border-radius: var(--radius-sm);">
-          <strong style="color: var(--accent);">C++: RAII</strong>
-          <p style="font-size: 0.88rem; color: var(--text-muted); margin-top: 0.3rem;">
-            <em>Resource Acquisition Is Initialization:</em> Resources (memory, socket, mutex) are bound to object lifetime; destructors execute automatically when leaving scope.
-          </p>
+      <p style="font-size:1rem; line-height:1.7; color:var(--text); margin-bottom:1.5rem;">
+        In healthcare applications, modeling patient records with hardcoded class fields (e.g., <code>patient.getBloodPressure()</code>, <code>patient.getCholesterol()</code>) requires modifying the database schema and class files whenever doctors introduce new medical diagnostics. Martin Fowler's <strong>Observation</strong> pattern decouples entities from variable measurements.
+      </p>
+
+      <div style="background:var(--bg-raised); border:1px solid var(--border); border-radius:var(--radius-md); padding:1.5rem; margin:1.5rem 0;">
+        <h4 style="color:#14b8a6; margin:0 0 0.5rem; font-size:1.05rem;">The Observation Data Structure</h4>
+        <p style="font-size:0.92rem; color:var(--text); line-height:1.6; margin:0;">
+          An <strong>Observation</strong> links an <strong>Entity</strong> (e.g. Patient #1042) to a <strong>PhenomenonType</strong> (e.g. "Systolic Blood Pressure") and a <strong>Quantity</strong> (e.g. 120 mmHg) recorded at an exact instant in time. New medical metrics are registered dynamically as database rows in a dictionary table rather than code changes.
+        </p>
+      </div>
+
+      <!-- Up Next Card -->
+      <div class="stage-next-card">
+        <div class="stage-next-card-content">
+          <div class="stage-next-card-label">UP NEXT · STAGE 03</div>
+          <div class="stage-next-card-title">Live Interactive Lab: Quantity Arithmetic Sandbox</div>
+          <p class="stage-next-card-desc">Execute unit conversions and dimensional arithmetic live in the browser with automatic error detection.</p>
         </div>
-        <div style="padding: 1.25rem; background: var(--bg-raised); border: 1px solid var(--border); border-radius: var(--radius-sm);">
-          <strong style="color: var(--accent);">Java: Try-With-Resources</strong>
-          <p style="font-size: 0.88rem; color: var(--text-muted); margin-top: 0.3rem;">
-            <code>try (InputStream in = ...)</code> automatically calls <code>close()</code> on any <code>AutoCloseable</code> object, preventing resource leaks.
-          </p>
-        </div>
+        <a href="#stage-3-sandbox" class="stage-next-card-btn">Jump to Stage 3 →</a>
       </div>
     </section>
 
-    <!-- Section 4: Self Study -->
-    <section class="chapter" id="self-study">
-      <div class="chapter-head">
-        <span class="chapter-num">4</span>
-        <h2>13.11 Questions for Self-Study</h2>
+    <!-- ====================================================================
+         STAGE 3: INTERACTIVE LABORATORY & VISUAL SANDBOX
+         ==================================================================== -->
+    <section class="masterclass-stage-section" id="stage-3-sandbox">
+      <div class="stage-header-top">
+        <div class="stage-eyebrow-pill">● Stage 03 · Interactive Laboratory</div>
+        <button type="button" class="stage-mastery-btn" onclick="markStageComplete(3)">Mark Stage 3 Complete ✓</button>
       </div>
+      <h2 class="stage-title">Interactive Quantity &amp; Unit Conversion Sandbox</h2>
+
+      <p style="font-size:1rem; line-height:1.7; color:var(--text); margin-bottom:1.5rem;">
+        Test dimensional math! Add quantities with matching dimensions to perform conversion, or attempt an illegal dimensional operation (e.g. adding Kilograms to Meters) to trigger the safety barrier.
+      </p>
+
+      <div class="quantity-sandbox-card">
+        <div class="calc-grid">
+          <div class="calc-input-group">
+            <label>Amount A</label>
+            <input type="number" id="inputAmtA" value="10">
+          </div>
+          <div class="calc-input-group">
+            <label>Unit A</label>
+            <select id="selectUnitA">
+              <option value="m">Meters (Length)</option>
+              <option value="km">Kilometers (Length)</option>
+              <option value="kg">Kilograms (Mass)</option>
+              <option value="EUR">Euros (Currency)</option>
+            </select>
+          </div>
+          <div class="calc-input-group">
+            <label>Amount B</label>
+            <input type="number" id="inputAmtB" value="500">
+          </div>
+          <div class="calc-input-group">
+            <label>Unit B</label>
+            <select id="selectUnitB">
+              <option value="m" selected>Meters (Length)</option>
+              <option value="km">Kilometers (Length)</option>
+              <option value="kg">Kilograms (Mass)</option>
+              <option value="EUR">Euros (Currency)</option>
+            </select>
+          </div>
+        </div>
+
+        <button type="button" id="btnCalculateQuantity" class="btn-suite-toggle active" style="font-weight:700;">
+          <span>⚡ Execute Quantity.add(other)</span>
+        </button>
+
+        <!-- Terminal Console Output -->
+        <div class="terminal-output" id="quantityConsole">
+          >> [Quantity Ready] 10 m + 500 m. Click 'Execute' to calculate dimensional arithmetic.
+        </div>
+      </div>
+
+      <!-- Up Next Card -->
+      <div class="stage-next-card">
+        <div class="stage-next-card-content">
+          <div class="stage-next-card-label">UP NEXT · STAGE 04</div>
+          <div class="stage-next-card-title">Programming Language Idioms: RAII &amp; Scoped Lifecycles</div>
+          <p class="stage-next-card-desc">Compare low-level language idioms: C++ RAII, Java Try-With-Resources, and Python Context Managers.</p>
+        </div>
+        <a href="#stage-4-idioms" class="stage-next-card-btn">Jump to Stage 4 →</a>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         STAGE 4: PROGRAMMING LANGUAGE IDIOMS
+         ==================================================================== -->
+    <section class="masterclass-stage-section" id="stage-4-idioms">
+      <div class="stage-header-top">
+        <div class="stage-eyebrow-pill">● Stage 04 · Language Idioms</div>
+        <button type="button" class="stage-mastery-btn" onclick="markStageComplete(4)">Mark Stage 4 Complete ✓</button>
+      </div>
+      <h2 class="stage-title">Programming Language Idioms: C++ RAII vs Java AutoCloseable</h2>
+
+      <p style="font-size:1rem; line-height:1.7; color:var(--text); margin-bottom:1.5rem;">
+        An <strong>idiom</strong> is a low-level pattern specific to a programming language syntax. While design patterns are universal across object-oriented languages, idioms leverage particular compiler mechanics.
+      </p>
+
+      <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:1rem; margin:1.5rem 0;">
+        <div style="background:var(--bg-raised); border:1px solid var(--border); border-radius:var(--radius-sm); padding:1.25rem;">
+          <strong style="color:#14b8a6; font-size:1.05rem;">C++: RAII (Resource Acquisition Is Init)</strong>
+          <p style="font-size:0.88rem; color:var(--text-muted); margin:0.35rem 0 0; line-height:1.5;">
+            Resources (heap memory, mutex locks, file descriptors) are acquired in the constructor and released deterministically in the destructor when exiting scope (even during exceptions).
+          </p>
+        </div>
+        <div style="background:var(--bg-raised); border:1px solid var(--border); border-radius:var(--radius-sm); padding:1.25rem;">
+          <strong style="color:#38bdf8; font-size:1.05rem;">Java: Try-With-Resources</strong>
+          <p style="font-size:0.88rem; color:var(--text-muted); margin:0.35rem 0 0; line-height:1.5;">
+            <code>try (InputStream in = new FileInputStream(...))</code> guarantees <code>close()</code> is invoked on any <code>AutoCloseable</code> object, eliminating manual `finally` boilerplate.
+          </p>
+        </div>
+      </div>
+
+      <!-- Up Next Card -->
+      <div class="stage-next-card">
+        <div class="stage-next-card-content">
+          <div class="stage-next-card-label">UP NEXT · STAGE 05</div>
+          <div class="stage-next-card-title">Frankfurt UAS Exam Traps &amp; Self-Study Drills</div>
+          <p class="stage-next-card-desc">Review authentic 20-point past-paper exam questions from Prof. Dr. Jörg Schäfer covering the Quantity pattern and Value Object immutability.</p>
+        </div>
+        <a href="#stage-5-exam" class="stage-next-card-btn">Jump to Stage 5 →</a>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         STAGE 5: EXAM TRAPS & SELF-STUDY DRILLS
+         ==================================================================== -->
+    <section class="masterclass-stage-section" id="stage-5-exam">
+      <div class="stage-header-top">
+        <div class="stage-eyebrow-pill">● Stage 05 · Exam Traps &amp; Self-Study</div>
+        <button type="button" class="stage-mastery-btn" onclick="markStageComplete(5)">Mark Stage 5 Complete ✓</button>
+      </div>
+      <h2 class="stage-title">Frankfurt UAS Exam Drills: Prof. Dr. Jörg Schäfer</h2>
+
+      <p style="font-size:1rem; line-height:1.7; color:var(--text); margin-bottom:1.5rem;">
+        Click each drill to reveal the exact grading rubric, common pitfalls, and 1.0 model answers expected in POSA examinations.
+      </p>
 
       <div class="drill-list">
+        <!-- Drill 1 -->
         <details class="drill-item" open>
           <summary>
-            <span class="drill-tag">Exam Drill</span>
-            <span class="drill-q">Why should a Quantity object be modeled as an immutable Value Object?</span>
+            <span class="drill-tag">Exam Drill 1</span>
+            <span class="drill-q">Why must a Quantity object be modeled as an immutable Value Object? (10 Exam Points)</span>
             <span class="drill-reveal-hint"></span>
           </summary>
           <div class="drill-a">
-            <p>
-              Quantities represent conceptual values (like the number 5 or $100 Euros). Mutating a quantity in place (e.g., changing $100 to $200) can cause unexpected side effects across all entities referencing that instance.
-            </p>
-            <p>
-              Immutability guarantees thread safety, allows safe sharing across multiple business entities, and ensures operations like <code>qty1.add(qty2)</code> return a fresh instance rather than corrupting existing state.
-            </p>
+            <p><strong>Model Answer (Prof. Schäfer 1.0 Standard):</strong></p>
+            <p>Quantities represent conceptual magnitudes (like the number 5 or \$100 Euros), not mutable physical entities.</p>
+            <ol>
+              <li><strong>Prevention of Unintended Side Effects:</strong> If a Quantity were mutable, calling <code>account.setBalance(balance.multiply(2))</code> could inadvertently mutate the balance of other objects sharing that reference.</li>
+              <li><strong>Thread Safety:</strong> Immutable objects are inherently thread-safe without synchronized locks, enabling safe concurrent reading across multiple threads.</li>
+              <li><strong>Mathematical Correctness:</strong> Arithmetic operations (e.g. <code>q1.add(q2)</code>) return a <strong>fresh Quantity instance</strong> representing the sum, preserving the integrity of operands.</li>
+            </ol>
+          </div>
+        </details>
+
+        <!-- Drill 2 -->
+        <details class="drill-item">
+          <summary>
+            <span class="drill-tag">Exam Drill 2</span>
+            <span class="drill-q">Distinguish between an Architectural Pattern, a Design Pattern, and an Idiom. (6 Exam Points)</span>
+            <span class="drill-reveal-hint"></span>
+          </summary>
+          <div class="drill-a">
+            <p><strong>Hierarchical Taxonomy:</strong></p>
+            <ul>
+              <li><strong>Architectural Pattern (Highest Level):</strong> Governs the fundamental macro-structure of an entire software system or subsystem. Technology and language independent (e.g. Pipes &amp; Filters, MVC, Microservices).</li>
+              <li><strong>Design Pattern (Mid Level):</strong> Refines the components and relationships between classes/objects within a subsystem. Independent of programming language syntax (e.g. Strategy, Observer, Factory Method).</li>
+              <li><strong>Programming Idiom (Lowest Level):</strong> A low-level pattern specific to a single programming language's syntax and runtime mechanics (e.g. RAII in C++, Try-With-Resources in Java, Context Managers in Python).</li>
+            </ul>
+          </div>
+        </details>
+
+        <!-- Drill 3 -->
+        <details class="drill-item">
+          <summary>
+            <span class="drill-tag">Exam Drill 3</span>
+            <span class="drill-q">How does the Observation Pattern solve schema migration problems in relational databases? (4 Exam Points)</span>
+            <span class="drill-reveal-hint"></span>
+          </summary>
+          <div class="drill-a">
+            <p><strong>Model Answer:</strong></p>
+            <p>Instead of executing `ALTER TABLE Patient ADD COLUMN blood_pressure FLOAT;` every time medical requirements evolve, the Observation pattern models measurements as dynamic rows:</p>
+            <p>Each row in the <code>Observation</code> table stores an Entity ID, a Phenomenon Type ID (pointing to a metadata dictionary), a Timestamp, and a Quantity value. New metrics are added simply by inserting a new row into the dictionary table with zero database downtime or code compilation.</p>
           </div>
         </details>
       </div>
+
+      <!-- Final Masterclass Roadmap Transition Card -->
+      <div class="stage-next-card" style="margin-top:2.5rem; border:1px solid #38bdf8; background:rgba(56,189,248,0.06);">
+        <div class="stage-next-card-content">
+          <div class="stage-next-card-label" style="color:#38bdf8;">NEXT CHAPTER IN CURRICULUM · UNIT 14</div>
+          <div class="stage-next-card-title">Unit 14: Testing Patterns &amp; Test Architecture</div>
+          <p class="stage-next-card-desc">Master the Test Pyramid, Test Doubles (Dummies, Stubs, Spies, Mocks, Fakes), and architectural contract testing.</p>
+        </div>
+        <a href="unit-14-testing.html" class="stage-next-card-btn" style="background:#0284c7;">Go to Unit 14: Testing →</a>
+      </div>
     </section>
 
-    <footer class="page-footer" style="margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--border); display: flex; justify-content: space-between;">
-      <span><a href="unit-12-architectural.html">← Previous: Unit 12 Architecture</a></span>
-      <span><a href="unit-14-testing.html">Next: Unit 14 Testing Patterns →</a></span>
+    <!-- Footer -->
+    <footer class="page-footer" style="margin-top: 3.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border); display: flex; justify-content: space-between; flex-wrap:wrap; gap:1rem;">
+      <span><a href="unit-12-architectural.html" style="color:var(--text-muted); font-weight:600;">← Previous: Unit 12 Architecture</a></span>
+      <span><a href="unit-14-testing.html" style="color:var(--accent); font-weight:700;">Next: Unit 14 Testing Patterns →</a></span>
     </footer>
 
   </div>
 </div>
 
-<script src="assets/site.js" defer></script>
+<script src="assets/site.js?v=2026.15"></script>
+<script>
+// Reading Progress Bar
+window.addEventListener("scroll", function () {
+  var winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+  var height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+  var scrolled = (winScroll / height) * 100;
+  var bar = document.getElementById("readingProgressBar");
+  if (bar) bar.style.width = scrolled + "%";
+});
+
+// 8-Pillar Selection & Matrix View Toggles
+var _currentPillar = 1;
+function selectPillar(num) {
+  _currentPillar = num;
+  var tabs = document.querySelectorAll(".pillar-tab-btn");
+  tabs.forEach(function (t, i) {
+    if (i + 1 === num) {
+      t.classList.add("active");
+      t.setAttribute("aria-selected", "true");
+    } else {
+      t.classList.remove("active");
+      t.setAttribute("aria-selected", "false");
+    }
+  });
+
+  for (var i = 1; i <= 8; i++) {
+    var p = document.getElementById("pillarPanel" + i);
+    if (p) p.style.display = (i === num) ? "block" : "none";
+  }
+}
+
+function setBlueprintView(mode) {
+  var explorer = document.getElementById("blueprintExplorer");
+  var matrix = document.getElementById("blueprintMatrix");
+  var btnExp = document.getElementById("btnViewExplorer");
+  var btnMat = document.getElementById("btnViewMatrix");
+
+  if (mode === "matrix") {
+    if (explorer) explorer.style.display = "none";
+    if (matrix) matrix.style.display = "block";
+    if (btnExp) btnExp.classList.remove("active");
+    if (btnMat) btnMat.classList.add("active");
+  } else {
+    if (explorer) explorer.style.display = "block";
+    if (matrix) matrix.style.display = "none";
+    if (btnExp) btnExp.classList.add("active");
+    if (btnMat) btnMat.classList.remove("active");
+    selectPillar(_currentPillar);
+  }
+}
+
+// Debounced Collapse Handler
+var _lastInlineCollapseTime = 0;
+function toggleBlueprintCollapse(forceState) {
+  var now = Date.now();
+  if (typeof forceState !== "boolean" && now - _lastInlineCollapseTime < 250) {
+    return;
+  }
+  _lastInlineCollapseTime = now;
+
+  var suite = document.getElementById("blueprintSuite");
+  var collapseBtn = document.getElementById("btnCollapseBlueprint");
+  var body = document.getElementById("blueprintCollapsibleBody");
+  var hint = document.getElementById("blueprintCollapsedHint");
+  if (!suite) return;
+
+  var isCurrentlyCollapsed = suite.classList.contains("is-collapsed");
+  var willCollapse = (typeof forceState === "boolean") ? forceState : !isCurrentlyCollapsed;
+
+  if (willCollapse) {
+    suite.classList.add("is-collapsed");
+    if (body) body.style.display = "none";
+    if (hint) hint.style.display = "flex";
+  } else {
+    suite.classList.remove("is-collapsed");
+    if (body) body.style.display = "block";
+    if (hint) hint.style.display = "none";
+  }
+
+  if (collapseBtn) {
+    var icon = collapseBtn.querySelector(".collapse-icon");
+    var label = collapseBtn.querySelector(".collapse-label");
+    if (willCollapse) {
+      if (icon) icon.textContent = "▼";
+      if (label) label.textContent = "Expand Rubric";
+      collapseBtn.setAttribute("aria-expanded", "false");
+    } else {
+      if (icon) icon.textContent = "▲";
+      if (label) label.textContent = "Collapse Rubric";
+      collapseBtn.setAttribute("aria-expanded", "true");
+    }
+  }
+}
+
+function copyBlueprintRubric() {
+  var copyLabel = document.getElementById("copyRubricSuiteLabel");
+  var rubricMarkdown = 
+    "# Software Pattern Mastery: The 8-Pillar Architectural Rubric\n" +
+    "*(Standard for POSA Exams & Technical Architecture Reviews)*\n\n" +
+    "## Domain: Analysis Patterns & Programming Idioms (Quantity, Observation, RAII)\n\n" +
+    "### 1. Intent & Architectural Motivation\n" +
+    "- Quantity: Prevent primitive obsession by binding magnitudes to measurement units.\n" +
+    "- Observation: Capture dynamic domain measurements without schema migrations.\n\n" +
+    "### 2. Structural Roles & Participants\n" +
+    "- Quantity (immutable Value Object), Unit, UnitConverter.\n" +
+    "- Observation (Entity, PhenomenonType, Quantity value, Timestamp).\n\n" +
+    "### 3. Formal UML Anatomy & Relationships\n" +
+    "- Quantity holds directed association to Unit; Observation encapsulates Quantity.\n\n" +
+    "### 4. Core Design Principles Enforced\n" +
+    "- Immutability; Value Object semantics; RAII deterministic resource management.\n\n" +
+    "### 5. Implementation Mechanics\n" +
+    "- Dimensional consistency validation inside arithmetic methods.\n" +
+    "- Scoped resource cleanup via Java Try-With-Resources and C++ RAII.\n\n" +
+    "### 6. Architectural Costs & Trade-offs\n" +
+    "- Heap object allocation overhead vs absolute dimensional and type safety.\n\n" +
+    "### 7. Rival Concepts Matrix\n" +
+    "- Architectural Pattern vs Design Pattern vs Language Idiom.\n\n" +
+    "### 8. Real-World JDK Reference & Exam Traps\n" +
+    "- JSR-385 Units of Measurement API.\n" +
+    "- Exam Trap: Floating point rounding inaccuracies in financial double primitives.\n";
+
+  function updateLabelSuccess() {
+    if (copyLabel) copyLabel.textContent = "Copied to Clipboard!";
+    if (typeof window.showToast === "function") window.showToast("8-Pillar Study Rubric copied to clipboard!");
+    setTimeout(function () {
+      if (copyLabel) copyLabel.textContent = "Copy Rubric (Markdown)";
+    }, 2500);
+  }
+
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(rubricMarkdown).then(updateLabelSuccess).catch(function () {
+      fallbackCopy(rubricMarkdown);
+    });
+  } else {
+    fallbackCopy(rubricMarkdown);
+  }
+
+  function fallbackCopy(text) {
+    var ta = document.createElement("textarea");
+    ta.value = text;
+    ta.style.position = "fixed";
+    ta.style.opacity = "0";
+    document.body.appendChild(ta);
+    ta.select();
+    try {
+      document.execCommand("copy");
+      updateLabelSuccess();
+    } catch (e) {
+      alert("Please press Ctrl+C to copy rubric");
+    }
+    document.body.removeChild(ta);
+  }
+}
+
+function copySnippet(elementId) {
+  var el = document.getElementById(elementId);
+  if (!el) return;
+  var text = el.innerText || el.textContent;
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(function() {
+      if (typeof window.showToast === "function") window.showToast("Code snippet copied to clipboard!");
+    });
+  }
+}
+
+// Stage Completion Indicator
+function markStageComplete(stageNum) {
+  var btn = event.target;
+  if (btn) {
+    btn.textContent = "Completed ✓";
+    btn.style.background = "#10b981";
+    btn.style.color = "#fff";
+  }
+  var pill = document.querySelector('.stage-nav-pill[data-stage="' + stageNum + '"]');
+  if (pill) {
+    pill.style.borderColor = "#10b981";
+  }
+  if (typeof window.showToast === "function") window.showToast("Stage " + stageNum + " marked complete! Great progress.");
+}
+
+// Interactive Quantity Calculator Controller
+(function initQuantitySandbox() {
+  var btnCalc = document.getElementById("btnCalculateQuantity");
+  var inputAmtA = document.getElementById("inputAmtA");
+  var selectUnitA = document.getElementById("selectUnitA");
+  var inputAmtB = document.getElementById("inputAmtB");
+  var selectUnitB = document.getElementById("selectUnitB");
+  var consoleEl = document.getElementById("quantityConsole");
+
+  if (!btnCalc || !inputAmtA || !selectUnitA || !inputAmtB || !selectUnitB || !consoleEl) return;
+
+  btnCalc.addEventListener("click", function () {
+    var a = parseFloat(inputAmtA.value) || 0;
+    var uA = selectUnitA.value;
+    var b = parseFloat(inputAmtB.value) || 0;
+    var uB = selectUnitB.value;
+
+    var dimensionA = (uA === "m" || uA === "km") ? "length" : (uA === "kg" ? "mass" : "currency");
+    var dimensionB = (uB === "m" || uB === "km") ? "length" : (uB === "kg" ? "mass" : "currency");
+
+    if (dimensionA !== dimensionB) {
+      consoleEl.style.color = "#ef4444";
+      consoleEl.textContent = ">> [DIMENSIONAL ERROR] Cannot add Quantity(" + a + " " + uA + ") to Quantity(" + b + " " + uB + ")! Incompatible dimensions (" + dimensionA + " vs " + dimensionB + "). Protected against Mars Climate Orbiter disaster!";
+      return;
+    }
+
+    // Convert B to A
+    var bInA = b;
+    if (uA === "m" && uB === "km") bInA = b * 1000;
+    else if (uA === "km" && uB === "m") bInA = b / 1000;
+
+    var sum = a + bInA;
+    consoleEl.style.color = "#14b8a6";
+    consoleEl.textContent = ">> [SUCCESS: Quantity.add()] " + a + " " + uA + " + " + b + " " + uB + " = " + sum + " " + uA + ". Dimensional consistency preserved!";
+  });
+})();
+
+window.selectPillar = selectPillar;
+window.setBlueprintView = setBlueprintView;
+window.toggleBlueprintCollapse = toggleBlueprintCollapse;
+window.copyBlueprintRubric = copyBlueprintRubric;
+window.copySnippet = copySnippet;
+window.markStageComplete = markStageComplete;
+</script>
 </body>
 </html>
