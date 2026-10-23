@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/style.css?v=2026.8">
+<link rel="stylesheet" href="assets/style.css?v=2026.9">
 <style>
   .quote-card {
     margin: 1.5rem 0 2rem;
@@ -113,10 +113,10 @@
       <a href="#stage-3-refactoring" class="jump-stage-btn" data-target-stage="stage-3-refactoring"><span class="toc-num">3</span>Before &amp; After Code Lab</a>
       <a href="#stage-4-decision" class="jump-stage-btn" data-target-stage="stage-4-decision"><span class="toc-num">4</span>Trade-offs &amp; Decision Wizard</a>
       <a href="#stage-5-exam" class="jump-stage-btn" data-target-stage="stage-5-exam"><span class="toc-num">5</span>Prof. Schäfer Exam Drills</a>
-      <button type="button" class="sidebar-blueprint-trigger" id="sidebarBlueprintBtn" onclick="openBlueprintModal()">
+      <a href="#blueprintSuite" class="sidebar-blueprint-trigger" id="sidebarBlueprintBtn">
         <span class="toc-num" style="background:#6366f1; color:#fff;">★</span>
         <span>8-Pillar Pattern Blueprint</span>
-      </button>
+      </a>
     </div>
     <div class="sidebar-block">
       <span class="sidebar-label">Curriculum Origin</span>
@@ -164,23 +164,404 @@
           </div>
         </div>
 
-        <!-- 8-Pillar Architecture Anatomy Banner -->
-        <div class="blueprint-banner">
-          <div>
-            <div class="blueprint-badge-row">
-              <span class="blueprint-pill">Core Architectural Rubric</span>
-              <span class="blueprint-pill-accent">Exam &amp; Production Standard</span>
+        <!-- 8-PILLAR ARCHITECTURE BLUEPRINT COMMAND CENTER (NATIVE INLINE DASHBOARD) -->
+        <section class="blueprint-suite" id="blueprintSuite" aria-label="8-Pillar Architecture Rubric">
+          <div class="blueprint-suite-top">
+            <div>
+              <div class="blueprint-suite-badge">
+                <span>📐 GoF Architectural Rubric</span>
+                <span style="opacity:0.6;">·</span>
+                <span>Exam &amp; Production Checklist</span>
+              </div>
+              <h3 class="blueprint-suite-title">The 8 Pillars of Software Pattern Mastery</h3>
+              <p class="blueprint-suite-desc">
+                When analyzing or being examined on any design pattern (Prof. Schäfer's POSA curriculum or enterprise architectural reviews), you must master these 8 dimensions. Switch between the <strong>Interactive Explorer</strong> and the <strong>Full 8-Pillar Matrix</strong>.
+              </p>
             </div>
-            <h3 class="blueprint-banner-title">The 8 Pillars of Pattern Mastery</h3>
-            <p class="blueprint-banner-desc">
-              Mastering a design pattern requires far more than memorizing code. Discover the 8 mandatory pillars required in Prof. Schäfer's exams and enterprise code reviews—from formal GoF intent down to UML arrow rules, OCP invariants, and rival pattern trade-offs.
-            </p>
+            <div class="blueprint-suite-actions">
+              <button type="button" class="btn-suite-toggle active" id="btnViewExplorer" onclick="setBlueprintView('explorer')">
+                <span>⚡ Interactive Explorer</span>
+              </button>
+              <button type="button" class="btn-suite-toggle" id="btnViewMatrix" onclick="setBlueprintView('matrix')">
+                <span>📑 Full Matrix</span>
+              </button>
+              <button type="button" class="btn-copy-rubric" id="btnCopyRubricSuite" onclick="copyBlueprintRubric()">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                <span id="copyRubricSuiteLabel">Copy Rubric (Markdown)</span>
+              </button>
+            </div>
           </div>
-          <button type="button" class="btn-open-blueprint" id="openBlueprintBtn" onclick="openBlueprintModal()" aria-haspopup="dialog">
-            <span>Explore 8 Pillars</span>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"></path></svg>
-          </button>
-        </div>
+
+          <!-- TAB STRIP FOR INTERACTIVE EXPLORER -->
+          <div class="blueprint-pills-bar" id="blueprintPillsBar" role="tablist">
+            <button type="button" class="pillar-tab-btn active" data-pillar="p1" role="tab" aria-selected="true" onclick="selectPillar('p1')">
+              <span>🎯 01 · Intent &amp; Motivation</span>
+            </button>
+            <button type="button" class="pillar-tab-btn" data-pillar="p2" role="tab" aria-selected="false" onclick="selectPillar('p2')">
+              <span>🧩 02 · Structural Roles</span>
+            </button>
+            <button type="button" class="pillar-tab-btn" data-pillar="p3" role="tab" aria-selected="false" onclick="selectPillar('p3')">
+              <span>📐 03 · UML Anatomy</span>
+            </button>
+            <button type="button" class="pillar-tab-btn" data-pillar="p4" role="tab" aria-selected="false" onclick="selectPillar('p4')">
+              <span>🛡️ 04 · SOLID Principles</span>
+            </button>
+            <button type="button" class="pillar-tab-btn" data-pillar="p5" role="tab" aria-selected="false" onclick="selectPillar('p5')">
+              <span>⚡ 05 · Runtime Hot-Swap</span>
+            </button>
+            <button type="button" class="pillar-tab-btn" data-pillar="p6" role="tab" aria-selected="false" onclick="selectPillar('p6')">
+              <span>⚖️ 06 · Trade-offs &amp; Cost</span>
+            </button>
+            <button type="button" class="pillar-tab-btn" data-pillar="p7" role="tab" aria-selected="false" onclick="selectPillar('p7')">
+              <span>🧭 07 · Rival Matrix</span>
+            </button>
+            <button type="button" class="pillar-tab-btn" data-pillar="p8" role="tab" aria-selected="false" onclick="selectPillar('p8')">
+              <span>🔍 08 · Exam Gotchas</span>
+            </button>
+          </div>
+
+          <div class="blueprint-content-area" id="blueprintContentArea">
+            <!-- PANE 1: INTENT -->
+            <div class="pillar-pane active" id="pane-p1" role="tabpanel">
+              <div class="pillar-hero-box">
+                <div class="pillar-rule-card">
+                  <div class="pillar-rule-header">
+                    <span class="pillar-rule-tag">Universal Architectural Standard</span>
+                    <span style="font-family:var(--font-mono); font-size:0.75rem; color:var(--text-muted);">Pillar 01</span>
+                  </div>
+                  <h4 class="pillar-rule-title">Intent &amp; Motivation Invariants</h4>
+                  <p class="pillar-rule-desc">
+                    Every design pattern originates from a recurring production architectural failure. To master a pattern, you must define:
+                  </p>
+                  <ul class="pillar-criteria-list">
+                    <li><span class="check">✓</span> <span><strong>The GoF Intent Statement:</strong> Concise, memorizable specification of what behavior is abstracted.</span></li>
+                    <li><span class="check">✓</span> <span><strong>The Failure Mode Eliminated:</strong> Identifies whether it kills inheritance bloat, state switchboards, or coupling.</span></li>
+                    <li><span class="cross">✕</span> <span><strong>Fatal Exam Error:</strong> Describing "what the code does" rather than "why the architectural problem exists".</span></li>
+                  </ul>
+                </div>
+                <div class="pillar-app-card">
+                  <span class="pillar-app-tag">Unit 1: Strategy Pattern Focus</span>
+                  <h4 class="pillar-app-title">GoF Intent &amp; The Duck Simulator Failure</h4>
+                  <p style="font-size:0.88rem; line-height:1.6; color:var(--text); margin:0 0 0.5rem;">
+                    <em>"Define a family of algorithms, encapsulate each one, and make them interchangeable. Strategy lets the algorithm vary independently from clients that use it."</em>
+                  </p>
+                  <div class="pillar-app-snippet">
+// Failure mode: Adding fly() to Duck base class broke RubberDuck &amp; DecoyDuck in production!
+// Solution: Encapsulate volatile flying and quacking behaviors into standalone strategy contracts.
+                  </div>
+                  <div class="pillar-exam-tip">
+                    🎯 <strong>Prof. Schäfer Exam Criteria:</strong> You will be asked <em>"Why can't we simply use class inheritance?"</em> Answer: Inheritance creates compile-time locks, causes subclass explosion ($2^N$ combinations), and forces inappropriate default implementations onto subclasses.
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- PANE 2: ROLES -->
+            <div class="pillar-pane" id="pane-p2" role="tabpanel">
+              <div class="pillar-hero-box">
+                <div class="pillar-rule-card">
+                  <div class="pillar-rule-header">
+                    <span class="pillar-rule-tag">Universal Architectural Standard</span>
+                    <span style="font-family:var(--font-mono); font-size:0.75rem; color:var(--text-muted);">Pillar 02</span>
+                  </div>
+                  <h4 class="pillar-rule-title">Structural Participants &amp; Single Responsibility</h4>
+                  <p class="pillar-rule-desc">
+                    Patterns divide responsibilities across distinct structural roles. You must isolate who holds state, who delegates, and who executes:
+                  </p>
+                  <ul class="pillar-criteria-list">
+                    <li><span class="check">✓</span> <span><strong>Context:</strong> Maintains the domain chassis and holds a reference to the abstract strategy interface.</span></li>
+                    <li><span class="check">✓</span> <span><strong>Strategy Interface:</strong> Declares the pure signature contract common to all algorithmic variants.</span></li>
+                    <li><span class="check">✓</span> <span><strong>Concrete Strategies:</strong> Implements the concrete algorithm variant without leaking details to Context.</span></li>
+                    <li><span class="check">✓</span> <span><strong>Client:</strong> Selects and passes the desired Strategy instance into the Context.</span></li>
+                  </ul>
+                </div>
+                <div class="pillar-app-card">
+                  <span class="pillar-app-tag">Unit 1: Strategy Pattern Focus</span>
+                  <h4 class="pillar-app-title">Duck Simulator Participants</h4>
+                  <ul class="pillar-criteria-list" style="margin-top:0.5rem;">
+                    <li><span class="check">✓</span> <span><strong>Context:</strong> <code>Duck</code> (abstract base chassis holding <code>flyBehavior</code> and <code>quackBehavior</code>).</span></li>
+                    <li><span class="check">✓</span> <span><strong>Strategy Interface:</strong> <code>FlyBehavior</code> (declares <code>void fly()</code>).</span></li>
+                    <li><span class="check">✓</span> <span><strong>Concrete Strategies:</strong> <code>FlyWithWings</code>, <code>FlyNoWay</code>, <code>FlyRocketPowered</code>.</span></li>
+                  </ul>
+                  <div class="pillar-exam-tip">
+                    🎯 <strong>Exam Trap:</strong> Never let a ConcreteStrategy inherit from the Context! The relationship is strictly composition: Context <em>HAS-A</em> Strategy.
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- PANE 3: UML -->
+            <div class="pillar-pane" id="pane-p3" role="tabpanel">
+              <div class="pillar-hero-box">
+                <div class="pillar-rule-card">
+                  <div class="pillar-rule-header">
+                    <span class="pillar-rule-tag">Universal Architectural Standard</span>
+                    <span style="font-family:var(--font-mono); font-size:0.75rem; color:var(--text-muted);">Pillar 03</span>
+                  </div>
+                  <h4 class="pillar-rule-title">Formal UML 2.5 Diagram Syntax</h4>
+                  <p class="pillar-rule-desc">
+                    Drawing diagrams accurately is where students routinely drop 5 to 10 points on the exam. UML connectors carry rigorous legal semantic meaning:
+                  </p>
+                  <ul class="pillar-criteria-list">
+                    <li><span class="check">✓</span> <span><strong>Directed Association / Aggregation (──&gt;):</strong> Points from Context to Strategy interface with multiplicity <code>1</code>.</span></li>
+                    <li><span class="check">✓</span> <span><strong>Realization / Implementation (···▷):</strong> Dashed line with open hollow triangular head pointing to <code>&lt;&lt;interface&gt;&gt; Strategy</code>.</span></li>
+                    <li><span class="cross">✕</span> <span><strong>Fatal Exam Error:</strong> Using a solid inheritance triangle (──▷) for an interface! This is an immediate point deduction.</span></li>
+                  </ul>
+                </div>
+                <div class="pillar-app-card">
+                  <span class="pillar-app-tag">Unit 1: Strategy Pattern Focus</span>
+                  <h4 class="pillar-app-title">Strategy UML Architecture</h4>
+                  <div class="pillar-app-snippet">
++---------------------+             +------------------------+
+|      Context        |  -strategy  | &lt;&lt;interface&gt;&gt; Strategy |
+|---------------------|------------&gt;|------------------------|
+| -strategy: Strategy |      1      | +algorithm(): void     |
++---------------------+             +------------------------+
+                                                ^
+                                                : (Realization ···▷)
+                                 +--------------+--------------+
+                                 |                             |
+                      +---------------------+       +---------------------+
+                      | ConcreteStrategyA   |       | ConcreteStrategyB   |
+                      |---------------------|       |---------------------|
+                      | +algorithm(): void  |       | +algorithm(): void  |
+                      +---------------------+       +---------------------+
+                  </div>
+                  <div class="pillar-exam-tip">
+                    🎯 <strong>Prof. Schäfer Checklist:</strong> Check the multiplicity! Always label the association end with <code>1</code> or <code>-flyBehavior: FlyBehavior</code>.
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- PANE 4: SOLID -->
+            <div class="pillar-pane" id="pane-p4" role="tabpanel">
+              <div class="pillar-hero-box">
+                <div class="pillar-rule-card">
+                  <div class="pillar-rule-header">
+                    <span class="pillar-rule-tag">Universal Architectural Standard</span>
+                    <span style="font-family:var(--font-mono); font-size:0.75rem; color:var(--text-muted);">Pillar 04</span>
+                  </div>
+                  <h4 class="pillar-rule-title">Core Principles Enforced</h4>
+                  <p class="pillar-rule-desc">
+                    Patterns are concrete expressions of foundational software engineering axioms:
+                  </p>
+                  <ul class="pillar-criteria-list">
+                    <li><span class="check">✓</span> <span><strong>Open/Closed Principle (OCP):</strong> The Context class is closed for modification when new algorithms are invented, but open for extension.</span></li>
+                    <li><span class="check">✓</span> <span><strong>Dependency Inversion Principle (DIP):</strong> High-level domain logic does not depend on low-level detail; both depend on abstractions.</span></li>
+                    <li><span class="check">✓</span> <span><strong>Favor Composition over Inheritance:</strong> Dynamic aggregation yields greater flexibility and less fragility than static class derivation.</span></li>
+                  </ul>
+                </div>
+                <div class="pillar-app-card">
+                  <span class="pillar-app-tag">Unit 1: Strategy Pattern Focus</span>
+                  <h4 class="pillar-app-title">OCP &amp; DIP in Action</h4>
+                  <p style="font-size:0.88rem; line-height:1.6; color:var(--text); margin:0 0 0.5rem;">
+                    When we need to introduce a brand new flight algorithm (e.g., <code>FlyRocketPowered</code>), we do <strong>not touch Duck.java at all</strong>. We write a single new class implementing <code>FlyBehavior</code>.
+                  </p>
+                  <div class="pillar-exam-tip">
+                    🎯 <strong>Exam Question:</strong> <em>"Which SOLID principles are directly realized by the Strategy Pattern?"</em> Always cite <strong>OCP</strong>, <strong>DIP</strong>, and <strong>SRP</strong>, accompanied by the Head First axiom <em>"Encapsulate what varies."</em>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- PANE 5: HOT-SWAP -->
+            <div class="pillar-pane" id="pane-p5" role="tabpanel">
+              <div class="pillar-hero-box">
+                <div class="pillar-rule-card">
+                  <div class="pillar-rule-header">
+                    <span class="pillar-rule-tag">Universal Architectural Standard</span>
+                    <span style="font-family:var(--font-mono); font-size:0.75rem; color:var(--text-muted);">Pillar 05</span>
+                  </div>
+                  <h4 class="pillar-rule-title">Implementation Mechanics &amp; Hot-Swapping</h4>
+                  <p class="pillar-rule-desc">
+                    Code wiring must support dynamic mutation without re-instantiating the entire context:
+                  </p>
+                  <ul class="pillar-criteria-list">
+                    <li><span class="check">✓</span> <span><strong>Interface Reference:</strong> Field declared as the interface type, never concrete class.</span></li>
+                    <li><span class="check">✓</span> <span><strong>Runtime Setter:</strong> <code>setStrategy(Strategy s)</code> allows swapping algorithms on live objects.</span></li>
+                    <li><span class="check">✓</span> <span><strong>Pure Delegation:</strong> Context method simply forwards the request to <code>this.strategy.algorithm()</code>.</span></li>
+                  </ul>
+                </div>
+                <div class="pillar-app-card">
+                  <span class="pillar-app-tag">Unit 1: Strategy Pattern Focus</span>
+                  <h4 class="pillar-app-title">Duck Dynamic Hot-Swapping</h4>
+                  <div class="pillar-app-snippet">
+// The classic hot-swap in Java
+Duck modelDuck = new ModelDuck();
+modelDuck.performFly(); // Output: &lt;&lt; Silence &gt;&gt; (FlyNoWay)
+
+// Dynamic hot-swap at runtime:
+modelDuck.setFlyBehavior(new FlyRocketPowered());
+modelDuck.performFly(); // Output: "Screaming through the sky at Mach 3!"
+                  </div>
+                  <div class="pillar-exam-tip">
+                    🎯 <strong>Exam Trap:</strong> If your Context class does not provide a setter for the strategy, you lose runtime dynamicity, reducing the pattern to basic constructor dependency injection.
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- PANE 6: TRADE-OFFS -->
+            <div class="pillar-pane" id="pane-p6" role="tabpanel">
+              <div class="pillar-hero-box">
+                <div class="pillar-rule-card">
+                  <div class="pillar-rule-header">
+                    <span class="pillar-rule-tag">Universal Architectural Standard</span>
+                    <span style="font-family:var(--font-mono); font-size:0.75rem; color:var(--text-muted);">Pillar 06</span>
+                  </div>
+                  <h4 class="pillar-rule-title">Architectural Costs &amp; Trade-offs</h4>
+                  <p class="pillar-rule-desc">
+                    Senior software architects never declare a pattern "always good". Every abstraction introduces trade-offs:
+                  </p>
+                  <ul class="pillar-criteria-list">
+                    <li><span class="check">✓</span> <span><strong>Benefits:</strong> Eliminates conditional statements, isolates algorithmic bugs, enables independent mock testing.</span></li>
+                    <li><span class="cross">✕</span> <span><strong>Costs:</strong> Class Explosion (many small classes), Heap allocation overhead, increased mental indirection.</span></li>
+                    <li><span class="cross">✕</span> <span><strong>Client Awareness:</strong> The client application must understand the differences between strategies to select the right one.</span></li>
+                  </ul>
+                </div>
+                <div class="pillar-app-card">
+                  <span class="pillar-app-tag">Unit 1: Strategy Pattern Focus</span>
+                  <h4 class="pillar-app-title">Mitigating Strategy Costs in Java</h4>
+                  <p style="font-size:0.88rem; line-height:1.6; color:var(--text); margin:0 0 0.5rem;">
+                    In modern Java 8+, class explosion and heap allocation can be mitigated:
+                  </p>
+                  <div class="pillar-app-snippet">
+// Stateless strategies don't need new object instances:
+duck.setFlyBehavior(() -&gt; System.out.println("Jetpack gliding!"));
+
+// Or reuse stateless Flyweight instances:
+duck.setFlyBehavior(FlyBehaviors.NO_WAY); // Singleton instance
+                  </div>
+                  <div class="pillar-exam-tip">
+                    🎯 <strong>Trade-off Summary:</strong> Strategy trading compile-time simplicity for runtime flexibility and clean OCP compliance.
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- PANE 7: RIVALS -->
+            <div class="pillar-pane" id="pane-p7" role="tabpanel">
+              <div class="pillar-hero-box">
+                <div class="pillar-rule-card">
+                  <div class="pillar-rule-header">
+                    <span class="pillar-rule-tag">Universal Architectural Standard</span>
+                    <span style="font-family:var(--font-mono); font-size:0.75rem; color:var(--text-muted);">Pillar 07</span>
+                  </div>
+                  <h4 class="pillar-rule-title">Rival Pattern Decision Matrix</h4>
+                  <p class="pillar-rule-desc">
+                    In architecture reviews and exams, the most critical skill is choosing between rival patterns that look identical on UML diagrams:
+                  </p>
+                  <ul class="pillar-criteria-list">
+                    <li><span class="check">✓</span> <span><strong>Strategy vs. State:</strong> Identical UML structure! In Strategy, the client selects an algorithm. In State, state changes autonomously inside the object.</span></li>
+                    <li><span class="check">✓</span> <span><strong>Strategy vs. Template Method:</strong> Strategy uses composition (whole algorithm). Template Method uses inheritance (skeleton base class, subclass overrides steps).</span></li>
+                    <li><span class="check">✓</span> <span><strong>Strategy vs. Command:</strong> Strategy encapsulates an <em>algorithm</em>; Command encapsulates a <em>request / action</em> with undo capability.</span></li>
+                  </ul>
+                </div>
+                <div class="pillar-app-card">
+                  <span class="pillar-app-tag">Unit 1: Strategy Pattern Focus</span>
+                  <h4 class="pillar-app-title">Quick Discrimination Rule</h4>
+                  <div class="pillar-app-snippet">
+Need to swap entire algorithms at runtime?    --&gt; Strategy (Composition)
+Algorithm skeleton is fixed, vary few steps? --&gt; Template Method (Inheritance)
+Object behavior changes based on state?      --&gt; State (Internal FSM)
+Need undo/redo, queuing, or macro commands?  --&gt; Command
+                  </div>
+                  <div class="pillar-exam-tip">
+                    🎯 <strong>Prof. Schäfer Classic Question:</strong> <em>"Compare the UML diagrams of State and Strategy. Why are they identical, yet their intent is diametrically opposed?"</em>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- PANE 8: EXAM DRILLS -->
+            <div class="pillar-pane" id="pane-p8" role="tabpanel">
+              <div class="pillar-hero-box">
+                <div class="pillar-rule-card">
+                  <div class="pillar-rule-header">
+                    <span class="pillar-rule-tag">Universal Architectural Standard</span>
+                    <span style="font-family:var(--font-mono); font-size:0.75rem; color:var(--text-muted);">Pillar 08</span>
+                  </div>
+                  <h4 class="pillar-rule-title">Real-World Enterprise Reference &amp; Exam Traps</h4>
+                  <p class="pillar-rule-desc">
+                    Real-world enterprise systems rely on Strategy everywhere. Knowing standard JDK citations proves deep industry mastery:
+                  </p>
+                  <ul class="pillar-criteria-list">
+                    <li><span class="check">✓</span> <span><strong><code>java.util.Comparator</code>:</strong> Swapped inside <code>Collections.sort(list, comparator)</code>.</span></li>
+                    <li><span class="check">✓</span> <span><strong><code>java.awt.LayoutManager</code>:</strong> Components delegate layout to <code>BorderLayout</code>, <code>FlowLayout</code>.</span></li>
+                    <li><span class="check">✓</span> <span><strong>Spring <code>ResourceLoader</code>:</strong> Swapping file system, classpath, or cloud S3 loading strategies.</span></li>
+                  </ul>
+                </div>
+                <div class="pillar-app-card">
+                  <span class="pillar-app-tag">Unit 1: Strategy Pattern Focus</span>
+                  <h4 class="pillar-app-title">Top 3 Exam Traps to Avoid</h4>
+                  <ul class="pillar-criteria-list" style="margin-top:0.5rem;">
+                    <li><span class="cross">✕</span> <span><strong>Trap 1:</strong> Circular Context Passing. Passing Context to Strategy creates tight two-way coupling. Only pass raw data parameters!</span></li>
+                    <li><span class="cross">✕</span> <span><strong>Trap 2:</strong> Missing Setter. Forgetting <code>setFlyBehavior()</code> prevents runtime behavior changes.</span></li>
+                    <li><span class="cross">✕</span> <span><strong>Trap 3:</strong> LSP Violation. Throwing <code>UnsupportedOperationException</code> inside a ConcreteStrategy violates Liskov Substitution.</span></li>
+                  </ul>
+                  <div class="pillar-exam-tip">
+                    🎯 <strong>Exam Target:</strong> Scoring 15/15 points requires demonstrating awareness of all 3 traps.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- FULL MATRIX MODE GRID (ALL 8 AT ONCE) -->
+          <div class="blueprint-content-area" id="blueprintMatrixArea" style="display:none; padding-top:0;">
+            <div class="blueprint-matrix-grid active">
+              <div class="matrix-card">
+                <div class="matrix-card-header"><span class="matrix-card-num">Pillar 01</span><span>🎯</span></div>
+                <h4 class="matrix-card-title">Intent &amp; Motivation</h4>
+                <p class="matrix-card-desc">Define a family of algorithms, encapsulate each one, and make them interchangeable at runtime.</p>
+                <div class="matrix-card-example">Eliminates brittle inheritance trees and cascading switch statements.</div>
+              </div>
+              <div class="matrix-card">
+                <div class="matrix-card-header"><span class="matrix-card-num">Pillar 02</span><span>🧩</span></div>
+                <h4 class="matrix-card-title">Structural Roles</h4>
+                <p class="matrix-card-desc">Context (chassis), Strategy (interface contract), ConcreteStrategies (variants), Client.</p>
+                <div class="matrix-card-example">Context has single responsibility; delegates algorithm execution.</div>
+              </div>
+              <div class="matrix-card">
+                <div class="matrix-card-header"><span class="matrix-card-num">Pillar 03</span><span>📐</span></div>
+                <h4 class="matrix-card-title">UML 2.5 Anatomy</h4>
+                <p class="matrix-card-desc">Context has Directed Association (──&gt;) to Strategy interface; ConcreteStrategies have Realization (···▷).</p>
+                <div class="matrix-card-example">Never use solid inheritance arrow (──▷) for interfaces! Multiplicity: 1.</div>
+              </div>
+              <div class="matrix-card">
+                <div class="matrix-card-header"><span class="matrix-card-num">Pillar 04</span><span>🛡️</span></div>
+                <h4 class="matrix-card-title">SOLID Principles</h4>
+                <p class="matrix-card-desc">Enforces Open/Closed Principle (OCP), Dependency Inversion (DIP), and Favor Composition.</p>
+                <div class="matrix-card-example">Context closed for editing, open for new strategy extensions.</div>
+              </div>
+              <div class="matrix-card">
+                <div class="matrix-card-header"><span class="matrix-card-num">Pillar 05</span><span>⚡</span></div>
+                <h4 class="matrix-card-title">Runtime Hot-Swapping</h4>
+                <p class="matrix-card-desc">Context holds interface field; setter method `setStrategy()` enables dynamic behavior mutation.</p>
+                <div class="matrix-card-example">Supports Java 8+ lambdas and method references.</div>
+              </div>
+              <div class="matrix-card">
+                <div class="matrix-card-header"><span class="matrix-card-num">Pillar 06</span><span>⚖️</span></div>
+                <h4 class="matrix-card-title">Trade-offs &amp; Cost</h4>
+                <p class="matrix-card-desc">High flexibility and clean unit testing vs. class explosion and client awareness overhead.</p>
+                <div class="matrix-card-example">Mitigate class explosion via Flyweight singletons or lambdas.</div>
+              </div>
+              <div class="matrix-card">
+                <div class="matrix-card-header"><span class="matrix-card-num">Pillar 07</span><span>🧭</span></div>
+                <h4 class="matrix-card-title">Rival Matrix</h4>
+                <p class="matrix-card-desc">Strategy (client chooses algorithm) vs. State (internal FSM) vs. Template Method (inheritance).</p>
+                <div class="matrix-card-example">Identical UML with State; intent is completely distinct.</div>
+              </div>
+              <div class="matrix-card">
+                <div class="matrix-card-header"><span class="matrix-card-num">Pillar 08</span><span>🔍</span></div>
+                <h4 class="matrix-card-title">Real-World &amp; Traps</h4>
+                <p class="matrix-card-desc">JDK `Comparator`, `LayoutManager`. Traps: Circular coupling, missing setter, LSP violation.</p>
+                <div class="matrix-card-example">Never pass Context back to Strategy causing cyclical coupling!</div>
+              </div>
+            </div>
+          </div>
+        </section>
 
       </div>
     </header>
@@ -1134,176 +1515,47 @@ public abstract class Duck {
   </div>
 </div>
 
-<!-- 8-Pillar Architecture Blueprint Modal Dialog -->
-<div class="blueprint-modal-overlay" id="blueprintModal" role="dialog" aria-modal="true" aria-labelledby="blueprintModalTitle">
-  <div class="blueprint-modal-card">
-    <div class="blueprint-modal-header">
-      <h3 class="blueprint-modal-title" id="blueprintModalTitle">
-        <span>🏛️</span>
-        <span>The 8 Pillars of Software Pattern Anatomy</span>
-      </h3>
-      <div style="display:flex; align-items:center; gap:0.6rem;">
-        <button type="button" class="btn-copy-rubric" id="copyRubricBtn" onclick="copyBlueprintRubric()" title="Copy markdown rubric checklist to clipboard">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-          <span id="copyRubricLabel">Copy Rubric (Markdown)</span>
-        </button>
-        <button type="button" class="blueprint-close-btn" id="closeBlueprintBtn" onclick="closeBlueprintModal()" aria-label="Close blueprint modal">✕</button>
-      </div>
-    </div>
-    <div class="blueprint-modal-body">
-      <div style="background:var(--bg-raised); border:1px solid var(--border); border-left:4px solid #38BDF8; border-radius:var(--radius-sm); padding:1rem 1.25rem; margin-bottom:1.5rem;">
-        <p style="margin:0; font-size:0.9rem; line-height:1.6; color:var(--text);">
-          <strong>Architectural Rubric:</strong> When evaluating, implementing, or being examined on any design pattern (in Prof. Schäfer's masterclass or technical architecture reviews), you must master these 8 structural dimensions. Below is the blueprint with concrete applications to the <em>Strategy Pattern</em>.
-        </p>
-      </div>
-
-      <div class="blueprint-grid">
-        <!-- Pillar 1 -->
-        <div class="pillar-card">
-          <div class="pillar-header">
-            <span class="pillar-num">Pillar 01 · Intent</span>
-            <span class="pillar-icon">🎯</span>
-          </div>
-          <h4 class="pillar-title">Intent &amp; Architectural Motivation</h4>
-          <p class="pillar-desc">
-            The precise problem the pattern solves and its formal Gang of Four definition. Identifies the specific architectural failure mode (brittle inheritance, conditional explosion, rigid coupling) it eliminates.
-          </p>
-          <div class="pillar-example">
-            <strong>Strategy:</strong> "Define a family of algorithms, encapsulate each one, and make them interchangeable. Lets the algorithm vary independently from clients." Eliminates cascading switch/if-else chains and subclass duplication.
-          </div>
-        </div>
-
-        <!-- Pillar 2 -->
-        <div class="pillar-card">
-          <div class="pillar-header">
-            <span class="pillar-num">Pillar 02 · Roles</span>
-            <span class="pillar-icon">🧩</span>
-          </div>
-          <h4 class="pillar-title">Structural Roles &amp; Participants</h4>
-          <p class="pillar-desc">
-            The exact participants and their single responsibilities (SRP). Distinguishes the chassis from the interchangeable algorithmic engines, and clarifies who initiates and who delegates.
-          </p>
-          <div class="pillar-example">
-            <strong>Participants:</strong> Context (maintains reference &amp; delegates), Strategy Interface (declares algorithmic signature contract), ConcreteStrategies (implement algorithmic variants), Client (configures Context).
-          </div>
-        </div>
-
-        <!-- Pillar 3 -->
-        <div class="pillar-card">
-          <div class="pillar-header">
-            <span class="pillar-num">Pillar 03 · UML</span>
-            <span class="pillar-icon">📐</span>
-          </div>
-          <h4 class="pillar-title">Formal UML Anatomy &amp; Connectors</h4>
-          <p class="pillar-desc">
-            Exact UML 2.5 notation, class stereotypes, and connector arrowheads. A strict requirement in POSA exams to prevent grade deductions.
-          </p>
-          <div class="pillar-example">
-            <strong>UML Rules:</strong> Context has Directed Association / Aggregation (──&gt;) with multiplicity 1 to Strategy &lt;&lt;interface&gt;&gt;. ConcreteStrategies have Realization (···▷) pointing up to the interface. (Never solid inheritance arrows!)
-          </div>
-        </div>
-
-        <!-- Pillar 4 -->
-        <div class="pillar-card">
-          <div class="pillar-header">
-            <span class="pillar-num">Pillar 04 · SOLID</span>
-            <span class="pillar-icon">🛡️</span>
-          </div>
-          <h4 class="pillar-title">Core Principles Enforced</h4>
-          <p class="pillar-desc">
-            The underlying software engineering axioms the pattern protects. Demonstrates mastery of OCP, DIP, SRP, and Composition over Inheritance.
-          </p>
-          <div class="pillar-example">
-            <strong>Principles:</strong> Open/Closed Principle (add new strategies without editing Context), Dependency Inversion (Context depends on interface, not implementations), Favor Composition over Inheritance (HAS-A &gt; IS-A).
-          </div>
-        </div>
-
-        <!-- Pillar 5 -->
-        <div class="pillar-card">
-          <div class="pillar-header">
-            <span class="pillar-num">Pillar 05 · Mechanics</span>
-            <span class="pillar-icon">⚡</span>
-          </div>
-          <h4 class="pillar-title">Implementation &amp; Runtime Hot-Swapping</h4>
-          <p class="pillar-desc">
-            The concrete boilerplate and wiring. How the context references the strategy, delegates execution, and exposes setters for dynamic runtime mutation.
-          </p>
-          <div class="pillar-example">
-            <strong>Wiring:</strong> Context holds `private Strategy strategy;`. Constructor sets initial behavior; `setStrategy(...)` enables dynamic hot-swapping. Context calls `strategy.execute()`. In modern Java, functional interfaces allow lambdas.
-          </div>
-        </div>
-
-        <!-- Pillar 6 -->
-        <div class="pillar-card">
-          <div class="pillar-header">
-            <span class="pillar-num">Pillar 06 · Trade-offs</span>
-            <span class="pillar-icon">⚖️</span>
-          </div>
-          <h4 class="pillar-title">Architectural Costs &amp; Trade-offs</h4>
-          <p class="pillar-desc">
-            Nothing in software engineering is free. A balanced assessment of benefits versus memory overhead, class count inflation, and cognitive indirection.
-          </p>
-          <div class="pillar-example">
-            <strong>Trade-offs:</strong> Benefits: Clean testing &amp; OCP compliance. Costs: Increased class explosion (mitigated via lambdas or Flyweight Singletons), client must understand differences between strategies, extra pointer indirection.
-          </div>
-        </div>
-
-        <!-- Pillar 7 -->
-        <div class="pillar-card">
-          <div class="pillar-header">
-            <span class="pillar-num">Pillar 07 · Matrix</span>
-            <span class="pillar-icon">🧭</span>
-          </div>
-          <h4 class="pillar-title">Rival Pattern Decision Matrix</h4>
-          <p class="pillar-desc">
-            Clear disambiguation between patterns sharing similar UML structures. Vital for exam discrimination questions and high-stakes architecture decisions.
-          </p>
-          <div class="pillar-example">
-            <strong>Disambiguation:</strong> vs. State (identical UML, but State transitions dynamically internally without client knowing; Strategy is chosen by client); vs. Template Method (Template uses inheritance for skeleton; Strategy uses composition for whole algorithm).
-          </div>
-        </div>
-
-        <!-- Pillar 8 -->
-        <div class="pillar-card">
-          <div class="pillar-header">
-            <span class="pillar-num">Pillar 08 · Drills</span>
-            <span class="pillar-icon">🔍</span>
-          </div>
-          <h4 class="pillar-title">Real-World JDK &amp; Exam Traps</h4>
-          <p class="pillar-desc">
-            Standard library citations (proving real-world ubiquity) and classic trick questions from Prof. Schäfer's past exam papers.
-          </p>
-          <div class="pillar-example">
-            <strong>Real-World &amp; Traps:</strong> JDK `Comparator.compare()`, `LayoutManager`. Exam Traps: Forgetting Context setter prevents runtime swaps; passing whole Context to strategy causing circular tight coupling; failing to recognize Strategy when written as a Lambda.
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
 <script>
-// Instant Blueprint Modal Controller (Resilient to Browser Caching)
-function openBlueprintModal() {
-  var modal = document.getElementById("blueprintModal");
-  if (modal) {
-    modal.classList.add("active");
-    modal.style.display = "flex";
-    document.body.style.overflow = "hidden";
-  }
+// 8-Pillar Architecture Blueprint Command Center Controller
+function selectPillar(pillarId) {
+  var btns = document.querySelectorAll(".pillar-tab-btn");
+  var panes = document.querySelectorAll(".pillar-pane");
+  
+  btns.forEach(function (b) {
+    var match = b.getAttribute("data-pillar") === pillarId;
+    b.classList.toggle("active", match);
+    b.setAttribute("aria-selected", match ? "true" : "false");
+  });
+
+  panes.forEach(function (p) {
+    p.classList.toggle("active", p.getAttribute("id") === "pane-" + pillarId);
+  });
 }
 
-function closeBlueprintModal() {
-  var modal = document.getElementById("blueprintModal");
-  if (modal) {
-    modal.classList.remove("active");
-    modal.style.display = "none";
-    document.body.style.overflow = "";
+function setBlueprintView(view) {
+  var explorerBtn = document.getElementById("btnViewExplorer");
+  var matrixBtn = document.getElementById("btnViewMatrix");
+  var pillsBar = document.getElementById("blueprintPillsBar");
+  var contentArea = document.getElementById("blueprintContentArea");
+  var matrixArea = document.getElementById("blueprintMatrixArea");
+
+  if (view === "matrix") {
+    if (explorerBtn) explorerBtn.classList.remove("active");
+    if (matrixBtn) matrixBtn.classList.add("active");
+    if (pillsBar) pillsBar.style.display = "none";
+    if (contentArea) contentArea.style.display = "none";
+    if (matrixArea) matrixArea.style.display = "block";
+  } else {
+    if (explorerBtn) explorerBtn.classList.add("active");
+    if (matrixBtn) matrixBtn.classList.remove("active");
+    if (pillsBar) pillsBar.style.display = "flex";
+    if (contentArea) contentArea.style.display = "block";
+    if (matrixArea) matrixArea.style.display = "none";
   }
 }
 
 function copyBlueprintRubric() {
-  var copyLabel = document.getElementById("copyRubricLabel");
+  var copyLabel = document.getElementById("copyRubricSuiteLabel");
   var rubricMarkdown = 
     "# Software Pattern Mastery: The 8-Pillar Architectural Rubric\n" +
     "*(Standard for POSA Exams & Technical Architecture Reviews)*\n\n" +
@@ -1372,21 +1624,11 @@ function copyBlueprintRubric() {
   }
 }
 
-// Bind overlay and ESC key directly
-document.addEventListener("DOMContentLoaded", function () {
-  var modal = document.getElementById("blueprintModal");
-  if (modal) {
-    modal.addEventListener("click", function (e) {
-      if (e.target === modal) closeBlueprintModal();
-    });
-  }
-});
-
-document.addEventListener("keydown", function (e) {
-  if (e.key === "Escape") closeBlueprintModal();
-});
+window.selectPillar = selectPillar;
+window.setBlueprintView = setBlueprintView;
+window.copyBlueprintRubric = copyBlueprintRubric;
 </script>
 
-<script src="assets/site.js?v=2026.8" defer></script>
+<script src="assets/site.js?v=2026.9" defer></script>
 </body>
 </html>

@@ -5577,281 +5577,433 @@ body.mode-stage-focused .stage-view.active {
 /* ==========================================================================
    8-PILLAR DESIGN PATTERN ANATOMY BLUEPRINT (HERO BANNER & MODAL)
    ========================================================================== */
-.blueprint-banner {
-  background: radial-gradient(circle at 10% 10%, rgba(99, 102, 241, 0.18) 0%, transparent 70%), var(--bg-raised);
+/* ==========================================================================
+   8-PILLAR ARCHITECTURE BLUEPRINT COMMAND CENTER (NATIVE INLINE DASHBOARD)
+   ========================================================================== */
+.blueprint-suite {
+  background: var(--bg-raised);
   border: 1px solid var(--border-strong);
-  border-left: 4px solid var(--accent);
-  border-radius: var(--radius-md);
-  padding: 1.25rem 1.5rem;
-  margin: 1.75rem 0 1rem;
+  border-radius: var(--radius-lg);
+  margin: 2rem 0;
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.4);
+  overflow: hidden;
+  position: relative;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+[data-theme="light"] .blueprint-suite {
+  background: #ffffff;
+  border-color: #cbd5e1;
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.08);
+}
+
+.blueprint-suite-top {
+  padding: 1.5rem 1.75rem 1.25rem;
+  background: linear-gradient(180deg, rgba(99, 102, 241, 0.08) 0%, transparent 100%);
+  border-bottom: 1px solid var(--border);
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
-  gap: 1.25rem;
-  box-shadow: 0 10px 25px -10px rgba(0, 0, 0, 0.5);
-  transition: transform 0.2s, border-color 0.2s;
+  gap: 1.5rem;
+  flex-wrap: wrap;
 }
 
-.blueprint-banner:hover {
-  border-color: var(--accent);
-  transform: translateY(-1px);
-}
-
-.blueprint-badge-row {
-  display: flex;
+.blueprint-suite-badge {
+  display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
-  margin-bottom: 0.4rem;
-}
-
-.blueprint-pill {
+  gap: 0.4rem;
   font-family: var(--font-mono);
   font-size: 0.72rem;
   font-weight: 700;
   text-transform: uppercase;
-  background: var(--accent-soft);
   color: var(--accent-ink);
-  padding: 0.15rem 0.5rem;
+  background: var(--accent-soft);
+  padding: 0.2rem 0.65rem;
   border-radius: 999px;
   border: 1px solid rgba(99, 102, 241, 0.25);
+  margin-bottom: 0.5rem;
 }
 
-.blueprint-pill-accent {
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  background: rgba(16, 185, 129, 0.12);
-  color: #10B981;
-  padding: 0.15rem 0.5rem;
-  border-radius: 999px;
-  border: 1px solid rgba(16, 185, 129, 0.25);
-}
-
-.blueprint-banner-title {
-  margin: 0 0 0.3rem;
+.blueprint-suite-title {
+  margin: 0 0 0.35rem;
   font-family: var(--font-display);
-  font-size: 1.15rem;
+  font-size: 1.35rem;
   font-weight: 800;
   color: var(--text);
+  letter-spacing: -0.02em;
 }
 
-.blueprint-banner-desc {
+.blueprint-suite-desc {
   margin: 0;
-  font-size: 0.88rem;
+  font-size: 0.9rem;
   line-height: 1.55;
   color: var(--text-muted);
   max-width: 65ch;
 }
 
-.btn-open-blueprint {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  background: linear-gradient(135deg, #6366F1 0%, #38BDF8 100%);
-  color: #ffffff;
-  border: none;
-  border-radius: var(--radius-sm);
-  padding: 0.75rem 1.35rem;
-  font-family: var(--font-body);
-  font-size: 0.9rem;
-  font-weight: 700;
-  cursor: pointer;
-  white-space: nowrap;
-  box-shadow: 0 4px 15px rgba(99, 102, 241, 0.35);
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-  flex-shrink: 0;
-}
-
-.btn-open-blueprint:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(99, 102, 241, 0.5);
-}
-
-.btn-open-blueprint svg {
-  width: 16px;
-  height: 16px;
-  stroke: currentColor;
-  transition: transform 0.2s;
-}
-
-.btn-open-blueprint:hover svg {
-  transform: translateX(3px);
-}
-
-@media (max-width: 768px) {
-  .blueprint-banner {
-    flex-direction: column;
-    align-items: flex-start;
-    padding: 1.15rem;
-  }
-  .btn-open-blueprint {
-    width: 100%;
-    justify-content: center;
-  }
-}
-
-/* Blueprint Modal Window */
-.blueprint-modal-overlay {
-  display: none;
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.82);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  z-index: 2000;
-  padding: 1.5rem 1rem;
-  overflow-y: auto;
-  align-items: center;
-  justify-content: center;
-}
-
-.blueprint-modal-overlay.active {
-  display: flex !important;
-  animation: modalFadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-@keyframes modalFadeIn {
-  from { opacity: 0; transform: scale(0.97); }
-  to { opacity: 1; transform: scale(1); }
-}
-
-.blueprint-modal-card {
-  background: var(--bg);
-  border: 1px solid var(--border-strong);
-  border-radius: var(--radius-lg);
-  box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.9), 0 0 0 1px rgba(255, 255, 255, 0.08);
-  width: 100%;
-  max-width: 1050px;
-  max-height: 90vh;
-  overflow-y: auto;
-  display: flex;
-  flex-direction: column;
-}
-
-.blueprint-modal-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 1rem 1.5rem;
-  background: var(--bg-raised);
-  border-bottom: 1px solid var(--border);
-  position: sticky;
-  top: 0;
-  z-index: 10;
-}
-
-.blueprint-modal-title {
+.blueprint-suite-actions {
   display: flex;
   align-items: center;
   gap: 0.65rem;
-  font-family: var(--font-display);
-  font-size: 1.1rem;
-  font-weight: 800;
-  color: var(--text);
-  margin: 0;
+  flex-shrink: 0;
+  flex-wrap: wrap;
 }
 
-.blueprint-close-btn {
-  background: transparent;
+.btn-suite-toggle {
+  background: var(--bg);
   border: 1px solid var(--border);
-  color: var(--text-muted);
-  width: 32px;
-  height: 32px;
-  border-radius: 8px;
-  display: flex;
+  color: var(--text);
+  padding: 0.45rem 0.85rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
   align-items: center;
-  justify-content: center;
-  font-size: 1.1rem;
+  gap: 0.4rem;
+  transition: all 0.15s ease;
+}
+
+.btn-suite-toggle:hover {
+  background: var(--accent-soft);
+  border-color: var(--accent);
+  color: var(--accent-ink);
+}
+
+.btn-suite-toggle.active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #ffffff;
+}
+
+.btn-copy-rubric {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: var(--bg-subtle);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 0.45rem 0.85rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.82rem;
+  font-weight: 600;
   cursor: pointer;
   transition: all 0.15s;
 }
 
-.blueprint-close-btn:hover {
-  background: var(--bg-subtle);
-  color: var(--text);
+.btn-copy-rubric:hover {
+  background: var(--accent-soft);
   border-color: var(--accent);
+  color: var(--accent-ink);
 }
 
-.blueprint-modal-body {
+/* Tab Strip for 8 Pillars */
+.blueprint-pills-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.85rem 1.75rem;
+  background: var(--bg-subtle);
+  border-bottom: 1px solid var(--border);
+  overflow-x: auto;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+.blueprint-pills-bar::-webkit-scrollbar {
+  display: none;
+}
+
+.pillar-tab-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.5rem 0.85rem;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-body);
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  background: var(--bg);
+  border: 1px solid var(--border);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.18s ease;
+  flex-shrink: 0;
+}
+
+.pillar-tab-btn:hover {
+  color: var(--text);
+  border-color: var(--accent);
+  transform: translateY(-1px);
+}
+
+.pillar-tab-btn.active {
+  background: linear-gradient(135deg, #6366F1 0%, #38BDF8 100%);
+  color: #ffffff;
+  border-color: transparent;
+  font-weight: 700;
+  box-shadow: 0 4px 14px rgba(99, 102, 241, 0.35);
+}
+
+/* Pillar Content Pane */
+.blueprint-content-area {
   padding: 1.75rem;
 }
 
-.blueprint-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(310px, 1fr));
-  gap: 1.25rem;
-  margin-top: 1.25rem;
+.pillar-pane {
+  display: none;
 }
 
-.pillar-card {
+.pillar-pane.active {
+  display: block;
+  animation: paneFadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes paneFadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.pillar-hero-box {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  align-items: stretch;
+}
+
+@media (max-width: 900px) {
+  .pillar-hero-box {
+    grid-template-columns: 1fr;
+  }
+}
+
+.pillar-rule-card {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 1.35rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+}
+
+[data-theme="light"] .pillar-rule-card {
+  background: #f8fafc;
+  border-color: #e2e8f0;
+}
+
+.pillar-rule-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.pillar-rule-tag {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--accent-ink);
+  background: var(--accent-soft);
+  padding: 0.15rem 0.5rem;
+  border-radius: 4px;
+}
+
+.pillar-rule-title {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: var(--text);
+  margin: 0 0 0.5rem;
+}
+
+.pillar-rule-desc {
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: var(--text-muted);
+  margin: 0 0 1rem;
+}
+
+.pillar-criteria-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+.pillar-criteria-list li {
+  font-size: 0.85rem;
+  line-height: 1.5;
+  color: var(--text);
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+
+.pillar-criteria-list .check {
+  color: #10B981;
+  font-weight: 800;
+  flex-shrink: 0;
+}
+
+.pillar-criteria-list .cross {
+  color: #EF4444;
+  font-weight: 800;
+  flex-shrink: 0;
+}
+
+/* Pillar Strategy Application Card */
+.pillar-app-card {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+  border-radius: var(--radius-md);
+  padding: 1.35rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+}
+
+[data-theme="light"] .pillar-app-card {
+  background: #f8fafc;
+  border-color: #e2e8f0;
+  border-left-color: #4f46e5;
+}
+
+.pillar-app-tag {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #10B981;
+  background: rgba(16, 185, 129, 0.12);
+  padding: 0.15rem 0.5rem;
+  border-radius: 4px;
+  display: inline-block;
+  margin-bottom: 0.75rem;
+}
+
+.pillar-app-title {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: var(--text);
+  margin: 0 0 0.5rem;
+}
+
+.pillar-app-snippet {
   background: var(--bg-raised);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 0.85rem 1rem;
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  line-height: 1.6;
+  color: var(--text);
+  margin: 0.5rem 0 1rem;
+  overflow-x: auto;
+}
+
+[data-theme="light"] .pillar-app-snippet {
+  background: #f1f5f9;
+  border-color: #e2e8f0;
+}
+
+.pillar-exam-tip {
+  margin-top: auto;
+  font-size: 0.82rem;
+  line-height: 1.55;
+  color: var(--accent-ink);
+  background: var(--accent-soft);
+  padding: 0.65rem 0.85rem;
+  border-radius: 6px;
+  border: 1px solid rgba(99, 102, 241, 0.2);
+}
+
+/* Full Matrix Mode Grid */
+.blueprint-matrix-grid {
+  display: none;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 1.25rem;
+}
+
+.blueprint-matrix-grid.active {
+  display: grid;
+  animation: paneFadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.matrix-card {
+  background: var(--bg);
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
   padding: 1.25rem;
   display: flex;
   flex-direction: column;
-  gap: 0.65rem;
-  position: relative;
-  overflow: hidden;
-  transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
+  gap: 0.75rem;
+  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
-.pillar-card:hover {
-  border-color: var(--accent);
+[data-theme="light"] .matrix-card {
+  background: #f8fafc;
+  border-color: #e2e8f0;
+}
+
+.matrix-card:hover {
   transform: translateY(-2px);
+  border-color: var(--accent);
   box-shadow: 0 10px 25px -10px rgba(99, 102, 241, 0.2);
 }
 
-.pillar-header {
+.matrix-card-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 0.5rem;
 }
 
-.pillar-num {
+.matrix-card-num {
   font-family: var(--font-mono);
   font-size: 0.72rem;
   font-weight: 800;
-  background: var(--accent-soft);
   color: var(--accent-ink);
+  background: var(--accent-soft);
   padding: 0.15rem 0.5rem;
   border-radius: 999px;
   text-transform: uppercase;
 }
 
-.pillar-icon {
-  font-size: 1.15rem;
-}
-
-.pillar-title {
-  margin: 0;
+.matrix-card-title {
   font-family: var(--font-display);
   font-size: 1rem;
   font-weight: 800;
   color: var(--text);
-}
-
-.pillar-desc {
   margin: 0;
-  font-size: 0.85rem;
-  color: var(--text-muted);
-  line-height: 1.6;
 }
 
-.pillar-example {
-  background: var(--bg);
+.matrix-card-desc {
+  font-size: 0.86rem;
+  line-height: 1.55;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+.matrix-card-example {
+  background: var(--bg-raised);
   border: 1px solid var(--border);
   border-radius: 6px;
-  padding: 0.5rem 0.75rem;
+  padding: 0.65rem 0.85rem;
   font-family: var(--font-mono);
-  font-size: 0.78rem;
-  color: #38BDF8;
+  font-size: 0.8rem;
+  line-height: 1.5;
+  color: var(--text);
   margin-top: auto;
+}
+
+[data-theme="light"] .matrix-card-example {
+  background: #f1f5f9;
+  border-color: #e2e8f0;
 }
 
 .sidebar-blueprint-trigger {
@@ -5878,24 +6030,4 @@ body.mode-stage-focused .stage-view.active {
   transform: translateX(2px);
 }
 
-.btn-copy-rubric {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  background: var(--bg-subtle);
-  border: 1px solid var(--border);
-  color: var(--text);
-  padding: 0.4rem 0.8rem;
-  border-radius: 6px;
-  font-size: 0.8rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.15s;
-}
-
-.btn-copy-rubric:hover {
-  background: var(--accent-soft);
-  border-color: var(--accent);
-  color: var(--accent-ink);
-}
 
