@@ -5,77 +5,28 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Unit 1: The Strategy Pattern &amp; Behavioral Decoupling | POSA 2026 Masterclass</title>
 <meta name="description" content="Unit 1 of Pattern-Oriented Software Architecture by Prof. Dr. Jörg Schäfer: SimUDuck case study, Strategy pattern, UML architecture, interactive runtime simulator, and self-study exam drills.">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230c7a73'/%3E%3Cpath d='M8 10h16M8 16h16M8 22h10' stroke='%23fff' stroke-width='2.2' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%236366f1'/%3E%3Cpath d='M8 10h16M8 16h16M8 22h10' stroke='%23fff' stroke-width='2.2' stroke-linecap='round'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/style.css">
-<style>
-  :root {
-    --uml-card-bg: var(--bg-raised);
-    --uml-node-border: var(--border-strong);
-    --uml-accent: #0c7a73;
-    --uml-accent-soft: rgba(12, 122, 115, 0.08);
-  }
-  .key-metric-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.35rem;
-    padding: 0.3rem 0.65rem;
-    background: var(--bg);
-    border: 1px solid var(--border);
-    border-radius: 999px;
-    font-size: 0.8rem;
-    font-weight: 600;
-    color: var(--text-muted);
-  }
-  .feature-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 1.25rem;
-    margin: 1.75rem 0;
-  }
-  .feature-box {
-    background: var(--bg-raised);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-md);
-    padding: 1.35rem;
-    transition: transform 0.2s, border-color 0.2s;
-  }
-  .feature-box:hover {
-    transform: translateY(-2px);
-    border-color: var(--accent);
-  }
-  .feature-icon {
-    width: 36px;
-    height: 36px;
-    border-radius: var(--radius-sm);
-    background: var(--accent-soft);
-    color: var(--accent);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.15rem;
-    margin-bottom: 0.85rem;
-  }
-</style>
-<script>(function(){try{var t=localStorage.getItem('posa-theme')||'light';document.documentElement.setAttribute('data-theme',t);var m=localStorage.getItem('posa-mode')||'concept';document.documentElement.setAttribute('data-mode',m);}catch(e){}})();</script>
+<script>(function(){try{var t=localStorage.getItem('posa-theme')||'dark';document.documentElement.setAttribute('data-theme',t);var m=localStorage.getItem('posa-mode')||'concept';document.documentElement.setAttribute('data-mode',m);}catch(e){}})();</script>
 </head>
 <body>
 
 <nav class="sitenav">
   <div class="sitenav-inner">
     <a class="sitenav-home" href="index.html">
-      <span style="background:var(--accent);color:#fff;padding:0.15rem 0.45rem;border-radius:4px;font-size:0.8rem;font-weight:800;letter-spacing:0.04em;">POSA</span>
-      <span>2026</span>
+      <span style="background:linear-gradient(135deg, #6366f1 0%, #38bdf8 100%);color:#fff;padding:0.2rem 0.55rem;border-radius:6px;font-size:0.82rem;font-weight:800;letter-spacing:0.04em;">POSA</span>
+      <span style="font-weight:800;letter-spacing:-0.02em;">2026</span>
     </a>
     <div class="sitenav-links">
-      <a href="index.html">Overview</a>
-      <a href="unit-1-strategy.html" class="active">Unit 1 · Strategy</a>
-      <a href="unit-2-behavioral.html">Unit 2 · Template</a>
-      <a href="unit-6-solid.html">Unit 6 · SOLID</a>
-      <a href="unit-7-packaging.html">Unit 7 · Packaging</a>
-      <a href="past-papers.html">Past Papers</a>
+      <a href="index.html">Curriculum Hub</a>
+      <a href="unit-1-strategy.html" class="active">1 · Strategy Pattern</a>
+      <a href="unit-2-behavioral.html">2 · Template &amp; Command</a>
+      <a href="unit-6-solid.html">6 · SOLID Architecture</a>
+      <a href="unit-7-packaging.html">7 · Packaging &amp; Metrics</a>
+      <a href="past-papers.html">Past Papers Hub</a>
       <a href="mock-1.html">📝 Mock 1 (75 pts)</a>
     </div>
     <button class="nav-toggle" id="navToggle" type="button" aria-expanded="false" aria-controls="navPanel">
@@ -90,14 +41,14 @@
   </div>
   <div class="nav-panel" id="navPanel">
     <div class="nav-panel-section">
-      <span class="nav-panel-label">Course Navigation</span>
-      <a href="index.html">Course Hub</a>
-      <a href="unit-1-strategy.html" class="active">Unit 1 · Strategy Pattern</a>
+      <span class="nav-panel-label">Core Curriculum</span>
+      <a href="index.html">Curriculum Hub &amp; Roadmap</a>
+      <a href="unit-1-strategy.html" class="active">Unit 1 · The Strategy Pattern</a>
       <a href="unit-2-behavioral.html">Unit 2 · Template Method &amp; Command</a>
-      <a href="unit-3-structural.html">Unit 3 · Composite &amp; Components</a>
-      <a href="unit-6-solid.html">Unit 6 · SOLID &amp; Formal LSP</a>
-      <a href="unit-7-packaging.html">Unit 7 · Packaging &amp; Uncle Bob Metrics</a>
-      <a href="past-papers.html">Past Papers Analysis</a>
+      <a href="unit-3-structural.html">Unit 3 · Composite &amp; Iterator</a>
+      <a href="unit-6-solid.html">Unit 6 · SOLID Principles &amp; Formal LSP</a>
+      <a href="unit-7-packaging.html">Unit 7 · Packaging Principles &amp; Metrics</a>
+      <a href="past-papers.html">Past Papers Analysis Hub</a>
       <a href="mock-1.html">Mock Exam 1 (75 pts)</a>
       <a href="mock-2.html">Mock Exam 2 (95 pts)</a>
     </div>
@@ -107,220 +58,282 @@
 <div class="page-shell">
   <aside class="sidebar-toc">
     <div class="sidebar-block">
-      <span class="sidebar-label">Unit Roadmap</span>
-      <a href="#executive-summary"><span class="toc-num">0</span>Executive Summary</a>
-      <a href="#simuduck-evolution"><span class="toc-num">1</span>The SimUDuck Disaster</a>
-      <a href="#interactive-sandbox"><span class="toc-num">2</span>Interactive Sandbox</a>
-      <a href="#formal-pattern"><span class="toc-num">3</span>Formal GoF Architecture</a>
-      <a href="#sorting-example"><span class="toc-num">4</span>Application: Sorter Strategy</a>
-      <a href="#code-tabs"><span class="toc-num">5</span>Code Implementations</a>
-      <a href="#real-world"><span class="toc-num">6</span>Production Case Studies</a>
+      <span class="sidebar-label">Module Navigation</span>
+      <a href="#executive-summary"><span class="toc-num">0</span>Executive Briefing</a>
+      <a href="#simuduck-studio"><span class="toc-num">1</span>Interactive SimUDuck Studio</a>
+      <a href="#diff-evolution"><span class="toc-num">2</span>The Code Evolution</a>
+      <a href="#formal-uml"><span class="toc-num">3</span>Formal UML Architecture</a>
+      <a href="#sorter-pipeline"><span class="toc-num">4</span>Application: Sorter Pipeline</a>
+      <a href="#production-code"><span class="toc-num">5</span>Multi-Language Code Tabs</a>
+      <a href="#industry-cases"><span class="toc-num">6</span>Industry Case Studies</a>
       <a href="#decision-matrix"><span class="toc-num">7</span>Architecture Decision Matrix</a>
-      <a href="#prof-gotchas"><span class="toc-num">8</span>Professor Gotchas &amp; Self-Study</a>
-      <a href="#exam-quiz"><span class="toc-num">9</span>Self-Assessment Quiz</a>
+      <a href="#prof-gotchas"><span class="toc-num">8</span>Prof. Dr. Schäfer Gotchas</a>
+      <a href="#cert-exam-quiz"><span class="toc-num">9</span>Certification Exam Quiz</a>
     </div>
     <div class="sidebar-block">
-      <span class="sidebar-label">Course Metadata</span>
+      <span class="sidebar-label">Academic Pedigree</span>
       <p style="font-size: 0.85rem; color: var(--text-muted); margin: 0 0 0.5rem; line-height: 1.5;">
         <strong>Prof. Dr. Jörg Schäfer</strong><br>
         Frankfurt University of Applied Sciences<br>
         Fachbereich 2: Informatik
       </p>
-      <div class="key-metric-badge">⏱️ 45 Min Study Time</div>
-      <div class="key-metric-badge" style="margin-top:0.4rem;">🎯 15 Exam Points</div>
+      <div style="font-size:0.75rem; font-weight:700; color:#38bdf8; background:rgba(56,189,248,0.12); border:1px solid rgba(56,189,248,0.25); padding:0.25rem 0.5rem; border-radius:4px; display:inline-block; margin-top:0.4rem;">
+        ⏱️ 40 Min · 15 Exam Pts
+      </div>
     </div>
   </aside>
 
   <div class="page">
     
-    <!-- Masthead -->
+    <!-- Hero Masthead -->
     <header class="masthead">
       <div>
-        <div class="eyebrow">Unit 1 · Behavioral Patterns &amp; Architectural Foundations</div>
-        <h1 class="title">The Strategy Pattern</h1>
-        <p class="dek">
-          How to eliminate rigid inheritance hierarchies, encapsulate interchangeable algorithms, and enable zero-downtime runtime behavioral switching.
+        <div class="eyebrow">
+          <span>Unit 1 · Behavioral Architecture &amp; Foundations</span>
+        </div>
+        <h1 class="title">The Strategy Pattern &amp; Dynamic Decoupling</h1>
+        <p class="dek" style="font-size:1.05rem; line-height:1.65; max-width:68ch; color:var(--text-muted);">
+          How elite software engineers isolate volatile algorithmic business logic from stable domain contexts, eliminate brittle inheritance hierarchies, and achieve zero-downtime runtime extensibility.
         </p>
       </div>
     </header>
 
-    <!-- Executive Summary Card -->
+    <!-- Executive Briefing Card -->
     <section class="chapter" id="executive-summary" style="margin-top:0;">
-      <div style="background: linear-gradient(135deg, var(--bg-raised) 0%, var(--accent-soft) 100%); border: 1px solid var(--border-strong); border-radius: var(--radius-lg); padding: 1.75rem; box-shadow: var(--shadow-sm);">
-        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.75rem; margin-bottom:1rem;">
-          <span style="font-family:var(--font-mono); font-size:0.75rem; font-weight:700; text-transform:uppercase; letter-spacing:0.06em; background:var(--accent); color:#fff; padding:0.25rem 0.65rem; border-radius:999px;">
-            Core Architectural Principles
+      <div style="background: radial-gradient(circle at 85% 15%, rgba(99, 102, 241, 0.15) 0%, transparent 60%), var(--bg-raised); border: 1px solid var(--border-strong); border-radius: var(--radius-lg); padding: 2rem; box-shadow: var(--shadow-lg);">
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.75rem; margin-bottom:1.25rem;">
+          <span style="font-family:var(--font-mono); font-size:0.74rem; font-weight:800; text-transform:uppercase; letter-spacing:0.06em; background:linear-gradient(135deg, #6366f1 0%, #38bdf8 100%); color:#fff; padding:0.3rem 0.75rem; border-radius:999px;">
+            The 3 Canonical Pillars of Object-Oriented Architecture
           </span>
-          <span style="font-size:0.85rem; font-weight:600; color:var(--text-muted);">GoF Category: Behavioral</span>
+          <span style="font-size:0.85rem; font-weight:700; color:var(--accent-ink); font-family:var(--font-mono);">GoF Category: Behavioral</span>
         </div>
-        
-        <p style="margin:0 0 1rem; font-size:1.02rem; line-height:1.65; color:var(--text);">
-          <strong>The Golden Rule of Software Design:</strong> <em>"Identify the aspects of your application that vary and separate them from what stays the same."</em>
+
+        <p style="margin:0 0 1.25rem; font-size:1.1rem; line-height:1.65; font-weight:500; color:var(--text);">
+          <strong style="color:var(--accent-2);">The Golden Rule:</strong> <em>“Identify the aspects of your application that vary and separate them from what stays the same.”</em>
         </p>
 
-        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(240px, 1fr)); gap:1rem; margin-top:1.25rem;">
-          <div style="background:var(--bg-raised); border:1px solid var(--border); padding:1rem; border-radius:var(--radius-sm);">
-            <strong style="color:var(--accent); font-size:0.92rem;">1. Program to an Interface</strong>
-            <p style="font-size:0.85rem; color:var(--text-muted); margin:0.35rem 0 0;">Never program to a concrete implementation. Depend on abstractions to allow frictionless polymorphism.</p>
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:1.25rem;">
+          <div style="background:var(--bg); border:1px solid var(--border); padding:1.25rem; border-radius:var(--radius-md);">
+            <strong style="color:#38bdf8; font-size:0.95rem; display:flex; align-items:center; gap:0.4rem;">
+              <span>1. Program to Interfaces</span>
+            </strong>
+            <p style="font-size:0.88rem; color:var(--text-muted); margin:0.4rem 0 0; line-height:1.55;">
+              Never program to concrete implementations. Depend on interface abstractions so concrete algorithms can be substituted transparently via polymorphism.
+            </p>
           </div>
-          <div style="background:var(--bg-raised); border:1px solid var(--border); padding:1rem; border-radius:var(--radius-sm);">
-            <strong style="color:var(--accent); font-size:0.92rem;">2. Favor Composition over Inheritance</strong>
-            <p style="font-size:0.85rem; color:var(--text-muted); margin:0.35rem 0 0;">Inheritance locks behavior at compile time. Object composition gives you dynamic runtime elasticity.</p>
+
+          <div style="background:var(--bg); border:1px solid var(--border); padding:1.25rem; border-radius:var(--radius-md);">
+            <strong style="color:#10b981; font-size:0.95rem; display:flex; align-items:center; gap:0.4rem;">
+              <span>2. Favor Composition over Inheritance</span>
+            </strong>
+            <p style="font-size:0.88rem; color:var(--text-muted); margin:0.4rem 0 0; line-height:1.55;">
+              Class inheritance fixes behavior statically at compile time. Object composition gives you dynamic, in-memory elasticity to alter behavior on the fly.
+            </p>
           </div>
-          <div style="background:var(--bg-raised); border:1px solid var(--border); padding:1rem; border-radius:var(--radius-sm);">
-            <strong style="color:var(--accent); font-size:0.92rem;">3. Open-Closed Principle (OCP)</strong>
-            <p style="font-size:0.85rem; color:var(--text-muted); margin:0.35rem 0 0;">Classes must be open for extension by introducing new strategies, but closed for modification.</p>
+
+          <div style="background:var(--bg); border:1px solid var(--border); padding:1.25rem; border-radius:var(--radius-md);">
+            <strong style="color:#f59e0b; font-size:0.95rem; display:flex; align-items:center; gap:0.4rem;">
+              <span>3. Open-Closed Principle (OCP)</span>
+            </strong>
+            <p style="font-size:0.88rem; color:var(--text-muted); margin:0.4rem 0 0; line-height:1.55;">
+              Classes should be closed for direct modification but open for extension. Add 50 new algorithms without touching a single line of client context code.
+            </p>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- Section 1: The SimUDuck Disaster -->
-    <section class="chapter" id="simuduck-evolution">
+    <!-- Section 1: Interactive SimUDuck Studio -->
+    <section class="chapter" id="simuduck-studio">
       <div class="chapter-head">
         <span class="chapter-num">1</span>
-        <h2>1.1 The SimUDuck Evolution: The Fall of Naive Inheritance</h2>
+        <h2>1.1 Interactive SimUDuck Virtual Studio</h2>
       </div>
-      <p class="chapter-dek">Why standard object-oriented inheritance breaks down when systems evolve under changing business requirements.</p>
+      <p class="chapter-dek">
+        Test runtime strategy injection directly in your browser. Notice how changing the injected strategy mutates duck behavior in real time with zero subclass inheritance.
+      </p>
 
-      <div class="evolution-timeline">
-        
-        <!-- Step 1 -->
-        <div class="evolution-card warning">
-          <div class="evolution-card-header">
-            <div class="evolution-card-title">
-              <span>Phase 1: The Initial Innocent Architecture</span>
-            </div>
-            <span class="status-pill warn">Looks Fine Initially</span>
+      <div class="luxury-studio">
+        <!-- Top Bar -->
+        <div class="studio-topbar">
+          <div class="mac-dots">
+            <span class="dot dot-red"></span>
+            <span class="dot dot-yellow"></span>
+            <span class="dot dot-green"></span>
           </div>
-          <p style="margin:0 0 0.5rem; font-size:0.92rem; color:var(--text);">
-            A duck simulation game begins with an abstract superclass <code>Duck</code> containing standard methods <code>quack()</code>, <code>swim()</code>, and an abstract <code>display()</code>. Subclasses <code>MallardDuck</code> and <code>RedheadDuck</code> inherit cleanly.
-          </p>
-          <div style="background:var(--code-bg); padding:0.6rem 0.9rem; border-radius:var(--radius-sm); font-family:var(--font-mono); font-size:0.82rem;">
-            public abstract class Duck { void quack() { ... } void swim() { ... } abstract void display(); }
+          <div class="studio-title">
+            <span class="pulse-indicator"></span>
+            SimUDuck Dynamic Polymorphism Virtual Studio · POSA 2026 Engine
+          </div>
+          <div class="studio-badge">v2.4 RUNTIME ACTIVE</div>
+        </div>
+
+        <!-- Workstation -->
+        <div class="studio-workspace">
+          <!-- Holographic Display -->
+          <div class="studio-stage">
+            <div class="stage-hologram">
+              <div class="duck-avatar-wrap">
+                <div class="duck-avatar" id="duckAvatar">🦆</div>
+              </div>
+              <div class="duck-domain-title" id="duckTitle">Mallard Duck</div>
+              <div class="duck-domain-sub" id="duckSub">Anas platyrhynchos · Natural Waterfowl</div>
+            </div>
+
+            <!-- Telemetry -->
+            <div class="telemetry-grid">
+              <div class="telemetry-card">
+                <span class="telemetry-label">FLIGHT CAPABILITY</span>
+                <span class="telemetry-val" id="flightTelemetry">🪽 Biological Wings · 35 km/h</span>
+              </div>
+              <div class="telemetry-card">
+                <span class="telemetry-label">ACOUSTIC VOCALIZATION</span>
+                <span class="telemetry-val" id="quackTelemetry">🔊 Natural Quack · 85 dB</span>
+              </div>
+              <div class="telemetry-card">
+                <span class="telemetry-label">HEAP ALLOCATION</span>
+                <span class="telemetry-val" id="memoryTelemetry">Stateless Flyweight · 0B Heap</span>
+              </div>
+              <div class="telemetry-card">
+                <span class="telemetry-label">DISPATCH MECHANISM</span>
+                <span class="telemetry-val" id="dispatchTelemetry">Virtual Method Table (vtable)</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Controls -->
+          <div class="studio-controls">
+            <div class="control-group">
+              <label class="control-label">
+                <span>1. CLIENT CONTEXT INSTANCE</span>
+                <span class="control-hint">Duck Subclass</span>
+              </label>
+              <div class="btn-segmented" id="duckSegmented">
+                <button type="button" class="seg-btn active" data-val="MallardDuck">🦆 Mallard</button>
+                <button type="button" class="seg-btn" data-val="RubberDuck">🐤 Rubber</button>
+                <button type="button" class="seg-btn" data-val="DecoyDuck">🪵 Decoy</button>
+                <button type="button" class="seg-btn" data-val="ModelDuck">🤖 Drone</button>
+              </div>
+            </div>
+
+            <div class="control-group">
+              <label class="control-label">
+                <span>2. INJECTED FLY STRATEGY</span>
+                <span class="control-hint">&lt;&lt;interface FlyBehavior&gt;&gt;</span>
+              </label>
+              <div class="btn-segmented" id="flySegmented">
+                <button type="button" class="seg-btn active" data-val="FlyWithWings">🪽 Wings</button>
+                <button type="button" class="seg-btn" data-val="FlyNoWay">🚫 Grounded</button>
+                <button type="button" class="seg-btn" data-val="FlyRocketPowered">🚀 Mach 3 Rocket</button>
+              </div>
+            </div>
+
+            <div class="control-group">
+              <label class="control-label">
+                <span>3. INJECTED QUACK STRATEGY</span>
+                <span class="control-hint">&lt;&lt;interface QuackBehavior&gt;&gt;</span>
+              </label>
+              <div class="btn-segmented" id="quackSegmented">
+                <button type="button" class="seg-btn active" data-val="Quack">🔊 Quack</button>
+                <button type="button" class="seg-btn" data-val="Squeak">🔉 Squeak</button>
+                <button type="button" class="seg-btn" data-val="MuteQuack">🔇 Mute</button>
+              </div>
+            </div>
+
+            <div class="studio-action-row">
+              <button type="button" class="btn-studio-run" id="studioRunBtn">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+                Run Polymorphic Dispatch
+              </button>
+              <button type="button" class="btn-studio-hot-swap" id="studioHotSwapBtn">
+                ⚡ Trigger In-Flight Rocket Hot-Swap
+              </button>
+            </div>
           </div>
         </div>
 
-        <!-- Step 2 -->
-        <div class="evolution-card bad">
-          <div class="evolution-card-header">
-            <div class="evolution-card-title">
-              <span>Phase 2: The New Feature Request &amp; Production Bug</span>
-            </div>
-            <span class="status-pill bad">Catastrophic Bug</span>
+        <!-- Terminal Output -->
+        <div class="studio-terminal">
+          <div class="terminal-header">
+            <span class="term-prompt">saleem@posa-kernel:~/simuduck-v2.4$</span>
+            <span class="term-status">KERNEL DISPATCH TRACE</span>
           </div>
-          <p style="margin:0 0 0.5rem; font-size:0.92rem; color:var(--text);">
-            <strong>Requirement:</strong> Ducks must now fly in the simulator! A junior engineer adds <code>void fly()</code> directly to the <code>Duck</code> superclass.
-          </p>
-          <div style="background:rgba(239, 68, 68, 0.08); border:1px solid rgba(239, 68, 68, 0.25); padding:0.85rem; border-radius:var(--radius-sm); font-size:0.88rem; color:var(--text);">
-            💥 <strong>The Disaster:</strong> In the live customer demo, <code>RubberDuck</code> instances suddenly sprout wings and fly across the display! Inanimate decoy ducks fly! Behavior inherited inappropriately breaks business logic and domain modeling.
-          </div>
+          <div class="terminal-body" id="studioConsole">[INIT] SimUDuck Runtime Environment Loaded.
+[MEMORY] Ready. Select strategies above and trigger execution to observe runtime polymorphism.</div>
         </div>
-
-        <!-- Step 3 -->
-        <div class="evolution-card bad">
-          <div class="evolution-card-header">
-            <div class="evolution-card-title">
-              <span>Phase 3: The Bad Band-Aid (Override with No-Ops)</span>
-            </div>
-            <span class="status-pill bad">Maintenance Nightmare</span>
-          </div>
-          <p style="margin:0 0 0.5rem; font-size:0.92rem; color:var(--text);">
-            The team tries to "fix" it by overriding <code>fly()</code> in <code>RubberDuck</code> to do nothing: <code>public void fly() { /* do nothing */ }</code>.
-          </p>
-          <p style="margin:0; font-size:0.9rem; color:var(--text-muted);">
-            <strong>Why this fails:</strong> As soon as 40 different duck types are added (Wooden ducks, decoy ducks, drone ducks), engineers must manually check and override dozens of methods across every class. Code duplication explodes, DRY is violated, and every superclass change risks breaking obscure subclasses.
-          </p>
-        </div>
-
-        <!-- Step 4 -->
-        <div class="evolution-card good">
-          <div class="evolution-card-header">
-            <div class="evolution-card-title">
-              <span>Phase 4: The Strategy Pattern Architecture</span>
-            </div>
-            <span class="status-pill good">Production Masterclass</span>
-          </div>
-          <p style="margin:0 0 0.75rem; font-size:0.92rem; color:var(--text);">
-            <strong>The Breakthrough:</strong> Extract what varies (Flying &amp; Quacking) into separate behavior interfaces. The <code>Duck</code> class delegates behavior execution to interface references via composition.
-          </p>
-          <div style="display:flex; flex-wrap:wrap; gap:0.5rem;">
-            <span class="key-metric-badge" style="background:rgba(16,185,129,0.1); border-color:#10b981; color:#065f46;">Zero Code Duplication</span>
-            <span class="key-metric-badge" style="background:rgba(16,185,129,0.1); border-color:#10b981; color:#065f46;">Hot-Swappable at Runtime</span>
-            <span class="key-metric-badge" style="background:rgba(16,185,129,0.1); border-color:#10b981; color:#065f46;">Closed for Modification</span>
-          </div>
-        </div>
-
       </div>
     </section>
 
-    <!-- Section 2: Interactive Sandbox -->
-    <section class="chapter" id="interactive-sandbox">
+    <!-- Section 2: Code Evolution (The Diff) -->
+    <section class="chapter" id="diff-evolution">
       <div class="chapter-head">
         <span class="chapter-num">2</span>
-        <h2>1.2 Interactive Simulation Sandbox: Test the Pattern Live</h2>
+        <h2>1.2 The Architectural Journey: Anti-Pattern vs. Masterclass</h2>
       </div>
-      <p class="chapter-dek">Experiment with real-time runtime strategy composition. Notice how changing the strategy alters duck behavior without altering the Duck class itself.</p>
+      <p class="chapter-dek">Why 90% of legacy systems fail when using inheritance for shared behavioral logic.</p>
 
-      <div class="sim-sandbox">
-        <div class="sim-header">
-          <div class="sim-badge">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polygon points="10 8 16 12 10 16 10 8"></polygon></svg>
-            Live Pattern Playground
+      <div class="diff-container">
+        <!-- Bad -->
+        <div class="diff-col bad">
+          <div class="diff-header-bad">
+            <span style="font-weight:700; color:#F43F5E; font-size:0.95rem;">❌ The Naive Inheritance Anti-Pattern</span>
+            <span class="diff-badge-bad">Production Bug</span>
           </div>
-          <span style="font-size:0.8rem; color:var(--text-muted); font-family:var(--font-mono);">Client Context: Duck.java</span>
-        </div>
-
-        <div class="sim-controls-grid">
-          <div class="sim-field">
-            <label for="simDuckSelect">1. Select Duck Context</label>
-            <select class="sim-select" id="simDuckSelect">
-              <option value="MallardDuck">MallardDuck (Wild Waterfowl)</option>
-              <option value="RedheadDuck">RedheadDuck (Diving Duck)</option>
-              <option value="RubberDuck">RubberDuck (Bath Toy)</option>
-              <option value="DecoyDuck">DecoyDuck (Carved Wood)</option>
-              <option value="ModelDuck">ModelDuck (Prototype Drone)</option>
-            </select>
-          </div>
-
-          <div class="sim-field">
-            <label for="simFlySelect">2. Injected FlyStrategy</label>
-            <select class="sim-select" id="simFlySelect">
-              <option value="FlyWithWings">FlyWithWings (Flap Wings)</option>
-              <option value="FlyNoWay">FlyNoWay (Grounded / Safe)</option>
-              <option value="FlyRocketPowered">FlyRocketPowered (Jet Propulsion)</option>
-            </select>
-          </div>
-
-          <div class="sim-field">
-            <label for="simQuackSelect">3. Injected QuackStrategy</label>
-            <select class="sim-select" id="simQuackSelect">
-              <option value="Quack">Quack (Natural Resonance)</option>
-              <option value="Squeak">Squeak (Vinyl Air Valve)</option>
-              <option value="MuteQuack">MuteQuack (Zero Decibels)</option>
-            </select>
+          <div style="padding:1.25rem;">
+            <p style="font-size:0.88rem; color:var(--text-muted); margin-top:0;">
+              Adding <code>fly()</code> directly to the <code>Duck</code> superclass forces all 50 subclasses to inherit it automatically:
+            </p>
+            <pre style="margin:0; background:var(--code-bg); padding:1rem; border-radius:var(--radius-sm); font-family:var(--font-mono); font-size:0.82rem; overflow-x:auto;"><code>public class Duck {
+    public void quack() { ... }
+    public void swim() { ... }
+    // 💥 DISASTER: Rubber ducks now fly!
+    public void fly() { 
+        System.out.println("Flying!"); 
+    }
+}
+// RubberDuck is now forced to fly!
+public class RubberDuck extends Duck { ... }</code></pre>
+            <div style="margin-top:1rem; padding:0.75rem; background:rgba(244, 63, 94, 0.08); border-radius:var(--radius-sm); font-size:0.85rem; color:#F43F5E; line-height:1.5;">
+              💥 <strong>Catastrophic Regression:</strong> Overriding with empty no-ops violates the DRY principle and breaks Liskov Substitution Principle (LSP).
+            </div>
           </div>
         </div>
 
-        <div class="sim-actions">
-          <button type="button" class="sim-btn-primary" id="simRunBtn">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
-            Execute Dynamic Dispatch
-          </button>
-          <button type="button" class="sim-btn-secondary" id="simSwapBtn">
-            ⚡ Hot-Swap to Rocket Engine (Runtime)
-          </button>
+        <!-- Good -->
+        <div class="diff-col good">
+          <div class="diff-header-good">
+            <span style="font-weight:700; color:#10B981; font-size:0.95rem;">✅ The Strategy Pattern Architecture</span>
+            <span class="diff-badge-good">Clean Architecture</span>
+          </div>
+          <div style="padding:1.25rem;">
+            <p style="font-size:0.88rem; color:var(--text-muted); margin-top:0;">
+              Extract varying behaviors into separate interfaces. Duck holds a reference and delegates at runtime:
+            </p>
+            <pre style="margin:0; background:var(--code-bg); padding:1rem; border-radius:var(--radius-sm); font-family:var(--font-mono); font-size:0.82rem; overflow-x:auto;"><code>public abstract class Duck {
+    // Composition: "has-a" relationship
+    protected FlyBehavior flyBehavior;
+    
+    public void performFly() {
+        flyBehavior.fly(); // Runtime delegation
+    }
+    // Dynamic runtime hot-swap setter!
+    public void setFlyBehavior(FlyBehavior fb) {
+        this.flyBehavior = fb;
+    }
+}</code></pre>
+            <div style="margin-top:1rem; padding:0.75rem; background:rgba(16, 185, 129, 0.08); border-radius:var(--radius-sm); font-size:0.85rem; color:#10B981; line-height:1.5;">
+              🌟 <strong>Architectural Triumph:</strong> 100% Extensible. Add 20 new flight algorithms without modifying a single line of Duck client code.
+            </div>
+          </div>
         </div>
-
-        <div class="sim-console" id="simConsole">> System initialized. Select parameters above and click 'Execute Dynamic Dispatch' to inspect runtime delegation.</div>
       </div>
     </section>
 
-    <!-- Section 3: Formal GoF Pattern Architecture (Vector SVG UML) -->
-    <section class="chapter" id="formal-pattern">
+    <!-- Section 3: Formal GoF UML Architecture -->
+    <section class="chapter" id="formal-uml">
       <div class="chapter-head">
         <span class="chapter-num">3</span>
-        <h2>1.3 Formal GoF Architecture: Crisp Vector UML</h2>
+        <h2>1.3 Formal GoF Architecture: Vector UML Blueprint</h2>
       </div>
       <p class="chapter-dek">The official Gang of Four structural blueprint rendered as scalable, high-resolution vector graphics.</p>
 
@@ -330,8 +343,8 @@
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line><line x1="9" y1="21" x2="9" y2="9"></line></svg>
             UML Class Diagram: The Strategy Blueprint
           </div>
-          <span style="font-family:var(--font-mono); font-size:0.75rem; color:var(--text-muted); background:var(--code-bg); padding:0.2rem 0.5rem; border-radius:4px;">
-            GoF Design Pattern
+          <span style="font-family:var(--font-mono); font-size:0.75rem; color:#38bdf8; background:rgba(56,189,248,0.12); border:1px solid rgba(56,189,248,0.25); padding:0.2rem 0.55rem; border-radius:4px;">
+            GoF Standard
           </span>
         </div>
 
@@ -339,185 +352,78 @@
           <svg viewBox="0 0 820 340" width="100%" height="auto" xmlns="http://www.w3.org/2000/svg" style="font-family:'JetBrains Mono', 'SF Mono', monospace; font-size:13px;">
             <defs>
               <filter id="shadow" x="-5%" y="-5%" width="110%" height="115%" filterUnits="userSpaceOnUse">
-                <feDropShadow dx="0" dy="3" stdDeviation="4" flood-opacity="0.08"/>
+                <feDropShadow dx="0" dy="4" stdDeviation="6" flood-opacity="0.3" flood-color="#000000"/>
               </filter>
               <marker id="arrow" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-                <path d="M 0 1 L 10 5 L 0 9 z" fill="#0c7a73"/>
+                <path d="M 0 1 L 10 5 L 0 9 z" fill="#6366f1"/>
               </marker>
               <marker id="hollowTriangle" viewBox="0 0 12 12" refX="12" refY="6" markerWidth="10" markerHeight="10" orient="auto-start-reverse">
-                <polygon points="0,0 12,6 0,12" fill="#ffffff" stroke="#0c7a73" stroke-width="1.8"/>
+                <polygon points="0,0 12,6 0,12" fill="#0b1120" stroke="#6366f1" stroke-width="2"/>
               </marker>
             </defs>
 
             <!-- Context Box -->
             <g filter="url(#shadow)">
-              <rect x="30" y="30" width="260" height="140" rx="8" fill="var(--bg-raised, #ffffff)" stroke="#0c7a73" stroke-width="2"/>
-              <rect x="30" y="30" width="260" height="38" rx="8" fill="#0c7a73"/>
-              <rect x="30" y="60" width="260" height="8" fill="#0c7a73"/>
+              <rect x="30" y="30" width="260" height="140" rx="8" fill="#0f172a" stroke="#6366f1" stroke-width="2"/>
+              <rect x="30" y="30" width="260" height="38" rx="8" fill="linear-gradient(135deg, #4f46e5 0%, #6366f1 100%)"/>
+              <rect x="30" y="60" width="260" height="8" fill="#4f46e5"/>
               <text x="160" y="55" fill="#ffffff" font-weight="700" text-anchor="middle" font-size="14">Context</text>
-              <text x="45" y="90" fill="var(--text, #1e293b)" font-size="12">- strategy: Strategy</text>
-              <line x1="30" y1="102" x2="290" y2="102" stroke="var(--border, #e2e8f0)" stroke-width="1"/>
-              <text x="45" y="124" fill="var(--text, #1e293b)" font-size="12">+ contextInterface()</text>
-              <text x="45" y="146" fill="var(--text, #1e293b)" font-size="12">+ setStrategy(s: Strategy)</text>
+              <text x="45" y="90" fill="#f8fafc" font-size="12">- strategy: Strategy</text>
+              <line x1="30" y1="102" x2="290" y2="102" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
+              <text x="45" y="124" fill="#f8fafc" font-size="12">+ contextInterface()</text>
+              <text x="45" y="146" fill="#f8fafc" font-size="12">+ setStrategy(s: Strategy)</text>
             </g>
 
             <!-- Strategy Interface Box -->
             <g filter="url(#shadow)">
-              <rect x="490" y="30" width="280" height="110" rx="8" fill="var(--bg-raised, #ffffff)" stroke="#0c7a73" stroke-width="2"/>
-              <rect x="490" y="30" width="280" height="42" rx="8" fill="#0c7a73"/>
-              <rect x="490" y="64" width="280" height="8" fill="#0c7a73"/>
-              <text x="630" y="47" fill="#a7f3d0" font-size="10" text-anchor="middle">&lt;&lt;interface&gt;&gt;</text>
+              <rect x="490" y="30" width="280" height="110" rx="8" fill="#0f172a" stroke="#10b981" stroke-width="2"/>
+              <rect x="490" y="30" width="280" height="42" rx="8" fill="linear-gradient(135deg, #059669 0%, #10b981 100%)"/>
+              <rect x="490" y="64" width="280" height="8" fill="#059669"/>
+              <text x="630" y="47" fill="#d1fae5" font-size="10" text-anchor="middle">&lt;&lt;interface&gt;&gt;</text>
               <text x="630" y="64" fill="#ffffff" font-weight="700" text-anchor="middle" font-size="14">Strategy</text>
-              <text x="505" y="98" fill="var(--text, #1e293b)" font-size="12">+ algorithmInterface()</text>
-              <text x="505" y="122" fill="var(--text-muted, #64748b)" font-size="11" font-style="italic">// polymorphically swappable</text>
+              <text x="505" y="98" fill="#f8fafc" font-size="12">+ algorithmInterface()</text>
+              <text x="505" y="122" fill="#94a3b8" font-size="11" font-style="italic">// polymorphically swappable</text>
             </g>
 
             <!-- Association Line Context -> Strategy -->
-            <line x1="290" y1="85" x2="480" y2="85" stroke="#0c7a73" stroke-width="2" stroke-dasharray="none" marker-end="url(#arrow)"/>
-            <text x="385" y="75" fill="#0c7a73" font-size="11" font-weight="600" text-anchor="middle">has-a / delegates</text>
+            <line x1="290" y1="85" x2="480" y2="85" stroke="#6366f1" stroke-width="2" marker-end="url(#arrow)"/>
+            <text x="385" y="75" fill="#a5b4fc" font-size="11" font-weight="700" text-anchor="middle">has-a / delegates</text>
 
             <!-- Implementation Tree -->
-            <line x1="630" y1="140" x2="630" y2="195" stroke="#0c7a73" stroke-width="1.8" stroke-dasharray="5,4" marker-start="url(#hollowTriangle)"/>
-            <line x1="430" y1="195" x2="730" y2="195" stroke="#0c7a73" stroke-width="1.8" stroke-dasharray="5,4"/>
-            <line x1="430" y1="195" x2="430" y2="230" stroke="#0c7a73" stroke-width="1.8" stroke-dasharray="5,4"/>
-            <line x1="730" y1="195" x2="730" y2="230" stroke="#0c7a73" stroke-width="1.8" stroke-dasharray="5,4"/>
+            <line x1="630" y1="140" x2="630" y2="195" stroke="#6366f1" stroke-width="1.8" stroke-dasharray="5,4" marker-start="url(#hollowTriangle)"/>
+            <line x1="430" y1="195" x2="730" y2="195" stroke="#6366f1" stroke-width="1.8" stroke-dasharray="5,4"/>
+            <line x1="430" y1="195" x2="430" y2="230" stroke="#6366f1" stroke-width="1.8" stroke-dasharray="5,4"/>
+            <line x1="730" y1="195" x2="730" y2="230" stroke="#6366f1" stroke-width="1.8" stroke-dasharray="5,4"/>
 
             <!-- Concrete Strategy A -->
             <g filter="url(#shadow)">
-              <rect x="330" y="230" width="200" height="85" rx="6" fill="var(--bg-raised, #ffffff)" stroke="#3b82f6" stroke-width="1.8"/>
-              <rect x="330" y="230" width="200" height="32" rx="6" fill="#3b82f6"/>
-              <rect x="330" y="256" width="200" height="6" fill="#3b82f6"/>
+              <rect x="330" y="230" width="200" height="85" rx="6" fill="#0f172a" stroke="#38bdf8" stroke-width="1.8"/>
+              <rect x="330" y="230" width="200" height="32" rx="6" fill="#0284c7"/>
+              <rect x="330" y="256" width="200" height="6" fill="#0284c7"/>
               <text x="430" y="252" fill="#ffffff" font-weight="700" text-anchor="middle" font-size="13">ConcreteStrategyA</text>
-              <text x="345" y="286" fill="var(--text, #1e293b)" font-size="11">+ algorithmInterface()</text>
+              <text x="345" y="286" fill="#f8fafc" font-size="11">+ algorithmInterface()</text>
             </g>
 
             <!-- Concrete Strategy B -->
             <g filter="url(#shadow)">
-              <rect x="630" y="230" width="200" height="85" rx="6" fill="var(--bg-raised, #ffffff)" stroke="#3b82f6" stroke-width="1.8"/>
-              <rect x="630" y="230" width="200" height="32" rx="6" fill="#3b82f6"/>
-              <rect x="630" y="256" width="200" height="6" fill="#3b82f6"/>
+              <rect x="630" y="230" width="200" height="85" rx="6" fill="#0f172a" stroke="#38bdf8" stroke-width="1.8"/>
+              <rect x="630" y="230" width="200" height="32" rx="6" fill="#0284c7"/>
+              <rect x="630" y="256" width="200" height="6" fill="#0284c7"/>
               <text x="730" y="252" fill="#ffffff" font-weight="700" text-anchor="middle" font-size="13">ConcreteStrategyB</text>
-              <text x="645" y="286" fill="var(--text, #1e293b)" font-size="11">+ algorithmInterface()</text>
+              <text x="645" y="286" fill="#f8fafc" font-size="11">+ algorithmInterface()</text>
             </g>
           </svg>
-        </div>
-
-        <div style="background:var(--bg); border:1px solid var(--border); border-radius:var(--radius-sm); padding:1.25rem; margin-top:1rem;">
-          <h4 style="margin:0 0 0.5rem; font-size:0.95rem;">Architectural Role Matrix:</h4>
-          <ul style="margin:0; padding-left:1.2rem; font-size:0.88rem; line-height:1.6; color:var(--text-muted);">
-            <li><strong>Context:</strong> Maintains a reference to a <code>Strategy</code> object. Communicates solely via the strategy interface. Exposes a setter allowing runtime mutability.</li>
-            <li><strong>Strategy Interface:</strong> Defines an algorithm signature common to all supported algorithm variations.</li>
-            <li><strong>Concrete Strategies:</strong> Implements the specific algorithm (e.g. QuickSort, CloudPayment, GPSRoute) without leaking private implementation details to Context.</li>
-          </ul>
         </div>
       </div>
     </section>
 
-    <!-- Section 4: Application Sorter Strategy -->
-    <section class="chapter" id="sorting-example">
+    <!-- Section 4: Production Code Tabs -->
+    <section class="chapter" id="production-code">
       <div class="chapter-head">
         <span class="chapter-num">4</span>
-        <h2>1.4 Application Example: High-Throughput Sorter Engine</h2>
+        <h2>1.4 Production Code: Multi-Language Implementations</h2>
       </div>
-      <p class="chapter-dek">A production-grade sorting pipeline dynamically selecting between algorithms depending on data volume.</p>
-
-      <div class="uml-visual-card">
-        <div class="uml-header">
-          <div class="uml-title">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
-            UML Domain Model: Sorter &amp; Sorting Strategies
-          </div>
-        </div>
-
-        <div class="uml-svg-container">
-          <svg viewBox="0 0 860 310" width="100%" height="auto" xmlns="http://www.w3.org/2000/svg" style="font-family:'JetBrains Mono', 'SF Mono', monospace; font-size:12px;">
-            <defs>
-              <filter id="shadow2" x="-5%" y="-5%" width="110%" height="115%" filterUnits="userSpaceOnUse">
-                <feDropShadow dx="0" dy="2" stdDeviation="3" flood-opacity="0.08"/>
-              </filter>
-              <marker id="arrow2" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-                <path d="M 0 1 L 10 5 L 0 9 z" fill="#0c7a73"/>
-              </marker>
-              <marker id="hollowTriangle2" viewBox="0 0 12 12" refX="12" refY="6" markerWidth="10" markerHeight="10" orient="auto-start-reverse">
-                <polygon points="0,0 12,6 0,12" fill="#ffffff" stroke="#0c7a73" stroke-width="1.8"/>
-              </marker>
-            </defs>
-
-            <!-- Sorter Context -->
-            <g filter="url(#shadow2)">
-              <rect x="20" y="30" width="250" height="130" rx="8" fill="var(--bg-raised, #ffffff)" stroke="#0c7a73" stroke-width="2"/>
-              <rect x="20" y="30" width="250" height="35" rx="8" fill="#0c7a73"/>
-              <rect x="20" y="57" width="250" height="8" fill="#0c7a73"/>
-              <text x="145" y="53" fill="#ffffff" font-weight="700" text-anchor="middle" font-size="13">DatasetSorter&lt;T&gt;</text>
-              <text x="35" y="85" fill="var(--text, #1e293b)">- sortStrategy: SortStrategy</text>
-              <line x1="20" y1="96" x2="270" y2="96" stroke="var(--border, #e2e8f0)" stroke-width="1"/>
-              <text x="35" y="118" fill="var(--text, #1e293b)">+ sortData(dataset: List&lt;T&gt;)</text>
-              <text x="35" y="140" fill="var(--text, #1e293b)">+ setStrategy(s: SortStrategy)</text>
-            </g>
-
-            <!-- SortStrategy Interface -->
-            <g filter="url(#shadow2)">
-              <rect x="470" y="30" width="310" height="105" rx="8" fill="var(--bg-raised, #ffffff)" stroke="#0c7a73" stroke-width="2"/>
-              <rect x="470" y="30" width="310" height="38" rx="8" fill="#0c7a73"/>
-              <rect x="470" y="60" width="310" height="8" fill="#0c7a73"/>
-              <text x="625" y="46" fill="#a7f3d0" font-size="10" text-anchor="middle">&lt;&lt;interface&gt;&gt;</text>
-              <text x="625" y="60" fill="#ffffff" font-weight="700" text-anchor="middle" font-size="13">SortStrategy&lt;T&gt;</text>
-              <text x="485" y="93" fill="var(--text, #1e293b)">+ sort(dataset: List&lt;T&gt;): void</text>
-              <text x="485" y="115" fill="var(--text-muted, #64748b)" font-size="11">// O(N log N) / O(N) contracts</text>
-            </g>
-
-            <!-- Arrow -->
-            <line x1="270" y1="80" x2="460" y2="80" stroke="#0c7a73" stroke-width="2" marker-end="url(#arrow2)"/>
-            <text x="365" y="72" fill="#0c7a73" font-size="11" font-weight="600" text-anchor="middle">delegates sort</text>
-
-            <!-- Concrete 3 implementations -->
-            <line x1="625" y1="135" x2="625" y2="185" stroke="#0c7a73" stroke-width="1.8" stroke-dasharray="4,4" marker-start="url(#hollowTriangle2)"/>
-            <line x1="390" y1="185" x2="800" y2="185" stroke="#0c7a73" stroke-width="1.8" stroke-dasharray="4,4"/>
-            <line x1="390" y1="185" x2="390" y2="215" stroke="#0c7a73" stroke-width="1.8" stroke-dasharray="4,4"/>
-            <line x1="600" y1="185" x2="600" y2="215" stroke="#0c7a73" stroke-width="1.8" stroke-dasharray="4,4"/>
-            <line x1="800" y1="185" x2="800" y2="215" stroke="#0c7a73" stroke-width="1.8" stroke-dasharray="4,4"/>
-
-            <!-- QuickSort -->
-            <g filter="url(#shadow2)">
-              <rect x="310" y="215" width="160" height="75" rx="6" fill="var(--bg-raised, #ffffff)" stroke="#6366f1" stroke-width="1.6"/>
-              <rect x="310" y="215" width="160" height="26" rx="6" fill="#6366f1"/>
-              <rect x="310" y="235" width="160" height="6" fill="#6366f1"/>
-              <text x="390" y="233" fill="#ffffff" font-weight="700" text-anchor="middle" font-size="12">QuickSortStrategy</text>
-              <text x="322" y="262" fill="var(--text, #1e293b)" font-size="10">+ sort(dataset)</text>
-              <text x="322" y="278" fill="var(--text-muted, #64748b)" font-size="9.5">O(N log N) In-Place</text>
-            </g>
-
-            <!-- TimSort -->
-            <g filter="url(#shadow2)">
-              <rect x="520" y="215" width="160" height="75" rx="6" fill="var(--bg-raised, #ffffff)" stroke="#6366f1" stroke-width="1.6"/>
-              <rect x="520" y="215" width="160" height="26" rx="6" fill="#6366f1"/>
-              <rect x="520" y="235" width="160" height="6" fill="#6366f1"/>
-              <text x="600" y="233" fill="#ffffff" font-weight="700" text-anchor="middle" font-size="12">TimSortStrategy</text>
-              <text x="532" y="262" fill="var(--text, #1e293b)" font-size="10">+ sort(dataset)</text>
-              <text x="532" y="278" fill="var(--text-muted, #64748b)" font-size="9.5">Hybrid Run-Merge</text>
-            </g>
-
-            <!-- InsertionSort -->
-            <g filter="url(#shadow2)">
-              <rect x="720" y="215" width="160" height="75" rx="6" fill="var(--bg-raised, #ffffff)" stroke="#6366f1" stroke-width="1.6"/>
-              <rect x="720" y="215" width="160" height="26" rx="6" fill="#6366f1"/>
-              <rect x="720" y="235" width="160" height="6" fill="#6366f1"/>
-              <text x="800" y="233" fill="#ffffff" font-weight="700" text-anchor="middle" font-size="12">InsertionSort</text>
-              <text x="732" y="262" fill="var(--text, #1e293b)" font-size="10">+ sort(dataset)</text>
-              <text x="732" y="278" fill="var(--text-muted, #64748b)" font-size="9.5">Fast for N &lt; 32</text>
-            </g>
-          </svg>
-        </div>
-      </div>
-    </section>
-
-    <!-- Section 5: Code Implementations (Tabs) -->
-    <section class="chapter" id="code-tabs">
-      <div class="chapter-head">
-        <span class="chapter-num">5</span>
-        <h2>1.5 Production Code: Multi-Language Implementations</h2>
-      </div>
-      <p class="chapter-dek">Modern implementations adhering strictly to Clean Code and type safety.</p>
+      <p class="chapter-dek">Clean, type-safe implementations in modern enterprise languages.</p>
 
       <div class="tabs-container">
         <div class="tabs-header">
@@ -526,7 +432,6 @@
           <button type="button" class="tab-btn" data-tab="tab-duck-java">🦆 SimUDuck Complete Java</button>
         </div>
 
-        <!-- Java Tab -->
         <div class="tab-panel active" id="tab-java">
           <div class="code-container" style="margin:0;">
             <div class="code-header">
@@ -590,35 +495,30 @@ public class DatasetSorter&lt;T extends Comparable&lt;T&gt;&gt; {
           </div>
         </div>
 
-        <!-- Python Tab -->
         <div class="tab-panel" id="tab-python">
           <div class="code-container" style="margin:0;">
             <div class="code-header">
               <span>sorter.py (Python 3.12+)</span>
-              <span>Protocol Structural Typing</span>
+              <span>Protocol Structural Subtyping</span>
             </div>
             <pre class="code-body"><code class="language-python">from typing import Protocol, TypeVar, List
 import time
 
 T = TypeVar("T")
 
-# 1. Structural Strategy Abstraction via typing.Protocol
 class SortStrategy(Protocol[T]):
     def sort(self, dataset: List[T]) -> None:
         """Sorts the given list in place."""
         ...
 
-# 2. Concrete Strategy: Standard Timsort
 class TimSortStrategy:
     def sort(self, dataset: List[T]) -> None:
         dataset.sort()
 
-# 3. Concrete Strategy: Custom Reverse Sort
 class ReverseSortStrategy:
     def sort(self, dataset: List[T]) -> None:
         dataset.sort(reverse=True)
 
-# 4. Context Class
 class DatasetProcessor:
     def __init__(self, strategy: SortStrategy[T]) -> None:
         self._strategy = strategy
@@ -630,32 +530,19 @@ class DatasetProcessor:
         t0 = time.perf_counter()
         self._strategy.sort(data)
         elapsed = (time.perf_counter() - t0) * 1000
-        print(f"Processed {len(data)} items via {self._strategy.__class__.__name__} in {elapsed:.3f}ms")
-
-# Example Usage
-if __name__ == "__main__":
-    data = [42, 12, 88, 3, 99, 15]
-    processor = DatasetProcessor(TimSortStrategy())
-    processor.process(data)
-    
-    # Dynamic runtime switch to Reverse Strategy
-    processor.set_strategy(ReverseSortStrategy())
-    processor.process(data)</code></pre>
+        print(f"Processed {len(data)} items via {self._strategy.__class__.__name__} in {elapsed:.3f}ms")</code></pre>
           </div>
         </div>
 
-        <!-- Complete Duck Java Tab -->
         <div class="tab-panel" id="tab-duck-java">
           <div class="code-container" style="margin:0;">
             <div class="code-header">
               <span>DuckSimulator.java</span>
               <span>Complete GoF Pattern Architecture</span>
             </div>
-            <pre class="code-body"><code class="language-java">// Behavior Interfaces
-public interface FlyBehavior { void fly(); }
+            <pre class="code-body"><code class="language-java">public interface FlyBehavior { void fly(); }
 public interface QuackBehavior { void quack(); }
 
-// Concrete Fly Implementations
 public class FlyWithWings implements FlyBehavior {
     public void fly() { System.out.println("Flapping biological wings at high altitude!"); }
 }
@@ -666,7 +553,6 @@ public class FlyRocketPowered implements FlyBehavior {
     public void fly() { System.out.println("🚀 Mach 3 Jet Propulsion Activated!"); }
 }
 
-// Abstract Duck Superclass (Context)
 public abstract class Duck {
     protected FlyBehavior flyBehavior;
     protected QuackBehavior quackBehavior;
@@ -676,77 +562,57 @@ public abstract class Duck {
     public void swim() { System.out.println("All ducks float on water!"); }
     public abstract void display();
 
-    // Hot-swap setters
     public void setFlyBehavior(FlyBehavior fb) { this.flyBehavior = fb; }
     public void setQuackBehavior(QuackBehavior qb) { this.quackBehavior = qb; }
-}
-
-// Concrete Duck Subclasses
-public class MallardDuck extends Duck {
-    public MallardDuck() {
-        flyBehavior = new FlyWithWings();
-        quackBehavior = new Quack();
-    }
-    public void display() { System.out.println("I am a real Mallard Duck."); }
-}
-
-public class ModelDuck extends Duck {
-    public ModelDuck() {
-        flyBehavior = new FlyNoWay(); // Model initially can't fly
-        quackBehavior = new Quack();
-    }
-    public void display() { System.out.println("I am a futuristic Model Duck."); }
 }</code></pre>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- Section 6: Real-World Industry Case Studies -->
-    <section class="chapter" id="real-world">
+    <!-- Section 5: Real-World Industry Case Studies -->
+    <section class="chapter" id="industry-cases">
       <div class="chapter-head">
-        <span class="chapter-num">6</span>
-        <h2>1.6 Production Real-World Case Studies</h2>
+        <span class="chapter-num">5</span>
+        <h2>1.5 Production Real-World Case Studies</h2>
       </div>
-      <p class="chapter-dek">How the Fortune 500 and open-source infrastructure leverage the Strategy Pattern daily.</p>
 
-      <div class="feature-grid">
-        <div class="feature-box">
-          <div class="feature-icon">☕</div>
-          <h4 style="margin:0 0 0.4rem; font-size:1.05rem;">Java Standard Library: Comparator</h4>
-          <p style="font-size:0.88rem; color:var(--text-muted); line-height:1.5; margin:0 0 0.75rem;">
-            <code>Collections.sort(List, Comparator)</code> is the canonical Strategy pattern. The list sorting algorithm is the Context, while the custom ordering comparator is the Strategy passed dynamically at call time.
+      <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:1.25rem; margin:1.5rem 0;">
+        <div style="background:var(--bg-raised); border:1px solid var(--border); border-radius:var(--radius-md); padding:1.5rem;">
+          <div style="font-size:1.8rem; margin-bottom:0.75rem;">☕</div>
+          <h4 style="margin:0 0 0.5rem; font-size:1.05rem;">Java SDK: Collections.sort()</h4>
+          <p style="font-size:0.88rem; color:var(--text-muted); line-height:1.6; margin:0 0 0.75rem;">
+            <code>Collections.sort(List, Comparator)</code> is the quintessential Strategy pattern. The list sorting algorithm is the Context, while the custom ordering <code>Comparator</code> is the Strategy injected dynamically at call time.
           </p>
-          <span class="key-metric-badge">Java SDK Standard</span>
+          <span style="font-family:var(--font-mono); font-size:0.72rem; color:#38bdf8; background:rgba(56,189,248,0.12); padding:0.2rem 0.5rem; border-radius:4px;">Java SDK Standard</span>
         </div>
 
-        <div class="feature-box">
-          <div class="feature-icon">🐧</div>
-          <h4 style="margin:0 0 0.4rem; font-size:1.05rem;">Linux Virtual File System (VFS)</h4>
-          <p style="font-size:0.88rem; color:var(--text-muted); line-height:1.5; margin:0 0 0.75rem;">
-            The Linux kernel treats all storage (ext4, NTFS, Btrfs, NFS) through a generic <code>struct file_operations</code> table of function pointers. When you call <code>read()</code>, the kernel delegates to the mounted filesystem's strategy.
+        <div style="background:var(--bg-raised); border:1px solid var(--border); border-radius:var(--radius-md); padding:1.5rem;">
+          <div style="font-size:1.8rem; margin-bottom:0.75rem;">🐧</div>
+          <h4 style="margin:0 0 0.5rem; font-size:1.05rem;">Linux Kernel: Virtual File System</h4>
+          <p style="font-size:0.88rem; color:var(--text-muted); line-height:1.6; margin:0 0 0.75rem;">
+            The Linux kernel interacts with all storage systems (ext4, Btrfs, NFS, FAT32) via a generic <code>struct file_operations</code> table of function pointers. Calling <code>read()</code> delegates dynamically to the mounted filesystem driver.
           </p>
-          <span class="key-metric-badge">Operating Systems</span>
+          <span style="font-family:var(--font-mono); font-size:0.72rem; color:#10b981; background:rgba(16,185,129,0.12); padding:0.2rem 0.5rem; border-radius:4px;">OS Kernel Architecture</span>
         </div>
 
-        <div class="feature-box">
-          <div class="feature-icon">💳</div>
-          <h4 style="margin:0 0 0.4rem; font-size:1.05rem;">Cloud Payment Gateway Routing</h4>
-          <p style="font-size:0.88rem; color:var(--text-muted); line-height:1.5; margin:0 0 0.75rem;">
-            Payment processors like Uber or Airbnb route transactions through Stripe, Adyen, or PayPal dynamically. If Stripe experiences high latency in Europe, an algorithmic router switches to Adyen in 5ms without application restarts.
+        <div style="background:var(--bg-raised); border:1px solid var(--border); border-radius:var(--radius-md); padding:1.5rem;">
+          <div style="font-size:1.8rem; margin-bottom:0.75rem;">💳</div>
+          <h4 style="margin:0 0 0.5rem; font-size:1.05rem;">Cloud Payment Gateway Routing</h4>
+          <p style="font-size:0.88rem; color:var(--text-muted); line-height:1.6; margin:0 0 0.75rem;">
+            Payment gateways like Uber or Airbnb route checkout transactions through Stripe, Adyen, or PayPal. If Stripe latency spikes in Europe, an algorithmic router switches to Adyen in 5ms without application restart.
           </p>
-          <span class="key-metric-badge">High Availability</span>
+          <span style="font-family:var(--font-mono); font-size:0.72rem; color:#f59e0b; background:rgba(245,158,11,0.12); padding:0.2rem 0.5rem; border-radius:4px;">High Availability Fintech</span>
         </div>
       </div>
     </section>
 
-    <!-- Section 7: Decision Matrix -->
+    <!-- Section 6: Decision Matrix -->
     <section class="chapter" id="decision-matrix">
       <div class="chapter-head">
-        <span class="chapter-num">7</span>
-        <h2>1.7 Architecture Decision Matrix: Strategy vs. Alternatives</h2>
+        <span class="chapter-num">6</span>
+        <h2>1.6 Architecture Decision Matrix: Strategy vs. Alternatives</h2>
       </div>
-      <p class="chapter-dek">Never pick a pattern blindly. Compare trade-offs against Template Method and State.</p>
 
       <div class="matrix-table-wrap">
         <table class="matrix-table">
@@ -786,135 +652,131 @@ public class ModelDuck extends Duck {
       </div>
     </section>
 
-    <!-- Section 8: Professor Gotchas & Self-Study Questions -->
+    <!-- Section 7: Professor Dr. Jörg Schäfer Gotchas -->
     <section class="chapter" id="prof-gotchas">
       <div class="chapter-head">
-        <span class="chapter-num">8</span>
-        <h2>1.8 Exercise: Official Questions for Self-Study</h2>
+        <span class="chapter-num">7</span>
+        <h2>1.7 Exercise: Official Self-Study Questions (Prof. Dr. Jörg Schäfer)</h2>
       </div>
-      <p class="chapter-dek">Assigned directly by Prof. Dr. Jörg Schäfer with complete exam-grade model solutions.</p>
 
-      <!-- Gotcha 1 -->
       <div class="prof-gotcha">
         <div class="prof-gotcha-title">
-          <span>🎯 Professor Gotcha #1: The Strategy Object Explosion</span>
+          <span>🎯 Gotcha #1: Strategy Object Explosion &amp; Memory Overhead</span>
         </div>
-        <p style="margin:0 0 0.6rem; font-size:0.95rem; font-weight:600; color:var(--text);">
+        <p style="margin:0 0 0.6rem; font-size:0.95rem; font-weight:700; color:var(--text);">
           "What happens when a high-scale system has an explosion of Strategy objects? How can an architect prevent catastrophic memory exhaustion?"
         </p>
         <div style="background:var(--bg-raised); border:1px solid var(--border); padding:1.25rem; border-radius:var(--radius-sm); font-size:0.9rem; line-height:1.6; color:var(--text);">
-          <p><strong>The Architectural Problem:</strong> If 1,000,000 Duck or Sorter instances each instantiate a brand new <code>FlyWithWings</code> or <code>QuickSortStrategy</code> object, the JVM/runtime allocates millions of redundant objects, triggering severe Garbage Collector pauses and heap bloat.</p>
+          <p><strong>The Architectural Problem:</strong> If 1,000,000 Duck or Sorter instances each instantiate a brand new <code>FlyWithWings</code> or <code>QuickSortStrategy</code> object, the JVM allocates millions of redundant objects, triggering severe Garbage Collector pauses and heap bloat.</p>
           <p><strong>The 3 Exam-Grade Solutions:</strong></p>
           <ol style="margin:0; padding-left:1.3rem;">
-            <li>
-              <strong>Stateless Strategies via Flyweight Pattern:</strong> If a Strategy contains no mutable instance fields (it only executes algorithmic logic on data passed to it), it can be made a stateless <em>Singleton / Flyweight</em>. All 1,000,000 contexts reference a single shared instance in memory.
-            </li>
-            <li>
-              <strong>First-Class Lambdas &amp; Method References:</strong> In modern Java (<code>Integer::compareTo</code>) or Python (<code>lambda x: x.id</code>), strategies are passed as pure function references without allocating heavyweight class instances.
-            </li>
-            <li>
-              <strong>Strategy Factory (Unit 8):</strong> Cache and manage strategy lifecycles behind a centralized Factory to prevent ad-hoc allocation.
-            </li>
+            <li><strong>Stateless Strategies via Flyweight Pattern:</strong> If a Strategy contains no mutable instance fields, it can be made a stateless <em>Singleton / Flyweight</em>. All 1,000,000 contexts share a single instance in memory.</li>
+            <li><strong>First-Class Lambdas &amp; Method References:</strong> In modern Java (<code>Integer::compareTo</code>) or Python (<code>lambda x: x.id</code>), strategies are passed as pure function references without allocating heavyweight class instances.</li>
+            <li><strong>Strategy Factory (Unit 8):</strong> Cache and manage strategy lifecycles behind a centralized Factory to prevent ad-hoc allocation.</li>
           </ol>
         </div>
       </div>
 
-      <!-- Gotcha 2 -->
       <div class="prof-gotcha" style="margin-top:1.5rem;">
         <div class="prof-gotcha-title">
-          <span>🎯 Professor Gotcha #2: The Data Access &amp; Privacy Leak Dilemma</span>
+          <span>🎯 Gotcha #2: Context Data Access Coupling &amp; Privacy Leaks</span>
         </div>
-        <p style="margin:0 0 0.6rem; font-size:0.95rem; font-weight:600; color:var(--text);">
+        <p style="margin:0 0 0.6rem; font-size:0.95rem; font-weight:700; color:var(--text);">
           "GoF states a Strategy gets data by (A) parameter arguments or (B) Context reference passed to Strategy. What happens if the data required by Strategy is NOT public on Context? How do you solve this without violating Encapsulation?"
         </p>
         <div style="background:var(--bg-raised); border:1px solid var(--border); padding:1.25rem; border-radius:var(--radius-sm); font-size:0.9rem; line-height:1.6; color:var(--text);">
-          <p><strong>The Dilemma:</strong> If Context makes its internal private fields public via getters just so a Strategy can inspect them, Information Hiding is completely destroyed for all other outside clients!</p>
+          <p><strong>The Dilemma:</strong> If Context exposes its private fields via public getters just so a Strategy can read them, Information Hiding is broken for all other outside callers!</p>
           <p><strong>The 3 Architectural Remedies:</strong></p>
           <ol style="margin:0; padding-left:1.3rem;">
-            <li>
-              <strong>Narrow Interface (Interface Segregation Principle):</strong> Define a restricted interface (e.g. <code>ContextInspectable</code>) exposing only the specific fields needed by the Strategy. Context implements this interface. Context passes <code>this</code> typed strictly as <code>ContextInspectable</code>. Outside clients cannot see these methods.
-            </li>
-            <li>
-              <strong>Data Transfer Object (DTO) / Parameter Object:</strong> Context extracts and bundles only the required data slice into an immutable DTO and passes it into <code>strategy.execute(dto)</code>.
-            </li>
-            <li>
-              <strong>Package-Private Visibility (Java) / Friend Classes (C++):</strong> Place the Context and Concrete Strategies in the same internal package, keeping access methods package-private so outside packages cannot access them.
-            </li>
+            <li><strong>Narrow Interface (Interface Segregation Principle):</strong> Define a restricted interface (e.g. <code>ContextInspectable</code>) exposing only the fields the Strategy needs. Context implements it and passes <code>this</code> typed strictly as <code>ContextInspectable</code>.</li>
+            <li><strong>Data Transfer Object (DTO):</strong> Context bundles only the required data slice into an immutable DTO and passes it into <code>strategy.execute(dto)</code>.</li>
+            <li><strong>Package-Private Visibility (Java):</strong> Place Context and Strategies in the same package, keeping access package-private.</li>
           </ol>
         </div>
       </div>
     </section>
 
-    <!-- Section 9: Self-Assessment Quiz -->
-    <section class="chapter" id="exam-quiz">
+    <!-- Section 8: Certification Exam Simulator -->
+    <section class="chapter" id="cert-exam-quiz">
       <div class="chapter-head">
-        <span class="chapter-num">9</span>
-        <h2>1.9 Interactive Exam Mastery Quiz</h2>
+        <span class="chapter-num">8</span>
+        <h2>1.8 Certification-Grade Exam Mastery Simulator</h2>
       </div>
-      <p class="chapter-dek">Test your understanding against trick questions drawn from previous exam sittings.</p>
 
-      <!-- Quiz Question 1 -->
-      <div class="quiz-widget">
-        <div class="quiz-q-title">Q1: Which design principle is the PRIMARY motivator behind the Strategy pattern?</div>
-        <div class="quiz-options">
-          <button type="button" class="quiz-opt" data-correct="false" data-reason="Singleton ensures one instance, but does not isolate varying algorithms.">
-            A) Ensure a class has only one instance and provide a global point of access.
+      <!-- Question 1 -->
+      <div class="cert-quiz-card">
+        <div class="cert-quiz-badge">Question 1 · Core Architectural Intent · 5 Pts</div>
+        <div class="cert-quiz-question">Which design principle is the PRIMARY motivator behind the Strategy pattern?</div>
+        <div class="cert-quiz-options">
+          <button type="button" class="cert-opt" data-correct="false" data-reason="The Singleton pattern ensures single-instance access, but does not isolate varying algorithms.">
+            <span class="cert-opt-letter">A</span>
+            <span>Ensure a class has only one instance and provide a global point of access.</span>
           </button>
-          <button type="button" class="quiz-opt" data-correct="true" data-reason="Exact GoF rule: Identify what varies and separate it from what remains stable, favoring composition over inheritance.">
-            B) Encapsulate what varies and favor object composition over class inheritance.
+          <button type="button" class="cert-opt" data-correct="true" data-reason="Canonical Gang of Four intent: Encapsulate what varies and favor object composition over class inheritance.">
+            <span class="cert-opt-letter">B</span>
+            <span>Encapsulate what varies and favor object composition over class inheritance.</span>
           </button>
-          <button type="button" class="quiz-opt" data-correct="false" data-reason="Deep inheritance hierarchies are an anti-pattern that Strategy actively eliminates.">
-            C) Maximize code reuse through deep subclassing trees and protected methods.
+          <button type="button" class="cert-opt" data-correct="false" data-reason="Deep inheritance trees create rigid compile-time coupling, which Strategy actively eliminates.">
+            <span class="cert-opt-letter">C</span>
+            <span>Maximize code reuse through deep subclassing trees and protected methods.</span>
           </button>
-          <button type="button" class="quiz-opt" data-correct="false" data-reason="Coupling clients to concrete implementations violates dependency inversion.">
-            D) Ensure client classes create and manage concrete algorithmic classes directly.
+          <button type="button" class="cert-opt" data-correct="false" data-reason="Directly coupling clients to concrete classes violates the Dependency Inversion Principle.">
+            <span class="cert-opt-letter">D</span>
+            <span>Ensure client classes create and manage concrete algorithmic classes directly.</span>
           </button>
         </div>
-        <div class="quiz-feedback"></div>
+        <div class="cert-feedback"></div>
       </div>
 
-      <!-- Quiz Question 2 -->
-      <div class="quiz-widget">
-        <div class="quiz-q-title">Q2: How does the Strategy pattern achieve runtime behavioral modification compared to Template Method?</div>
-        <div class="quiz-options">
-          <button type="button" class="quiz-opt" data-correct="false" data-reason="Template Method relies on subclassing, which binds behavior rigidly at compile time.">
-            A) Template Method allows runtime swapping by overriding private methods dynamically.
+      <!-- Question 2 -->
+      <div class="cert-quiz-card">
+        <div class="cert-quiz-badge">Question 2 · Runtime Mutability vs. Compile-Time · 5 Pts</div>
+        <div class="cert-quiz-question">How does the Strategy pattern achieve runtime behavioral modification compared to Template Method?</div>
+        <div class="cert-quiz-options">
+          <button type="button" class="cert-opt" data-correct="false" data-reason="Template Method relies on subclass inheritance, which binds behavior rigidly at compile time.">
+            <span class="cert-opt-letter">A</span>
+            <span>Template Method allows runtime swapping by overriding private methods dynamically.</span>
           </button>
-          <button type="button" class="quiz-opt" data-correct="true" data-reason="Strategy uses composition: Context holds an interface pointer that can be reassigned at any moment via a setter. Template Method is bound at compile-time via inheritance.">
-            B) Strategy uses composition with swappable interface pointers; Template Method binds behavior at compile-time via class inheritance.
+          <button type="button" class="cert-opt" data-correct="true" data-reason="Strategy uses composition: Context holds an interface pointer that can be reassigned at any moment via a setter. Template Method binds behavior at compile-time via class inheritance.">
+            <span class="cert-opt-letter">B</span>
+            <span>Strategy uses composition with swappable interface pointers; Template Method binds behavior at compile-time via class inheritance.</span>
           </button>
-          <button type="button" class="quiz-opt" data-correct="false" data-reason="Strategy does not require reflection or bytecode generation for standard polymorphic dispatch.">
-            C) Strategy requires dynamic JVM bytecode manipulation, whereas Template Method uses static memory tables.
+          <button type="button" class="cert-opt" data-correct="false" data-reason="Strategy does not require JVM bytecode manipulation for standard polymorphic dispatch.">
+            <span class="cert-opt-letter">C</span>
+            <span>Strategy requires dynamic JVM bytecode manipulation, whereas Template Method uses static memory tables.</span>
           </button>
         </div>
-        <div class="quiz-feedback"></div>
+        <div class="cert-feedback"></div>
       </div>
 
-      <!-- Quiz Question 3 -->
-      <div class="quiz-widget">
-        <div class="quiz-q-title">Q3: When 10,000 Context instances share strategies, which companion pattern resolves the memory overhead?</div>
-        <div class="quiz-options">
-          <button type="button" class="quiz-opt" data-correct="true" data-reason="Flyweight shares stateless objects across thousands of clients, eliminating duplicate instance allocations.">
-            A) The Flyweight Pattern (by making the concrete Strategy classes stateless singletons).
+      <!-- Question 3 -->
+      <div class="cert-quiz-card">
+        <div class="cert-quiz-badge">Question 3 · Scale &amp; Memory Optimization · 5 Pts</div>
+        <div class="cert-quiz-question">When 100,000 Context instances share strategies, which companion pattern resolves the memory overhead?</div>
+        <div class="cert-quiz-options">
+          <button type="button" class="cert-opt" data-correct="true" data-reason="Flyweight shares stateless objects across thousands of clients, eliminating duplicate instance allocations.">
+            <span class="cert-opt-letter">A</span>
+            <span>The Flyweight Pattern (by making concrete Strategy classes stateless singletons).</span>
           </button>
-          <button type="button" class="quiz-opt" data-correct="false" data-reason="The Decorator pattern wraps objects to add responsibilities, increasing object count rather than reducing it.">
-            B) The Decorator Pattern (by chaining strategies inside nested wrappers).
+          <button type="button" class="cert-opt" data-correct="false" data-reason="Decorator wraps objects to add responsibilities, increasing object count rather than reducing it.">
+            <span class="cert-opt-letter">B</span>
+            <span>The Decorator Pattern (by chaining strategies inside nested wrappers).</span>
           </button>
-          <button type="button" class="quiz-opt" data-correct="false" data-reason="The Prototype pattern clones new copies, which worsens memory exhaustion.">
-            C) The Prototype Pattern (by cloning strategies on demand).
+          <button type="button" class="cert-opt" data-correct="false" data-reason="Prototype clones new instances, worsening memory exhaustion.">
+            <span class="cert-opt-letter">C</span>
+            <span>The Prototype Pattern (by cloning strategies on demand).</span>
           </button>
         </div>
-        <div class="quiz-feedback"></div>
+        <div class="cert-feedback"></div>
       </div>
-
     </section>
 
-    <!-- Navigation Footer -->
+    <!-- Footer -->
     <footer class="page-footer" style="margin-top: 4rem; padding-top: 2rem; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
-      <a href="index.html" class="sim-btn-secondary" style="text-decoration:none;">
+      <a href="index.html" class="btn-studio-hot-swap" style="text-decoration:none; padding:0.6rem 1.25rem;">
         ← Back to Course Hub
       </a>
-      <a href="unit-2-behavioral.html" class="sim-btn-primary" style="text-decoration:none;">
+      <a href="unit-2-behavioral.html" class="btn-studio-run" style="text-decoration:none; padding:0.6rem 1.25rem;">
         Next: Unit 2 · Template Method &amp; Command →
       </a>
     </footer>

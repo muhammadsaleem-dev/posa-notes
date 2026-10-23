@@ -321,4 +321,163 @@
     });
     header.appendChild(copyBtn);
   });
+
+  // ==========================================================================
+  // LUXURY €1,500 STUDIO INTERACTIVE ENGINE
+  // ==========================================================================
+  var currentDuck = "MallardDuck";
+  var currentFly = "FlyWithWings";
+  var currentQuack = "Quack";
+
+  function setupSegmentedControl(containerId, onChange) {
+    var container = document.getElementById(containerId);
+    if (!container) return;
+    container.addEventListener("click", function (e) {
+      var btn = e.target.closest(".seg-btn");
+      if (!btn) return;
+      container.querySelectorAll(".seg-btn").forEach(function (b) { b.classList.remove("active"); });
+      btn.classList.add("active");
+      var val = btn.getAttribute("data-val");
+      if (val && onChange) onChange(val);
+    });
+  }
+
+  setupSegmentedControl("duckSegmented", function (val) {
+    currentDuck = val;
+    updateStudioStage();
+  });
+  setupSegmentedControl("flySegmented", function (val) {
+    currentFly = val;
+    updateStudioStage();
+  });
+  setupSegmentedControl("quackSegmented", function (val) {
+    currentQuack = val;
+    updateStudioStage();
+  });
+
+  function updateStudioStage() {
+    var avatar = document.getElementById("duckAvatar");
+    var title = document.getElementById("duckTitle");
+    var sub = document.getElementById("duckSub");
+    var flight = document.getElementById("flightTelemetry");
+    var quack = document.getElementById("quackTelemetry");
+    var mem = document.getElementById("memoryTelemetry");
+
+    if (!avatar || !title) return;
+
+    if (currentDuck === "MallardDuck") {
+      avatar.textContent = "🦆";
+      title.textContent = "Mallard Duck";
+      sub.textContent = "Anas platyrhynchos · Natural Waterfowl";
+      if (mem) mem.textContent = "Stateless Flyweight · 0B Heap";
+    } else if (currentDuck === "RubberDuck") {
+      avatar.textContent = "🐤";
+      title.textContent = "Rubber Bath Duck";
+      sub.textContent = "Silicone Inanimate · Bath Toy Context";
+      if (mem) mem.textContent = "Lightweight Value Object";
+    } else if (currentDuck === "DecoyDuck") {
+      avatar.textContent = "🪵";
+      title.textContent = "Wooden Decoy Duck";
+      sub.textContent = "Hardwood Carving · Inert Context";
+      if (mem) mem.textContent = "Zero Dynamic Overhead";
+    } else if (currentDuck === "ModelDuck") {
+      avatar.textContent = "🤖";
+      title.textContent = "Cybernetic Drone Duck";
+      sub.textContent = "Autonomous UAV Simulator · Prototype";
+      if (mem) mem.textContent = "Embedded Controller Stack";
+    }
+
+    if (flight) {
+      if (currentFly === "FlyWithWings") {
+        flight.textContent = "🪽 Biological Wings · 35 km/h";
+      } else if (currentFly === "FlyNoWay") {
+        flight.textContent = "🚫 Grounded (Safe from Bugs)";
+      } else if (currentFly === "FlyRocketPowered") {
+        flight.textContent = "🚀 Jet Propulsion · Mach 3 Speed!";
+      }
+    }
+
+    if (quack) {
+      if (currentQuack === "Quack") {
+        quack.textContent = "🔊 Natural Quack · 85 dB";
+      } else if (currentQuack === "Squeak") {
+        quack.textContent = "🔉 Vinyl Air Valve Squeak";
+      } else if (currentQuack === "MuteQuack") {
+        quack.textContent = "🔇 Absolute Silence · 0 dB";
+      }
+    }
+  }
+
+  var studioRunBtn = document.getElementById("studioRunBtn");
+  var studioHotSwapBtn = document.getElementById("studioHotSwapBtn");
+  var studioConsole = document.getElementById("studioConsole");
+
+  if (studioRunBtn && studioConsole) {
+    studioRunBtn.addEventListener("click", function () {
+      var ts = new Date().toISOString().substring(11, 23);
+      var logs = [
+        "[" + ts + "] [DISPATCH] Invoking context.performFly() & context.performQuack()",
+        "[" + ts + "] [VTABLE] Resolved pointer: " + currentDuck + " -> " + currentFly + "::fly()",
+        "[" + ts + "] [OUTPUT] " + getFlyExecution(currentFly),
+        "[" + ts + "] [VTABLE] Resolved pointer: " + currentDuck + " -> " + currentQuack + "::quack()",
+        "[" + ts + "] [OUTPUT] " + getQuackExecution(currentQuack),
+        "[" + ts + "] [STATUS] Polymorphic dispatch completed with 0 heap allocations."
+      ];
+      studioConsole.textContent = logs.join("\n");
+      showToast("Dispatch Executed Successfully");
+    });
+  }
+
+  if (studioHotSwapBtn && studioConsole) {
+    studioHotSwapBtn.addEventListener("click", function () {
+      currentFly = "FlyRocketPowered";
+      var flySeg = document.getElementById("flySegmented");
+      if (flySeg) {
+        flySeg.querySelectorAll(".seg-btn").forEach(function (b) {
+          b.classList.toggle("active", b.getAttribute("data-val") === "FlyRocketPowered");
+        });
+      }
+      updateStudioStage();
+      var ts = new Date().toISOString().substring(11, 23);
+      var logs = [
+        "[" + ts + "] ⚡ [HOT-SWAP] Re-binding: context.setFlyBehavior(new FlyRocketPowered())",
+        "[" + ts + "] [MUTATION] Pointer updated in memory at runtime!",
+        "[" + ts + "] [OUTPUT] 🚀 WHOOOOSH! Jet Thrusters Ignited! Flying at Mach 3!",
+        "[" + ts + "] [TAKEAWAY] Zero subclass re-compilation. Strategy swapped dynamically in-flight!"
+      ];
+      studioConsole.textContent = logs.join("\n");
+      showToast("⚡ Hot-Swapped to Rocket Engine at Runtime!");
+    });
+  }
+
+  // Cert Quiz Handler
+  document.addEventListener("click", function (e) {
+    var opt = e.target.closest(".cert-opt");
+    if (!opt) return;
+    var card = opt.closest(".cert-quiz-card");
+    if (!card) return;
+    var isCorrect = opt.getAttribute("data-correct") === "true";
+    var feedback = card.querySelector(".cert-feedback");
+
+    card.querySelectorAll(".cert-opt").forEach(function (o) {
+      o.classList.remove("correct", "wrong");
+    });
+
+    if (isCorrect) {
+      opt.classList.add("correct");
+      if (feedback) {
+        feedback.className = "cert-feedback show-correct";
+        feedback.innerHTML = "<strong>✅ Correct Architecture Decision!</strong> " + (opt.getAttribute("data-reason") || "Spot-on! You demonstrated mastery of this design principle.");
+      }
+      showToast("🎉 Correct Answer!");
+    } else {
+      opt.classList.add("wrong");
+      var correctOpt = card.querySelector('.cert-opt[data-correct="true"]');
+      if (correctOpt) correctOpt.classList.add("correct");
+      if (feedback) {
+        feedback.className = "cert-feedback show-wrong";
+        feedback.innerHTML = "<strong>❌ Architectural Trap!</strong> " + (opt.getAttribute("data-reason") || "Review the trade-off and try again.");
+      }
+    }
+  });
 })();
