@@ -799,7 +799,7 @@
     var prevBtn = stepperBox.querySelector(".btn-stepper-prev");
     var nextBtn = stepperBox.querySelector(".btn-stepper-next");
 
-    function updateStepper(step) {
+    function updateStepper(step, autoScroll) {
       currentStep = step;
       stepNodes.forEach(function (node) {
         var num = parseInt(node.getAttribute("data-step"), 10);
@@ -818,25 +818,34 @@
           ? "Proceed to Stage 2: Architecture Blueprint →" 
           : "Next: Step " + (step + 1) + " →";
       }
+
+      if (autoScroll) {
+        var boxRect = stepperBox.getBoundingClientRect();
+        if (boxRect.top < 70) {
+          var headerOffset = 65;
+          var targetScroll = window.pageYOffset + boxRect.top - headerOffset;
+          window.scrollTo({ top: targetScroll, behavior: "smooth" });
+        }
+      }
     }
 
     stepNodes.forEach(function (node) {
       node.addEventListener("click", function () {
         var step = parseInt(node.getAttribute("data-step"), 10);
-        updateStepper(step);
+        updateStepper(step, true);
       });
     });
 
     if (prevBtn) {
       prevBtn.addEventListener("click", function () {
-        if (currentStep > 1) updateStepper(currentStep - 1);
+        if (currentStep > 1) updateStepper(currentStep - 1, true);
       });
     }
 
     if (nextBtn) {
       nextBtn.addEventListener("click", function () {
         if (currentStep < totalSteps) {
-          updateStepper(currentStep + 1);
+          updateStepper(currentStep + 1, true);
         } else {
           switchStage("stage-2-architecture");
         }

@@ -131,11 +131,15 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outlin
   position: sticky;
   top: 0;
   z-index: 500;
-  background: color-mix(in srgb, var(--bg-raised) 82%, transparent);
-  backdrop-filter: blur(12px) saturate(1.4);
-  -webkit-backdrop-filter: blur(12px) saturate(1.4);
+  background: color-mix(in srgb, var(--bg) 96%, transparent);
+  backdrop-filter: blur(20px) saturate(1.5);
+  -webkit-backdrop-filter: blur(20px) saturate(1.5);
   border-bottom: 1px solid var(--border);
-  box-shadow: var(--shadow-sm);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
+}
+:root[data-theme="light"] .sitenav {
+  background: color-mix(in srgb, var(--bg) 96%, transparent);
+  box-shadow: 0 2px 10px rgba(15, 23, 42, 0.05);
 }
 .sitenav-inner {
   max-width: 920px;
@@ -568,7 +572,7 @@ code {
   background: var(--code-inline-bg);
   color: var(--code-inline-text);
   border: 1px solid var(--code-inline-border);
-  padding: 0.12em 0.44em;
+  padding: 0.12em 0.34em;
   border-radius: 5px;
   font-weight: 500;
   word-break: break-word;
@@ -4233,7 +4237,7 @@ pre code.hljs {
     align-items: center;
   }
   body {
-    padding-bottom: 75px !important;
+    padding-bottom: calc(90px + env(safe-area-inset-bottom)) !important;
   }
 }
 
@@ -4921,6 +4925,21 @@ body.mode-stage-focused .stage-view.active {
   border-top: 1px solid var(--border);
 }
 
+@media (max-width: 600px) {
+  .stepper-nav-controls {
+    flex-direction: column-reverse;
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+    padding-top: 1.25rem;
+  }
+  .btn-stepper {
+    width: 100%;
+    justify-content: center;
+    padding: 0.85rem 1rem;
+    font-size: 0.95rem;
+  }
+}
+
 .btn-stepper {
   display: inline-flex;
   align-items: center;
@@ -5174,6 +5193,19 @@ body.mode-stage-focused .stage-view.active {
   gap: 1rem;
   width: 100%;
   max-width: 650px;
+}
+
+@media (max-width: 640px) {
+  .arch-flow-subclasses {
+    grid-template-columns: 1fr !important;
+    gap: 0.85rem !important;
+  }
+  .arch-flow-node {
+    max-width: 100% !important;
+  }
+  .arch-title {
+    font-size: 0.88rem !important;
+  }
 }
 
 /* Slide 5 Solution Flow */
