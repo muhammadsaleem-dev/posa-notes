@@ -4,6 +4,7 @@ package-lock.json
 
 # Local heavy course source PDFs & audio
 materials/
+exam-prep/
 *.m4a
 *.zip
 
