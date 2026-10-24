@@ -1099,6 +1099,32 @@ public class OrderProcessor {
             <p>DI is the primary mechanism used to realize DIP.</p>
           </div>
         </details>
+
+        <!-- Drill 4 -->
+        <details class="drill-item">
+          <summary>
+            <span class="drill-tag" style="background:var(--accent); color:#fff;">Authentic Exam Question · LSP Conformance</span>
+            <span class="drill-q">Can conformance to the Liskov Substitution Principle (LSP) be checked automatically? (7 Exam Points)</span>
+            <span class="drill-reveal-hint"></span>
+          </summary>
+          <div class="drill-a">
+            <p><strong>Official Model Answer &amp; Grading Rubric (Prof. Dr. Jörg Schäfer):</strong></p>
+            <p><strong>No, not completely.</strong></p>
+            <ul>
+              <li><strong>What can be checked automatically:</strong> Compilers and static linters easily verify <em>syntactic subtyping</em> (e.g. method signatures, return type covariance, parameter type contravariance, and visible access modifiers).</li>
+              <li><strong>Why semantic LSP cannot be fully checked automatically:</strong> LSP is fundamentally a <em>behavioral contract</em>. It requires that:
+                <ol>
+                  <li>Subtypes must not strengthen preconditions (\(Pre(T) \implies Pre(S)\)).</li>
+                  <li>Subtypes must not weaken postconditions (\(Post(S) \implies Post(T)\)).</li>
+                  <li>Subtypes must preserve invariants (\(Inv(S) \implies Inv(T)\)) and respect history constraints (e.g. immutable objects remain immutable).</li>
+                </ol>
+              </li>
+            </ul>
+            <p>
+              Statically verifying whether arbitrary runtime code fulfills behavioral postconditions and invariants is undecidable (equivalent to the Halting Problem). Therefore, software teams rely on <strong>Design by Contract (DbC)</strong>, formal specifications, and extensive polymorphic contract test suites rather than pure compiler checks.
+            </p>
+          </div>
+        </details>
       </div>
 
       <!-- Final Masterclass Roadmap Transition Card -->

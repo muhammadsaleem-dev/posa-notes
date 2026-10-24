@@ -1315,6 +1315,26 @@ public class LightOnCommand implements Command {
         <div class="cert-feedback"></div>
       </div>
 
+      <div class="cert-quiz-card">
+        <div class="cert-quiz-badge" style="background:var(--accent); color:#fff;">Question 3 · Authentic Exam Question 8 · Strategy vs Template Method · 5 Pts</div>
+        <div class="cert-quiz-question">How does the Strategy Pattern differ fundamentally from the Template Method Pattern?</div>
+        <div class="cert-quiz-options">
+          <button type="button" class="cert-opt" data-correct="true" data-reason="Canonical Frankfurt UAS distinction: Strategy uses composition and delegation to swap entire algorithms at runtime. Template Method relies on class inheritance where subclasses override steps in an invariant algorithm skeleton.">
+            <span class="cert-opt-letter">A</span>
+            <span>Strategy uses composition/delegation to swap an entire algorithm dynamically at runtime; Template Method uses inheritance to vary specific steps within an invariant algorithm skeleton.</span>
+          </button>
+          <button type="button" class="cert-opt" data-correct="false" data-reason="Inverse of reality: Template Method uses inheritance, not composition.">
+            <span class="cert-opt-letter">B</span>
+            <span>Strategy binds algorithms statically at compile-time via subclassing; Template Method swaps implementations at runtime via interface pointers.</span>
+          </button>
+          <button type="button" class="cert-opt" data-correct="false" data-reason="They solve different problems with different coupling semantics (composition vs inheritance).">
+            <span class="cert-opt-letter">C</span>
+            <span>They are architecturally identical; Strategy is simply the modern C++ name for Smalltalk Template Method.</span>
+          </button>
+        </div>
+        <div class="cert-feedback"></div>
+      </div>
+
       <!-- Unit Completion Celebration Card -->
       <div style="background:linear-gradient(135deg, rgba(99,102,241,0.15) 0%, rgba(56,189,248,0.15) 100%); border:1px solid var(--accent); border-radius:var(--radius-lg); padding:2rem; margin:2.5rem 0; text-align:center;">
         <div style="font-size:2.5rem; margin-bottom:0.5rem;">🎉</div>

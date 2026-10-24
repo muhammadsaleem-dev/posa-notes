@@ -925,10 +925,30 @@
       </p>
 
       <div class="drill-list">
-        <!-- Drill 1 -->
+        <!-- Authentic Exam Paper Question 7 -->
         <details class="drill-item" open>
           <summary>
-            <span class="drill-tag">Exam Drill 1</span>
+            <span class="drill-tag" style="background:var(--accent); color:#fff;">Authentic Exam Paper · Question 7 [4 Pts]</span>
+            <span class="drill-q">What is the main task/role of the model in MVC?</span>
+            <span class="drill-reveal-hint"></span>
+          </summary>
+          <div class="drill-a">
+            <p><strong>Official Model Answer &amp; Grading Rubric (Prof. Dr. Jörg Schäfer):</strong></p>
+            <p>
+              The <strong>Model</strong> is the core computational domain entity of an MVC architecture:
+            </p>
+            <ol>
+              <li><strong>Domain State &amp; Business Invariants:</strong> Encapsulates all application state, business rules, calculations, and consistency constraints. It is the single source of truth.</li>
+              <li><strong>Subject in Observer Pattern:</strong> Acts as the subject/observable that broadcasts state-change notifications (<code>notifyObservers()</code>) to all registered views without knowing their concrete UI types.</li>
+              <li><strong>UI &amp; Presentation Decoupling:</strong> Operates completely decoupled from user interface widgets, event listeners, and platform-specific window managers, enabling headless automated testing.</li>
+            </ol>
+          </div>
+        </details>
+
+        <!-- Drill 2 -->
+        <details class="drill-item">
+          <summary>
+            <span class="drill-tag">Exam Drill 2</span>
             <span class="drill-q">Why does the Model have zero knowledge of the View in a well-architected MVC system? (8 Exam Points)</span>
             <span class="drill-reveal-hint"></span>
           </summary>

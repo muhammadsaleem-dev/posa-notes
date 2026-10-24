@@ -905,7 +905,25 @@ Select a base and add condiments to observe the decorator onion stack...
       <div class="drill-list">
         <details class="drill-item" open>
           <summary>
-            <span class="drill-tag">Exam Drill 1 · Architectural Comparison</span>
+            <span class="drill-tag" style="background:var(--accent); color:#fff;">Authentic Exam Paper · Question 6 [4 Pts]</span>
+            <span class="drill-q">Which of the OOP principles does Decorator primarily follow: Inheritance or Composition, and briefly explain why?</span>
+            <span class="drill-reveal-hint"></span>
+          </summary>
+          <div class="drill-a">
+            <p><strong>Official Model Answer &amp; Grading Rubric (Prof. Dr. Jörg Schäfer):</strong></p>
+            <p>
+              The Decorator pattern primarily follows <strong>Composition</strong> (delegation), <em>not</em> inheritance.
+            </p>
+            <ol>
+              <li><strong>Dynamic Behavioral Delegation (Composition):</strong> The decorator maintains a private reference to a wrapped <code>Component</code> instance and augments behavior before or after forwarding calls at runtime. This avoids the combinatorial explosion of subclasses required by pure inheritance.</li>
+              <li><strong>Type Conformance Only (Subtyping):</strong> Inheritance from the abstract Component type is employed strictly for <strong>interface conformance and type substitutability</strong> (so decorators can substitute transparently for components), NOT for behavioral code reuse.</li>
+            </ol>
+          </div>
+        </details>
+
+        <details class="drill-item">
+          <summary>
+            <span class="drill-tag">Exam Drill 2 · Architectural Comparison</span>
             <span class="drill-q">Explain the famous quote: "Decorator changes the skin of an object; Strategy changes its guts."</span>
             <span class="drill-reveal-hint"></span>
           </summary>
