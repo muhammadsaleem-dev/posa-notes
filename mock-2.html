@@ -230,6 +230,30 @@
       </div>
     </div>
 
+    <!-- Authentic Exam Questions Highlight Banner -->
+    <div style="background:rgba(239, 68, 68, 0.08); border: 2px solid #ef4444; border-radius: var(--radius-md); padding: 1.25rem 1.5rem; margin: 1.5rem 0 2rem;">
+      <div style="display:flex; align-items:center; gap:0.5rem; font-weight:800; color:#ef4444; font-size:1.05rem; margin-bottom:0.4rem;">
+        <span>🎯 Authentic Frankfurt UAS Exam Questions Integrated Below (from exam-questions.pdf)</span>
+      </div>
+      <p style="margin:0 0 0.75rem; font-size:0.92rem; line-height:1.6; color:var(--text);">
+        The real exam questions directly scanned from Prof. Dr. Jörg Schäfer's official written exam sheet (<strong><code>exam-questions.pdf</code></strong>) are highlighted throughout this mock exam with the red badge:
+      </p>
+      <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 0.75rem; font-size:0.88rem;">
+        <a href="#q-exam-8" style="display:block; padding:0.6rem 0.8rem; background:var(--bg-raised); border:1px solid var(--border); border-radius:6px; color:var(--text); text-decoration:none;">
+          <strong style="color:#ef4444;">Section 1 · Q2:</strong> Question 8 (Strategy vs Template Method) →
+        </a>
+        <a href="#q-exam-6" style="display:block; padding:0.6rem 0.8rem; background:var(--bg-raised); border:1px solid var(--border); border-radius:6px; color:var(--text); text-decoration:none;">
+          <strong style="color:#ef4444;">Section 3 · Q12:</strong> Question 6 (Decorator: Inheritance vs Composition) →
+        </a>
+        <a href="#q-exam-7" style="display:block; padding:0.6rem 0.8rem; background:var(--bg-raised); border:1px solid var(--border); border-radius:6px; color:var(--text); text-decoration:none;">
+          <strong style="color:#ef4444;">Section 4 · Q16:</strong> Question 7 (MVC: Task/Role of the Model) →
+        </a>
+      </div>
+      <div style="margin-top:0.75rem; font-size:0.85rem; color:var(--text-muted);">
+        💡 Complete historical papers, derivation formulas, and oral exam notes are also available in the <a href="past-papers.html" style="color:var(--accent); font-weight:700; text-decoration:underline;">Official Frankfurt UAS Past Papers &amp; Solutions Center</a>.
+      </div>
+    </div>
+
     <!-- SECTION 1 -->
     <section class="chapter" id="section-1">
       <div class="chapter-head">
@@ -253,16 +277,38 @@
           </div>
         </details>
 
-        <!-- Q2 -->
-        <details class="drill-item">
+        <!-- Q2: Official Exam Question 8 -->
+        <details class="drill-item" id="q-exam-8" open>
           <summary>
-            <span class="drill-tag">Template vs Strategy · 5 pts</span>
-            <span class="drill-q">Compare the Template Method pattern with the Strategy pattern regarding the <strong>Hollywood Principle</strong> and resilience to runtime change.</span>
+            <span class="drill-tag" style="background:#ef4444; color:#fff; font-weight:800;">Authentic Exam Question 8 (exam-questions.pdf) · 5 pts</span>
+            <span class="drill-q"><strong>Question 8 (Official Frankfurt UAS Exam Sheet):</strong> How does the Strategy Pattern differ from the Template Method Pattern?</span>
             <span class="drill-reveal-hint"></span>
           </summary>
           <div class="drill-a">
-            <p><strong>Template Method:</strong> Relies on <em>inheritance</em>. The superclass enforces the algorithm skeleton (Hollywood Principle: <em>“Don’t call us, we’ll call you”</em>) and calls subclass hook operations. Inflexible at runtime because inheritance is statically bound at compile time.</p>
-            <p><strong>Strategy Pattern:</strong> Relies on <em>object composition and delegation</em>. The entire algorithm is encapsulated in a separate object. Highly resilient to change because the strategy object can be swapped dynamically while the program is running.</p>
+            <p><strong>Official Model Answer &amp; Grading Rubric (Prof. Dr. Jörg Schäfer Standard):</strong></p>
+            <p>
+              The fundamental difference lies in <strong>coupling, mechanism, and granularity of change</strong>:
+            </p>
+            <ol>
+              <li><strong>Mechanism &amp; Coupling:</strong>
+                <ul>
+                  <li><strong>Strategy</strong> utilizes <em>object composition and delegation</em>. The Context holds a reference to a Strategy interface pointer and delegates computations to it.</li>
+                  <li><strong>Template Method</strong> utilizes <em>class inheritance</em>. Subclasses extend an abstract base class and override specific primitive/hook steps.</li>
+                </ul>
+              </li>
+              <li><strong>Runtime Mutability:</strong>
+                <ul>
+                  <li><strong>Strategy</strong> allows swapping the entire algorithm <em>dynamically at runtime</em> via a setter method (e.g., <code>setFlyBehavior(new FlyRocketPowered())</code>).</li>
+                  <li><strong>Template Method</strong> binds the algorithm variant statically at <em>compile-time</em> through class inheritance; changing behavior requires re-instantiating a different subclass.</li>
+                </ul>
+              </li>
+              <li><strong>Granularity of Algorithm Variation:</strong>
+                <ul>
+                  <li><strong>Strategy</strong> encapsulates and swaps the <em>entire algorithm as a whole</em>.</li>
+                  <li><strong>Template Method</strong> keeps the invariant skeleton sequence identical in the superclass and only allows subclasses to vary <em>individual steps</em>.</li>
+                </ul>
+              </li>
+            </ol>
           </div>
         </details>
 
@@ -423,15 +469,29 @@
           </div>
         </details>
 
-        <!-- Q12 -->
-        <details class="drill-item">
+        <!-- Q12: Official Exam Question 6 -->
+        <details class="drill-item" id="q-exam-6" open>
           <summary>
-            <span class="drill-tag">Decorator Streams · 5 pts</span>
-            <span class="drill-q">Analyze the code: <code>new LineNumberInputStream(new BufferedInputStream(new FileInputStream("test.txt")))</code>. Identify the component and decorators, and state which principle this exemplifies.</span>
+            <span class="drill-tag" style="background:#ef4444; color:#fff; font-weight:800;">Authentic Exam Question 6 (exam-questions.pdf) · 5 pts</span>
+            <span class="drill-q"><strong>Question 6 (Official Frankfurt UAS Exam Sheet):</strong> Which of the OOP principles does Decorator primarily follow: Inheritance or Composition, and briefly explain why?</span>
             <span class="drill-reveal-hint"></span>
           </summary>
           <div class="drill-a">
-            <p><code>FileInputStream</code> is the Concrete Component (reads raw bytes). <code>BufferedInputStream</code> and <code>LineNumberInputStream</code> are Concrete Decorators augmenting buffering and line tracking. This exemplifies the <strong>Open-Closed Principle (OCP)</strong>: adding behavior dynamically without altering the underlying byte-reading class.</p>
+            <p><strong>Official Model Answer &amp; Grading Rubric (Prof. Dr. Jörg Schäfer Standard):</strong></p>
+            <p>
+              The Decorator pattern primarily follows <strong>Composition</strong> (Object Composition over Class Inheritance), <em>not</em> inheritance.
+            </p>
+            <ol>
+              <li><strong>Dynamic Behavioral Delegation (Composition):</strong>
+                The decorator maintains a private reference to the wrapped <code>Component</code> instance (<code>protected Component component;</code>). When a method is invoked, it augments behavior before/after forwarding the call dynamically at runtime. This prevents exponential subclass explosion (e.g. Starbuzz Coffee with 64 static subclasses).
+              </li>
+              <li><strong>Type Conformance Only (Inheritance):</strong>
+                While the abstract Decorator class extends or implements <code>Component</code>, this inheritance is used strictly for <strong>interface conformance and type substitutability</strong> (so decorators can substitute transparently for components), NOT for behavioral code reuse.
+              </li>
+            </ol>
+            <div class="gotcha-box">
+              <strong>⚠️ Common Exam Deduction:</strong> Stating that Decorator is an example of inheritance because <code>Decorator extends Component</code> loses 50% to 100% of the points. The professor specifically tests whether you recognize that inheritance is only used for subtyping, while all functionality is delivered via composition.
+            </div>
           </div>
         </details>
 
@@ -484,19 +544,32 @@
           </div>
         </details>
 
-        <!-- Q16 -->
-        <details class="drill-item">
+        <!-- Q16: Official Exam Question 7 -->
+        <details class="drill-item" id="q-exam-7" open>
           <summary>
-            <span class="drill-tag">MVC Patterns · 5 pts</span>
-            <span class="drill-q">Name the three design patterns that collaborate within classic Model-View-Controller.</span>
+            <span class="drill-tag" style="background:#ef4444; color:#fff; font-weight:800;">Authentic Exam Question 7 (exam-questions.pdf) · 5 pts</span>
+            <span class="drill-q"><strong>Question 7 (Official Frankfurt UAS Exam Sheet):</strong> What is the main task/role of the model in MVC?</span>
             <span class="drill-reveal-hint"></span>
           </summary>
           <div class="drill-a">
+            <p><strong>Official Model Answer &amp; Grading Rubric (Prof. Dr. Jörg Schäfer Standard):</strong></p>
+            <p>
+              The <strong>Model</strong> represents the core computational and domain entity of the Model-View-Controller architecture:
+            </p>
             <ol>
-              <li><strong>Observer:</strong> Model acts as Subject, View acts as Observer.</li>
-              <li><strong>Strategy:</strong> Controller acts as the input handling Strategy for the View.</li>
-              <li><strong>Composite:</strong> View elements (windows, buttons, panels) are structured as composite trees.</li>
+              <li><strong>Encapsulates Domain State &amp; Business Invariants:</strong>
+                It holds the application's domain data, business logic, calculations, and consistency constraints. It is the single source of truth for the system.
+              </li>
+              <li><strong>Acts as Subject in Observer Pattern:</strong>
+                The Model maintains a list of interested View observers. When its internal state changes (e.g. after a valid update), it broadcasts notifications via <code>notifyObservers()</code> without knowing the concrete GUI types of the observers.
+              </li>
+              <li><strong>Presentation Independence:</strong>
+                The Model possesses zero knowledge of, and zero references to, user interface widgets, screens, HTML elements, or controllers. This enables headless automated testing and allows multiple disparate views (e.g., graphical chart, tabular grid, mobile app) to observe the same model simultaneously.
+              </li>
             </ol>
+            <p>
+              <em>Compound Pattern Context:</em> In classic Smalltalk-80 MVC, the Model participates in the <strong>Observer Pattern</strong> (as Subject), while the Controller is the <strong>Strategy</strong> for the View, and the Views form <strong>Composite</strong> trees.
+            </p>
           </div>
         </details>
 

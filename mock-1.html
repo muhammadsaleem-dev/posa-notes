@@ -238,6 +238,30 @@
       </div>
     </div>
 
+    <!-- Authentic Exam Questions Highlight Banner -->
+    <div style="background:rgba(239, 68, 68, 0.08); border: 2px solid #ef4444; border-radius: var(--radius-md); padding: 1.25rem 1.5rem; margin: 1.5rem 0 2rem;">
+      <div style="display:flex; align-items:center; gap:0.5rem; font-weight:800; color:#ef4444; font-size:1.05rem; margin-bottom:0.4rem;">
+        <span>🎯 Where to Find Prof. Dr. Jörg Schäfer's Authentic Exam Questions (exam-questions.pdf)</span>
+      </div>
+      <p style="margin:0 0 0.75rem; font-size:0.92rem; line-height:1.6; color:var(--text);">
+        Mock 1 focuses strictly on <strong>POSA 1 &amp; POSA 2 (Architecture, Concurrency &amp; Networking)</strong>. The authentic written exam sheet questions from <strong><code>exam-questions.pdf</code></strong> (Questions 6, 7, and 8 covering Decorator, MVC Model, and Strategy vs Template Method) are located in:
+      </p>
+      <div style="display:flex; flex-wrap:wrap; gap: 0.75rem; font-size:0.88rem;">
+        <a href="mock-2.html#q-exam-8" style="padding:0.6rem 0.8rem; background:var(--bg-raised); border:1px solid var(--border); border-radius:6px; color:var(--text); text-decoration:none;">
+          <strong style="color:#ef4444;">Mock 2 (Section 1):</strong> Q8 · Strategy vs Template Method →
+        </a>
+        <a href="mock-2.html#q-exam-6" style="padding:0.6rem 0.8rem; background:var(--bg-raised); border:1px solid var(--border); border-radius:6px; color:var(--text); text-decoration:none;">
+          <strong style="color:#ef4444;">Mock 2 (Section 3):</strong> Q6 · Decorator (Inheritance vs Composition) →
+        </a>
+        <a href="mock-2.html#q-exam-7" style="padding:0.6rem 0.8rem; background:var(--bg-raised); border:1px solid var(--border); border-radius:6px; color:var(--text); text-decoration:none;">
+          <strong style="color:#ef4444;">Mock 2 (Section 4):</strong> Q7 · MVC Task of the Model →
+        </a>
+        <a href="past-papers.html#written-paper" style="padding:0.6rem 0.8rem; background:linear-gradient(135deg, #6366f1 0%, #38bdf8 100%); color:#fff; border-radius:6px; text-decoration:none; font-weight:700;">
+          📝 Official Past Papers &amp; Solutions Archive →
+        </a>
+      </div>
+    </div>
+
     <!-- ========================================== -->
     <!-- SECTION 1: ARCHITECTURAL PATTERNS (20 PTS) -->
     <!-- ========================================== -->
@@ -334,7 +358,12 @@
               </table>
             </div>
             <div class="gotcha-box">
-              <strong>⚠️ Critical Exam Gotcha:</strong> When asked how Knowledge Sources interact in Blackboard, note that <em>Knowledge Sources NEVER communicate directly with one another</em>. All communication is strictly mediated via reads and writes to the shared Blackboard state.
+              <strong>⚠️ Authentic Frankfurt UAS Exam Follow-Ups (POS-exams-notes.pdf):</strong>
+              <ul style="margin: 0.5rem 0 0 1rem; padding: 0;">
+                <li><strong>Blackboard Communication Rule:</strong> <em>Knowledge Sources NEVER communicate directly with one another</em>. All communication is strictly mediated via reads and writes to the shared Blackboard state.</li>
+                <li><strong>Blackboard 3 Exit Conditions:</strong> 1) A hypothesis reaches the target confidence threshold; 2) Quiescence/deadlock (no KS can trigger); 3) Compute/time budget exhausted.</li>
+                <li><strong>Pipes &amp; Filters for Modern Compilers:</strong> Early compilers used Pipes &amp; Filters (lexer &rarr; parser &rarr; codegen). Modern compilers avoid pure Pipes &amp; Filters because complex multi-pass AST optimizations, global symbol tables, and rich bidirectional error diagnostics require non-linear random access and feedback loops that linear pipes cannot accommodate.</li>
+              </ul>
             </div>
           </div>
         </details>
