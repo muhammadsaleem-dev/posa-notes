@@ -217,8 +217,8 @@
         <a href="unit-1-strategy.html" class="btn-studio-run" style="text-decoration:none; padding:0.75rem 1.4rem;">
           ▶ Launch Unit 1: Strategy Studio
         </a>
-        <a href="mock-1.html" class="btn-studio-hot-swap" style="text-decoration:none; padding:0.75rem 1.4rem;">
-          📝 Mock Exam 1 (75 Pts)
+        <a href="mock-1.html" class="btn-studio-hot-swap" style="text-decoration:none; padding:0.75rem 1.4rem; background:linear-gradient(135deg, #ef4444 0%, #dc2626 100%); color:#fff; border-color:#ef4444;">
+          🎓 Official Mock Exam (60 Pts)
         </a>
         <a href="past-papers.html" style="background:var(--bg); border:1px solid var(--border); color:var(--text); text-decoration:none; padding:0.75rem 1.4rem; border-radius:var(--radius-sm); font-weight:600; font-size:0.88rem; display:inline-flex; align-items:center;">
           📑 Past Papers Archive
@@ -418,23 +418,42 @@
     </div>
 
     <!-- Exam Hub -->
-    <h2 id="exam-hub" style="font-family: var(--font-display); margin-top: 3rem;">Past Papers &amp; Practice Mocks</h2>
-    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 1rem;">
-      <div style="padding: 1.5rem; background: var(--bg-raised); border: 1px solid var(--border); border-radius: var(--radius-md);">
-        <span class="card-badge">Simulation · 75 Pts</span>
-        <h3 style="margin: 0.5rem 0; font-family: var(--font-display);">Mock Exam 1: Core POSA &amp; Concurrency</h3>
-        <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 1rem;">
-          Broker, Layers, Blackboard, Reactor, Proactor, Half-Sync/Half-Async, and 80k-connection Crypto Gateway.
-        </p>
-        <a href="mock-1.html" class="btn-exam" style="text-decoration: none; display: inline-block;">Take Mock 1 &rarr;</a>
+    <h2 id="exam-hub" style="font-family: var(--font-display); margin-top: 3rem;">Authentic Exams &amp; Practice Mocks</h2>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin-top: 1rem;">
+      <!-- Card 1: Official Mock Exam from exam-questions.pdf -->
+      <div style="padding: 1.5rem; background: var(--bg-raised); border: 2px solid #ef4444; border-radius: var(--radius-md); display:flex; flex-direction:column; justify-content:space-between;">
+        <div>
+          <span class="card-badge" style="background:#ef4444; color:#fff; font-weight:800;">Authentic Klausur · 60 Pts</span>
+          <h3 style="margin: 0.5rem 0; font-family: var(--font-display);">Official Frankfurt UAS Mock Exam</h3>
+          <p style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 1rem; line-height:1.5;">
+            100% synthesized from Prof. Dr. Jörg Schäfer's genuine written exam sheet (<strong><code>exam-questions.pdf</code></strong>) and official course notes (<strong><code>POS-exams-notes.pdf</code></strong>). 90-minute timed simulation.
+          </p>
+        </div>
+        <a href="mock-1.html" class="btn-exam" style="text-decoration: none; display: inline-block; text-align:center; background:#ef4444;">Take Official Mock (60 Pts) &rarr;</a>
       </div>
-      <div style="padding: 1.5rem; background: var(--accent-soft); border: 1px solid var(--accent); border-radius: var(--radius-md);">
-        <span class="card-badge" style="background: var(--accent); color: #fff;">Comprehensive · 95 Pts</span>
-        <h3 style="margin: 0.5rem 0; font-family: var(--font-display);">Mock Exam 2: Frankfurt UAS Past Paper</h3>
-        <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 1rem;">
-          Strategy, Template, Command, Composite, SOLID, Package Metrics ($I, A, D$), Factories, Decorators, and GenAI.
-        </p>
-        <a href="mock-2.html" class="btn-exam" style="text-decoration: none; display: inline-block;">Take Mock 2 &rarr;</a>
+
+      <!-- Card 2: Comprehensive Simulation 2 -->
+      <div style="padding: 1.5rem; background: var(--accent-soft); border: 1px solid var(--accent); border-radius: var(--radius-md); display:flex; flex-direction:column; justify-content:space-between;">
+        <div>
+          <span class="card-badge" style="background: var(--accent); color: #fff;">Full Synthesis · 95 Pts</span>
+          <h3 style="margin: 0.5rem 0; font-family: var(--font-display);">Comprehensive Mock Exam 2</h3>
+          <p style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 1rem; line-height:1.5;">
+            Extended 120-minute masterclass simulation across GoF patterns, Liskov substitution proofs, package metrics ($I, A, D$), and GenAI architectural guardrails.
+          </p>
+        </div>
+        <a href="mock-2.html" class="btn-exam" style="text-decoration: none; display: inline-block; text-align:center;">Take Mock Exam 2 &rarr;</a>
+      </div>
+
+      <!-- Card 3: Past Papers Archive -->
+      <div style="padding: 1.5rem; background: var(--bg-raised); border: 1px solid var(--border); border-radius: var(--radius-md); display:flex; flex-direction:column; justify-content:space-between;">
+        <div>
+          <span class="card-badge" style="background:#6366f1; color:#fff;">Archive &amp; Solutions</span>
+          <h3 style="margin: 0.5rem 0; font-family: var(--font-display);">Past Papers &amp; Solutions Center</h3>
+          <p style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 1rem; line-height:1.5;">
+            Browse the complete repository of historical exam questions, model answers, professor grading rubrics, and oral exam gotchas organized into 6 study modules.
+          </p>
+        </div>
+        <a href="past-papers.html" class="btn-exam" style="text-decoration: none; display: inline-block; text-align:center; background:#6366f1;">Browse Past Papers Hub &rarr;</a>
       </div>
     </div>
 
