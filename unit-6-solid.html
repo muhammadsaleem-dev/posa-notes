@@ -1,1373 +1,567 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html lang="en" data-theme="dark" data-mode="concept">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Unit 6: SOLID Principles &amp; Design Smells | POSA 2026 Masterclass</title>
-<meta name="description" content="Unit 6 of Pattern-Oriented Software Architecture by Prof. Dr. Jörg Schäfer: The 7 classic design smells, SOLID principles (Uncle Bob), formal Liskov Substitution Principle (LSP), and exam drills.">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%236366f1'/%3E%3Cpath d='M8 10h16M8 16h16M8 22h10' stroke='%23fff' stroke-width='2.2' stroke-linecap='round'/%3E%3C/svg%3E">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Unit 6 · SOLID Principles &amp; Design Smells · POSA Masterclass 2026</title>
+<meta name="description" content="Master the 5 SOLID principles (SRP, OCP, LSP, ISP, DIP), the 4 symptoms of rotting design, formal Liskov substitution proofs, and OCP refactoring.">
+<link rel="stylesheet" href="assets/style.css?v=2026.18">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/style.css?v=2026.16">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,600;0,700;1,400&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,600;1,700&display=swap" rel="stylesheet">
+<script>
+  window.MathJax = {
+    tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
+    svg: { fontCache: 'global' }
+  };
+</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<script>(function(){try{var t=localStorage.getItem('posa-theme')||localStorage.getItem('dm2026-theme')||'dark';document.documentElement.setAttribute('data-theme',t);var m=localStorage.getItem('posa-mode')||'concept';document.documentElement.setAttribute('data-mode',m);}catch(e){}})();</script>
 <style>
-  .reading-progress-bar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    height: 3px;
-    background: linear-gradient(90deg, #6366f1 0%, #38bdf8 50%, #10b981 100%);
-    width: 0%;
-    z-index: 9999;
-    transition: width 0.1s ease-out;
-  }
-  .stage-takeaways-box {
-    background: rgba(99, 102, 241, 0.05);
-    border: 1px solid rgba(99, 102, 241, 0.2);
+  .guide-card {
+    background: var(--bg-raised);
+    border: 1px solid var(--border);
     border-radius: var(--radius-md);
     padding: 1.5rem;
-    margin: 2rem 0;
+    margin-bottom: 2rem;
   }
-  [data-theme="light"] .stage-takeaways-box {
-    background: #f5f3ff;
-    border-color: #ddd6fe;
-  }
-  .stage-takeaways-title {
-    font-weight: 800;
-    color: #6366f1;
-    margin-bottom: 0.75rem;
+  .guide-card-header {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
-    font-size: 1.05rem;
-  }
-  .takeaway-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: 1rem;
-    margin-top: 1rem;
-  }
-  .takeaway-item {
-    background: var(--bg-raised);
-    padding: 1rem;
-    border-radius: var(--radius-sm);
-    border: 1px solid var(--border);
-  }
-  .takeaway-item strong {
+    gap: 0.6rem;
+    font-size: 1.15rem;
+    font-weight: 700;
     color: var(--text);
-    display: block;
-    margin-bottom: 0.35rem;
-    font-size: 0.92rem;
+    margin-bottom: 0.75rem;
   }
-  .takeaway-item p {
-    margin: 0;
-    font-size: 0.85rem;
-    color: var(--text-muted);
-    line-height: 1.5;
-  }
-  .smell-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: 1.25rem;
-    margin: 1.5rem 0;
-  }
-  .smell-card {
-    background: var(--bg-raised);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-md);
-    padding: 1.25rem;
-    transition: transform 0.2s, border-color 0.2s;
-  }
-  .smell-card:hover {
-    border-color: #f43f5e;
-    transform: translateY(-2px);
-  }
-  .smell-name {
-    font-weight: 800;
-    color: #f43f5e;
-    font-size: 1.05rem;
-    margin-bottom: 0.35rem;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-  }
-  .solid-card {
-    background: var(--bg-raised);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-md);
-    padding: 1.5rem;
-    margin-bottom: 1.5rem;
-  }
-  .solid-letter {
+  .rule-badge {
     display: inline-flex;
     align-items: center;
-    justify-content: center;
-    width: 36px;
-    height: 36px;
-    background: linear-gradient(135deg, #6366f1 0%, #38bdf8 100%);
-    color: #fff;
+    gap: 0.35rem;
+    padding: 0.2rem 0.55rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
     font-weight: 800;
-    border-radius: var(--radius-sm);
     font-family: var(--font-mono);
-    margin-right: 0.75rem;
-    box-shadow: 0 2px 8px rgba(99,102,241,0.3);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    background: rgba(99, 102, 241, 0.12);
+    color: #6366f1;
+    border: 1px solid rgba(99, 102, 241, 0.25);
   }
-  /* Interactive LSP Sandbox */
-  .lsp-sandbox-card {
+  .rule-badge.warn {
+    background: rgba(245, 158, 11, 0.12);
+    color: #f59e0b;
+    border-color: rgba(245, 158, 11, 0.25);
+  }
+  .rule-badge.danger {
+    background: rgba(239, 68, 68, 0.12);
+    color: #ef4444;
+    border-color: rgba(239, 68, 68, 0.25);
+  }
+  .headfirst-card {
+    background: var(--bg-raised);
+    border: 1px solid var(--border);
+    border-left: 4px solid #6366f1;
+    border-radius: var(--radius-md);
+    margin-bottom: 2rem;
+    overflow: hidden;
+  }
+  .headfirst-summary {
+    list-style: none;
+    cursor: pointer;
+    user-select: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.15rem 1.4rem;
+    background: var(--bg-subtle);
+    border-bottom: 1px solid transparent;
+    transition: background 0.15s ease;
+  }
+  .headfirst-summary:hover {
+    background: var(--code-bg);
+  }
+  .headfirst-summary::-webkit-details-marker {
+    display: none;
+  }
+  .headfirst-card[open] .headfirst-summary {
+    border-bottom: 1px solid var(--border);
+  }
+  .headfirst-title {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--text);
+  }
+  .headfirst-badge {
+    font-size: 0.72rem;
+    font-weight: 800;
+    padding: 0.15rem 0.5rem;
+    border-radius: 4px;
+    background: rgba(99, 102, 241, 0.15);
+    color: var(--accent);
+    border: 1px solid rgba(99, 102, 241, 0.25);
+  }
+  .headfirst-body {
+    padding: 1.5rem;
+  }
+  .pattern-spec-box {
     background: var(--bg-raised);
     border: 1px solid var(--border);
     border-radius: var(--radius-md);
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+  .spec-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+  .spec-row {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .spec-row:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+  .spec-label {
+    font-size: 0.8rem;
+    font-family: var(--font-mono);
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 700;
+  }
+  .spec-val {
+    font-size: 0.95rem;
+    color: var(--text);
+    line-height: 1.55;
+  }
+  .qa-block {
+    margin: 1.5rem 0;
     padding: 1.5rem;
-    margin: 2rem 0;
-  }
-  .lsp-visualizer-box {
-    display: flex;
-    gap: 2rem;
-    align-items: center;
-    justify-content: center;
-    padding: 2rem;
-    background: #090d16;
+    background: var(--bg-raised);
+    border: 1px solid var(--border);
     border-radius: var(--radius-md);
-    border: 1px solid #1e293b;
-    margin: 1rem 0;
-    min-height: 160px;
   }
-  .shape-preview {
-    border: 2px solid #38bdf8;
-    background: rgba(56, 189, 248, 0.15);
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  .qa-q {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 1rem;
+    line-height: 1.45;
+  }
+  .qa-q .pts-badge {
+    display: inline-block;
+    padding: 0.2rem 0.6rem;
+    background: var(--accent-soft);
+    color: var(--accent);
+    border-radius: 999px;
+    font-size: 0.78rem;
     font-family: var(--font-mono);
+    font-weight: 700;
+    margin-left: 0.5rem;
+  }
+  .qa-a {
+    padding: 1.25rem 1.5rem;
+    background: var(--bg);
+    border-left: 4px solid var(--accent);
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    font-size: 0.95rem;
+    line-height: 1.65;
+    color: var(--text);
+  }
+  .qa-a .ans-label {
+    display: block;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    font-weight: 800;
+    font-family: var(--font-mono);
+    color: var(--accent);
+    margin-bottom: 0.75rem;
+    letter-spacing: 0.05em;
+  }
+  .solid-letter {
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+    line-height: 24px;
+    text-align: center;
+    border-radius: 4px;
+    background: var(--accent);
+    color: #fff;
+    font-family: var(--font-mono);
+    font-weight: 800;
     font-size: 0.85rem;
-    color: #38bdf8;
-    transition: all 0.3s ease;
-  }
-  .terminal-output {
-    background: #090d16;
-    color: #38bdf8;
-    font-family: var(--font-mono);
-    padding: 0.85rem 1.25rem;
-    border-radius: var(--radius-sm);
-    font-size: 0.82rem;
-    min-height: 48px;
-    display: flex;
-    align-items: center;
-    border: 1px solid #1e293b;
-    margin-top: 1rem;
-    overflow-x: auto;
+    margin-right: 0.4rem;
   }
 </style>
-<script>(function(){try{var t=localStorage.getItem('posa-theme')||'dark';document.documentElement.setAttribute('data-theme',t);var m=localStorage.getItem('posa-mode')||'concept';document.documentElement.setAttribute('data-mode',m);}catch(e){}})();</script>
 </head>
-<body class="mode-stage-focused">
-
-<div class="reading-progress-bar" id="readingProgressBar"></div>
-
-<nav class="sitenav">
-  <div class="sitenav-inner">
-    <a class="sitenav-home" href="index.html">
-      <span style="background:linear-gradient(135deg, #6366f1 0%, #38bdf8 100%);color:#fff;padding:0.2rem 0.55rem;border-radius:6px;font-size:0.82rem;font-weight:800;letter-spacing:0.04em;">POSA</span>
-      <span style="font-weight:800;letter-spacing:-0.02em;">2026</span>
-    </a>
-                <div class="sitenav-links">
-      <a href="index.html">Overview</a>
-      <a href="index.html#curriculum-roadmap">16 Units</a>
-      <a href="mock-1.html">🎓 Mock Exam 1</a>
-      <a href="mock-2.html">📝 Mock Exam 2</a>
+<body>
+  <!-- Top Navigation -->
+  <nav class="sitenav" aria-label="Main Navigation">
+    <div class="sitenav-inner">
+      <a href="index.html" class="sitenav-brand">
+        <span class="brand-badge">POSA 2026</span>
+        <span class="brand-title">Pattern Architecture</span>
+      </a>
+      <div class="sitenav-links">
+        <a href="index.html">Overview</a>
+        <a href="unit-3-composite.html">Unit 3A: Composite</a>
+        <a href="unit-3-iterator.html">Unit 3B: Iterator</a>
+        <a href="unit-4-junit.html">Unit 4: JUnit</a>
+        <a href="unit-5-theory.html">Unit 5: Theory</a>
+        <a href="unit-6-solid.html" class="active">Unit 6: SOLID</a>
+        <a href="mock-1.html">🎓 Mock Exam 1</a>
+        <a href="mock-2.html">📝 Mock Exam 2</a>
+        <a href="past-papers.html">Practice Hub</a>
+      </div>
+      <button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle theme">
+        <span class="theme-icon light-icon">☀️</span>
+        <span class="theme-icon dark-icon">🌙</span>
+      </button>
     </div>
-    <button class="nav-toggle" id="navToggle" type="button" aria-expanded="false" aria-controls="navPanel">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
-      Menu
-    </button>
-    <button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle color theme">
-      <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path></svg>
-      <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
-    </button>
-    <button class="mode-toggle" id="modeToggle" type="button" aria-label="Toggle technical mode" style="font-size: 1.1rem; line-height: 1;">🎓</button>
-  </div>
-  <div class="nav-panel" id="navPanel">
-    <div class="nav-panel-section">
-      <span class="nav-panel-label">Course Navigation</span>
-      <a href="index.html">Overview</a>
-      <a href="unit-1-strategy.html">Unit 1 · Strategy</a>
-      <a href="unit-2-template.html">Unit 2A · Template Method</a>
-      <a href="unit-2-command.html">Unit 2B · Command Pattern</a>
-      <a href="unit-3-structural.html">Unit 3 · Structural Patterns</a>
-      <a href="unit-6-solid.html" class="active">Unit 6 · SOLID Principles</a>
-      <a href="unit-7-packaging.html">Unit 7 · Packaging Architecture</a>
-      <a href="mock-1.html">📝 Mock Exam 1</a>
-    </div>
-  </div>
-</nav>
+  </nav>
 
-<!-- Mobile Native Bottom Dock (iOS App Bar) -->
-<nav class="mobile-bottom-dock" aria-label="Mobile Navigation Dock">
-  <a href="#stage-1-smells" class="dock-item active">
-    <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
-    <span>1 · Smells</span>
-  </a>
-  <a href="#stage-2-solid" class="dock-item">
-    <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
-    <span>2 · SOLID</span>
-  </a>
-  <a href="#stage-3-lsp" class="dock-item">
-    <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="9" y1="3" x2="9" y2="21"></line></svg>
-    <span>3 · Sandbox</span>
-  </a>
-  <a href="#stage-4-matrix" class="dock-item">
-    <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 14 14"></polyline></svg>
-    <span>4 · Matrix</span>
-  </a>
-  <a href="#stage-5-exam" class="dock-item">
-    <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
-    <span>5 · Drills</span>
-  </a>
-</nav>
-
-<div class="page-shell">
-  <aside class="sidebar-toc">
+  <!-- Sidebar -->
+  <aside class="sidebar">
     <div class="sidebar-block">
-      <span class="sidebar-label">Curriculum Navigation</span>
-      <a href="#stage-1-smells" class="jump-stage-btn" data-target-stage="stage-1-smells"><span class="toc-num">1</span>The 7 Design Smells</a>
-      <a href="#stage-2-solid" class="jump-stage-btn" data-target-stage="stage-2-solid"><span class="toc-num">2</span>The 5 SOLID Laws</a>
-      <a href="#stage-3-lsp" class="jump-stage-btn" data-target-stage="stage-3-lsp"><span class="toc-num">3</span>Formal LSP &amp; Sandbox Lab</a>
-      <a href="#stage-4-matrix" class="jump-stage-btn" data-target-stage="stage-4-matrix"><span class="toc-num">4</span>Smell-to-Principle Matrix</a>
-      <a href="#stage-5-exam" class="jump-stage-btn" data-target-stage="stage-5-exam"><span class="toc-num">5</span>Prof. Schäfer Exam Drills</a>
+      <span class="sidebar-label">Unit Navigation</span>
+      <a href="#sec-profile" class="active"><span class="toc-num">1</span>The 5 Principles</a>
+      <a href="#sec-smells"><span class="toc-num">2</span>Rotting Design Smells</a>
+      <a href="#sec-lsp"><span class="toc-num">3</span>Formal LSP &amp; Square Paradox</a>
+      <a href="#sec-drills"><span class="toc-num">4</span>Core Exam Drills</a>
     </div>
+
     <div class="sidebar-block">
-      <span class="sidebar-label">Course Origin</span>
-      <p style="font-size: 0.85rem; color: var(--text-muted); margin: 0 0 0.5rem; line-height: 1.5;">
-        <strong>Prof. Dr. Jörg Schäfer</strong><br>
-        Frankfurt University of Applied Sciences<br>
-        Fachbereich 2: Informatik
-      </p>
-      <div style="font-size:0.75rem; font-weight:700; color:#38bdf8; background:rgba(56,189,248,0.12); border:1px solid rgba(56,189,248,0.25); padding:0.25rem 0.5rem; border-radius:4px; display:inline-block; margin-top:0.4rem;">
-        ⏱️ 45 Min · 25 Exam Pts
+      <span class="sidebar-label">Related Modules</span>
+      <a href="unit-1-strategy.html">Unit 1 · Strategy (OCP/DIP)</a>
+      <a href="unit-2-template.html">Unit 2A · Template (OCP)</a>
+      <a href="unit-7-packaging.html">Unit 7 · Package Principles</a>
+      <a href="mock-1.html">🎓 Mock Exam 1 (Ex 3 &amp; 6)</a>
+      <a href="mock-2.html">📝 Mock Exam 2 (Module 3)</a>
+    </div>
+
+    <div class="sidebar-block">
+      <span class="sidebar-label">Exam Profile</span>
+      <div style="font-size:0.75rem; font-weight:700; color:#38bdf8; background:rgba(56,189,248,0.12); border:1px solid rgba(56,189,248,0.25); padding:0.25rem 0.5rem; border-radius:4px; display:inline-block;">
+        ⏱️ 10–12 Mins · 20 Exam Pts
       </div>
     </div>
   </aside>
 
-  <div class="page">
+  <!-- Main Content -->
+  <main class="page">
     
-    <!-- Hero Masthead -->
     <header class="masthead">
       <div>
-        <div class="eyebrow">
-          <span>Foundational Principles Masterclass · Object-Oriented Design Quality</span>
-        </div>
-        <h1 class="title">Unit 6: SOLID Principles &amp; Design Smells</h1>
-        <p class="dek" style="font-size:1.05rem; line-height:1.65; max-width:68ch; color:var(--text-muted);">
-          Robert C. Martin’s (Uncle Bob) 7 design smells signaling architectural rot, the 5 foundational SOLID principles that counteract them, and Barbara Liskov’s formal subtype invariance proofs.
-        </p>
-
-        <!-- Course Meta Metric Chips -->
-        <div class="masthead-metrics-grid">
-          <div class="metric-chip">
-            <div class="metric-chip-label">⏱️ Study Time</div>
-            <div class="metric-chip-val" style="color:#38bdf8;">45 Minutes</div>
-          </div>
-          <div class="metric-chip">
-            <div class="metric-chip-label">🎯 Exam Weight</div>
-            <div class="metric-chip-val" style="color:#10b981;">25 Pts (Top Priority)</div>
-          </div>
-          <div class="metric-chip">
-            <div class="metric-chip-label">🏛️ Category</div>
-            <div class="metric-chip-val" style="color:#a5b4fc;">Foundations &amp; Metrics</div>
-          </div>
-          <div class="metric-chip">
-            <div class="metric-chip-label">⚙️ Visual Sandbox</div>
-            <div class="metric-chip-val" style="color:#f59e0b;">LSP Contract Tester</div>
-          </div>
-        </div>
-
+        <div class="eyebrow">Unit 6 · Core Object-Oriented Design Principles</div>
+        <h1 class="title">SOLID Principles &amp; Design Smells</h1>
       </div>
+      <p class="dek">
+        Master Robert C. Martin's 5 foundational design principles, the 4 classic symptoms of architectural rot (Rigidity, Fragility, Immobility, Viscosity), and the formal proof of why Square is NOT a Rectangle in object orientation.
+      </p>
     </header>
 
-    <!-- ====================================================================
-         SECTION 1: 8-PILLAR ARCHITECTURAL BLUEPRINT (UNIVERSAL RUBRIC)
-         ==================================================================== -->
-    <div class="masterclass-section-divider" style="margin: 2.5rem 0 1.5rem;">
-      <div class="section-divider-line"></div>
-      <div class="section-divider-chip">
-        <span>PART 1 · ARCHITECTURAL RUBRIC</span>
-      </div>
-      <div class="section-divider-line"></div>
-    </div>
-
-    <section class="blueprint-suite" id="blueprintSuite" aria-label="8-Pillar Architecture Rubric">
-      <div class="blueprint-suite-top">
+    <!-- ============================================================== -->
+    <!-- 1. THE 5 SOLID PRINCIPLES & DIP UML                            -->
+    <!-- ============================================================== -->
+    <section class="chapter" id="sec-profile">
+      <div class="chapter-head">
+        <span class="chapter-num">1</span>
         <div>
-          <div class="blueprint-suite-badge">
-            <span class="section-badge-pill">SECTION 1 OF 2</span>
-            <span class="badge-sep">·</span>
-            <span>📐 Universal Pattern Rubric</span>
-            <span class="badge-sep">·</span>
-            <span>Exam &amp; Production Standard</span>
-          </div>
-          <h3 class="blueprint-suite-title">The 8 Pillars of Software Pattern Mastery</h3>
-          <p class="blueprint-suite-desc">
-            The standard architectural rubric for analyzing design smells and applying SOLID principles in enterprise codebases and Frankfurt UAS examinations.
-          </p>
-        </div>
-        <div class="blueprint-suite-actions">
-          <div class="blueprint-view-toggles" style="display:inline-flex; gap:0.4rem;">
-            <button type="button" class="btn-suite-toggle active" id="btnViewExplorer" onclick="setBlueprintView('explorer')" title="Explore one pillar at a time with interactive details">
-              <span>⚡ Interactive Explorer</span>
-            </button>
-            <button type="button" class="btn-suite-toggle" id="btnViewMatrix" onclick="setBlueprintView('matrix')" title="View all 8 pillars simultaneously in an executive grid">
-              <span>📊 Full Matrix</span>
-            </button>
-          </div>
-          <button type="button" class="btn-copy-rubric" id="btnCopyRubricSuite" onclick="copyBlueprintRubric()" title="Copy entire 8-pillar markdown study rubric to clipboard">
-            <span>📋</span>
-            <span id="copyRubricSuiteLabel">Copy Rubric</span>
-          </button>
-          <button type="button" class="btn-section-collapse" id="btnCollapseBlueprint" onclick="toggleBlueprintCollapse()" aria-expanded="true" title="Collapse or expand the 8-Pillar section">
-            <span class="collapse-icon">▲</span>
-            <span class="collapse-label">Collapse Rubric</span>
-          </button>
+          <h2>The 5 SOLID Principles</h2>
+          <span style="font-size:0.85rem; color:var(--text-muted); font-weight:600;">Robert C. Martin Framework</span>
         </div>
       </div>
 
-      <!-- Collapsed Hint Bar -->
-      <div class="blueprint-collapsed-hint" id="blueprintCollapsedHint" style="display:none; padding:0.85rem 1.75rem; background:var(--bg-subtle); border-top:1px dashed var(--border); font-size:0.85rem; color:var(--text-muted); align-items:center; justify-content:space-between; flex-wrap:wrap; gap:0.5rem;">
-        <div style="display:flex; align-items:center; gap:0.6rem;">
-          <span style="font-size:1.1rem;">📐</span>
-          <span><strong>8-Pillar Architecture Rubric is Collapsed</strong> (SOLID Principles &amp; Design Smells). Click to restore instant reference.</span>
+      <div class="pattern-spec-box">
+        <div class="spec-grid">
+          <div class="spec-row">
+            <span class="spec-label"><span class="solid-letter">S</span> SRP &mdash; Single Responsibility Principle:</span>
+            <span class="spec-val">
+              <em>"A class should have one, and only one, reason to change."</em> Each class must be responsible to only one single actor or business role. Cohesive behavior belongs together; divergent responsibilities must be segregated.
+            </span>
+          </div>
+          <div class="spec-row">
+            <span class="spec-label"><span class="solid-letter">O</span> OCP &mdash; Open-Closed Principle:</span>
+            <span class="spec-val">
+              <em>"Software entities should be open for extension, but closed for modification."</em> You should be able to add new features or algorithms without modifying existing, tested classes (achieved via polymorphism: Strategy, Template Method, Decorator).
+            </span>
+          </div>
+          <div class="spec-row">
+            <span class="spec-label"><span class="solid-letter">L</span> LSP &mdash; Liskov Substitution Principle:</span>
+            <span class="spec-val">
+              <em>"Subtypes must be substitutable for their base types without altering the correctness of the program."</em> Derived classes must fulfill all behavioral contracts guaranteed by the superclass (preconditions, postconditions, invariants).
+            </span>
+          </div>
+          <div class="spec-row">
+            <span class="spec-label"><span class="solid-letter">I</span> ISP &mdash; Interface Segregation Principle:</span>
+            <span class="spec-val">
+              <em>"Clients should not be forced to depend on methods they do not use."</em> Prefer many small, client-specific role interfaces over a single bloated "fat" general-purpose interface.
+            </span>
+          </div>
+          <div class="spec-row">
+            <span class="spec-label"><span class="solid-letter">D</span> DIP &mdash; Dependency Inversion Principle:</span>
+            <span class="spec-val">
+              <em>"1. High-level modules should not depend on low-level modules; both should depend on abstractions.<br>2. Abstractions should not depend on details; details should depend on abstractions."</em>
+            </span>
+          </div>
         </div>
-        <button type="button" class="btn-restore-rubric" onclick="toggleBlueprintCollapse(false)" style="background:var(--accent); color:#fff; border:none; padding:0.35rem 0.85rem; border-radius:6px; font-weight:700; cursor:pointer; font-size:0.8rem;">
-          Restore Rubric ▲
-        </button>
       </div>
 
-      <div class="blueprint-collapsible-body" id="blueprintCollapsibleBody">
-        <!-- Explorer View -->
-        <div class="blueprint-explorer" id="blueprintExplorer">
-          <nav class="blueprint-pillar-tabs" role="tablist" aria-label="8 Pillars Navigation">
-            <button type="button" class="pillar-tab-btn active" role="tab" aria-selected="true" onclick="selectPillar(1)">
-              <span class="pillar-tab-num">1</span>
-              <span class="pillar-tab-label">Intent</span>
-            </button>
-            <button type="button" class="pillar-tab-btn" role="tab" aria-selected="false" onclick="selectPillar(2)">
-              <span class="pillar-tab-num">2</span>
-              <span class="pillar-tab-label">Roles</span>
-            </button>
-            <button type="button" class="pillar-tab-btn" role="tab" aria-selected="false" onclick="selectPillar(3)">
-              <span class="pillar-tab-num">3</span>
-              <span class="pillar-tab-label">UML</span>
-            </button>
-            <button type="button" class="pillar-tab-btn" role="tab" aria-selected="false" onclick="selectPillar(4)">
-              <span class="pillar-tab-num">4</span>
-              <span class="pillar-tab-label">Principles</span>
-            </button>
-            <button type="button" class="pillar-tab-btn" role="tab" aria-selected="false" onclick="selectPillar(5)">
-              <span class="pillar-tab-num">5</span>
-              <span class="pillar-tab-label">Mechanics</span>
-            </button>
-            <button type="button" class="pillar-tab-btn" role="tab" aria-selected="false" onclick="selectPillar(6)">
-              <span class="pillar-tab-num">6</span>
-              <span class="pillar-tab-label">Trade-offs</span>
-            </button>
-            <button type="button" class="pillar-tab-btn" role="tab" aria-selected="false" onclick="selectPillar(7)">
-              <span class="pillar-tab-num">7</span>
-              <span class="pillar-tab-label">Rivals</span>
-            </button>
-            <button type="button" class="pillar-tab-btn" role="tab" aria-selected="false" onclick="selectPillar(8)">
-              <span class="pillar-tab-num">8</span>
-              <span class="pillar-tab-label">Exam Traps</span>
-            </button>
-          </nav>
-
-          <div class="blueprint-active-pillar-card" id="pillarActiveCard">
-            <div class="pillar-panel active" id="pillarPanel1">
-              <div class="pillar-panel-badge">PILLAR 1 OF 8 · INTENT &amp; MOTIVATION</div>
-              <h4 class="pillar-panel-title">Preventing Architectural Decay &amp; Systemic Rot</h4>
-              <p style="font-size:0.95rem; line-height:1.6; color:var(--text); margin-bottom:1rem;">
-                Software architectures do not fail overnight; they degrade gradually due to the accumulation of 7 classic design smells (Rigidity, Fragility, Immobility, Viscosity, Needless Complexity, Needless Repetition, Opacity). The 5 SOLID principles provide formal laws to counteract these smells.
-              </p>
-              <div style="background:var(--bg-subtle); padding:1rem; border-radius:6px; border-left:3px solid #6366f1;">
-                <strong style="color:#6366f1; display:block; margin-bottom:0.35rem;">Primary Architectural Intent</strong>
-                <p style="font-size:0.85rem; color:var(--text-muted); margin:0;">
-                  Ensure systems remain maintainable, extensible without modification, safely substitutable across class hierarchies, decoupled from volatile details, and aligned with distinct business actors.
-                </p>
-              </div>
-            </div>
-
-            <div class="pillar-panel" id="pillarPanel2" style="display:none;">
-              <div class="pillar-panel-badge">PILLAR 2 OF 8 · PARTICIPANTS &amp; ROLES</div>
-              <h4 class="pillar-panel-title">Architectural Boundaries &amp; Actors</h4>
-              <div class="pillar-matrix-table-wrap">
-                <table class="pillar-matrix-table">
-                  <thead>
-                    <tr>
-                      <th>Participant Role</th>
-                      <th>SOLID Principle</th>
-                      <th>Architectural Responsibility</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td><strong>Single Business Actor</strong></td>
-                      <td>Single Responsibility (SRP)</td>
-                      <td>Defines the single source of requirements and reason to change for a module.</td>
-                    </tr>
-                    <tr>
-                      <td><strong>Abstract Boundary</strong></td>
-                      <td>Open-Closed (OCP)</td>
-                      <td>Provides stable, unchanging interfaces open to extension via polymorphism.</td>
-                    </tr>
-                    <tr>
-                      <td><strong>Subtype / Subclass</strong></td>
-                      <td>Liskov Substitution (LSP)</td>
-                      <td>Preserves base type behavioral contracts, invariants, and pre/postconditions.</td>
-                    </tr>
-                    <tr>
-                      <td><strong>Client-Specific Interface</strong></td>
-                      <td>Interface Segregation (ISP)</td>
-                      <td>Narrow, targeted interface preventing clients from depending on unused operations.</td>
-                    </tr>
-                    <tr>
-                      <td><strong>Dependency Injector</strong></td>
-                      <td>Dependency Inversion (DIP)</td>
-                      <td>Wires concrete details to high-level policies through abstractions.</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-
-            <div class="pillar-panel" id="pillarPanel3" style="display:none;">
-              <div class="pillar-panel-badge">PILLAR 3 OF 8 · FORMAL UML ANATOMY</div>
-              <h4 class="pillar-panel-title">Vector SVG UML: Dependency Inversion Architecture</h4>
-              <p style="font-size:0.88rem; color:var(--text-muted); margin-bottom:1rem;">
-                Traditional procedural architectures couple high-level business policies directly to low-level implementation details. DIP inverts the dependency arrow so both depend on an abstraction.
-              </p>
-              <div class="uml-svg-container" style="background:#090d16; border-radius:8px; padding:1.5rem; text-align:center; overflow-x:auto;">
-                <svg viewBox="0 0 760 220" width="100%" height="auto" xmlns="http://www.w3.org/2000/svg" style="font-family:'JetBrains Mono', 'SF Mono', monospace; font-size:12px;">
-                  <defs>
-                    <marker id="u6-arrow" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-                      <path d="M 0 1 L 10 5 L 0 9 z" fill="#38bdf8"/>
-                    </marker>
-                    <marker id="u6-tri" viewBox="0 0 12 12" refX="12" refY="6" markerWidth="10" markerHeight="10" orient="auto-start-reverse">
-                      <polygon points="0,0 12,6 0,12" fill="#090d16" stroke="#38bdf8" stroke-width="1.8"/>
-                    </marker>
-                  </defs>
-
-                  <!-- High Level Policy -->
-                  <rect x="40" y="70" width="200" height="70" rx="6" fill="#1e293b" stroke="#6366f1" stroke-width="2"/>
-                  <rect x="40" y="70" width="200" height="24" rx="6" fill="#4f46e5"/>
-                  <text x="140" y="87" fill="#ffffff" font-weight="700" text-anchor="middle">OrderService (High-Level)</text>
-                  <text x="50" y="118" fill="#e2e8f0">+ processPayment()</text>
-
-                  <!-- Arrow to Interface -->
-                  <line x1="240" y1="105" x2="310" y2="105" stroke="#38bdf8" stroke-width="2" marker-end="url(#u6-arrow)"/>
-                  <text x="275" y="97" fill="#38bdf8" font-size="10" text-anchor="middle">uses</text>
-
-                  <!-- Interface -->
-                  <rect x="320" y="60" width="200" height="90" rx="6" fill="#1e293b" stroke="#38bdf8" stroke-width="2"/>
-                  <rect x="320" y="60" width="200" height="24" rx="6" fill="#0284c7"/>
-                  <text x="420" y="77" fill="#ffffff" font-weight="700" text-anchor="middle">&lt;&lt;interface&gt;&gt; PaymentGateway</text>
-                  <text x="330" y="110" fill="#f8fafc">+ charge(amount : double)</text>
-
-                  <!-- Low Level Detail -->
-                  <rect x="580" y="70" width="160" height="70" rx="6" fill="#1e293b" stroke="#10b981" stroke-width="1.8"/>
-                  <rect x="580" y="70" width="160" height="24" rx="6" fill="#059669"/>
-                  <text x="660" y="87" fill="#ffffff" font-weight="700" text-anchor="middle">StripeGateway</text>
-                  <text x="590" y="118" fill="#a7f3d0">+ charge(amount)</text>
-
-                  <!-- Realization Arrow -->
-                  <line x1="580" y1="105" x2="530" y2="105" stroke="#38bdf8" stroke-width="1.8" stroke-dasharray="4,4" marker-end="url(#u6-tri)"/>
-                  <text x="555" y="97" fill="#38bdf8" font-size="10" text-anchor="middle">realizes</text>
-                </svg>
-              </div>
-            </div>
-
-            <div class="pillar-panel" id="pillarPanel4" style="display:none;">
-              <div class="pillar-panel-badge">PILLAR 4 OF 8 · FORMAL LAWS &amp; INVARIANTS</div>
-              <h4 class="pillar-panel-title">Barbara Liskov's Formal Subtype Invariance</h4>
-              <p style="font-size:0.92rem; line-height:1.6; color:var(--text); margin-bottom:1rem;">
-                Let \(\phi(x)\) be a property provable about objects \(x\) of type \(T\). Then \(\phi(y)\) should be true for objects \(y\) of type \(S\) where \(S\) is a subtype of \(T\).
-              </p>
-              <div class="takeaway-grid">
-                <div class="takeaway-item" style="border-left:3px solid #10b981;">
-                  <strong>1. Preconditions</strong>
-                  <p>Cannot be strengthened in a subtype (subtypes can accept more inputs, but never fewer).</p>
-                </div>
-                <div class="takeaway-item" style="border-left:3px solid #38bdf8;">
-                  <strong>2. Postconditions</strong>
-                  <p>Cannot be weakened in a subtype (subtypes must guarantee at least as much as the parent).</p>
-                </div>
-                <div class="takeaway-item" style="border-left:3px solid #f59e0b;">
-                  <strong>3. Invariants &amp; History</strong>
-                  <p>All invariants of the supertype must be preserved. Subtypes cannot mutate immutable supertype state.</p>
-                </div>
-              </div>
-            </div>
-
-            <div class="pillar-panel" id="pillarPanel5" style="display:none;">
-              <div class="pillar-panel-badge">PILLAR 5 OF 8 · IMPLEMENTATION MECHANICS</div>
-              <h4 class="pillar-panel-title">Dependency Injection &amp; Interface Segregation</h4>
-              <div class="mac-ide-window" style="margin: 0.5rem 0;">
-                <div class="mac-ide-top">
-                  <div class="mac-ide-dots">
-                    <span class="mac-dot mac-dot-red"></span>
-                    <span class="mac-dot mac-dot-yellow"></span>
-                    <span class="mac-dot mac-dot-green"></span>
-                  </div>
-                  <div class="mac-ide-tab">OrderProcessor.java · DIP In Practice</div>
-                  <button type="button" class="btn-copy-code" onclick="copySnippet('codeSnippetP5Solid')">Copy Code</button>
-                </div>
-                <pre class="mac-ide-content" id="codeSnippetP5Solid"><code>// Clean DIP: High-level policy depends strictly on Abstractions
-public class OrderProcessor {
-    private final PaymentGateway gateway;
-    private final InventoryRepository inventory;
-
-    // Constructor Injection (Dependency Inversion)
-    public OrderProcessor(PaymentGateway gateway, InventoryRepository inventory) {
-        this.gateway = Objects.requireNonNull(gateway);
-        this.inventory = Objects.requireNonNull(inventory);
-    }
-
-    public void process(Order order) {
-        inventory.reserve(order.getItems());
-        gateway.charge(order.getTotal());
-    }
-}</code></pre>
-              </div>
-            </div>
-
-            <div class="pillar-panel" id="pillarPanel6" style="display:none;">
-              <div class="pillar-panel-badge">PILLAR 6 OF 8 · COSTS &amp; TRADE-OFFS</div>
-              <h4 class="pillar-panel-title">Architectural Trade-offs &amp; Cognitive Cost</h4>
-              <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
-                <div style="background:rgba(16,185,129,0.06); border:1px solid rgba(16,185,129,0.25); border-radius:6px; padding:1rem;">
-                  <strong style="color:#10b981; display:block; margin-bottom:0.5rem;">✅ SOLID Benefits</strong>
-                  <ul style="margin:0; padding-left:1.2rem; font-size:0.85rem; color:var(--text); line-height:1.5;">
-                    <li>High testability: Mocks and stubs easily injected.</li>
-                    <li>Eliminates cascading breaks when database or external APIs change.</li>
-                    <li>Code reuse without coupling to environment-specific details.</li>
-                  </ul>
-                </div>
-                <div style="background:rgba(239,68,68,0.06); border:1px solid rgba(239,68,68,0.25); border-radius:6px; padding:1rem;">
-                  <strong style="color:#ef4444; display:block; margin-bottom:0.5rem;">⚠️ Potential Over-Engineering</strong>
-                  <ul style="margin:0; padding-left:1.2rem; font-size:0.85rem; color:var(--text); line-height:1.5;">
-                    <li>Interface proliferation: Creating 1-to-1 interfaces for classes that will never have a second implementation.</li>
-                    <li>Indirection: Navigating code requires jumping through interfaces.</li>
-                    <li>Can violate YAGNI if speculative complexity is added too early.</li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-
-            <div class="pillar-panel" id="pillarPanel7" style="display:none;">
-              <div class="pillar-panel-badge">PILLAR 7 OF 8 · RIVAL CONCEPTS MATRIX</div>
-              <h4 class="pillar-panel-title">Principles &amp; Anti-Pattern Matrix</h4>
-              <div class="pillar-matrix-table-wrap">
-                <table class="pillar-matrix-table">
-                  <thead>
-                    <tr>
-                      <th>Principle</th>
-                      <th>Rival Anti-Pattern</th>
-                      <th>Resolution Criteria</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td><strong>SRP</strong></td>
-                      <td>God Object / Monster Class</td>
-                      <td>Split classes along single business stakeholder axes.</td>
-                    </tr>
-                    <tr>
-                      <td><strong>OCP</strong></td>
-                      <td>Premature Generalization / YAGNI</td>
-                      <td>Only abstract when variation is proven or highly probable.</td>
-                    </tr>
-                    <tr>
-                      <td><strong>LSP</strong></td>
-                      <td>Square-Rectangle Flawed Inheritance</td>
-                      <td>Favor composition over inheritance when behavioral invariants clash.</td>
-                    </tr>
-                    <tr>
-                      <td><strong>ISP</strong></td>
-                      <td>Fat Interface</td>
-                      <td>Segregate fat interfaces into role-specific sub-interfaces.</td>
-                    </tr>
-                    <tr>
-                      <td><strong>DIP</strong></td>
-                      <td>Hardcoded `new` Operators</td>
-                      <td>Inject dependencies via constructor or dependency injection container.</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-
-            <div class="pillar-panel" id="pillarPanel8" style="display:none;">
-              <div class="pillar-panel-badge">PILLAR 8 OF 8 · EXAM TRAPS &amp; JDK REFERENCES</div>
-              <h4 class="pillar-panel-title">Prof. Schäfer Exam Traps &amp; Solutions</h4>
-              <div style="background:rgba(245,158,11,0.08); border-left:4px solid #f59e0b; padding:1.25rem; border-radius:0 6px 6px 0; margin-bottom:1rem;">
-                <strong style="color:#f59e0b; font-size:0.92rem;">🚨 Frankfurt UAS Exam Trap #1: What is a "Responsibility"?</strong>
-                <p style="font-size:0.86rem; color:var(--text); margin:0.35rem 0 0; line-height:1.5;">
-                  Students often answer: <em>"A class should only do one thing"</em> or <em>"A class should only have one method."</em><br>
-                  <strong>Prof. Schäfer Model Answer:</strong> Robert C. Martin explicitly defines a responsibility as <strong>"a reason to change"</strong>, which is tied to a single business stakeholder or actor.
-                </p>
-              </div>
-              <div style="font-size:0.85rem; color:var(--text-muted);">
-                <strong>JDK Benchmark:</strong> <code>java.sql.Driver</code> and <code>java.sql.Connection</code> exemplify DIP and OCP.
-              </div>
-            </div>
-          </div>
+      <!-- Vector UML: Dependency Inversion Architecture -->
+      <div class="guide-card">
+        <div class="guide-card-header">
+          <span>📐 Canonical Architecture: Figure 6.1 Dependency Inversion in Action</span>
         </div>
+        <div class="uml-diagram-box" style="text-align:center;">
+          <svg viewBox="0 0 680 200" style="max-width:100%; height:auto;" aria-label="Figure 6.1: DIP Architecture UML">
+            <!-- High-Level Module Box -->
+            <rect x="30" y="40" width="180" height="70" rx="3" fill="var(--bg-raised)" stroke="var(--border)" stroke-width="1.5"/>
+            <rect x="30" y="40" width="180" height="24" rx="3" fill="var(--bg-subtle)"/>
+            <text x="120" y="57" fill="var(--text)" font-family="var(--font-display)" font-size="12" font-weight="700" text-anchor="middle">OrderProcessor (High-Level)</text>
+            <line x1="30" y1="64" x2="210" y2="64" stroke="var(--border)" stroke-width="1.5"/>
+            <text x="40" y="85" fill="var(--text-muted)" font-family="var(--font-mono)" font-size="10">+ processOrder(o: Order)</text>
 
-        <!-- Full Matrix View (Hidden by default) -->
-        <div class="blueprint-matrix-view" id="blueprintMatrix" style="display:none;">
-          <div class="pillar-matrix-table-wrap">
-            <table class="pillar-matrix-table">
-              <thead>
-                <tr>
-                  <th style="width:12%;">Pillar #</th>
-                  <th style="width:20%;">Mastery Dimension</th>
-                  <th style="width:34%;">The 7 Design Smells (Uncle Bob)</th>
-                  <th style="width:34%;">The 5 SOLID Principles</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td><strong>Pillar 1</strong></td>
-                  <td><strong>Intent &amp; Motivation</strong></td>
-                  <td>Identify symptoms of decaying software architectures before catastrophic failure.</td>
-                  <td>Provide foundational object-oriented laws to maintain agility and modularity.</td>
-                </tr>
-                <tr>
-                  <td><strong>Pillar 2</strong></td>
-                  <td><strong>Participants &amp; Roles</strong></td>
-                  <td>Rigidity, Fragility, Immobility, Viscosity, Needless Complexity, Repetition, Opacity.</td>
-                  <td>Single Responsibility, Open/Closed, Liskov Substitution, Interface Segregation, Dependency Inversion.</td>
-                </tr>
-                <tr>
-                  <td><strong>Pillar 3</strong></td>
-                  <td><strong>UML Anatomy</strong></td>
-                  <td>Entangled cyclic graphs and god-object diagrams.</td>
-                  <td>Inverted dependency arrows pointing to stable abstractions.</td>
-                </tr>
-                <tr>
-                  <td><strong>Pillar 4</strong></td>
-                  <td><strong>Formal Laws</strong></td>
-                  <td>Entropy increases without deliberate refactoring.</td>
-                  <td>LSP Invariance: Subtypes must fulfill all behavioral contracts of the supertype.</td>
-                </tr>
-                <tr>
-                  <td><strong>Pillar 5</strong></td>
-                  <td><strong>Mechanics</strong></td>
-                  <td>Static analysis and code smells detection.</td>
-                  <td>Dependency injection, composition over inheritance, interface segregation.</td>
-                </tr>
-                <tr>
-                  <td><strong>Pillar 6</strong></td>
-                  <td><strong>Trade-offs</strong></td>
-                  <td>Ignoring smells leads to the total rewrite bankruptcy cycle.</td>
-                  <td>Requires discipline; avoid speculative interface bloat.</td>
-                </tr>
-                <tr>
-                  <td><strong>Pillar 7</strong></td>
-                  <td><strong>Rival Concepts</strong></td>
-                  <td>Code smells vs Architectural smells.</td>
-                  <td>SOLID vs GRASP principles.</td>
-                </tr>
-                <tr>
-                  <td><strong>Pillar 8</strong></td>
-                  <td><strong>Exam Traps</strong></td>
-                  <td>Confusing Rigidity (cascading changes) with Fragility (breaks in unrelated modules).</td>
-                  <td>Square-Rectangle paradox; confusing Dependency Inversion with Dependency Injection.</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
+            <!-- Interface Abstraction Box -->
+            <rect x="270" y="40" width="170" height="70" rx="3" fill="var(--bg-raised)" stroke="var(--accent)" stroke-width="1.5"/>
+            <rect x="270" y="40" width="170" height="24" rx="3" fill="var(--accent-soft)"/>
+            <text x="355" y="57" fill="var(--accent)" font-family="var(--font-display)" font-size="12" font-style="italic" font-weight="700" text-anchor="middle">&lt;&lt;interface&gt;&gt; PaymentGateway</text>
+            <line x1="270" y1="64" x2="440" y2="64" stroke="var(--border)" stroke-width="1.5"/>
+            <text x="280" y="85" fill="var(--text)" font-family="var(--font-mono)" font-size="10">+ pay(amount: double)</text>
+
+            <!-- Low-Level Concrete Detail Box -->
+            <rect x="500" y="40" width="160" height="70" rx="3" fill="var(--bg-raised)" stroke="var(--border)" stroke-width="1.5"/>
+            <rect x="500" y="40" width="160" height="24" rx="3" fill="var(--bg-subtle)"/>
+            <text x="580" y="57" fill="var(--text)" font-family="var(--font-display)" font-size="12" font-weight="700" text-anchor="middle">StripeGateway (Low-Level)</text>
+            <line x1="500" y1="64" x2="660" y2="64" stroke="var(--border)" stroke-width="1.5"/>
+            <text x="510" y="85" fill="var(--text)" font-family="var(--font-mono)" font-size="10">+ pay(amount: double)</text>
+
+            <!-- Association from OrderProcessor to PaymentGateway -->
+            <line x1="210" y1="75" x2="270" y2="75" stroke="var(--border)" stroke-width="1.5"/>
+            <polygon points="270,75 260,70 260,80" fill="var(--border)"/>
+            <text x="240" y="65" fill="var(--text-muted)" font-family="var(--font-mono)" font-size="10" text-anchor="middle">depends on</text>
+
+            <!-- Realization from StripeGateway to PaymentGateway (INVERTED ARROW pointing left!) -->
+            <line x1="500" y1="75" x2="440" y2="75" stroke="var(--border)" stroke-width="1.5" stroke-dasharray="4,4"/>
+            <polygon points="440,75 453,68 453,82" fill="var(--bg-raised)" stroke="var(--border)" stroke-width="1.5"/>
+            <text x="470" y="65" fill="var(--accent)" font-family="var(--font-mono)" font-size="10" font-weight="700" text-anchor="middle">inverts &larr;</text>
+
+            <!-- Label explaining DIP -->
+            <text x="340" y="150" fill="var(--text)" font-family="var(--font-mono)" font-size="11" text-anchor="middle">
+              Both High-Level and Low-Level depend on the Abstraction.
+            </text>
+            <text x="340" y="170" fill="var(--text-muted)" font-family="var(--font-mono)" font-size="10" text-anchor="middle">
+              No direct compile-time coupling exists between OrderProcessor and StripeGateway!
+            </text>
+          </svg>
         </div>
       </div>
     </section>
 
-    <!-- ====================================================================
-         SECTION 2: 5-STAGE HANDS-ON CURRICULUM
-         ==================================================================== -->
-    <div class="masterclass-section-divider" style="margin: 3.5rem 0 1.5rem;">
-      <div class="section-divider-line"></div>
-      <div class="section-divider-chip">
-        <span>PART 2 · HANDS-ON CURRICULUM</span>
-      </div>
-      <div class="section-divider-line"></div>
-    </div>
-
-    <!-- Curriculum Super-Header with Metadata Chips -->
-    <div class="curriculum-super-header" id="curriculumHeader" style="margin-bottom:1.5rem; background:var(--bg-raised); border:1px solid var(--border); border-radius:var(--radius-md); padding:1.5rem;">
-      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem;">
+    <!-- ============================================================== -->
+    <!-- 2. THE 4 SYMPTOMS OF ROTTING DESIGN                            -->
+    <!-- ============================================================== -->
+    <section class="chapter" id="sec-smells">
+      <div class="chapter-head">
+        <span class="chapter-num">2</span>
         <div>
-          <div style="font-size:0.75rem; font-weight:800; letter-spacing:0.08em; text-transform:uppercase; color:#6366f1; margin-bottom:0.25rem;">
-            STAGE-DRIVEN MASTERY PATH
-          </div>
-          <h2 style="font-size:1.4rem; font-weight:800; margin:0; letter-spacing:-0.02em;">
-            SOLID Principles &amp; Design Smells: 5 Stages to Grade 1.0
-          </h2>
-        </div>
-        <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
-          <span style="background:rgba(99,102,241,0.12); color:#6366f1; font-size:0.78rem; font-weight:700; padding:0.35rem 0.75rem; border-radius:20px; border:1px solid rgba(99,102,241,0.25);">⏱️ 45 Min Total</span>
-          <span style="background:rgba(16,185,129,0.12); color:#10b981; font-size:0.78rem; font-weight:700; padding:0.35rem 0.75rem; border-radius:20px; border:1px solid rgba(16,185,129,0.25);">🎯 25 Exam Points</span>
-          <span style="background:rgba(56,189,248,0.12); color:#38bdf8; font-size:0.78rem; font-weight:700; padding:0.35rem 0.75rem; border-radius:20px; border:1px solid rgba(56,189,248,0.25);">🏛️ Prof. Dr. Jörg Schäfer</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- Masterclass Stage Navigation Bar -->
-    <nav class="masterclass-stage-nav" aria-label="Curriculum Stages">
-      <a href="#stage-1-smells" class="stage-nav-pill active" data-stage="1">
-        <span class="pill-number">1</span>
-        <span class="pill-title">The 7 Smells</span>
-      </a>
-      <a href="#stage-2-solid" class="stage-nav-pill" data-stage="2">
-        <span class="pill-number">2</span>
-        <span class="pill-title">SOLID Laws</span>
-      </a>
-      <a href="#stage-3-lsp" class="stage-nav-pill" data-stage="3">
-        <span class="pill-number">3</span>
-        <span class="pill-title">LSP Sandbox</span>
-      </a>
-      <a href="#stage-4-matrix" class="stage-nav-pill" data-stage="4">
-        <span class="pill-number">4</span>
-        <span class="pill-title">Solution Matrix</span>
-      </a>
-      <a href="#stage-5-exam" class="stage-nav-pill" data-stage="5">
-        <span class="pill-number">5</span>
-        <span class="pill-title">Exam Traps</span>
-      </a>
-    </nav>
-
-    <!-- ====================================================================
-         STAGE 1: THE 7 ARCHITECTURAL DESIGN SMELLS
-         ==================================================================== -->
-    <section class="masterclass-stage-section" id="stage-1-smells">
-      <div class="stage-header-top">
-        <div class="stage-eyebrow-pill">● Stage 01 · Symptoms of Architectural Decay</div>
-        <button type="button" class="stage-mastery-btn" onclick="markStageComplete(1)">Mark Stage 1 Complete ✓</button>
-      </div>
-      <h2 class="stage-title">The 7 Classic Architectural Smells (Robert C. Martin)</h2>
-
-      <p style="font-size:1rem; line-height:1.7; color:var(--text); margin-bottom:1.5rem;">
-        Before learning the principles, an architect must recognize the symptoms of systemic decay. Uncle Bob identified seven cardinal design smells that signal an application is rotting from within.
-      </p>
-
-      <div class="smell-grid">
-        <div class="smell-card">
-          <div class="smell-name">1. Rigidity</div>
-          <p style="font-size:0.88rem; color:var(--text-muted); line-height:1.6; margin:0;">
-            The tendency for software to be difficult to change because every single modification forces a cascade of changes in dependent modules.
-          </p>
-        </div>
-        <div class="smell-card">
-          <div class="smell-name">2. Fragility</div>
-          <p style="font-size:0.88rem; color:var(--text-muted); line-height:1.6; margin:0;">
-            Changes cause the system to break in places that have no conceptual relationship to the part that was changed.
-          </p>
-        </div>
-        <div class="smell-card">
-          <div class="smell-name">3. Immobility</div>
-          <p style="font-size:0.88rem; color:var(--text-muted); line-height:1.6; margin:0;">
-            The inability to reuse software parts in other applications because components are deeply entangled with local dependencies.
-          </p>
-        </div>
-        <div class="smell-card">
-          <div class="smell-name">4. Viscosity</div>
-          <p style="font-size:0.88rem; color:var(--text-muted); line-height:1.6; margin:0;">
-            It is easier to do the "hacky wrong thing" than to preserve architectural integrity (design viscosity vs. environment viscosity).
-          </p>
-        </div>
-        <div class="smell-card">
-          <div class="smell-name">5. Needless Complexity</div>
-          <p style="font-size:0.88rem; color:var(--text-muted); line-height:1.6; margin:0;">
-            The design contains infrastructure and speculative abstractions that have no direct business value today (YAGNI violation).
-          </p>
-        </div>
-        <div class="smell-card">
-          <div class="smell-name">6. Needless Repetition</div>
-          <p style="font-size:0.88rem; color:var(--text-muted); line-height:1.6; margin:0;">
-            Copy-paste programming. Bug fixes in one module leave identical duplicate bugs alive across unmerged copies.
-          </p>
-        </div>
-        <div class="smell-card">
-          <div class="smell-name">7. Opacity</div>
-          <p style="font-size:0.88rem; color:var(--text-muted); line-height:1.6; margin:0;">
-            The code is convoluted and expresses intent poorly, reading like an impenetrable riddle to new team members.
-          </p>
+          <h2>The 4 Symptoms of Rotting Design</h2>
+          <span style="font-size:0.85rem; color:var(--text-muted); font-weight:600;">Architectural Decay</span>
         </div>
       </div>
 
-      <!-- Key Takeaways Box -->
-      <div class="stage-takeaways-box">
-        <div class="stage-takeaways-title">
-          <span>🧠 Key Takeaways: Rigidity vs Fragility</span>
+      <div class="guide-card">
+        <div class="guide-card-header">
+          <span class="rule-badge danger">CODE SMELLS</span>
+          <span>Why Good Software Degrades into Chaos</span>
         </div>
-        <div class="takeaway-grid">
-          <div class="takeaway-item">
-            <strong>Rigidity (Cost of Change)</strong>
-            <p>You want to change module A, but the compiler forces you to change B, C, D, and E. The architecture is rigid.</p>
-          </div>
-          <div class="takeaway-item">
-            <strong>Fragility (Unpredictable Risk)</strong>
-            <p>You modify user authentication, and suddenly the PDF report generator crashes. The architecture is fragile.</p>
-          </div>
-          <div class="takeaway-item">
-            <strong>Viscosity (Friction)</strong>
-            <p>Doing it right takes 3 hours of boilerplate; hacking it takes 3 minutes. Developers inevitably hack.</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- Up Next Card -->
-      <div class="stage-next-card">
-        <div class="stage-next-card-content">
-          <div class="stage-next-card-label">UP NEXT · STAGE 02</div>
-          <div class="stage-next-card-title">The 5 SOLID Principles Blueprint</div>
-          <p class="stage-next-card-desc">Examine how Uncle Bob's five architectural laws systematically eliminate each of the 7 smells.</p>
-        </div>
-        <a href="#stage-2-solid" class="stage-next-card-btn">Jump to Stage 2 →</a>
-      </div>
-    </section>
-
-    <!-- ====================================================================
-         STAGE 2: THE 5 SOLID LAWS
-         ==================================================================== -->
-    <section class="masterclass-stage-section" id="stage-2-solid">
-      <div class="stage-header-top">
-        <div class="stage-eyebrow-pill">● Stage 02 · Foundational Laws</div>
-        <button type="button" class="stage-mastery-btn" onclick="markStageComplete(2)">Mark Stage 2 Complete ✓</button>
-      </div>
-      <h2 class="stage-title">The 5 SOLID Principles Blueprint</h2>
-
-      <p style="font-size:1rem; line-height:1.7; color:var(--text); margin-bottom:1.5rem;">
-        Each letter of the SOLID acronym represents a fundamental design constraint that guarantees modularity, testability, and resilience against architectural decay.
-      </p>
-
-      <!-- SRP -->
-      <div class="solid-card">
-        <h3><span class="solid-letter">S</span> Single Responsibility Principle (SRP)</h3>
-        <p><strong>Rule:</strong> <em>“A class should have one, and only one, reason to change.”</em></p>
-        <p style="font-size:0.92rem; color:var(--text-muted); line-height:1.6;">
-          Each class should encapsulate a single business actor's requirements. If a class calculates employee salaries, connects to the SQL database, AND renders HTML, changing the database schema will force modifications to core financial payroll calculations.
-        </p>
-      </div>
-
-      <!-- OCP -->
-      <div class="solid-card">
-        <h3><span class="solid-letter">O</span> Open-Closed Principle (OCP)</h3>
-        <p><strong>Rule:</strong> <em>“Software entities should be open for extension, but closed for modification.”</em> (Bertrand Meyer)</p>
-        <p style="font-size:0.92rem; color:var(--text-muted); line-height:1.6;">
-          You should be able to extend the behavior of a module without modifying its source code. Achieved via abstraction (interfaces, abstract base classes) and patterns like <strong>Strategy</strong> and <strong>Template Method</strong>.
-        </p>
-      </div>
-
-      <!-- LSP -->
-      <div class="solid-card">
-        <h3><span class="solid-letter">L</span> Liskov Substitution Principle (LSP)</h3>
-        <p><strong>Rule:</strong> <em>“Subtypes must be substitutable for their base types without altering program correctness.”</em> (Barbara Liskov)</p>
-        <p style="font-size:0.92rem; color:var(--text-muted); line-height:1.6;">
-          A derived class must fulfill all behavioral promises made by its parent. It cannot throw unexpected runtime exceptions, weaken postconditions, or strengthen preconditions.
-        </p>
-      </div>
-
-      <!-- ISP -->
-      <div class="solid-card">
-        <h3><span class="solid-letter">I</span> Interface Segregation Principle (ISP)</h3>
-        <p><strong>Rule:</strong> <em>“Clients should not be forced to depend upon interfaces that they do not use.”</em></p>
-        <p style="font-size:0.92rem; color:var(--text-muted); line-height:1.6;">
-          Many client-specific interfaces are vastly superior to one bloated "fat" interface. Avoid "God Interfaces" that force a print-only client to implement scanner and fax methods.
-        </p>
-      </div>
-
-      <!-- DIP -->
-      <div class="solid-card">
-        <h3><span class="solid-letter">D</span> Dependency Inversion Principle (DIP)</h3>
-        <p><strong>Rule:</strong> <em>“High-level modules should not depend on low-level modules. Both must depend on abstractions.”</em></p>
-        <p style="font-size:0.92rem; color:var(--text-muted); line-height:1.6;">
-          Abstractions must not depend on details. Details (concrete implementations) must depend on abstractions.
-        </p>
-      </div>
-
-      <!-- Up Next Card -->
-      <div class="stage-next-card">
-        <div class="stage-next-card-content">
-          <div class="stage-next-card-label">UP NEXT · STAGE 03</div>
-          <div class="stage-next-card-title">Interactive LSP Sandbox: Rectangle vs Square</div>
-          <p class="stage-next-card-desc">Execute real contract assertions live in the browser and see mathematically why Square extending Rectangle breaks LSP.</p>
-        </div>
-        <a href="#stage-3-lsp" class="stage-next-card-btn">Jump to Stage 3 →</a>
-      </div>
-    </section>
-
-    <!-- ====================================================================
-         STAGE 3: FORMAL LSP & INTERACTIVE SANDBOX
-         ==================================================================== -->
-    <section class="masterclass-stage-section" id="stage-3-lsp">
-      <div class="stage-header-top">
-        <div class="stage-eyebrow-pill">● Stage 03 · Formal LSP &amp; Interactive Lab</div>
-        <button type="button" class="stage-mastery-btn" onclick="markStageComplete(3)">Mark Stage 3 Complete ✓</button>
-      </div>
-      <h2 class="stage-title">Formal LSP: The Rectangle / Square Paradox</h2>
-
-      <p style="font-size:1rem; line-height:1.7; color:var(--text); margin-bottom:1.5rem;">
-        In high-school mathematics, a square is a special case of a rectangle. However, in object-oriented architecture, modeling <code>class Square extends Rectangle</code> violates the Liskov Substitution Principle! Run the interactive lab below to see the behavioral assertion crash in real time.
-      </p>
-
-      <div class="lsp-sandbox-card">
-        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem; margin-bottom:1rem;">
-          <div>
-            <h4 style="margin:0 0 0.25rem; font-size:1.1rem; color:var(--text);">Client Assertion Contract Verification</h4>
-            <span style="font-size:0.82rem; color:var(--text-muted);">Contract: setWidth(5); setHeight(4); assert(area == 20);</span>
-          </div>
-          <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
-            <button type="button" id="btnTestRectangle" class="btn-suite-toggle active" style="font-weight:700;">
-              <span>🟦 Test with Rectangle</span>
-            </button>
-            <button type="button" id="btnTestSquare" class="btn-suite-toggle" style="font-weight:700;">
-              <span>🟪 Test with Square</span>
-            </button>
-          </div>
-        </div>
-
-        <!-- Shape Visualizer Canvas Box -->
-        <div class="lsp-visualizer-box">
-          <div id="shapeBox" class="shape-preview" style="width: 150px; height: 100px;">
-            <span id="shapeLabel">Rectangle (W: 150, H: 100)</span>
-          </div>
-        </div>
-
-        <!-- Terminal Console Output -->
-        <div class="terminal-output" id="lspConsole">
-          >> [System Ready] Click 'Test with Rectangle' or 'Test with Square' to execute client contract.
-        </div>
-      </div>
-
-      <div style="background:rgba(244,63,94,0.08); border-left:3px solid #f43f5e; padding:1.25rem; border-radius:0 6px 6px 0; font-size:0.92rem; line-height:1.6; color:var(--text); margin:1.5rem 0;">
-        <strong>The Mathematical Root Cause (Design by Contract):</strong><br>
-        A <code>Rectangle</code> promises an independent postcondition: <em>"Calling <code>setWidth(w)</code> leaves <code>height</code> unchanged."</em><br>
-        A <code>Square</code> subclass cannot preserve this postcondition without violating its own invariant (\(width == height\)). Therefore, <code>Square</code> breaks client expectations and cannot be safely substituted for <code>Rectangle</code>.
-      </div>
-
-      <!-- Up Next Card -->
-      <div class="stage-next-card">
-        <div class="stage-next-card-content">
-          <div class="stage-next-card-label">UP NEXT · STAGE 04</div>
-          <div class="stage-next-card-title">Smell-to-Principle Solution Matrix</div>
-          <p class="stage-next-card-desc">Review the master reference matrix mapping each of the 7 smells to its direct SOLID antidote and applied GoF design patterns.</p>
-        </div>
-        <a href="#stage-4-matrix" class="stage-next-card-btn">Jump to Stage 4 →</a>
-      </div>
-    </section>
-
-    <!-- ====================================================================
-         STAGE 4: SMELL-TO-PRINCIPLE SOLUTION MATRIX
-         ==================================================================== -->
-    <section class="masterclass-stage-section" id="stage-4-matrix">
-      <div class="stage-header-top">
-        <div class="stage-eyebrow-pill">● Stage 04 · Solution Matrix</div>
-        <button type="button" class="stage-mastery-btn" onclick="markStageComplete(4)">Mark Stage 4 Complete ✓</button>
-      </div>
-      <h2 class="stage-title">Smell-to-Principle Solution Matrix</h2>
-
-      <p style="font-size:1rem; line-height:1.7; color:var(--text); margin-bottom:1.5rem;">
-        Which SOLID principle or design pattern cures each architectural smell? Keep this matrix in mind for technical architecture reviews and POSA exams.
-      </p>
-
-      <div class="pillar-matrix-table-wrap">
-        <table class="pillar-matrix-table">
-          <thead>
-            <tr>
-              <th>Architectural Smell</th>
-              <th>Direct SOLID Antidote</th>
-              <th>Applied GoF Design Patterns</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td style="font-weight:700; color:#f43f5e;">Rigidity (Cascading ripple edits)</td>
-              <td style="color:#38bdf8; font-weight:700;">Open-Closed Principle (OCP)</td>
-              <td style="color:var(--text-muted);">Strategy, Abstract Factory, Template Method</td>
-            </tr>
-            <tr>
-              <td style="font-weight:700; color:#f43f5e;">Fragility (Unexpected breaks)</td>
-              <td style="color:#10b981; font-weight:700;">Liskov Substitution (LSP)</td>
-              <td style="color:var(--text-muted);">Composition over inheritance, State</td>
-            </tr>
-            <tr>
-              <td style="font-weight:700; color:#f43f5e;">Immobility (Cannot reuse)</td>
-              <td style="color:#a5b4fc; font-weight:700;">Dependency Inversion (DIP)</td>
-              <td style="color:var(--text-muted);">Adapter, Dependency Injection, Bridge</td>
-            </tr>
-            <tr>
-              <td style="font-weight:700; color:#f43f5e;">Needless Complexity (Over-speculation)</td>
-              <td style="color:#f59e0b; font-weight:700;">Single Responsibility (SRP)</td>
-              <td style="color:var(--text-muted);">Facade, Command (YAGNI discipline)</td>
-            </tr>
-            <tr>
-              <td style="font-weight:700; color:#f43f5e;">Needless Repetition (Copy-paste)</td>
-              <td style="color:#38bdf8; font-weight:700;">Single Responsibility &amp; DRY</td>
-              <td style="color:var(--text-muted);">Template Method, Strategy, Decorator</td>
-            </tr>
-            <tr>
-              <td style="font-weight:700; color:#f43f5e;">Opacity (Inscrutable code)</td>
-              <td style="color:#10b981; font-weight:700;">Interface Segregation (ISP)</td>
-              <td style="color:var(--text-muted);">Clear semantic role interfaces, Builder</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-      <!-- Up Next Card -->
-      <div class="stage-next-card" style="margin-top:2rem;">
-        <div class="stage-next-card-content">
-          <div class="stage-next-card-label">UP NEXT · STAGE 05</div>
-          <div class="stage-next-card-title">Frankfurt UAS Exam Drills: Prof. Dr. Jörg Schäfer</div>
-          <p class="stage-next-card-desc">Practice past-paper exam questions with interactive self-assessment and scoring rubrics.</p>
-        </div>
-        <a href="#stage-5-exam" class="stage-next-card-btn">Jump to Stage 5 →</a>
-      </div>
-    </section>
-
-    <!-- ====================================================================
-         STAGE 5: EXAM DRILLS & SELF-STUDY
-         ==================================================================== -->
-    <section class="masterclass-stage-section" id="stage-5-exam">
-      <div class="stage-header-top">
-        <div class="stage-eyebrow-pill">● Stage 05 · Exam Drills &amp; Assessment</div>
-        <button type="button" class="stage-mastery-btn" onclick="markStageComplete(5)">Mark Stage 5 Complete ✓</button>
-      </div>
-      <h2 class="stage-title">Frankfurt UAS Exam Drills: Prof. Dr. Jörg Schäfer</h2>
-
-      <p style="font-size:1rem; line-height:1.7; color:var(--text); margin-bottom:1.5rem;">
-        Click each drill to reveal the exact grading rubric, common pitfalls, and 1.0 model answers expected in POSA examinations.
-      </p>
-
-      <div class="drill-list">
-        <!-- Drill 1 -->
-        <details class="drill-item" open>
-          <summary>
-            <span class="drill-tag">Exam Drill 1</span>
-            <span class="drill-q">Why does "Square extends Rectangle" violate the Liskov Substitution Principle? (10 Exam Points)</span>
-            <span class="drill-reveal-hint"></span>
-          </summary>
-          <div class="drill-a">
-            <p><strong>Model Answer (Prof. Schäfer 1.0 Standard):</strong></p>
-            <p>1. <code>Rectangle</code> establishes an independent postcondition: <em>"Modifying width via <code>setWidth(w)</code> leaves height unchanged."</em></p>
-            <p>2. A client method written for <code>Rectangle</code> relies on this contract:</p>
-            <pre style="background:var(--bg-subtle); padding:0.5rem; border-radius:4px; font-family:var(--font-mono); font-size:0.85rem;">void test(Rectangle r) {
-    r.setWidth(5);
-    r.setHeight(4);
-    assert(r.getArea() == 20); // Breaks if r is Square! (Square area would be 16)
-}</pre>
-            <p>3. <code>Square</code> cannot honor this postcondition without violating its own fundamental geometric invariant (\(width == height\)). Therefore, <code>Square</code> cannot be safely substituted for <code>Rectangle</code> without altering program correctness.</p>
-          </div>
-        </details>
-
-        <!-- Drill 2 -->
-        <details class="drill-item">
-          <summary>
-            <span class="drill-tag">Exam Drill 2</span>
-            <span class="drill-q">What is the precise definition of a "responsibility" in the Single Responsibility Principle? (8 Exam Points)</span>
-            <span class="drill-reveal-hint"></span>
-          </summary>
-          <div class="drill-a">
-            <p><strong>Model Answer:</strong></p>
-            <p>Robert C. Martin explicitly defines a responsibility as <strong>"a reason to change"</strong>.</p>
-            <p>Furthermore, a reason to change is mapped directly to a <strong>single business stakeholder, user role, or actor</strong> within the organization. For example, financial auditors, DBA administrators, and UI designers represent distinct actors; a class should never mix requirements originating from multiple actors.</p>
-          </div>
-        </details>
-
-        <!-- Drill 3 -->
-        <details class="drill-item">
-          <summary>
-            <span class="drill-tag">Exam Drill 3</span>
-            <span class="drill-q">Distinguish Dependency Inversion Principle (DIP) from Dependency Injection (DI). (7 Exam Points)</span>
-            <span class="drill-reveal-hint"></span>
-          </summary>
-          <div class="drill-a">
-            <p><strong>Model Answer:</strong></p>
-            <ul>
-              <li><strong>Dependency Inversion Principle (DIP):</strong> A high-level <em>architectural principle</em>. It states that high-level policy modules should not depend on low-level detail modules; both must depend upon abstractions.</li>
-              <li><strong>Dependency Injection (DI):</strong> A concrete <em>design pattern / implementation technique</em>. It provides dependencies to an object from the outside (via constructor, setter, or framework) rather than having the object construct them itself using <code>new</code>.</li>
-            </ul>
-            <p>DI is the primary mechanism used to realize DIP.</p>
-          </div>
-        </details>
-
-        <!-- Drill 4 -->
-        <details class="drill-item">
-          <summary>
-            <span class="drill-tag" style="background:var(--accent); color:#fff;">Authentic Exam Question · LSP Conformance</span>
-            <span class="drill-q">Can conformance to the Liskov Substitution Principle (LSP) be checked automatically? (7 Exam Points)</span>
-            <span class="drill-reveal-hint"></span>
-          </summary>
-          <div class="drill-a">
-            <p><strong>Official Model Answer &amp; Grading Rubric (Prof. Dr. Jörg Schäfer):</strong></p>
-            <p><strong>No, not completely.</strong></p>
-            <ul>
-              <li><strong>What can be checked automatically:</strong> Compilers and static linters easily verify <em>syntactic subtyping</em> (e.g. method signatures, return type covariance, parameter type contravariance, and visible access modifiers).</li>
-              <li><strong>Why semantic LSP cannot be fully checked automatically:</strong> LSP is fundamentally a <em>behavioral contract</em>. It requires that:
-                <ol>
-                  <li>Subtypes must not strengthen preconditions (\(Pre(T) \implies Pre(S)\)).</li>
-                  <li>Subtypes must not weaken postconditions (\(Post(S) \implies Post(T)\)).</li>
-                  <li>Subtypes must preserve invariants (\(Inv(S) \implies Inv(T)\)) and respect history constraints (e.g. immutable objects remain immutable).</li>
-                </ol>
-              </li>
-            </ul>
-            <p>
-              Statically verifying whether arbitrary runtime code fulfills behavioral postconditions and invariants is undecidable (equivalent to the Halting Problem). Therefore, software teams rely on <strong>Design by Contract (DbC)</strong>, formal specifications, and extensive polymorphic contract test suites rather than pure compiler checks.
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:1.25rem;">
+          
+          <div style="background:var(--bg); border:1px solid var(--border); border-radius:6px; padding:1.2rem;">
+            <strong style="color:#ef4444; font-size:1rem;">1. Rigidity</strong>
+            <p style="font-size:0.88rem; color:var(--text-muted); line-height:1.5; margin:0.4rem 0 0;">
+              The tendency for software to be hard to change because every single change forces a cascade of subsequent changes in dependent modules. The engineer fears touching code because simple tasks explode into multi-module rewrites.
             </p>
           </div>
-        </details>
-      </div>
 
-      <!-- Final Masterclass Roadmap Transition Card -->
-      <div class="stage-next-card" style="margin-top:2.5rem; border:1px solid #10b981; background:rgba(16,185,129,0.06);">
-        <div class="stage-next-card-content">
-          <div class="stage-next-card-label" style="color:#10b981;">NEXT CHAPTER IN CURRICULUM · UNIT 7</div>
-          <div class="stage-next-card-title">Unit 7: Packaging Principles &amp; Modularity Metrics</div>
-          <p class="stage-next-card-desc">Explore package cohesion (REP, CCP, CRP), package coupling (ADP, SDP, SAP), and Robert C. Martin's instability / abstractness metrics.</p>
+          <div style="background:var(--bg); border:1px solid var(--border); border-radius:6px; padding:1.2rem;">
+            <strong style="color:#f59e0b; font-size:1rem;">2. Fragility</strong>
+            <p style="font-size:0.88rem; color:var(--text-muted); line-height:1.5; margin:0.4rem 0 0;">
+              The tendency for software to break in places that have no conceptual or logical relationship to the modified area. Fixes introduce new bugs elsewhere, destroying developer confidence.
+            </p>
+          </div>
+
+          <div style="background:var(--bg); border:1px solid var(--border); border-radius:6px; padding:1.2rem;">
+            <strong style="color:#6366f1; font-size:1rem;">3. Immobility</strong>
+            <p style="font-size:0.88rem; color:var(--text-muted); line-height:1.5; margin:0.4rem 0 0;">
+              The inability to reuse software from other projects or parts of the same project because it cannot be disentangled from the current application context. It is easier to rewrite the code from scratch than to separate it.
+            </p>
+          </div>
+
+          <div style="background:var(--bg); border:1px solid var(--border); border-radius:6px; padding:1.2rem;">
+            <strong style="color:#10b981; font-size:1rem;">4. Viscosity</strong>
+            <p style="font-size:0.88rem; color:var(--text-muted); line-height:1.5; margin:0.4rem 0 0;">
+              When doing things the <em>right architectural way</em> is slow, tedious, or cumbersome, whereas applying a quick, dirty hack is instantaneous. Developers inevitably choose the path of least resistance, compounding technical debt.
+            </p>
+          </div>
+
         </div>
-        <a href="unit-7-packaging.html" class="stage-next-card-btn" style="background:#10b981;">Go to Unit 7: Packaging →</a>
       </div>
     </section>
 
-    <!-- Footer -->
-    <footer class="page-footer" style="margin-top: 3.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border); display: flex; justify-content: space-between; flex-wrap:wrap; gap:1rem;">
-      <span><a href="unit-3-structural.html" style="color:var(--text-muted); font-weight:600;">← Previous: Unit 3 Structural Patterns</a></span>
-      <span><a href="unit-7-packaging.html" style="color:var(--accent); font-weight:700;">Next: Unit 7 Packaging Architecture →</a></span>
-    </footer>
+    <!-- ============================================================== -->
+    <!-- 3. FORMAL LSP: THE RECTANGLE VS SQUARE PARADOX                 -->
+    <!-- ============================================================== -->
+    <section class="chapter" id="sec-lsp">
+      <div class="chapter-head">
+        <span class="chapter-num">3</span>
+        <div>
+          <h2>Formal LSP: Why Square is NOT a Rectangle</h2>
+          <span style="font-size:0.85rem; color:var(--text-muted); font-weight:600;">The Classic Exam Proof</span>
+        </div>
+      </div>
 
-  </div>
-</div>
+      <div class="guide-card">
+        <div class="guide-card-header">
+          <span class="rule-badge danger">CRITICAL EXAM PROOF</span>
+          <span>Behavioral Subtyping vs. Mathematical Classification</span>
+        </div>
+        <p style="font-size:0.95rem; line-height:1.6; color:var(--text); margin-bottom:1rem;">
+          In mathematics, every square is a rectangle ($is-a$). But in Object-Oriented Design, <strong>a Square cannot substitute for a Rectangle without violating LSP</strong>:
+        </p>
 
-<script src="assets/site.js?v=2026.15"></script>
-<script>
-// Reading Progress Bar
-window.addEventListener("scroll", function () {
-  var winScroll = document.body.scrollTop || document.documentElement.scrollTop;
-  var height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-  var scrolled = (winScroll / height) * 100;
-  var bar = document.getElementById("readingProgressBar");
-  if (bar) bar.style.width = scrolled + "%";
-});
+        <pre style="background:var(--code-bg); padding:1rem; border-radius:6px; font-family:var(--font-mono); font-size:0.85rem; line-height:1.5; overflow-x:auto;"><code>public class Rectangle {
+    protected int width, height;
+    public void setWidth(int w) { this.width = w; }
+    public void setHeight(int h) { this.height = h; }
+    public int getArea() { return width * height; }
+}
 
-// 8-Pillar Selection & Matrix View Toggles
-var _currentPillar = 1;
-function selectPillar(num) {
-  _currentPillar = num;
-  var tabs = document.querySelectorAll(".pillar-tab-btn");
-  tabs.forEach(function (t, i) {
-    if (i + 1 === num) {
-      t.classList.add("active");
-      t.setAttribute("aria-selected", "true");
-    } else {
-      t.classList.remove("active");
-      t.setAttribute("aria-selected", "false");
+// Naive inheritance: Square maintains width == height invariant
+public class Square extends Rectangle {
+    @Override
+    public void setWidth(int w) { this.width = w; this.height = w; }
+    @Override
+    public void setHeight(int h) { this.height = h; this.width = h; }
+}
+
+// Client method expecting Rectangle behavioral contract:
+void verifyArea(Rectangle r) {
+    r.setWidth(5);
+    r.setHeight(4);
+    // Rectangle Contract Postcondition: getArea() == width * height == 20
+    assert r.getArea() == 20; // FAILS for Square (yields 16)!
+}</code></pre>
+
+        <div style="margin-top:1.25rem; padding:1rem; background:rgba(239,68,68,0.08); border-left:3px solid #ef4444; border-radius:4px; font-size:0.9rem; line-height:1.6; color:var(--text);">
+          <strong>The 3 Formal Rules of Barbara Liskov's Behavioral Subtyping:</strong>
+          <ol style="margin:0.5rem 0 0; padding-left:1.25rem;">
+            <li><strong>Preconditions cannot be strengthened</strong> in a subtype (the subtype cannot demand more from callers than the supertype).</li>
+            <li><strong>Postconditions cannot be weakened</strong> in a subtype (the subtype must guarantee at least as much to callers as the supertype). <em>Square weakens Rectangle's postcondition: changing height alters width!</em></li>
+            <li><strong>Invariants of the supertype must be preserved</strong> in all subtypes.</li>
+          </ol>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================== -->
+    <!-- 4. CORE EXAM PRACTICE & DIRECT MODEL ANSWERS                   -->
+    <!-- ============================================================== -->
+    <section class="chapter" id="sec-drills">
+      <div class="chapter-head">
+        <span class="chapter-num">4</span>
+        <div>
+          <h2>Core Exam Practice &amp; Model Solutions</h2>
+          <span style="font-size:0.85rem; color:var(--text-muted); font-weight:600;">Direct Question &rarr; Answer Format</span>
+        </div>
+      </div>
+
+      <!-- QA 1: OCP Sorter Refactoring -->
+      <div class="qa-block">
+        <div class="qa-q">
+          Question 1: Open-Closed Principle (OCP) Sorter Refactoring
+          <span class="pts-badge">8 Points</span>
+          <p style="font-size:0.92rem; font-weight:400; color:var(--text-muted); margin-top:0.5rem;">
+            A class <code>DataSorter</code> has a method <code>sort(int[] data, SortAlgorithm algo)</code> using a switch statement over an enum:
+            <br><code>if (algo == BUBBLE) { ... } else if (algo == QUICK) { ... }</code>.
+            <br>Explain why this violates OCP and provide the refactored solution!
+          </p>
+        </div>
+        <div class="qa-a">
+          <span class="ans-label">Model Answer:</span>
+          <ol>
+            <li><strong>OCP Violation:</strong> Whenever a new sorting algorithm (e.g. <code>MERGE_SORT</code>) is introduced, the existing, tested <code>DataSorter</code> class must be modified to add a new <code>else if</code> branch. It is not closed for modification.</li>
+            <li><strong>Refactoring via Strategy Pattern:</strong>
+              <pre style="background:var(--code-bg); padding:0.75rem; border-radius:4px; font-family:var(--font-mono); font-size:0.85rem; margin-top:0.5rem;"><code>public interface Sorter {
+    void sort(int[] data);
+}
+
+public class QuickSort implements Sorter {
+    public void sort(int[] data) { /* Quicksort implementation */ }
+}
+
+public class DataSorter {
+    public void sort(int[] data, Sorter sorter) {
+        sorter.sort(data); // Closed for modification, open for extension!
     }
-  });
+}</code></pre>
+            </li>
+          </ol>
+        </div>
+      </div>
 
-  for (var i = 1; i <= 8; i++) {
-    var p = document.getElementById("pillarPanel" + i);
-    if (p) p.style.display = (i === num) ? "block" : "none";
-  }
-}
+      <!-- QA 2: Singleton SOLID Violations -->
+      <div class="qa-block">
+        <div class="qa-q">
+          Question 2: Why Classic Singleton Violates SOLID Principles
+          <span class="pts-badge">6 Points</span>
+          <p style="font-size:0.92rem; font-weight:400; color:var(--text-muted); margin-top:0.5rem;">
+            Identify and explain at least two SOLID principles that are violated by the classic Singleton pattern!
+          </p>
+        </div>
+        <div class="qa-a">
+          <span class="ans-label">Model Answer:</span>
+          <ol>
+            <li><strong>Single Responsibility Principle (SRP):</strong> The Singleton class is responsible for its actual domain business logic (e.g., logging, database queries) AND managing its own instantiation and lifecycle (ensuring exactly one instance). That represents two distinct reasons to change.</li>
+            <li><strong>Dependency Inversion Principle (DIP):</strong> Classes using the Singleton call <code>Singleton.getInstance()</code> directly, binding themselves to a concrete class rather than an abstract interface. High-level modules become tightly coupled to a low-level concrete implementation.</li>
+            <li><strong>Open-Closed Principle (OCP):</strong> A Singleton is sealed via private constructors. It cannot be extended with polymorphic alternatives (e.g., a mock for testing) without changing the call sites throughout the application.</li>
+          </ol>
+        </div>
+      </div>
 
-function setBlueprintView(mode) {
-  var explorer = document.getElementById("blueprintExplorer");
-  var matrix = document.getElementById("blueprintMatrix");
-  var btnExp = document.getElementById("btnViewExplorer");
-  var btnMat = document.getElementById("btnViewMatrix");
+      <!-- QA 3: Square vs Rectangle Proof -->
+      <div class="qa-block">
+        <div class="qa-q">
+          Question 3: Formal LSP Proof for Square and Rectangle
+          <span class="pts-badge">6 Points</span>
+          <p style="font-size:0.92rem; font-weight:400; color:var(--text-muted); margin-top:0.5rem;">
+            Prove using postconditions why <code>Square</code> extending <code>Rectangle</code> violates the Liskov Substitution Principle!
+          </p>
+        </div>
+        <div class="qa-a">
+          <span class="ans-label">Model Answer:</span>
+          <p>
+            The contract of <code>Rectangle.setWidth(w)</code> guarantees the following postcondition:
+            $$\text{postcondition}(Rectangle.setWidth(w)) \implies (width' = w) \land (height' = height)$$
+            Namely, setting the width must leave the existing height unchanged.
+          </p>
+          <p>
+            When <code>Square</code> overrides <code>setWidth(w)</code> to maintain its invariant ($width = height$), it sets both:
+            $$\text{postcondition}(Square.setWidth(w)) \implies (width' = w) \land (height' = w)$$
+            If $w \neq height$, the postcondition guaranteed by <code>Rectangle</code> is broken. Any client assuming the supertype's postcondition fails, proving that <code>Square</code> is not a valid behavioral subtype of <code>Rectangle</code>.
+          </p>
+        </div>
+      </div>
+    </section>
 
-  if (mode === "matrix") {
-    if (explorer) explorer.style.display = "none";
-    if (matrix) matrix.style.display = "block";
-    if (btnExp) btnExp.classList.remove("active");
-    if (btnMat) btnMat.classList.add("active");
-  } else {
-    if (explorer) explorer.style.display = "block";
-    if (matrix) matrix.style.display = "none";
-    if (btnExp) btnExp.classList.add("active");
-    if (btnMat) btnMat.classList.remove("active");
-    selectPillar(_currentPillar);
-  }
-}
-
-// Debounced Collapse Handler
-var _lastInlineCollapseTime = 0;
-function toggleBlueprintCollapse(forceState) {
-  var now = Date.now();
-  if (typeof forceState !== "boolean" && now - _lastInlineCollapseTime < 250) {
-    return;
-  }
-  _lastInlineCollapseTime = now;
-
-  var suite = document.getElementById("blueprintSuite");
-  var collapseBtn = document.getElementById("btnCollapseBlueprint");
-  var body = document.getElementById("blueprintCollapsibleBody");
-  var hint = document.getElementById("blueprintCollapsedHint");
-  if (!suite) return;
-
-  var isCurrentlyCollapsed = suite.classList.contains("is-collapsed");
-  var willCollapse = (typeof forceState === "boolean") ? forceState : !isCurrentlyCollapsed;
-
-  if (willCollapse) {
-    suite.classList.add("is-collapsed");
-    if (body) body.style.display = "none";
-    if (hint) hint.style.display = "flex";
-  } else {
-    suite.classList.remove("is-collapsed");
-    if (body) body.style.display = "block";
-    if (hint) hint.style.display = "none";
-  }
-
-  if (collapseBtn) {
-    var icon = collapseBtn.querySelector(".collapse-icon");
-    var label = collapseBtn.querySelector(".collapse-label");
-    if (willCollapse) {
-      if (icon) icon.textContent = "▼";
-      if (label) label.textContent = "Expand Rubric";
-      collapseBtn.setAttribute("aria-expanded", "false");
-    } else {
-      if (icon) icon.textContent = "▲";
-      if (label) label.textContent = "Collapse Rubric";
-      collapseBtn.setAttribute("aria-expanded", "true");
-    }
-  }
-}
-
-function copyBlueprintRubric() {
-  var copyLabel = document.getElementById("copyRubricSuiteLabel");
-  var rubricMarkdown = 
-    "# Software Pattern Mastery: The 8-Pillar Architectural Rubric\n" +
-    "*(Standard for POSA Exams & Technical Architecture Reviews)*\n\n" +
-    "## Domain: SOLID Principles & The 7 Design Smells\n\n" +
-    "### 1. Intent & Architectural Motivation\n" +
-    "- Prevent systemic architectural decay signaled by the 7 smells (Rigidity, Fragility, Immobility, Viscosity, Needless Complexity, Needless Repetition, Opacity).\n\n" +
-    "### 2. Structural Roles & Participants\n" +
-    "- Single Business Actor, Stable Abstraction Boundary, Conforming Subtype, Client-Specific Role Interface, Dependency Injector.\n\n" +
-    "### 3. Formal UML Anatomy & Relationships\n" +
-    "- DIP: Both high-level policy and low-level details point to the abstraction boundary.\n\n" +
-    "### 4. Core Design Principles Enforced\n" +
-    "- Barbara Liskov's formal subtype invariance: Preconditions cannot be strengthened, Postconditions cannot be weakened, Invariants must be preserved.\n\n" +
-    "### 5. Implementation Mechanics\n" +
-    "- Constructor injection, interface segregation, composition over inheritance.\n\n" +
-    "### 6. Architectural Costs & Trade-offs\n" +
-    "- High testability vs potential interface proliferation and speculative indirection.\n\n" +
-    "### 7. Rival Concepts Matrix\n" +
-    "- SRP vs God Object; OCP vs YAGNI; LSP vs Rectangle/Square flawed inheritance.\n\n" +
-    "### 8. Real-World JDK Reference & Exam Traps\n" +
-    "- JDK: `java.sql.Driver` / `Connection` (DIP).\n" +
-    "- Exam Traps: Responsibility means 'reason to change' (single actor); Square-Rectangle breaks postcondition.\n";
-
-  function updateLabelSuccess() {
-    if (copyLabel) copyLabel.textContent = "Copied to Clipboard!";
-    if (typeof window.showToast === "function") window.showToast("8-Pillar Study Rubric copied to clipboard!");
-    setTimeout(function () {
-      if (copyLabel) copyLabel.textContent = "Copy Rubric (Markdown)";
-    }, 2500);
-  }
-
-  if (navigator.clipboard && navigator.clipboard.writeText) {
-    navigator.clipboard.writeText(rubricMarkdown).then(updateLabelSuccess).catch(function () {
-      fallbackCopy(rubricMarkdown);
-    });
-  } else {
-    fallbackCopy(rubricMarkdown);
-  }
-
-  function fallbackCopy(text) {
-    var ta = document.createElement("textarea");
-    ta.value = text;
-    ta.style.position = "fixed";
-    ta.style.opacity = "0";
-    document.body.appendChild(ta);
-    ta.select();
-    try {
-      document.execCommand("copy");
-      updateLabelSuccess();
-    } catch (e) {
-      alert("Please press Ctrl+C to copy rubric");
-    }
-    document.body.removeChild(ta);
-  }
-}
-
-function copySnippet(elementId) {
-  var el = document.getElementById(elementId);
-  if (!el) return;
-  var text = el.innerText || el.textContent;
-  if (navigator.clipboard && navigator.clipboard.writeText) {
-    navigator.clipboard.writeText(text).then(function() {
-      if (typeof window.showToast === "function") window.showToast("Code snippet copied to clipboard!");
-    });
-  }
-}
-
-// Stage Completion Indicator
-function markStageComplete(stageNum) {
-  var btn = event.target;
-  if (btn) {
-    btn.textContent = "Completed ✓";
-    btn.style.background = "#10b981";
-    btn.style.color = "#fff";
-  }
-  var pill = document.querySelector('.stage-nav-pill[data-stage="' + stageNum + '"]');
-  if (pill) {
-    pill.style.borderColor = "#10b981";
-  }
-  if (typeof window.showToast === "function") window.showToast("Stage " + stageNum + " marked complete! Great progress.");
-}
-
-// Interactive LSP Sandbox Controller
-(function initLspSandbox() {
-  var box = document.getElementById("shapeBox");
-  var label = document.getElementById("shapeLabel");
-  var consoleEl = document.getElementById("lspConsole");
-  var btnRect = document.getElementById("btnTestRectangle");
-  var btnSquare = document.getElementById("btnTestSquare");
-
-  if (!box || !label || !consoleEl || !btnRect || !btnSquare) return;
-
-  function log(msg, isError) {
-    consoleEl.textContent = ">> " + msg;
-    consoleEl.style.color = isError ? "#f43f5e" : "#38bdf8";
-  }
-
-  btnRect.addEventListener("click", function () {
-    btnRect.classList.add("active");
-    btnSquare.classList.remove("active");
-    box.style.width = "200px";
-    box.style.height = "120px";
-    box.style.borderColor = "#38bdf8";
-    box.style.background = "rgba(56, 189, 248, 0.15)";
-    label.textContent = "Rectangle: W=5, H=4 -> Area=20";
-    log("[SUCCESS] Rectangle::setWidth(5) -> setHeight(4). assert(area == 20) PASSES! Contract honored.");
-  });
-
-  btnSquare.addEventListener("click", function () {
-    btnSquare.classList.add("active");
-    btnRect.classList.remove("active");
-    // In Square, setHeight(4) also sets width to 4!
-    box.style.width = "120px";
-    box.style.height = "120px";
-    box.style.borderColor = "#f43f5e";
-    box.style.background = "rgba(244, 63, 94, 0.15)";
-    label.textContent = "Square: W=4, H=4 -> Area=16";
-    log("[ASSERTION ERROR] Square::setHeight(4) forced width to 4! assert(area == 20) FAILED! Expected 20, got 16. LSP VIOLATED!", true);
-  });
-})();
-
-window.selectPillar = selectPillar;
-window.setBlueprintView = setBlueprintView;
-window.toggleBlueprintCollapse = toggleBlueprintCollapse;
-window.copyBlueprintRubric = copyBlueprintRubric;
-window.copySnippet = copySnippet;
-window.markStageComplete = markStageComplete;
-</script>
+  </main>
 </body>
 </html>
