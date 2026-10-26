@@ -85,6 +85,6 @@
 
 - [x] Align on user's discussion points and requirements.
 - [x] Finalize the simplified specification for Unit 2.
-- [ ] Implement streamlined `unit-2-behavioral.html` pilot.
+- [x] Implement streamlined `unit-2-behavioral.html` pilot with verbatim code & notes matching Prof. Schäfer's materials.
 - [ ] Review Unit 2 with the user.
 - [ ] Roll out to remaining units in planned batches.
