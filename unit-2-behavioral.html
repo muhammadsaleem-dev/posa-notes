@@ -340,44 +340,115 @@
         </div>
       </div>
 
-      <!-- Minimal Code Implementation -->
+      <!-- Book Narrative from Exam Notes -->
       <div class="guide-card">
         <div class="guide-card-header">
-          <span>💻 3. Minimal Clean Code (from Prof. Schäfer's Notes)</span>
+          <span>☕ Book Example: Preparing Beverages (Head First Chapter 8)</span>
         </div>
-        <pre><code class="language-java">// 1. The Abstract Template Class
-public abstract class CaffeineBeverage {
+        <p style="margin:0 0 1rem; font-size:0.92rem; color:var(--text); line-height:1.6;">
+          In <em>&ldquo;Head First Design Patterns,&rdquo;</em> Chapter 8 delves into the <strong>Template Method Pattern</strong> through the example of preparing beverages like tea and coffee. This pattern defines the skeleton of an algorithm in a method, allowing subclasses to override specific steps without changing the algorithm's overall structure.
+        </p>
+        <div style="background:var(--bg-subtle); padding:1rem 1.25rem; border-radius:var(--radius-sm); border-left:3px solid var(--accent); margin-bottom:1rem;">
+          <strong style="color:var(--text); font-size:0.92rem; display:block; margin-bottom:0.5rem; text-transform:uppercase; letter-spacing:0.04em;">Example: Preparing Beverages</strong>
+          <p style="margin:0 0 0.5rem; font-size:0.9rem; color:var(--text-muted); line-height:1.5;">
+            The process of making tea and coffee shares a common sequence of steps:
+          </p>
+          <ol style="margin:0; padding-left:1.35rem; font-size:0.9rem; color:var(--text); line-height:1.65;">
+            <li><strong>Boil water.</strong></li>
+            <li><strong>Brew or steep the beverage.</strong></li>
+            <li><strong>Pour into a cup.</strong></li>
+            <li><strong>Add condiments.</strong></li>
+          </ol>
+        </div>
+        <p style="margin:0; font-size:0.92rem; color:var(--text-muted); line-height:1.6;">
+          While the overall process is similar, the specifics of brewing and adding condiments differ between tea and coffee. The Template Method Pattern captures this shared structure and allows subclasses to define the differing steps.
+        </p>
+      </div>
 
-    // The Template Method: Marked final to freeze the invariant algorithm skeleton!
-    public final void prepareRecipe() {
+      <!-- Verbatim Java Code from Exam Notes -->
+      <div class="guide-card">
+        <div class="guide-card-header">
+          <span>💻 Verbatim Java Implementation (from Prof. Schäfer's Exam Notes)</span>
+        </div>
+        <pre><code class="language-java">public abstract class CaffeineBeverage {
+    final void prepareRecipe() {
         boilWater();
         brew();
         pourInCup();
-        if (customerWantsCondiments()) { // Hook method controlling optional extension
+        addCondiments();
+    }
+
+    abstract void brew();
+    abstract void addCondiments();
+
+    void boilWater() {
+        System.out.println("Boiling water");
+    }
+
+    void pourInCup() {
+        System.out.println("Pouring into cup");
+    }
+}
+
+public class Tea extends CaffeineBeverage {
+    public void brew() {
+        System.out.println("Steeping the tea");
+    }
+
+    public void addCondiments() {
+        System.out.println("Adding Lemon");
+    }
+}
+
+public class Coffee extends CaffeineBeverage {
+    public void brew() {
+        System.out.println("Dripping Coffee through filter");
+    }
+
+    public void addCondiments() {
+        System.out.println("Adding Sugar and Milk");
+    }
+}
+
+public class BeverageTestDrive {
+    public static void main(String[] args) {
+        Tea tea = new Tea();
+        Coffee coffee = new Coffee();
+
+        System.out.println("\nMaking tea...");
+        tea.prepareRecipe();
+
+        System.out.println("\nMaking coffee...");
+        coffee.prepareRecipe();
+    }
+}
+
+// hooks can also be used for enhancements
+
+public abstract class CaffeineBeverageWithHook {
+    final void prepareRecipe() {
+        boilWater();
+        brew();
+        pourInCup();
+        if (customerWantsCondiments()) {
             addCondiments();
         }
     }
 
-    // Primitive steps deferred to subclasses
-    protected abstract void brew();
-    protected abstract void addCondiments();
+    abstract void brew();
+    abstract void addCondiments();
 
-    // Concrete invariant steps shared across all subclasses
-    private void boilWater() { System.out.println("Boiling water"); }
-    private void pourInCup()  { System.out.println("Pouring into cup"); }
-
-    // Hook method: provides a default implementation that subclasses can optionally override
-    protected boolean customerWantsCondiments() {
-        return true; 
+    void boilWater() {
+        System.out.println("Boiling water");
     }
-}
 
-// 2. Concrete Subclass: Implements only the varying primitive operations
-public class Tea extends CaffeineBeverage {
-    @Override
-    protected void brew() { System.out.println("Steeping tea leaves"); }
-    @Override
-    protected void addCondiments() { System.out.println("Adding lemon"); }
+    void pourInCup() {
+        System.out.println("Pouring into cup");
+    }
+
+    boolean customerWantsCondiments() {
+        return true;
+    }
 }</code></pre>
       </div>
 
@@ -424,14 +495,80 @@ public class Tea extends CaffeineBeverage {
         <div class="guide-card-header">
           <span>🔬 5. The Big Exam Trade-off: Inheritance vs. Composition (Duck / Comparator)</span>
         </div>
-        <p style="margin:0 0 0.75rem; font-size:0.9rem; color:var(--text-muted); line-height:1.6;">
-          <strong>Klausur Question from Notes (p. 28):</strong> <em>"Template Method relies on class inheritance. Would it be possible to get the same functionality using object composition? What are the trade-offs?"</em>
+        <p style="margin:0 0 0.75rem; font-size:0.9rem; color:var(--text); line-height:1.6;">
+          <strong>Klausur Question from Prof. Schäfer's Notes:</strong> <em>&ldquo;The Template Method relies on inheritance. Would it be possible to get the same functionality of a Template Method, using object composition? What would some of the tradeoffs be?&rdquo;</em>
         </p>
         <p style="margin:0 0 1rem; font-size:0.9rem; color:var(--text-muted); line-height:1.6;">
-          <strong>Yes:</strong> Instead of subclassing <code>CaffeineBeverage</code>, inject strategy objects (e.g. injecting a <code>Comparator&lt;Duck&gt;</code> into a <code>Duck</code> instance). Here is the exact evaluation rubric:
+          <strong>Yes:</strong> Instead of relying on subclassing, we inject a strategy object (such as a <code>Comparator&lt;Duck&gt;</code>) directly into the class via <strong>Constructor Dependency Injection</strong>.
         </p>
 
-        <div class="tradeoff-table-wrap">
+        <!-- Verbatim Duck Code from Exam Notes -->
+        <pre><code class="language-java">import java.util.Comparator;
+
+public class Duck {
+    private String name;
+    private int weight;
+    private Comparator&lt;Duck&gt; comparator;
+
+    // The comparator is injected (composition) instead of using inheritance.
+    public Duck(String name, int weight, Comparator&lt;Duck&gt; comparator) {
+        this.name = name;
+        this.weight = weight;
+        this.comparator = comparator;
+    }
+
+    // Delegate comparison to the composed comparator.
+    public int compare(Duck other) {
+        return comparator.compare(this, other);
+    }
+
+    public int getWeight() {
+        return weight;
+    }
+
+    @Override
+    public String toString() {
+        return name + " weighs " + weight;
+    }
+
+    public static void main(String[] args) {
+        // Define a Comparator to compare ducks by weight.
+        Comparator&lt;Duck&gt; weightComparator = (d1, d2) -&gt; Integer.compare(d1.getWeight(), d2.getWeight());
+        Duck duck1 = new Duck("Daffy", 8, weightComparator);
+        Duck duck2 = new Duck("Donald", 10, weightComparator);
+
+        System.out.println(duck1);
+        System.out.println(duck2);
+        System.out.println("Comparison result: " + duck1.compare(duck2)); // Negative if duck1 is lighter.
+    }
+}</code></pre>
+
+        <!-- Official Pros & Cons from Notes -->
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:1rem; margin-top:1.25rem;">
+          <div style="background:rgba(16,185,129,0.08); border:1px solid rgba(16,185,129,0.25); border-radius:var(--radius-sm); padding:1rem 1.15rem;">
+            <strong style="color:#10b981; font-size:0.88rem; text-transform:uppercase; letter-spacing:0.04em; display:block; margin-bottom:0.6rem;">
+              ✅ Pros of Composition Approach
+            </strong>
+            <ul style="margin:0; padding-left:1.15rem; font-size:0.87rem; color:var(--text); line-height:1.55; display:flex; flex-direction:column; gap:0.5rem;">
+              <li><strong>Runtime Flexibility:</strong> Behaviors can be swapped or modified at runtime by injecting different delegate objects, offering dynamic customization.</li>
+              <li><strong>Loose Coupling:</strong> Composition decouples the algorithm's structure from its individual steps, making the system more modular and easier to test.</li>
+              <li><strong>Enhanced Reusability:</strong> Individual strategy objects can be reused across different contexts without being tied to a rigid inheritance hierarchy.</li>
+            </ul>
+          </div>
+
+          <div style="background:rgba(239,68,68,0.08); border:1px solid rgba(239,68,68,0.25); border-radius:var(--radius-sm); padding:1rem 1.15rem;">
+            <strong style="color:#ef4444; font-size:0.88rem; text-transform:uppercase; letter-spacing:0.04em; display:block; margin-bottom:0.6rem;">
+              ⚠️ Cons of Composition Approach
+            </strong>
+            <ul style="margin:0; padding-left:1.15rem; font-size:0.87rem; color:var(--text); line-height:1.55; display:flex; flex-direction:column; gap:0.5rem;">
+              <li><strong>Boilerplate &amp; Object Graph:</strong> It may result in more boilerplate code and a more complex object graph.</li>
+              <li><strong>Increased Complexity:</strong> Managing multiple objects and their interactions can lead to a more complex design compared to a single inheritance-based template.</li>
+              <li><strong>Distributed Algorithm Logic:</strong> The overall flow of the algorithm might be less transparent since the steps are spread across several objects, potentially making the system harder to understand.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="tradeoff-table-wrap" style="margin-top:1.5rem;">
           <table class="tradeoff-table">
             <thead>
               <tr>
@@ -560,48 +697,120 @@ public class Tea extends CaffeineBeverage {
         </div>
       </div>
 
-      <!-- Minimal Code Implementation -->
+      <!-- Verbatim Code Implementation from Exam Notes -->
       <div class="guide-card">
         <div class="guide-card-header">
-          <span>💻 3. Minimal Clean Code (from Prof. Schäfer's Notes)</span>
+          <span>💻 Verbatim Java Implementation (from Prof. Schäfer's Exam Notes)</span>
         </div>
-        <pre><code class="language-java">// 1. Command Interface
+        <pre><code class="language-java">// 1. Command Interface declares execute and undo methods
 public interface Command {
     void execute();
     void undo();
 }
 
-// 2. Concrete Command: Encapsulates receiver reference and bindings
+// ----------------------- Receiver Classes -----------------------
+public class Light {
+    private String location;
+    public Light(String location) { this.location = location; }
+    public void on()  { System.out.println(location + " light is on"); }
+    public void off() { System.out.println(location + " light is off"); }
+}
+
+public class CeilingFan {
+    public static final int HIGH = 3, MEDIUM = 2, LOW = 1, OFF = 0;
+    private String location;
+    private int speed;
+
+    public CeilingFan(String location) {
+        this.location = location;
+        speed = OFF;
+    }
+    public void high()   { speed = HIGH;   System.out.println(location + " ceiling fan is on high"); }
+    public void medium() { speed = MEDIUM; System.out.println(location + " ceiling fan is on medium"); }
+    public void low()    { speed = LOW;    System.out.println(location + " ceiling fan is on low"); }
+    public void off()    { speed = OFF;    System.out.println(location + " ceiling fan is off"); }
+    public int getSpeed() { return speed; }
+}
+
+// ----------------------- Concrete Commands -----------------------
 public class LightOnCommand implements Command {
-    private final Light light; // Injected Receiver reference
+    private Light light;
     public LightOnCommand(Light light) { this.light = light; }
-    
     public void execute() { light.on(); }
     public void undo()    { light.off(); }
 }
 
-// 3. Null Object Pattern: Default no-op command (eliminates null checks!)
-public class NoCommand implements Command {
-    public void execute() { /* No-op */ }
-    public void undo()    { /* No-op */ }
+// Stateful Undo: Records prevSpeed before mutation to restore exact state
+public class CeilingFanHighCommand implements Command {
+    private CeilingFan ceilingFan;
+    private int prevSpeed;
+
+    public CeilingFanHighCommand(CeilingFan ceilingFan) {
+        this.ceilingFan = ceilingFan;
+    }
+    public void execute() {
+        prevSpeed = ceilingFan.getSpeed();
+        ceilingFan.high();
+    }
+    public void undo() {
+        if (prevSpeed == CeilingFan.HIGH)        ceilingFan.high();
+        else if (prevSpeed == CeilingFan.MEDIUM) ceilingFan.medium();
+        else if (prevSpeed == CeilingFan.LOW)    ceilingFan.low();
+        else if (prevSpeed == CeilingFan.OFF)    ceilingFan.off();
+    }
 }
 
-// 4. Invoker: Remote Control
+// MacroCommand: Executes forward, undos in reverse LIFO order!
+public class MacroCommand implements Command {
+    private Command[] commands;
+    public MacroCommand(Command[] commands) { this.commands = commands; }
+
+    public void execute() {
+        for (Command cmd : commands) cmd.execute();
+    }
+    public void undo() {
+        for (int i = commands.length - 1; i >= 0; i--) {
+            commands[i].undo();
+        }
+    }
+}
+
+// Null Object Pattern: Eliminates null checks in the invoker
+public class NoCommand implements Command {
+    public void execute() { }
+    public void undo()    { }
+}
+
+// ----------------------- Invoker -----------------------
 public class RemoteControl {
-    private final Command[] onCommands = new Command[7];
-    private Command undoCommand = new NoCommand(); // Initialized to Null Object
+    private Command[] onCommands = new Command[7];
+    private Command[] offCommands = new Command[7];
+    private Command undoCommand;
 
     public RemoteControl() {
-        Command noCmd = new NoCommand();
-        for (int i = 0; i &lt; 7; i++) onCommands[i] = noCmd;
+        Command noCommand = new NoCommand();
+        for (int i = 0; i < 7; i++) {
+            onCommands[i]  = noCommand;
+            offCommands[i] = noCommand;
+        }
+        undoCommand = noCommand;
     }
 
-    public void setCommand(int slot, Command cmd) { onCommands[slot] = cmd; }
+    public void setCommand(int slot, Command onCommand, Command offCommand) {
+        onCommands[slot]  = onCommand;
+        offCommands[slot] = offCommand;
+    }
     public void onButtonWasPushed(int slot) {
         onCommands[slot].execute();
         undoCommand = onCommands[slot]; // Track for undo
     }
-    public void undoButtonWasPushed() { undoCommand.undo(); }
+    public void offButtonWasPushed(int slot) {
+        offCommands[slot].execute();
+        undoCommand = offCommands[slot]; // Track for undo
+    }
+    public void undoButtonWasPushed() {
+        undoCommand.undo();
+    }
 }</code></pre>
       </div>
 
