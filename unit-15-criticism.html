@@ -1,1077 +1,341 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html lang="en" data-theme="dark" data-mode="concept">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Unit 15: Pattern Criticism &amp; Language Evolution | POSA 2026 Masterclass</title>
-<meta name="description" content="Master Peter Norvig's critique, Paul Graham's missing language features, over-engineering hazards (Patternitis), and modern functional alternatives with Prof. Dr. Jörg Schäfer.">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23e11d48'/%3E%3Cpath d='M8 10h16M8 16h16M8 22h10' stroke='%23fff' stroke-width='2.2' stroke-linecap='round'/%3E%3C/svg%3E">
-<link rel="preconnect" href="https://fonts.googleapis.com">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Unit 15 · Pattern Criticism &amp; Functional Alternatives · POSA Masterclass 2026</title>
+<meta name="description" content="Master pattern criticism: Mark Dominus' thesis, Peter Norvig's 16/23 absorption, first-class functions vs Strategy, and Python quicksort lambda comparison.">
+<link rel="stylesheet" href="assets/style.css?v=2026.18">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/style.css?v=2026.16">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,600;0,700;1,400&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,600;1,700&display=swap" rel="stylesheet">
+<script>
+  window.MathJax = {
+    tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
+    svg: { fontCache: 'global' }
+  };
+</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<script>(function(){try{var t=localStorage.getItem('posa-theme')||localStorage.getItem('dm2026-theme')||'dark';document.documentElement.setAttribute('data-theme',t);var m=localStorage.getItem('posa-mode')||'concept';document.documentElement.setAttribute('data-mode',m);}catch(e){}})();</script>
 <style>
-  .reading-progress-bar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    height: 3px;
-    background: linear-gradient(90deg, #e11d48 0%, #f43f5e 50%, #fb7185 100%);
-    width: 0%;
-    z-index: 9999;
-    transition: width 0.1s ease-out;
-  }
-  .stage-takeaways-box {
-    background: rgba(225, 29, 72, 0.05);
-    border: 1px solid rgba(225, 29, 72, 0.2);
+  .guide-card {
+    background: var(--bg-raised);
+    border: 1px solid var(--border);
     border-radius: var(--radius-md);
     padding: 1.5rem;
-    margin: 2rem 0;
+    margin-bottom: 2rem;
   }
-  [data-theme="light"] .stage-takeaways-box {
-    background: #fff1f2;
-    border-color: #fecdd3;
-  }
-  .stage-takeaways-title {
-    font-weight: 800;
-    color: #e11d48;
-    margin-bottom: 0.75rem;
+  .guide-card-header {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
-    font-size: 1.05rem;
-  }
-  .takeaway-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: 1rem;
-    margin-top: 1rem;
-  }
-  .takeaway-item {
-    background: var(--bg-raised);
-    padding: 1rem;
-    border-radius: var(--radius-sm);
-    border: 1px solid var(--border);
-  }
-  .takeaway-item strong {
+    gap: 0.6rem;
+    font-size: 1.15rem;
+    font-weight: 700;
     color: var(--text);
-    display: block;
-    margin-bottom: 0.35rem;
-    font-size: 0.92rem;
+    margin-bottom: 0.75rem;
   }
-  .takeaway-item p {
-    margin: 0;
-    font-size: 0.85rem;
-    color: var(--text-muted);
-    line-height: 1.5;
-  }
-  /* Interactive Patternitis vs Clean Spectrum */
-  .patternitis-card {
-    background: var(--bg-raised);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-md);
-    padding: 1.5rem;
-    margin: 2rem 0;
-  }
-  .spectrum-controls {
-    display: flex;
-    gap: 0.75rem;
-    flex-wrap: wrap;
-    margin: 1.25rem 0;
-  }
-  .spectrum-btn {
-    padding: 0.5rem 1rem;
-    border-radius: var(--radius-sm);
-    border: 1px solid var(--border);
-    background: var(--bg);
-    color: var(--text);
-    font-size: 0.85rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s ease;
-  }
-  .spectrum-btn.active {
-    background: #e11d48;
-    color: #fff;
-    border-color: #e11d48;
-  }
-  .spectrum-output {
-    background: #090d16;
-    color: #fb7185;
+  .rule-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.2rem 0.55rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 800;
     font-family: var(--font-mono);
-    padding: 1.25rem;
-    border-radius: var(--radius-sm);
-    font-size: 0.85rem;
-    min-height: 110px;
-    border: 1px solid #1e293b;
-    margin-top: 1rem;
-    white-space: pre-wrap;
-    line-height: 1.6;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    background: rgba(99, 102, 241, 0.12);
+    color: #6366f1;
+    border: 1px solid rgba(99, 102, 241, 0.25);
   }
+  .headfirst-card {
+    background: var(--bg-raised);
+    border: 1px solid var(--border);
+    border-left: 4px solid #6366f1;
+    border-radius: var(--radius-md);
+    margin-bottom: 2rem;
+    overflow: hidden;
+  }
+  .headfirst-summary {
+    list-style: none;
+    cursor: pointer;
+    user-select: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.15rem 1.4rem;
+    background: var(--bg-subtle);
+    border-bottom: 1px solid transparent;
+  }
+  .headfirst-summary:hover { background: var(--code-bg); }
+  .headfirst-summary::-webkit-details-marker { display: none; }
+  .headfirst-card[open] .headfirst-summary { border-bottom: 1px solid var(--border); }
+  .headfirst-title { display: flex; align-items: center; gap: 0.65rem; font-size: 1.05rem; font-weight: 700; color: var(--text); }
+  .headfirst-badge { font-size: 0.72rem; font-weight: 800; padding: 0.15rem 0.5rem; border-radius: 4px; background: rgba(99, 102, 241, 0.15); color: var(--accent); border: 1px solid rgba(99, 102, 241, 0.25); }
+  .headfirst-body { padding: 1.5rem; }
+  .pattern-spec-box { background: var(--bg-raised); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 1.25rem 1.5rem; margin-bottom: 1.5rem; }
+  .spec-grid { display: grid; grid-template-columns: 1fr; gap: 0.75rem; }
+  .spec-row { display: flex; flex-direction: column; gap: 0.25rem; padding-bottom: 0.75rem; border-bottom: 1px solid var(--border); }
+  .spec-row:last-child { border-bottom: none; padding-bottom: 0; }
+  .spec-label { font-size: 0.8rem; font-family: var(--font-mono); text-transform: uppercase; color: var(--accent); font-weight: 700; }
+  .spec-val { font-size: 0.95rem; color: var(--text); line-height: 1.55; }
+  .qa-block { margin: 1.5rem 0; padding: 1.5rem; background: var(--bg-raised); border: 1px solid var(--border); border-radius: var(--radius-md); }
+  .qa-q { font-size: 1.05rem; font-weight: 700; color: var(--text); margin-bottom: 1rem; line-height: 1.45; }
+  .qa-q .pts-badge { display: inline-block; padding: 0.2rem 0.6rem; background: var(--accent-soft); color: var(--accent); border-radius: 999px; font-size: 0.78rem; font-family: var(--font-mono); font-weight: 700; margin-left: 0.5rem; }
+  .qa-a { padding: 1.25rem 1.5rem; background: var(--bg); border-left: 4px solid var(--accent); border-radius: 0 var(--radius-sm) var(--radius-sm) 0; font-size: 0.95rem; line-height: 1.65; color: var(--text); }
+  .qa-a .ans-label { display: block; font-size: 0.8rem; text-transform: uppercase; font-weight: 800; font-family: var(--font-mono); color: var(--accent); margin-bottom: 0.75rem; letter-spacing: 0.05em; }
 </style>
-<script>(function(){try{var t=localStorage.getItem('posa-theme')||'dark';document.documentElement.setAttribute('data-theme',t);var m=localStorage.getItem('posa-mode')||'concept';document.documentElement.setAttribute('data-mode',m);}catch(e){}})();</script>
 </head>
-<body class="mode-stage-focused">
+<body>
+  <nav class="sitenav" aria-label="Main Navigation">
+    <div class="sitenav-inner">
+      <a href="index.html" class="sitenav-brand">
+        <span class="brand-badge">POSA 2026</span>
+        <span class="brand-title">Pattern Architecture</span>
+      </a>
+      <div class="sitenav-links">
+        <a href="index.html">Overview</a>
+        <a href="unit-1-strategy.html">Unit 1: Strategy</a>
+        <a href="unit-3-composite.html">Unit 3A: Composite</a>
+        <a href="unit-3-iterator.html">Unit 3B: Iterator</a>
+        <a href="unit-15-criticism.html" class="active">Unit 15: Criticism</a>
+        <a href="mock-1.html">🎓 Mock Exam 1</a>
+        <a href="mock-2.html">📝 Mock Exam 2</a>
+        <a href="past-papers.html">Practice Hub</a>
+      </div>
+      <button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle theme">
+        <span class="theme-icon light-icon">☀️</span>
+        <span class="theme-icon dark-icon">🌙</span>
+      </button>
+    </div>
+  </nav>
 
-<div class="reading-progress-bar" id="readingProgressBar"></div>
+  <aside class="sidebar">
+    <div class="sidebar-block">
+      <span class="sidebar-label">Unit Navigation</span>
+      <a href="#sec-profile" class="active"><span class="toc-num">1</span>Dominus &amp; Graham Thesis</a>
+      <a href="#sec-python"><span class="toc-num">2</span>Python Quicksort Code</a>
+      <a href="#sec-norvig"><span class="toc-num">3</span>16/23 Absorption Spectrum</a>
+      <a href="#sec-drills"><span class="toc-num">4</span>Core Exam Drills</a>
+    </div>
 
-<nav class="sitenav">
-  <div class="sitenav-inner">
-    <a class="sitenav-home" href="index.html">
-      <span style="background:linear-gradient(135deg, #e11d48 0%, #f43f5e 100%);color:#fff;padding:0.2rem 0.55rem;border-radius:6px;font-size:0.82rem;font-weight:800;letter-spacing:0.04em;">POSA</span>
-      <span style="font-weight:800;letter-spacing:-0.02em;">2026</span>
-    </a>
-                <div class="sitenav-links">
-      <a href="index.html">Overview</a>
-      <a href="index.html#curriculum-roadmap">16 Units</a>
-      <a href="mock-1.html">🎓 Mock Exam 1</a>
-      <a href="mock-2.html">📝 Mock Exam 2</a>
+    <div class="sidebar-block">
+      <span class="sidebar-label">Related Modules</span>
+      <a href="unit-1-strategy.html">Unit 1 · Strategy Pattern</a>
+      <a href="unit-5-theory.html">Unit 5 · Pattern Theory</a>
+      <a href="mock-1.html">🎓 Mock Exam 1 (Ex 7)</a>
     </div>
-    <button class="nav-toggle" id="navToggle" type="button" aria-expanded="false" aria-controls="navPanel">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
-      Menu
-    </button>
-    <button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle color theme">
-      <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path></svg>
-      <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
-    </button>
-    <button class="mode-toggle" id="modeToggle" type="button" aria-label="Toggle technical mode" style="font-size: 1.1rem; line-height: 1;">🎓</button>
-  </div>
-  <div class="nav-panel" id="navPanel">
-    <div class="nav-panel-section">
-      <span class="nav-panel-label">Course Navigation</span>
-      <a href="index.html">Course Overview</a>
-      <a href="unit-13-analysis.html">Unit 13 · Analysis &amp; Enterprise Patterns</a>
-      <a href="unit-14-testing.html">Unit 14 · Testing Patterns &amp; Test Doubles</a>
-      <a href="unit-15-criticism.html" class="active">Unit 15 · Pattern Criticism &amp; Evolution</a>
-      <a href="unit-16-genai.html">Unit 16 · Architectural Patterns &amp; GenAI</a>
-      <a href="mock-1.html">📝 Mock Exam 1</a>
-    </div>
-  </div>
-</nav>
 
-<div class="page-shell">
-  <aside class="sidebar-toc">
     <div class="sidebar-block">
-      <span class="sidebar-label">PART 1 · RUBRIC</span>
-      <a href="#pillar-1"><span class="toc-num">P1</span>Epistemic Skepticism</a>
-      <a href="#pillar-2"><span class="toc-num">P2</span>Norvig Spectrum</a>
-      <a href="#pillar-3"><span class="toc-num">P3</span>Language Absorption</a>
-      <a href="#pillar-4"><span class="toc-num">P4</span>Trade-Offs &amp; Debt</a>
-      <a href="#pillar-5"><span class="toc-num">P5</span>OOP vs Functional</a>
-      <a href="#pillar-6"><span class="toc-num">P6</span>Pathologies &amp; Smells</a>
-      <a href="#pillar-7"><span class="toc-num">P7</span>Modern Java 21 Code</a>
-      <a href="#pillar-8"><span class="toc-num">P8</span>Frankfurt UAS Exam Traps</a>
-    </div>
-    <div class="sidebar-block">
-      <span class="sidebar-label">PART 2 · CURRICULUM</span>
-      <a href="#stage-1"><span class="toc-num">1</span>Peter Norvig's 16/23</a>
-      <a href="#stage-2"><span class="toc-num">2</span>Missing Language Features</a>
-      <a href="#stage-3"><span class="toc-num">3</span>Patternitis Simulator</a>
-      <a href="#stage-4"><span class="toc-num">4</span>Modern Replacements</a>
-      <a href="#stage-5"><span class="toc-num">5</span>Exam Drills</a>
-    </div>
-    <div class="sidebar-block">
-      <span class="sidebar-label">Academic Profile</span>
-      <p style="font-size: 0.85rem; color: var(--text-muted); margin: 0; line-height: 1.4;">
-        <strong>Prof. Dr. Jörg Schäfer</strong><br>
-        Frankfurt University of Applied Sciences<br>
-        <span style="display:inline-block;margin-top:0.35rem;padding:0.15rem 0.4rem;background:rgba(225,29,72,0.15);border-radius:4px;color:#e11d48;font-weight:700;font-size:0.75rem;">Criticism &amp; Evolution</span>
-      </p>
+      <span class="sidebar-label">Exam Profile</span>
+      <div style="font-size:0.75rem; font-weight:700; color:#38bdf8; background:rgba(56,189,248,0.12); border:1px solid rgba(56,189,248,0.25); padding:0.25rem 0.5rem; border-radius:4px; display:inline-block;">
+        ⏱️ 8–10 Mins · 12 Exam Pts
+      </div>
     </div>
   </aside>
 
   <main class="page">
-    <div class="masthead">
-      <div class="eyebrow">Unit 15 · Critical Perspectives &amp; Evolution</div>
-      <h1 class="title">Pattern Criticism: Language Deficiencies &amp; Alternatives</h1>
+    <header class="masthead">
+      <div>
+        <div class="eyebrow">Unit 15 · Pattern Criticism &amp; Language Evolution</div>
+        <h1 class="title">Pattern Criticism: Missing Language Features &amp; Alternatives</h1>
+      </div>
       <p class="dek">
-        Are software design patterns a pinnacle of software engineering or simply boilerplate compensation for weak programming languages? Deconstruct Peter Norvig's critique, Paul Graham's insights, and the modern functional paradigm.
+        Analyze Mark Dominus and Paul Graham's critique that design patterns are workarounds for language deficiencies, Peter Norvig's 16 of 23 pattern absorption, and functional alternatives using Python lambdas.
       </p>
-    </div>
-
-    <!-- Symmetrical Demarcation 1 -->
-    <div class="section-divider-wrapper" style="margin: 2.5rem 0 1.5rem;">
-      <div class="section-divider-line"></div>
-      <div class="section-divider-tag">
-        <span class="section-divider-dot"></span>
-        <span>PART 1 · ARCHITECTURAL RUBRIC</span>
-      </div>
-      <div class="section-divider-line"></div>
-    </div>
-
-    <section class="blueprint-suite" id="blueprintSuite" aria-label="8-Pillar Architecture Rubric">
-      <div class="blueprint-suite-top">
-        <div>
-          <div class="blueprint-suite-badge">
-            <span class="section-badge-pill">SECTION 1 OF 2</span>
-            <span class="badge-sep">·</span>
-            <span>8-PILLAR ARCHITECTURAL RUBRIC</span>
-          </div>
-          <h2 class="blueprint-suite-heading">The Scientific Pattern Criticism Blueprint</h2>
-          <p class="blueprint-suite-sub">
-            The canonical engineering rubric evaluating when to adopt patterns, when to avoid "Patternitis", and how modern language features absorb legacy OOP boilerplate.
-          </p>
-        </div>
-        <div class="blueprint-suite-actions">
-          <div class="blueprint-view-toggle" role="group" aria-label="Blueprint Layout">
-            <button class="blueprint-toggle-btn active" id="btnViewExplorer" type="button" onclick="setBlueprintView('explorer')">Explorer View</button>
-            <button class="blueprint-toggle-btn" id="btnViewMatrix" type="button" onclick="setBlueprintView('matrix')">Full Matrix</button>
-          </div>
-          <button class="rubric-action-btn" type="button" onclick="copyBlueprintRubric()">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-            Export Rubric (MD)
-          </button>
-          <button class="rubric-action-btn rubric-collapse-btn" id="btnCollapseRubric" type="button" onclick="toggleBlueprintCollapse()">
-            <span id="collapseLabel">▲ Collapse Rubric</span>
-          </button>
-        </div>
-      </div>
-
-      <div class="blueprint-collapsed-hint" id="blueprintCollapsedHint" style="display:none;">
-        <span class="hint-icon">💡</span>
-        <span>The 8-Pillar Rubric is currently collapsed. Click <strong>Expand Rubric</strong> above to inspect details.</span>
-      </div>
-
-      <div class="blueprint-suite-body" id="blueprintSuiteBody">
-        <div class="blueprint-tabs" role="tablist" aria-label="8 Pillars">
-          <button class="blueprint-tab active" role="tab" aria-selected="true" data-pillar="1" onclick="selectPillar(1)">
-            <span class="blueprint-tab-num">01</span>
-            <span class="blueprint-tab-title">Epistemic Skepticism</span>
-          </button>
-          <button class="blueprint-tab" role="tab" aria-selected="false" data-pillar="2" onclick="selectPillar(2)">
-            <span class="blueprint-tab-num">02</span>
-            <span class="blueprint-tab-title">Norvig Spectrum</span>
-          </button>
-          <button class="blueprint-tab" role="tab" aria-selected="false" data-pillar="3" onclick="selectPillar(3)">
-            <span class="blueprint-tab-num">03</span>
-            <span class="blueprint-tab-title">Language Absorption</span>
-          </button>
-          <button class="blueprint-tab" role="tab" aria-selected="false" data-pillar="4" onclick="selectPillar(4)">
-            <span class="blueprint-tab-num">04</span>
-            <span class="blueprint-tab-title">Trade-Offs &amp; Debt</span>
-          </button>
-          <button class="blueprint-tab" role="tab" aria-selected="false" data-pillar="5" onclick="selectPillar(5)">
-            <span class="blueprint-tab-num">05</span>
-            <span class="blueprint-tab-title">OOP vs Functional</span>
-          </button>
-          <button class="blueprint-tab" role="tab" aria-selected="false" data-pillar="6" onclick="selectPillar(6)">
-            <span class="blueprint-tab-num">06</span>
-            <span class="blueprint-tab-title">Pathologies &amp; Smells</span>
-          </button>
-          <button class="blueprint-tab" role="tab" aria-selected="false" data-pillar="7" onclick="selectPillar(7)">
-            <span class="blueprint-tab-num">07</span>
-            <span class="blueprint-tab-title">Modern Java 21 Code</span>
-          </button>
-          <button class="blueprint-tab" role="tab" aria-selected="false" data-pillar="8" onclick="selectPillar(8)">
-            <span class="blueprint-tab-num">08</span>
-            <span class="blueprint-tab-title">Exam Traps (Schäfer)</span>
-          </button>
-        </div>
-
-        <div class="blueprint-content-area" id="blueprintContentArea">
-          <!-- Pillar 1 -->
-          <article class="pillar-panel active" id="pillar-1" data-pillar="1">
-            <div class="pillar-header">
-              <span class="pillar-tag">PILLAR 01 · FOUNDATIONAL INTENT</span>
-              <h3 class="pillar-title">Epistemic Skepticism: Are Patterns a Symptom of Flawed Languages?</h3>
-            </div>
-            <div class="pillar-body">
-              <div class="pillar-grid-2col">
-                <div>
-                  <h4 style="color:#e11d48;margin-top:0;">The Paul Graham Thesis</h4>
-                  <p>In 2002, Lisp pioneer Paul Graham published <em>Revenge of the Nerds</em>, positing that:</p>
-                  <blockquote style="border-left:3px solid #e11d48;padding-left:1rem;margin:1rem 0;color:var(--text);font-style:italic;">
-                    “When I see patterns in my code, I consider it a sign of trouble. The shape of a program should reflect only the problem it needs to solve. Any other regularity in the code is a sign, to me at least, that I’m using abstractions that aren't powerful enough—often that I’m generating by hand the expansions to some macro that I ought to write.”
-                  </blockquote>
-                  <p>Patterns appear when a language lacks the syntactic power to express a concept directly as a native primitive.</p>
-                </div>
-                <div>
-                  <h4 style="color:var(--text);margin-top:0;">The Architectural Rebuttal (POSA)</h4>
-                  <p>While macro syntax absorbs micro patterns (like Strategy or Visitor), architectural systems cannot be solved by language keywords:</p>
-                  <ul>
-                    <li>Distributed consensus, network partitions, and asynchronous messaging (Pipes &amp; Filters, Blackboard, Broker) persist across all languages.</li>
-                    <li>Patterns provide an <strong>instant conceptual vocabulary</strong> that accelerates team alignment far beyond syntax.</li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </article>
-
-          <!-- Pillar 2 -->
-          <article class="pillar-panel" id="pillar-2" data-pillar="2">
-            <div class="pillar-header">
-              <span class="pillar-tag">PILLAR 02 · STRUCTURAL TOPOLOGY</span>
-              <h3 class="pillar-title">The Peter Norvig 16/23 Absorption Spectrum (Vector SVG)</h3>
-            </div>
-            <div class="pillar-body">
-              <p>In 1996, Peter Norvig proved that 16 of the 23 GoF patterns dissolve in languages with first-class functions, macros, and dynamic dispatch:</p>
-
-              <div style="background:var(--bg-raised);border:1px solid var(--border);border-radius:var(--radius-md);padding:1.5rem;margin:1.5rem 0;">
-                <svg viewBox="0 0 880 300" style="width:100%;height:auto;display:block;" xmlns="http://www.w3.org/2000/svg">
-                  <!-- Category 1: 16 Absorbed Patterns -->
-                  <g transform="translate(40, 30)">
-                    <rect width="400" height="240" rx="8" fill="var(--bg)" stroke="#e11d48" stroke-width="2"/>
-                    <text x="200" y="32" font-family="var(--font-display)" font-size="14" font-weight="800" fill="#e11d48" text-anchor="middle">16 PATTERNS ABSORBED IN MODERN FP / DYNAMIC</text>
-                    <line x1="0" y1="46" x2="400" y2="46" stroke="var(--border)" stroke-width="1"/>
-                    <text x="20" y="74" font-family="var(--font-sans)" font-size="12" fill="var(--text)">• <strong>Strategy</strong> → First-class lambda functions</text>
-                    <text x="20" y="98" font-family="var(--font-sans)" font-size="12" fill="var(--text)">• <strong>Command</strong> → Closures / anonymous runnables</text>
-                    <text x="20" y="122" font-family="var(--font-sans)" font-size="12" fill="var(--text)">• <strong>Visitor</strong> → Pattern matching on sealed types</text>
-                    <text x="20" y="146" font-family="var(--font-sans)" font-size="12" fill="var(--text)">• <strong>Iterator</strong> → Generators (yield) &amp; stream pipelines</text>
-                    <text x="20" y="170" font-family="var(--font-sans)" font-size="12" fill="var(--text)">• <strong>Decorator</strong> → Higher-order functions &amp; @decorators</text>
-                    <text x="20" y="194" font-family="var(--font-sans)" font-size="12" fill="var(--text)">• <strong>Template Method</strong> → Higher-order functions with hooks</text>
-                    <text x="20" y="218" font-family="var(--font-mono)" font-size="10.5" fill="var(--text-muted)">Plus: Abstract Factory, Builder, Chain of Resp, etc.</text>
-                  </g>
-
-                  <!-- Category 2: 7 Resilient Architectural Patterns -->
-                  <g transform="translate(480, 30)">
-                    <rect width="360" height="240" rx="8" fill="var(--bg)" stroke="#10b981" stroke-width="2"/>
-                    <text x="180" y="32" font-family="var(--font-display)" font-size="14" font-weight="800" fill="#10b981" text-anchor="middle">7 PATTERNS THAT SURVIVE ANY LANGUAGE</text>
-                    <line x1="0" y1="46" x2="360" y2="46" stroke="var(--border)" stroke-width="1"/>
-                    <text x="20" y="74" font-family="var(--font-sans)" font-size="12" fill="var(--text)">• <strong>Composite</strong> (Recursive tree topologies)</text>
-                    <text x="20" y="102" font-family="var(--font-sans)" font-size="12" fill="var(--text)">• <strong>Observer</strong> (Distributed event messaging)</text>
-                    <text x="20" y="130" font-family="var(--font-sans)" font-size="12" fill="var(--text)">• <strong>Adapter</strong> (Bridging incompatible APIs)</text>
-                    <text x="20" y="158" font-family="var(--font-sans)" font-size="12" fill="var(--text)">• <strong>Facade</strong> (Subsystem entry abstraction)</text>
-                    <text x="20" y="186" font-family="var(--font-sans)" font-size="12" fill="var(--text)">• <strong>Bridge</strong> (Independent orthogonal dimensions)</text>
-                    <text x="20" y="214" font-family="var(--font-mono)" font-size="10.5" fill="#10b981">Architectural structural relationships persist!</text>
-                  </g>
-                </svg>
-              </div>
-            </div>
-          </article>
-
-          <!-- Pillar 3 -->
-          <article class="pillar-panel" id="pillar-3" data-pillar="3">
-            <div class="pillar-header">
-              <span class="pillar-tag">PILLAR 03 · DYNAMIC EVOLUTION TRACE</span>
-              <h3 class="pillar-title">30-Year Evolution: From 1994 C++ Boilerplate to 2026 Modern Primitives</h3>
-            </div>
-            <div class="pillar-body">
-              <div class="pillar-grid-2col">
-                <div>
-                  <h4 style="color:#e11d48;margin-top:0;">The 1994 OOP Era (C++ / Java 1.0)</h4>
-                  <p>In early static OOP languages, functions were not first-class citizens. To pass behavior, an engineer was forced to:</p>
-                  <ol style="font-size:0.9rem;line-height:1.6;color:var(--text-muted);padding-left:1.2rem;">
-                    <li>Define a named interface (e.g. <code>Comparator</code>).</li>
-                    <li>Create a concrete class implementing that interface.</li>
-                    <li>Instantiate the class onto the heap.</li>
-                    <li>Pass the instance reference to the caller.</li>
-                  </ol>
-                  <p style="font-size:0.85rem;color:var(--text-muted);">Result: 4 files and 50 lines of code just to sort an array backwards!</p>
-                </div>
-                <div>
-                  <h4 style="color:#10b981;margin-top:0;">The Modern Multi-Paradigm Era (Java 21 / Kotlin / Rust)</h4>
-                  <p>Modern enterprise platforms treat functions, closures, and algebraic data types as native building blocks:</p>
-                  <ol style="font-size:0.9rem;line-height:1.6;color:var(--text-muted);padding-left:1.2rem;">
-                    <li><strong>Lambdas &amp; Method Refs:</strong> `list.sort(Comparator.reverseOrder())`.</li>
-                    <li><strong>Sealed Interfaces &amp; Pattern Matching:</strong> Eliminates double-dispatch Visitor in 5 lines of exhaustive `switch`.</li>
-                    <li><strong>Records / Data Classes:</strong> Eliminates Builder pattern ceremony for immutable DTOs.</li>
-                  </ol>
-                </div>
-              </div>
-            </div>
-          </article>
-
-          <!-- Pillar 4 -->
-          <article class="pillar-panel" id="pillar-4" data-pillar="4">
-            <div class="pillar-header">
-              <span class="pillar-tag">PILLAR 04 · TRADE-OFFS &amp; INDIRECTION DEBT</span>
-              <h3 class="pillar-title">Architectural Trade-Offs: The Indirection Tax</h3>
-            </div>
-            <div class="pillar-body">
-              <table class="blueprint-table" style="width:100%;border-collapse:collapse;margin-top:0.5rem;font-size:0.88rem;">
-                <thead>
-                  <tr style="border-bottom:2px solid var(--border);text-align:left;">
-                    <th style="padding:0.6rem;">Approach</th>
-                    <th style="padding:0.6rem;">Runtime Overhead</th>
-                    <th style="padding:0.6rem;">Cognitive Reading Load</th>
-                    <th style="padding:0.6rem;">Refactoring Safety</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr style="border-bottom:1px solid var(--border);">
-                    <td style="padding:0.6rem;font-weight:700;color:#e11d48;">Over-Patterned OOP ("Patternitis")</td>
-                    <td style="padding:0.6rem;color:#ef4444;">High (virtual dispatch, heap allocations)</td>
-                    <td style="padding:0.6rem;color:#ef4444;">Severe (10 layers of indirection)</td>
-                    <td style="padding:0.6rem;color:#eab308;">Medium (rigid class hierarchies)</td>
-                  </tr>
-                  <tr style="border-bottom:1px solid var(--border);">
-                    <td style="padding:0.6rem;font-weight:700;color:#10b981;">Modern Idiomatic FP</td>
-                    <td style="padding:0.6rem;color:#10b981;">Minimal (inlining, stack-allocated records)</td>
-                    <td style="padding:0.6rem;color:#10b981;">Low (concise local expressions)</td>
-                    <td style="padding:0.6rem;color:#10b981;">High (compiler exhaustive checks)</td>
-                  </tr>
-                  <tr>
-                    <td style="padding:0.6rem;font-weight:700;color:#3b82f6;">POSA Architectural System</td>
-                    <td style="padding:0.6rem;color:#eab308;">Network / IPC serialization costs</td>
-                    <td style="padding:0.6rem;color:#10b981;">High clarity on macro topology</td>
-                    <td style="padding:0.6rem;color:#10b981;">High subsystem modularity</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </article>
-
-          <!-- Pillar 5 -->
-          <article class="pillar-panel" id="pillar-5" data-pillar="5">
-            <div class="pillar-header">
-              <span class="pillar-tag">PILLAR 05 · CROSS-PARADIGM ECOSYSTEM</span>
-              <h3 class="pillar-title">Cross-Paradigm Equivalences: OOP vs Functional Programming</h3>
-            </div>
-            <div class="pillar-body">
-              <div class="pillar-grid-2col">
-                <div class="takeaway-item">
-                  <strong>GoF Visitor $\longleftrightarrow$ FP Pattern Matching</strong>
-                  <p>In OOP, adding a new operation across a class hierarchy requires the heavy double-dispatch Visitor. In FP, algebraic data types with pattern matching let you add operations trivially without touching data structures.</p>
-                </div>
-                <div class="takeaway-item">
-                  <strong>GoF Strategy $\longleftrightarrow$ Higher-Order Functions</strong>
-                  <p>In OOP, Strategy requires an interface and class wrappers. In functional programming, passing a function $f: A \to B$ directly fulfills the exact same role with zero boilerplate.</p>
-                </div>
-                <div class="takeaway-item">
-                  <strong>GoF Decorator $\longleftrightarrow$ Function Composition ($f \circ g$)</strong>
-                  <p>Wrapping an object in three decorators is mathematically identical to composing three pure functions: <code>h(x) = f(g(k(x)))</code>.</p>
-                </div>
-                <div class="takeaway-item">
-                  <strong>GoF Builder $\longleftrightarrow$ Immutable Records &amp; Named Parameters</strong>
-                  <p>Languages with default arguments, copy-with-modification syntax (Kotlin <code>copy()</code>, Python dataclasses), and records eliminate Builder classes.</p>
-                </div>
-              </div>
-            </div>
-          </article>
-
-          <!-- Pillar 6 -->
-          <article class="pillar-panel" id="pillar-6" data-pillar="6">
-            <div class="pillar-header">
-              <span class="pillar-tag">PILLAR 06 · PATHOLOGIES &amp; ANTI-PATTERNS</span>
-              <h3 class="pillar-title">Psychological Pathologies of Pattern Adoption</h3>
-            </div>
-            <div class="pillar-body">
-              <div class="smell-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
-                <div style="background:var(--bg-raised);padding:1rem;border-left:4px solid #ef4444;border-radius:0 4px 4px 0;">
-                  <strong style="color:#ef4444;">1. The Golden Hammer (Maslow's Law)</strong>
-                  <p style="font-size:0.85rem;color:var(--text-muted);margin:0.4rem 0 0;">
-                    <em>"If all you have is a hammer, everything looks like a nail."</em> An engineer finishes learning the State pattern and immediately rewrites an 8-line boolean flag into 12 state classes.
-                  </p>
-                </div>
-                <div style="background:var(--bg-raised);padding:1rem;border-left:4px solid #ef4444;border-radius:0 4px 4px 0;">
-                  <strong style="color:#ef4444;">2. Cargo Cult Architecture</strong>
-                  <p style="font-size:0.85rem;color:var(--text-muted);margin:0.4rem 0 0;">
-                    Adopting Netflix-scale distributed patterns (Blackboard, Event Sourcing, CQRS) for a 50-user internal CRUD intranet application.
-                  </p>
-                </div>
-                <div style="background:var(--bg-raised);padding:1rem;border-left:4px solid #eab308;border-radius:0 4px 4px 0;">
-                  <strong style="color:#eab308;">3. Resume-Driven Development (RDD)</strong>
-                  <p style="font-size:0.85rem;color:var(--text-muted);margin:0.4rem 0 0;">
-                    Deliberately adding complex abstract factories, visitors, and dynamic proxies solely to pad resume keywords at the company's expense.
-                  </p>
-                </div>
-                <div style="background:var(--bg-raised);padding:1rem;border-left:4px solid #eab308;border-radius:0 4px 4px 0;">
-                  <strong style="color:#eab308;">4. Loss of Mental Transparency</strong>
-                  <p style="font-size:0.85rem;color:var(--text-muted);margin:0.4rem 0 0;">
-                    Code where clicking "Go to Implementation" in the IDE jumps through 8 forwarding layers before reaching a single line of business logic.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </article>
-
-          <!-- Pillar 7 -->
-          <article class="pillar-panel" id="pillar-7" data-pillar="7">
-            <div class="pillar-header">
-              <span class="pillar-tag">PILLAR 07 · MODERN JAVA 21 CODE</span>
-              <h3 class="pillar-title">Modern Java 21: Replacing the GoF Visitor with Sealed Types</h3>
-            </div>
-            <div class="pillar-body">
-              <div class="code-window">
-                <div class="code-window-bar">
-                  <div class="code-dots"><span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span></div>
-                  <span class="code-file">VisitorVsPatternMatching.java · Modern Java 21 Standard</span>
-                  <button class="code-copy-btn" onclick="copySnippet('codeModernJava21')">Copy Code</button>
-                </div>
-                <pre class="code-pre" id="codeModernJava21"><code><span class="k">package</span> de.frankfurt.uas.posa.evolution;
-
-<span class="c">// 1. Sealed Hierarchy: Compiler enforces completeness</span>
-<span class="k">public sealed interface</span> <span class="nc">AstNode</span> <span class="k">permits</span> <span class="nc">Literal</span>, <span class="nc">Add</span>, <span class="nc">Multiply</span> {}
-
-<span class="k">public record</span> <span class="nc">Literal</span>(<span class="k">double</span> val) <span class="k">implements</span> <span class="nc">AstNode</span> {}
-<span class="k">public record</span> <span class="nc">Add</span>(<span class="nc">AstNode</span> left, <span class="nc">AstNode</span> right) <span class="k">implements</span> <span class="nc">AstNode</span> {}
-<span class="k">public record</span> <span class="nc">Multiply</span>(<span class="nc">AstNode</span> left, <span class="nc">AstNode</span> right) <span class="k">implements</span> <span class="nc">AstNode</span> {}
-
-<span class="c">// 2. Modern Functional Evaluation: Zero Visitor classes, Zero accept() double-dispatch!</span>
-<span class="k">public class</span> <span class="nc">Evaluator</span> {
-    <span class="k">public static double</span> <span class="nf">eval</span>(<span class="nc">AstNode</span> node) {
-        <span class="k">return switch</span> (node) {
-            <span class="k">case</span> <span class="nc">Literal</span>(var v)    -&gt; v;
-            <span class="k">case</span> <span class="nc">Add</span>(var l, var r) -&gt; eval(l) + eval(r);
-            <span class="k">case</span> <span class="nc">Multiply</span>(var l, var r) -&gt; eval(l) * eval(r);
-        }; <span class="c">// Exhaustive: If you add a new subtype, javac fails to compile!</span>
-    }
-}</code></pre>
-              </div>
-            </div>
-          </article>
-
-          <!-- Pillar 8 -->
-          <article class="pillar-panel" id="pillar-8" data-pillar="8">
-            <div class="pillar-header">
-              <span class="pillar-tag">PILLAR 08 · EXAM TRAPS &amp; DEFENSE</span>
-              <h3 class="pillar-title">Frankfurt UAS Examination Pitfalls (Prof. Dr. Jörg Schäfer)</h3>
-            </div>
-            <div class="pillar-body">
-              <div class="pillar-grid-2col">
-                <div style="background:rgba(239,68,68,0.06);border:1px solid rgba(239,68,68,0.3);border-radius:var(--radius-sm);padding:1rem;">
-                  <strong style="color:#ef4444;">Exam Trap 1: "Does Modern FP make POSA Obsolete?"</strong>
-                  <p style="font-size:0.86rem;color:var(--text-muted);margin-top:0.4rem;">
-                    <strong>Schäfer's Trap:</strong> "Since Java 21 and Python render 16 GoF patterns trivial, is software architecture study obsolete?"<br>
-                    <strong>Correct UAS Defense:</strong> Absolutely not! High-level architectural patterns (POSA Layers, Pipes &amp; Filters, Blackboard, Broker) address distributed topologies, concurrency, and fault tolerance. Language syntax handles micro-abstractions, but cannot solve system-wide architectural decomposition.
-                  </p>
-                </div>
-                <div style="background:rgba(239,68,68,0.06);border:1px solid rgba(239,68,68,0.3);border-radius:var(--radius-sm);padding:1rem;">
-                  <strong style="color:#ef4444;">Exam Trap 2: Paul Graham's Language Deficiency Quote</strong>
-                  <p style="font-size:0.86rem;color:var(--text-muted);margin-top:0.4rem;">
-                    <strong>Schäfer's Trap:</strong> "What did Paul Graham mean when he claimed patterns are signs of trouble in code?"<br>
-                    <strong>Correct UAS Defense:</strong> He argued that recurring boilerplate structural code is evidence that the language lacks adequate abstraction mechanisms (such as macros, first-class functions, or pattern matching). When languages evolve, those patterns naturally get absorbed into the core syntax.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <!-- Symmetrical Demarcation 2 -->
-    <div class="section-divider-wrapper" style="margin: 3.5rem 0 1.5rem;">
-      <div class="section-divider-line"></div>
-      <div class="section-divider-tag">
-        <span class="section-divider-dot"></span>
-        <span>PART 2 · HANDS-ON CURRICULUM</span>
-      </div>
-      <div class="section-divider-line"></div>
-    </div>
-
-    <!-- Curriculum Super-Header -->
-    <header class="curriculum-header" id="curriculumHeader">
-      <div class="curriculum-meta-chip">
-        <span>⏱️ 40 Min Curriculum</span>
-        <span class="dot-sep">·</span>
-        <span>🎯 Exam Target: Norvig 16/23 &amp; Patternitis</span>
-        <span class="dot-sep">·</span>
-        <span>🏛️ Prof. Dr. Jörg Schäfer</span>
-      </div>
-      <h2 class="curriculum-title">5-Stage Masterclass: Pattern Criticism &amp; Language Evolution</h2>
-      <p class="curriculum-desc">
-        Investigate Peter Norvig's seminal critique, explore Paul Graham's language deficiency thesis, battle "Patternitis" in the interactive spectrum simulator, and master modern functional replacements.
-      </p>
-
-      <!-- Stage Navigation Bar -->
-      <nav class="masterclass-stage-nav" aria-label="Curriculum Stages">
-        <a class="stage-nav-pill active" href="#stage-1" data-stage="1">
-          <span class="pill-number">01</span>
-          <span class="pill-label">Norvig 16/23</span>
-        </a>
-        <a class="stage-nav-pill" href="#stage-2" data-stage="2">
-          <span class="pill-number">02</span>
-          <span class="pill-label">Missing Features</span>
-        </a>
-        <a class="stage-nav-pill" href="#stage-3" data-stage="3">
-          <span class="pill-number">03</span>
-          <span class="pill-label">Patternitis Lab</span>
-        </a>
-        <a class="stage-nav-pill" href="#stage-4" data-stage="4">
-          <span class="pill-number">04</span>
-          <span class="pill-label">Modern Replacements</span>
-        </a>
-        <a class="stage-nav-pill" href="#stage-5" data-stage="5">
-          <span class="pill-number">05</span>
-          <span class="pill-label">Exam Drills</span>
-        </a>
-      </nav>
     </header>
 
-    <!-- Stage 1 -->
-    <section class="masterclass-stage" id="stage-1" data-stage="1">
-      <div class="stage-header-top">
+    <!-- ============================================================== -->
+    <!-- 1. THE DOMINUS & GRAHAM CRITIQUE                               -->
+    <!-- ============================================================== -->
+    <section class="chapter" id="sec-profile">
+      <div class="chapter-head">
+        <span class="chapter-num">1</span>
         <div>
-          <span class="stage-eyebrow-pill">STAGE 01 OF 05 · EMPIRICAL CRITIQUE</span>
-          <h3 class="stage-title">Peter Norvig’s 1996 Study: 16 of 23 Patterns Disappear</h3>
-        </div>
-        <button class="stage-mastery-btn" type="button" onclick="markStageComplete(1)">Mark Stage 1 Complete</button>
-      </div>
-
-      <div class="stage-takeaways-box">
-        <div class="stage-takeaways-title">
-          <span>⚡</span>
-          <span>Core Takeaways for Frankfurt UAS Students</span>
-        </div>
-        <div class="takeaway-grid">
-          <div class="takeaway-item">
-            <strong>1. The 16/23 Finding</strong>
-            <p>16 of the 23 GoF patterns become invisible or trivial when using first-class functions and macros.</p>
-          </div>
-          <div class="takeaway-item">
-            <strong>2. C++ &amp; Java 1.0 Origins</strong>
-            <p>The GoF catalog was written primarily against C++ and early Smalltalk constraints in the early 1990s.</p>
-          </div>
-          <div class="takeaway-item">
-            <strong>3. Architectural Permanence</strong>
-            <p>Structural patterns dealing with system-wide distributed boundaries (POSA) remain completely immune to language syntax.</p>
-          </div>
+          <h2>The Dominus &amp; Graham Critique</h2>
+          <span style="font-size:0.85rem; color:var(--text-muted); font-weight:600;">Are Patterns Flaws in Languages?</span>
         </div>
       </div>
 
-      <p>
-        In 1996, Peter Norvig presented <em>Design Patterns in Dynamic Languages</em>. He analyzed each of the 23 Gang of Four patterns and proved that in Common Lisp or Dylan, 16 patterns dissolve because the language itself supports the necessary dynamism directly:
-      </p>
-
-      <div class="stage-next-card">
-        <div class="stage-next-body">
-          <span class="stage-next-eyebrow">UP NEXT · STAGE 02</span>
-          <h4 class="stage-next-title">Patterns as Missing Language Features</h4>
-          <p class="stage-next-desc">Paul Graham's thesis on programming language power and recurring syntactic boilerplate.</p>
+      <div class="pattern-spec-box">
+        <div class="spec-grid">
+          <div class="spec-row">
+            <span class="spec-label">Mark Dominus’ Central Thesis:</span>
+            <span class="spec-val">
+              <em>"Design patterns are signs of weakness in programming languages. When we see a pattern, it usually means that the language was not powerful enough to express the abstraction directly."</em> &mdash; Mark Dominus (<em>Design Patterns in Perl</em>).
+            </span>
+          </div>
+          <div class="spec-row">
+            <span class="spec-label">Paul Graham’s Corollary:</span>
+            <span class="spec-val">
+              <em>"This practice is not only common, but a recognized part of computer science: it is called this pattern or that pattern. A pattern means: I have written this same code fifty times in fifty different programs because my language won't let me abstract it into a library function."</em> &mdash; Paul Graham (<em>Revenge of the Nerds</em>).
+            </span>
+          </div>
         </div>
-        <a class="stage-next-btn" href="#stage-2">Proceed to Stage 2 →</a>
       </div>
     </section>
 
-    <!-- Stage 2 -->
-    <section class="masterclass-stage" id="stage-2" data-stage="2">
-      <div class="stage-header-top">
+    <!-- ============================================================== -->
+    <!-- 2. MINIMAL CODE: FUNCTIONAL QUICKSORT IN PYTHON                -->
+    <!-- ============================================================== -->
+    <section class="chapter" id="sec-python">
+      <div class="chapter-head">
+        <span class="chapter-num">2</span>
         <div>
-          <span class="stage-eyebrow-pill">STAGE 02 OF 05 · LANGUAGE EVOLUTION</span>
-          <h3 class="stage-title">Patterns as Missing Language Features</h3>
+          <h2>Functional Quicksort &amp; Lambdas in Python</h2>
+          <span style="font-size:0.85rem; color:var(--text-muted); font-weight:600;">Replacing the Strategy Class Hierarchy</span>
         </div>
-        <button class="stage-mastery-btn" type="button" onclick="markStageComplete(2)">Mark Stage 2 Complete</button>
       </div>
 
-      <p>
-        When an engineering community notices that thousands of developers write the exact same structural template (e.g. Iterators or Getters/Setters), language designers eventually elevate that pattern into native syntax:
-      </p>
-
-      <div class="blueprint-table-wrapper" style="margin: 1.5rem 0; overflow-x: auto;">
-        <table class="blueprint-table" style="width:100%; border-collapse: collapse; font-size: 0.9rem;">
-          <thead>
-            <tr style="border-bottom: 2px solid var(--border); text-align: left;">
-              <th style="padding: 0.75rem;">Legacy GoF Pattern</th>
-              <th style="padding: 0.75rem;">Historical Boilerplate</th>
-              <th style="padding: 0.75rem;">Elevated Language Feature</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr style="border-bottom: 1px solid var(--border);">
-              <td style="padding: 0.75rem; font-weight:700;">Iterator</td>
-              <td style="padding: 0.75rem;">Explicit <code>hasNext()</code>, <code>next()</code> classes</td>
-              <td style="padding: 0.75rem; color:#10b981;">Enhanced for-loops (<code>for-each</code>), Python generators (<code>yield</code>)</td>
-            </tr>
-            <tr style="border-bottom: 1px solid var(--border);">
-              <td style="padding: 0.75rem; font-weight:700;">Observer</td>
-              <td style="padding: 0.75rem;">Listener interfaces &amp; vector dispatch loops</td>
-              <td style="padding: 0.75rem; color:#10b981;">Reactive Streams, C# events / delegates</td>
-            </tr>
-            <tr style="border-bottom: 1px solid var(--border);">
-              <td style="padding: 0.75rem; font-weight:700;">Singleton</td>
-              <td style="padding: 0.75rem;">Double-checked locking, volatile fields</td>
-              <td style="padding: 0.75rem; color:#10b981;">Kotlin <code>object</code> keyword, Scala singleton objects</td>
-            </tr>
-            <tr>
-              <td style="padding: 0.75rem; font-weight:700;">Proxy / Decorator</td>
-              <td style="padding: 0.75rem;">Wrapper classes with 20 forwarding methods</td>
-              <td style="padding: 0.75rem; color:#10b981;">Dynamic proxies, Python decorators (<code>@functools.wraps</code>)</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-      <div class="stage-next-card">
-        <div class="stage-next-body">
-          <span class="stage-next-eyebrow">UP NEXT · STAGE 03</span>
-          <h4 class="stage-next-title">Interactive Laboratory: The Patternitis Spectrum Simulator</h4>
-          <p class="stage-next-desc">Compare Naive vs Over-Engineered Patternitis vs Modern Idiomatic code for a realistic business task.</p>
-        </div>
-        <a class="stage-next-btn" href="#stage-3">Proceed to Stage 3 →</a>
-      </div>
-    </section>
-
-    <!-- Stage 3 -->
-    <section class="masterclass-stage" id="stage-3" data-stage="3">
-      <div class="stage-header-top">
-        <div>
-          <span class="stage-eyebrow-pill">STAGE 03 OF 05 · HANDS-ON LAB</span>
-          <h3 class="stage-title">Interactive Patternitis vs. Clean Architecture Simulator</h3>
-        </div>
-        <button class="stage-mastery-btn" type="button" onclick="markStageComplete(3)">Mark Stage 3 Complete</button>
-      </div>
-
-      <div class="patternitis-card">
-        <h4 style="margin:0;color:var(--text);">Architecture Complexity Spectrum: "Calculate 15% VIP Cart Discount"</h4>
-        <p style="font-size:0.85rem;color:var(--text-muted);margin:0.25rem 0 1rem;">
-          Select an implementation style to inspect lines of code, class count, stack trace depth, and readability:
-        </p>
-
-        <div class="spectrum-controls">
-          <button class="spectrum-btn" id="btnSpecNaive" onclick="setSpectrum('naive')">1. Primitive / Naive Code</button>
-          <button class="spectrum-btn" id="btnSpecPatternitis" onclick="setSpectrum('patternitis')">2. "Patternitis" (Over-Engineered)</button>
-          <button class="spectrum-btn active" id="btnSpecIdiomatic" onclick="setSpectrum('idiomatic')">3. Modern Idiomatic (Clean Java 21)</button>
-        </div>
-
-        <div class="spectrum-output" id="spectrumOutput">Loading spectrum analysis...</div>
-      </div>
-
-      <div class="stage-next-card">
-        <div class="stage-next-body">
-          <span class="stage-next-eyebrow">UP NEXT · STAGE 04</span>
-          <h4 class="stage-next-title">Modern Language Replacements in Action</h4>
-          <p class="stage-next-desc">Inspect production-grade Java 21 and Kotlin patterns that replace legacy GoF structures.</p>
-        </div>
-        <a class="stage-next-btn" href="#stage-4">Proceed to Stage 4 →</a>
-      </div>
-    </section>
-
-    <!-- Stage 4 -->
-    <section class="masterclass-stage" id="stage-4" data-stage="4">
-      <div class="stage-header-top">
-        <div>
-          <span class="stage-eyebrow-pill">STAGE 04 OF 05 · PRODUCTION ARCHITECTURE</span>
-          <h3 class="stage-title">Modern Language Replacements in Action</h3>
-        </div>
-        <button class="stage-mastery-btn" type="button" onclick="markStageComplete(4)">Mark Stage 4 Complete</button>
-      </div>
-
-      <p>Modern architectural standard: writing expressive, type-safe software without needless boilerplate classes:</p>
-
-      <div class="code-window" style="margin: 1.5rem 0;">
-        <div class="code-window-bar">
-          <div class="code-dots"><span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span></div>
-          <span class="code-file">ModernReplacements.kt · Kotlin &amp; Modern FP Replacements</span>
-          <button class="code-copy-btn" onclick="copySnippet('codeModernRepl')">Copy Code</button>
-        </div>
-        <pre class="code-pre" id="codeModernRepl"><code><span class="k">package</span> de.frankfurt.uas.posa.evolution
-
-<span class="c">// 1. SINGLETON: Zero double-checked locking boilerplate</span>
-<span class="k">object</span> <span class="nc">AppConfig</span> {
-    <span class="k">val</span> environment = <span class="s">"production"</span>
-    <span class="k">fun</span> <span class="nf">isDev</span>() = environment == <span class="s">"dev"</span>
-}
-
-<span class="c">// 2. STRATEGY: Pass function literal directly</span>
-<span class="k">fun</span> <span class="nf">calculateDiscount</span>(price: <span class="nc">Double</span>, strategy: (<span class="nc">Double</span>) -&gt; <span class="nc">Double</span>): <span class="nc">Double</span> {
-    <span class="k">return</span> strategy(price)
-}
-
-<span class="c">// 3. BUILDER: Named parameters + default values completely kill the Builder pattern</span>
-<span class="k">data class</span> <span class="nc">HttpRequest</span>(
-    <span class="k">val</span> url: <span class="nc">String</span>,
-    <span class="k">val</span> method: <span class="nc">String</span> = <span class="s">"GET"</span>,
-    <span class="k">val</span> timeoutMs: <span class="nc">Int</span> = <span class="m">5000</span>,
-    <span class="k">val</span> headers: <span class="nc">Map</span>&lt;<span class="nc">String</span>, <span class="nc">String</span>&gt; = emptyMap()
-)
-
-<span class="k">fun</span> <span class="nf">main</span>() {
-    <span class="c">// Clean caller without HttpRequestBuilder</span>
-    <span class="k">val</span> req = <span class="nc">HttpRequest</span>(
-        url = <span class="s">"https://api.frankfurt-uas.de/grades"</span>,
-        timeoutMs = <span class="m">10000</span>
-    )
-}</code></pre>
-      </div>
-
-      <div class="stage-next-card">
-        <div class="stage-next-body">
-          <span class="stage-next-eyebrow">UP NEXT · STAGE 05</span>
-          <h4 class="stage-next-title">Frankfurt UAS Exam Drills &amp; Self-Study Traps</h4>
-          <p class="stage-next-desc">Test your understanding with Prof. Dr. Jörg Schäfer's official exam questions.</p>
-        </div>
-        <a class="stage-next-btn" href="#stage-5">Proceed to Stage 5 →</a>
-      </div>
-    </section>
-
-    <!-- Stage 5 -->
-    <section class="masterclass-stage" id="stage-5" data-stage="5">
-      <div class="stage-header-top">
-        <div>
-          <span class="stage-eyebrow-pill">STAGE 05 OF 05 · ACADEMIC VERIFICATION</span>
-          <h3 class="stage-title">Frankfurt UAS Examination Drills (Prof. Dr. Jörg Schäfer)</h3>
-        </div>
-        <button class="stage-mastery-btn" type="button" onclick="markStageComplete(5)">Mark Stage 5 Complete</button>
-      </div>
-
-      <div class="drill-list">
-        <details class="drill-item" open>
-          <summary>
-            <span class="drill-tag">Exam Drill 1 · Fundamental Defense</span>
-            <span class="drill-q">Does the existence of modern functional programming language features render the study of design patterns obsolete?</span>
-            <span class="drill-reveal-hint"></span>
-          </summary>
-          <div class="drill-a">
-            <p><strong>Official Model Answer:</strong></p>
-            <p><strong>No, for three foundational reasons:</strong></p>
-            <ol>
-              <li><strong>Architectural Shared Vocabulary:</strong> Even if a Strategy is implemented with a lambda or closure, saying <em>“We use a Strategy pattern for tax calculation”</em> communicates architectural intent, extensibility, and trade-offs instantly across teams.</li>
-              <li><strong>Forces Remain the Same:</strong> Macro-architectural patterns (POSA Layers, Broker, Blackboard, Pipes &amp; Filters) deal with distributed networks, concurrency, and fault domains, which no language syntax can automatically resolve.</li>
-              <li><strong>Engineering Heuristics:</strong> Patterns teach foundational design principles: separation of concerns, high cohesion, loose coupling, and dependency inversion.</li>
-            </ol>
+      <details class="headfirst-card" open>
+        <summary class="headfirst-summary">
+          <div class="headfirst-title">
+            <span>🐍 Python Quicksort with Comparison Lambdas (Exam Task)</span>
           </div>
-        </details>
+          <span class="headfirst-badge">&lt; 15 Lines</span>
+        </summary>
+        <div class="headfirst-body">
+          <pre style="background:var(--code-bg); padding:1rem; border-radius:6px; font-family:var(--font-mono); font-size:0.88rem; line-height:1.5; overflow-x:auto;"><code># Functional Quicksort taking array and comparison predicate
+def quicksort(arr, comp):
+    if len(arr) &lt;= 1:
+        return arr
+    pivot = arr[0]
+    # Partitioning using list comprehensions and comparison lambda
+    left = [x for x in arr[1:] if comp(x, pivot)]
+    right = [x for x in arr[1:] if not comp(x, pivot)]
+    return quicksort(left, comp) + [pivot] + quicksort(right, comp)
 
-        <details class="drill-item">
-          <summary>
-            <span class="drill-tag">Exam Drill 2 · Norvig's Study</span>
-            <span class="drill-q">What was Peter Norvig’s main finding regarding the Gang of Four patterns in dynamic languages?</span>
-            <span class="drill-reveal-hint"></span>
-          </summary>
-          <div class="drill-a">
-            <p><strong>Official Model Answer:</strong></p>
-            <p>
-              In 1996, Peter Norvig demonstrated that <strong>16 out of the 23 GoF design patterns</strong> are either completely invisible or trivial language expressions in languages with first-class functions, macros, and dynamic dispatch (such as Common Lisp or modern dynamic/functional languages). For instance, Strategy and Command dissolve into passing first-class functions or closures directly.
-            </p>
-          </div>
-        </details>
+# Strategy Lambdas (No class hierarchies needed!)
+comp1 = lambda a, b: a &lt; b  # Ascending sort
+comp2 = lambda a, b: a &gt; b  # Descending sort
 
-        <details class="drill-item">
-          <summary>
-            <span class="drill-tag">Exam Drill 3 · Software Pathology</span>
-            <span class="drill-q">What is "Patternitis" and how does it harm an enterprise software codebase?</span>
-            <span class="drill-reveal-hint"></span>
-          </summary>
-          <div class="drill-a">
-            <p><strong>Official Model Answer:</strong></p>
-            <p>
-              <strong>Patternitis</strong> is the premature, compulsive over-use of design patterns where simpler, direct solutions are superior. It introduces excessive indirection (e.g. creating factories of factories, visitor double-dispatch, and decorator chains for trivial operations), destroying cognitive readability, inflating stack traces, and slowing down future refactoring.
-            </p>
-          </div>
-        </details>
+# Execution
+data = [5, 2, 9, 1, 7, 6, 3]
+print(quicksort(data, comp1))  # [1, 2, 3, 5, 6, 7, 9]
+print(quicksort(data, comp2))  # [9, 7, 6, 5, 3, 2, 1]</code></pre>
+        </div>
+      </details>
+    </section>
+
+    <!-- ============================================================== -->
+    <!-- 3. THE 16/23 NORVIG ABSORPTION SPECTRUM                        -->
+    <!-- ============================================================== -->
+    <section class="chapter" id="sec-norvig">
+      <div class="chapter-head">
+        <span class="chapter-num">3</span>
+        <div>
+          <h2>Peter Norvig’s 16/23 Absorption Matrix</h2>
+          <span style="font-size:0.85rem; color:var(--text-muted); font-weight:600;">How Patterns Dissolve into Modern Languages</span>
+        </div>
+      </div>
+
+      <div class="guide-card">
+        <div class="guide-card-header">
+          <span class="rule-badge">LANGUAGE EVOLUTION</span>
+          <span>16 GoF Patterns Absorbed by Modern Primitives</span>
+        </div>
+        <div style="overflow-x:auto;">
+          <table style="width:100%; border-collapse:collapse; font-size:0.88rem;">
+            <thead>
+              <tr style="border-bottom:2px solid var(--border); text-align:left;">
+                <th style="padding:0.6rem;">Pattern</th>
+                <th style="padding:0.6rem;">Status in Dynamic / Functional Languages</th>
+                <th style="padding:0.6rem;">Language Feature Replacing It</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr style="border-bottom:1px solid var(--border);">
+                <td style="padding:0.6rem;"><strong>Strategy</strong></td>
+                <td style="padding:0.6rem;">Invisible / Replaced</td>
+                <td style="padding:0.6rem;">First-class functions, lambdas, callable objects</td>
+              </tr>
+              <tr style="border-bottom:1px solid var(--border);">
+                <td style="padding:0.6rem;"><strong>Command</strong></td>
+                <td style="padding:0.6rem;">Invisible / Replaced</td>
+                <td style="padding:0.6rem;">Closures, partial application, lambda expressions</td>
+              </tr>
+              <tr style="border-bottom:1px solid var(--border);">
+                <td style="padding:0.6rem;"><strong>Iterator</strong></td>
+                <td style="padding:0.6rem;">Native Language Construct</td>
+                <td style="padding:0.6rem;">Generators (<code>yield</code>), list comprehensions, <code>for..in</code></td>
+              </tr>
+              <tr style="border-bottom:1px solid var(--border);">
+                <td style="padding:0.6rem;"><strong>Proxy</strong></td>
+                <td style="padding:0.6rem;">Drastically Simplified</td>
+                <td style="padding:0.6rem;">Dynamic method dispatch (<code>method_missing</code>, JS <code>Proxy</code>)</td>
+              </tr>
+              <tr>
+                <td style="padding:0.6rem;"><strong>Visitor</strong></td>
+                <td style="padding:0.6rem;">Invisible / Replaced</td>
+                <td style="padding:0.6rem;">Pattern matching, multi-methods / multiple dispatch</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </section>
 
-    <!-- Footer Navigation -->
-    <footer class="page-footer" style="margin-top: 4rem; padding-top: 2rem; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
-      <a class="nav-prev" href="unit-14-testing.html" style="font-weight: 700; color: var(--accent); text-decoration: none;">← Previous: Unit 14 · Testing Patterns</a>
-      <a class="nav-next" href="unit-16-genai.html" style="font-weight: 700; color: var(--accent); text-decoration: none;">Next: Unit 16 · Architectural Patterns &amp; GenAI →</a>
-    </footer>
+    <!-- ============================================================== -->
+    <!-- 4. CORE EXAM PRACTICE & DIRECT MODEL ANSWERS                   -->
+    <!-- ============================================================== -->
+    <section class="chapter" id="sec-drills">
+      <div class="chapter-head">
+        <span class="chapter-num">4</span>
+        <div>
+          <h2>Core Exam Practice &amp; Model Solutions</h2>
+          <span style="font-size:0.85rem; color:var(--text-muted); font-weight:600;">Direct Question &rarr; Answer Format</span>
+        </div>
+      </div>
+
+      <!-- QA 1: Dominus Quote -->
+      <div class="qa-block">
+        <div class="qa-q">
+          Question 1: Mark Dominus’ Critique of Design Patterns
+          <span class="pts-badge">4 Points</span>
+          <p style="font-size:0.92rem; font-weight:400; color:var(--text-muted); margin-top:0.5rem;">
+            Mark Dominus stated: <em>"Design patterns are signs of weakness in programming languages."</em> Explain this statement with a concrete example comparing Java and Python!
+          </p>
+        </div>
+        <div class="qa-a">
+          <span class="ans-label">Model Answer:</span>
+          <p>
+            Dominus argues that when a programming language lacks sufficient abstraction mechanisms, developers must repeatedly write manual boilerplate patterns to achieve basic flexibility:
+          </p>
+          <ul>
+            <li><strong>Classic Java / C++:</strong> To customize a sorting algorithm, the language forces the creation of an interface (<code>Comparator</code>) and concrete implementation classes (the <em>Strategy Pattern</em>) because methods cannot exist outside of classes.</li>
+            <li><strong>Python / Functional Languages:</strong> Functions are first-class citizens. You pass a lambda or function directly to <code>sort(key=...)</code>. The entire Strategy pattern hierarchy is replaced by a built-in language feature. Thus, the pattern existed solely to work around Java's lack of first-class functions.</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- QA 2: Python Quicksort -->
+      <div class="qa-block">
+        <div class="qa-q">
+          Question 2: Python Quicksort with Lambdas
+          <span class="pts-badge">8 Points</span>
+          <p style="font-size:0.92rem; font-weight:400; color:var(--text-muted); margin-top:0.5rem;">
+            Given the Python quicksort signature <code>def quicksort(arr, comp):</code>, define the quicksort function using list comprehensions and define the comparison lambdas <code>comp1</code> (for ascending order) and <code>comp2</code> (for descending order)!
+          </p>
+        </div>
+        <div class="qa-a">
+          <span class="ans-label">Model Answer:</span>
+          <pre style="background:var(--code-bg); padding:0.75rem; border-radius:4px; font-family:var(--font-mono); font-size:0.85rem;"><code>def quicksort(arr, comp):
+    if len(arr) &lt;= 1:
+        return arr
+    pivot = arr[0]
+    left = [x for x in arr[1:] if comp(x, pivot)]
+    right = [x for x in arr[1:] if not comp(x, pivot)]
+    return quicksort(left, comp) + [pivot] + quicksort(right, comp)
+
+# Ascending comparison (elements less than pivot go left)
+comp1 = lambda a, b: a &lt; b
+
+# Descending comparison (elements greater than pivot go left)
+comp2 = lambda a, b: a &gt; b</code></pre>
+        </div>
+      </div>
+    </section>
+
   </main>
-</div>
-
-<script src="assets/site.js?v=2026.15" defer></script>
-<script>
-// Reading progress bar
-window.addEventListener('scroll', function() {
-  var h = document.documentElement, b = document.body;
-  var st = 'scrollTop', sh = 'scrollHeight';
-  var percent = (h[st]||b[st]) / ((h[sh]||b[sh]) - h.clientHeight) * 100;
-  var bar = document.getElementById('readingProgressBar');
-  if (bar) bar.style.width = percent + '%';
-});
-
-// Blueprint Pillar & Layout Controls
-var _blueprintCollapsed = false;
-var _lastInlineCollapseTime = 0;
-
-function selectPillar(num) {
-  var tabs = document.querySelectorAll('.blueprint-tab');
-  var panels = document.querySelectorAll('.pillar-panel');
-  tabs.forEach(function(t) {
-    var match = t.getAttribute('data-pillar') == num;
-    t.classList.toggle('active', match);
-    t.setAttribute('aria-selected', match ? 'true' : 'false');
-  });
-  panels.forEach(function(p) {
-    p.classList.toggle('active', p.getAttribute('data-pillar') == num);
-  });
-}
-
-function setBlueprintView(mode) {
-  var suite = document.getElementById('blueprintSuite');
-  var btnExplorer = document.getElementById('btnViewExplorer');
-  var btnMatrix = document.getElementById('btnViewMatrix');
-  if (!suite) return;
-
-  if (mode === 'matrix') {
-    suite.classList.add('view-matrix');
-    if (btnMatrix) btnMatrix.classList.add('active');
-    if (btnExplorer) btnExplorer.classList.remove('active');
-    document.querySelectorAll('.pillar-panel').forEach(function(p) { p.classList.add('active'); });
-  } else {
-    suite.classList.remove('view-matrix');
-    if (btnExplorer) btnExplorer.classList.add('active');
-    if (btnMatrix) btnMatrix.classList.remove('active');
-    var activeTab = document.querySelector('.blueprint-tab.active');
-    var pNum = activeTab ? activeTab.getAttribute('data-pillar') : 1;
-    selectPillar(pNum);
-  }
-}
-
-function toggleBlueprintCollapse() {
-  var now = Date.now();
-  if (now - _lastInlineCollapseTime < 250) return;
-  _lastInlineCollapseTime = now;
-
-  _blueprintCollapsed = !_blueprintCollapsed;
-  var body = document.getElementById('blueprintSuiteBody');
-  var hint = document.getElementById('blueprintCollapsedHint');
-  var label = document.getElementById('collapseLabel');
-
-  if (_blueprintCollapsed) {
-    if (body) body.style.display = 'none';
-    if (hint) hint.style.display = 'flex';
-    if (label) label.textContent = '▼ Expand Rubric';
-  } else {
-    if (body) body.style.display = '';
-    if (hint) hint.style.display = 'none';
-    if (label) label.textContent = '▲ Collapse Rubric';
-  }
-}
-
-function copyBlueprintRubric() {
-  var md = `# Unit 15: Pattern Criticism & Language Evolution - 8-Pillar Architecture Rubric
-## Instructor: Prof. Dr. Jörg Schäfer · Frankfurt University of Applied Sciences
-
-### Pillar 1: Epistemic Skepticism
-- Paul Graham: Patterns are signs of language deficiencies; programs should reflect only domain requirements.
-
-### Pillar 2: Norvig Spectrum
-- 16 of the 23 GoF patterns dissolve in dynamic/functional languages with first-class functions and macros.
-- 7 architectural patterns (Composite, Observer, Adapter, Facade, Bridge) survive because systemic relationships persist.
-
-### Pillar 3: Dynamic Evolution Trace
-- 1994 C++ interface boilerplate -> Java 8 lambdas -> Java 21 sealed pattern matching.
-
-### Pillar 4: Trade-Offs & Indirection Debt
-- "Patternitis" incurs heavy cognitive tax and deep debugging stack traces.
-
-### Pillar 5: Cross-Paradigm Ecosystem
-- Strategy -> Higher-Order Functions; Visitor -> Pattern Matching on Sealed Types; Decorator -> Function Composition.
-
-### Pillar 6: Pathologies
-- Maslow's Hammer, Cargo Cult Architecture, and Resume-Driven Development.
-
-### Pillar 7: Modern Java 21 Standard
-- Sealed interfaces, record patterns, and exhaustive switch statements.
-
-### Pillar 8: Frankfurt UAS Exam Traps
-- Modern FP does NOT make POSA architecture obsolete (macro distribution & vocabulary survive).
-- Paul Graham's critique targets missing syntactic language features.
-`;
-
-  function updateLabelSuccess() {
-    var btn = document.querySelector('.blueprint-suite-actions button[onclick="copyBlueprintRubric()"]');
-    if (btn) {
-      var orig = btn.innerHTML;
-      btn.innerHTML = 'Copied to Clipboard! ✓';
-      setTimeout(function() { btn.innerHTML = orig; }, 2000);
-    }
-  }
-
-  if (navigator.clipboard && navigator.clipboard.writeText) {
-    navigator.clipboard.writeText(md).then(updateLabelSuccess);
-  } else {
-    var ta = document.createElement('textarea');
-    ta.value = md;
-    document.body.appendChild(ta);
-    ta.select();
-    try {
-      document.execCommand('copy');
-      updateLabelSuccess();
-    } catch (e) {
-      alert("Please press Ctrl+C to copy rubric");
-    }
-    document.body.removeChild(ta);
-  }
-}
-
-function copySnippet(elementId) {
-  var el = document.getElementById(elementId);
-  if (!el) return;
-  var text = el.innerText || el.textContent;
-  if (navigator.clipboard && navigator.clipboard.writeText) {
-    navigator.clipboard.writeText(text).then(function() {
-      if (typeof window.showToast === "function") window.showToast("Code snippet copied to clipboard!");
-    });
-  }
-}
-
-function markStageComplete(stageNum) {
-  var btn = event.target;
-  if (btn) {
-    btn.textContent = "Completed ✓";
-    btn.style.background = "#e11d48";
-    btn.style.color = "#fff";
-  }
-  var pill = document.querySelector('.stage-nav-pill[data-stage="' + stageNum + '"]');
-  if (pill) {
-    pill.style.borderColor = "#e11d48";
-  }
-  if (typeof window.showToast === "function") window.showToast("Stage " + stageNum + " marked complete! Great progress.");
-}
-
-// Spectrum Simulator
-function setSpectrum(mode) {
-  var out = document.getElementById('spectrumOutput');
-  var btns = ['btnSpecNaive', 'btnSpecPatternitis', 'btnSpecIdiomatic'];
-  btns.forEach(function(b) {
-    var el = document.getElementById(b);
-    if (el) el.classList.remove('active');
-  });
-
-  if (mode === 'naive') {
-    document.getElementById('btnSpecNaive').classList.add('active');
-    out.textContent = `// 1. PRIMITIVE / NAIVE IMPLEMENTATION
-public double calculateDiscount(double price, String customerType) {
-    if ("VIP".equals(customerType)) return price * 0.85;
-    return price;
-}
-
-[METRICS]:
-• Files/Classes: 1
-• Lines of Code: 4
-• Cognitive Load: Low
-• Fragility: High (violates Open-Closed Principle if adding 20 customer tiers)`;
-  } else if (mode === 'patternitis') {
-    document.getElementById('btnSpecPatternitis').classList.add('active');
-    out.textContent = `// 2. OVER-ENGINEERED "PATTERNITIS"
-interface DiscountStrategyFactoryProvider { ... }
-class VipDiscountCalculationStrategyVisitorImpl implements CartNodeVisitor { ... }
-class AbstractDiscountStrategyProxyFactory extends AbstractFactory { ... }
-// Requires 7 classes, 3 interfaces, 2 reflection proxies, and 45 lines of boilerplate!
-
-[METRICS]:
-• Files/Classes: 9
-• Lines of Code: 120
-• Stack Trace Depth: 14 hops
-• Cognitive Load: Extreme ("Where is the actual 15% discount math?!")
-• Fragility: Severe (refactoring requires touching 9 files)`;
-  } else if (mode === 'idiomatic') {
-    document.getElementById('btnSpecIdiomatic').classList.add('active');
-    out.textContent = `// 3. MODERN IDIOMATIC CLEAN STANDARD (Java 21 / Kotlin)
-// Using pure first-class function: Function<Double, Double>
-public record Cart(double subtotal, Customer customer) {
-    public double applyDiscount(UnaryOperator<Double> discountRule) {
-        return discountRule.apply(subtotal);
-    }
-}
-// Caller passes lambda: cart.applyDiscount(price -> price * 0.85);
-
-[METRICS]:
-• Files/Classes: 1 (Record)
-• Lines of Code: 6
-• Stack Trace Depth: 1 hop
-• Cognitive Load: Minimal
-• Refactoring Safety: Maximum (100% OCP compliant without class explosion)`;
-  }
-}
-
-// Initial spectrum render
-window.addEventListener('DOMContentLoaded', function() {
-  setSpectrum('idiomatic');
-});
-
-window.selectPillar = selectPillar;
-window.setBlueprintView = setBlueprintView;
-window.toggleBlueprintCollapse = toggleBlueprintCollapse;
-window.copyBlueprintRubric = copyBlueprintRubric;
-window.copySnippet = copySnippet;
-window.markStageComplete = markStageComplete;
-window.setSpectrum = setSpectrum;
-</script>
 </body>
 </html>
