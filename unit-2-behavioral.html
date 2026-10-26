@@ -60,6 +60,88 @@
     color: #ef4444;
     border-color: rgba(239, 68, 68, 0.25);
   }
+  /* Collapsible Head First Module */
+  .headfirst-card {
+    background: var(--bg-raised);
+    border: 1px solid var(--border);
+    border-left: 4px solid #6366f1;
+    border-radius: var(--radius-md);
+    margin-bottom: 2rem;
+    overflow: hidden;
+  }
+  .headfirst-summary {
+    list-style: none;
+    cursor: pointer;
+    user-select: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.15rem 1.4rem;
+    background: var(--bg-subtle);
+    border-bottom: 1px solid transparent;
+    transition: background 0.15s ease;
+  }
+  .headfirst-summary:hover {
+    background: var(--code-bg);
+  }
+  .headfirst-summary::-webkit-details-marker {
+    display: none;
+  }
+  .headfirst-card[open] .headfirst-summary {
+    border-bottom: 1px solid var(--border);
+  }
+  .headfirst-title {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--text);
+  }
+  .headfirst-badge {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #6366f1;
+    background: rgba(99, 102, 241, 0.12);
+    border: 1px solid rgba(99, 102, 241, 0.25);
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    font-family: var(--font-mono);
+  }
+  .headfirst-toggle {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    font-family: var(--font-mono);
+  }
+  .headfirst-chevron {
+    width: 16px;
+    height: 16px;
+    transition: transform 0.2s ease;
+    stroke: currentColor;
+  }
+  .headfirst-card[open] .headfirst-chevron {
+    transform: rotate(180deg);
+  }
+  .headfirst-card[open] .toggle-text-open {
+    display: inline;
+  }
+  .headfirst-card[open] .toggle-text-closed {
+    display: none;
+  }
+  .headfirst-card:not([open]) .toggle-text-open {
+    display: none;
+  }
+  .headfirst-card:not([open]) .toggle-text-closed {
+    display: inline;
+  }
+  .headfirst-body {
+    padding: 1.4rem;
+    background: var(--bg-raised);
+  }
   .uml-diagram-box {
     background: var(--code-bg);
     border: 1px solid var(--border);
@@ -340,37 +422,54 @@
         </div>
       </div>
 
-      <!-- Book Narrative from Exam Notes -->
-      <div class="guide-card">
-        <div class="guide-card-header">
-          <span>☕ Book Example: Preparing Beverages (Head First Chapter 8)</span>
-        </div>
-        <p style="margin:0 0 1rem; font-size:0.92rem; color:var(--text); line-height:1.6;">
-          In <em>&ldquo;Head First Design Patterns,&rdquo;</em> Chapter 8 delves into the <strong>Template Method Pattern</strong> through the example of preparing beverages like tea and coffee. This pattern defines the skeleton of an algorithm in a method, allowing subclasses to override specific steps without changing the algorithm's overall structure.
-        </p>
-        <div style="background:var(--bg-subtle); padding:1rem 1.25rem; border-radius:var(--radius-sm); border-left:3px solid var(--accent); margin-bottom:1rem;">
-          <strong style="color:var(--text); font-size:0.92rem; display:block; margin-bottom:0.5rem; text-transform:uppercase; letter-spacing:0.04em;">Example: Preparing Beverages</strong>
-          <p style="margin:0 0 0.5rem; font-size:0.9rem; color:var(--text-muted); line-height:1.5;">
-            The process of making tea and coffee shares a common sequence of steps:
-          </p>
-          <ol style="margin:0; padding-left:1.35rem; font-size:0.9rem; color:var(--text); line-height:1.65;">
-            <li><strong>Boil water.</strong></li>
-            <li><strong>Brew or steep the beverage.</strong></li>
-            <li><strong>Pour into a cup.</strong></li>
-            <li><strong>Add condiments.</strong></li>
-          </ol>
-        </div>
-        <p style="margin:0; font-size:0.92rem; color:var(--text-muted); line-height:1.6;">
-          While the overall process is similar, the specifics of brewing and adding condiments differ between tea and coffee. The Template Method Pattern captures this shared structure and allows subclasses to define the differing steps.
-        </p>
-      </div>
+      <!-- Head First Section (Collapsible) -->
+      <details class="headfirst-card" id="headfirst-template" open>
+        <summary class="headfirst-summary">
+          <div class="headfirst-title">
+            <span>📖 Head First: Preparing Beverages (Template Method)</span>
+            <span class="headfirst-badge">Head First Chapter 8</span>
+          </div>
+          <div class="headfirst-toggle">
+            <span class="toggle-text-open">Collapse</span>
+            <span class="toggle-text-closed">Expand</span>
+            <svg class="headfirst-chevron" viewBox="0 0 24 24" fill="none" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          </div>
+        </summary>
 
-      <!-- Verbatim Java Code from Exam Notes -->
-      <div class="guide-card">
-        <div class="guide-card-header">
-          <span>💻 Verbatim Java Implementation (from Prof. Schäfer's Exam Notes)</span>
-        </div>
-        <pre><code class="language-java">public abstract class CaffeineBeverage {
+        <div class="headfirst-body">
+          <!-- Screenshot Notes: Beverage Sequence Narrative -->
+          <div style="margin-bottom:1.5rem;">
+            <p style="margin:0 0 1rem; font-size:0.92rem; color:var(--text); line-height:1.6;">
+              In <em>&ldquo;Head First Design Patterns,&rdquo;</em> Chapter 8 delves into the <strong>Template Method Pattern</strong> through the example of preparing beverages like tea and coffee. This pattern defines the skeleton of an algorithm in a method, allowing subclasses to override specific steps without changing the algorithm's overall structure.
+            </p>
+            <div style="background:var(--bg-subtle); padding:1rem 1.25rem; border-radius:var(--radius-sm); border-left:3px solid var(--accent); margin-bottom:1rem;">
+              <strong style="color:var(--text); font-size:0.92rem; display:block; margin-bottom:0.5rem; text-transform:uppercase; letter-spacing:0.04em;">Example: Preparing Beverages</strong>
+              <p style="margin:0 0 0.5rem; font-size:0.9rem; color:var(--text-muted); line-height:1.5;">
+                The process of making tea and coffee shares a common sequence of steps:
+              </p>
+              <ol style="margin:0; padding-left:1.35rem; font-size:0.9rem; color:var(--text); line-height:1.65;">
+                <li><strong>Boil water.</strong></li>
+                <li><strong>Brew or steep the beverage.</strong></li>
+                <li><strong>Pour into a cup.</strong></li>
+                <li><strong>Add condiments.</strong></li>
+              </ol>
+            </div>
+            <p style="margin:0; font-size:0.92rem; color:var(--text-muted); line-height:1.6;">
+              While the overall process is similar, the specifics of brewing and adding condiments differ between tea and coffee. The Template Method Pattern captures this shared structure and allows subclasses to define the differing steps.
+            </p>
+          </div>
+
+          <!-- Verbatim Java Code with Insightful Comments -->
+          <div>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem;">
+              <span style="font-weight:700; font-size:0.9rem; color:var(--text);">💻 Java Code Implementation (Annotated from Exam Notes)</span>
+              <span style="font-size:0.75rem; color:var(--text-muted); font-family:var(--font-mono);">CaffeineBeverage.java</span>
+            </div>
+            <pre><code class="language-java">// 1. Abstract Template Superclass defining the invariant skeleton of the algorithm
+public abstract class CaffeineBeverage {
+
+    // The Template Method: Marked 'final' so subclasses CANNOT override the execution sequence!
+    // This enforces the invariant algorithm skeleton (Hollywood Principle: superclass calls subclass).
     final void prepareRecipe() {
         boilWater();
         brew();
@@ -378,9 +477,11 @@
         addCondiments();
     }
 
+    // Primitive operations: abstract methods deferred to subclasses for specific beverage variations
     abstract void brew();
     abstract void addCondiments();
 
+    // Invariant operations: concrete steps shared identically across all caffeine beverages
     void boilWater() {
         System.out.println("Boiling water");
     }
@@ -390,6 +491,7 @@
     }
 }
 
+// 2. Concrete Subclass: Implements the primitive operations specific to Tea
 public class Tea extends CaffeineBeverage {
     public void brew() {
         System.out.println("Steeping the tea");
@@ -400,6 +502,7 @@ public class Tea extends CaffeineBeverage {
     }
 }
 
+// 3. Concrete Subclass: Implements the primitive operations specific to Coffee
 public class Coffee extends CaffeineBeverage {
     public void brew() {
         System.out.println("Dripping Coffee through filter");
@@ -410,26 +513,29 @@ public class Coffee extends CaffeineBeverage {
     }
 }
 
+// 4. Test Drive Client: Demonstrates polymorphism & Inversion of Control
 public class BeverageTestDrive {
     public static void main(String[] args) {
         Tea tea = new Tea();
         Coffee coffee = new Coffee();
 
         System.out.println("\nMaking tea...");
-        tea.prepareRecipe();
+        tea.prepareRecipe(); // prepareRecipe() in superclass calls Tea's brew() & addCondiments()
 
         System.out.println("\nMaking coffee...");
-        coffee.prepareRecipe();
+        coffee.prepareRecipe(); // prepareRecipe() in superclass calls Coffee's brew() & addCondiments()
     }
 }
 
-// hooks can also be used for enhancements
-
+// 5. Hook Variation: Hooks provide optional extension points without altering the skeleton
 public abstract class CaffeineBeverageWithHook {
+
+    // Template method calling a conditional hook
     final void prepareRecipe() {
         boilWater();
         brew();
         pourInCup();
+        // The hook method customerWantsCondiments() controls whether condiments are added
         if (customerWantsCondiments()) {
             addCondiments();
         }
@@ -446,11 +552,15 @@ public abstract class CaffeineBeverageWithHook {
         System.out.println("Pouring into cup");
     }
 
+    // Hook operation: provides a default implementation (returns true).
+    // Subclasses can optionally override this hook (e.g. prompt customer) without breaking OCP.
     boolean customerWantsCondiments() {
         return true;
     }
 }</code></pre>
-      </div>
+          </div>
+        </div>
+      </details>
 
       <!-- 3 Exam Rules Tested by Prof. Schäfer -->
       <div class="guide-card">
@@ -697,18 +807,37 @@ public class Duck {
         </div>
       </div>
 
-      <!-- Verbatim Code Implementation from Exam Notes -->
-      <div class="guide-card">
-        <div class="guide-card-header">
-          <span>💻 Verbatim Java Implementation (from Prof. Schäfer's Exam Notes)</span>
-        </div>
-        <pre><code class="language-java">// 1. Command Interface declares execute and undo methods
+      <!-- Head First Section (Collapsible) -->
+      <details class="headfirst-card" id="headfirst-command" open>
+        <summary class="headfirst-summary">
+          <div class="headfirst-title">
+            <span>📖 Head First: Remote Control &amp; Macro Commands</span>
+            <span class="headfirst-badge">Head First Chapter 6</span>
+          </div>
+          <div class="headfirst-toggle">
+            <span class="toggle-text-open">Collapse</span>
+            <span class="toggle-text-closed">Expand</span>
+            <svg class="headfirst-chevron" viewBox="0 0 24 24" fill="none" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          </div>
+        </summary>
+
+        <div class="headfirst-body">
+          <p style="margin:0 0 1rem; font-size:0.92rem; color:var(--text); line-height:1.6;">
+            In <em>&ldquo;Head First Design Patterns,&rdquo;</em> Chapter 6 models the <strong>Command Pattern</strong> using a multi-slot programmable home automation remote control. The remote invokes commands without knowing what receiver (Light, Ceiling Fan, Stereo) executes the action or what device-specific APIs are called.
+          </p>
+
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem;">
+            <span style="font-weight:700; font-size:0.9rem; color:var(--text);">💻 Java Code Implementation (Annotated from Exam Notes)</span>
+            <span style="font-size:0.75rem; color:var(--text-muted); font-family:var(--font-mono);">RemoteControl.java</span>
+          </div>
+          <pre><code class="language-java">// 1. Command Interface: Declares common execution protocol for all actions
 public interface Command {
     void execute();
     void undo();
 }
 
 // ----------------------- Receiver Classes -----------------------
+// A simple Light receiver with on/off operations
 public class Light {
     private String location;
     public Light(String location) { this.location = location; }
@@ -716,6 +845,7 @@ public class Light {
     public void off() { System.out.println(location + " light is off"); }
 }
 
+// A stateful CeilingFan receiver maintaining multi-level speed constants
 public class CeilingFan {
     public static final int HIGH = 3, MEDIUM = 2, LOW = 1, OFF = 0;
     private String location;
@@ -733,26 +863,28 @@ public class CeilingFan {
 }
 
 // ----------------------- Concrete Commands -----------------------
+// Encapsulates turning a Light on, binding receiver via Constructor Dependency Injection
 public class LightOnCommand implements Command {
-    private Light light;
+    private Light light; // Injected Receiver
     public LightOnCommand(Light light) { this.light = light; }
     public void execute() { light.on(); }
     public void undo()    { light.off(); }
 }
 
-// Stateful Undo: Records prevSpeed before mutation to restore exact state
+// Stateful Undo: Records prevSpeed before mutating state to restore exact setting
 public class CeilingFanHighCommand implements Command {
     private CeilingFan ceilingFan;
-    private int prevSpeed;
+    private int prevSpeed; // Stored previous state for reversible undo
 
     public CeilingFanHighCommand(CeilingFan ceilingFan) {
         this.ceilingFan = ceilingFan;
     }
     public void execute() {
-        prevSpeed = ceilingFan.getSpeed();
+        prevSpeed = ceilingFan.getSpeed(); // Capture state BEFORE execution
         ceilingFan.high();
     }
     public void undo() {
+        // Restore prior state faithfully
         if (prevSpeed == CeilingFan.HIGH)        ceilingFan.high();
         else if (prevSpeed == CeilingFan.MEDIUM) ceilingFan.medium();
         else if (prevSpeed == CeilingFan.LOW)    ceilingFan.low();
@@ -760,14 +892,17 @@ public class CeilingFanHighCommand implements Command {
     }
 }
 
-// MacroCommand: Executes forward, undos in reverse LIFO order!
+// MacroCommand: Executes multiple commands forward; undos in strict reverse LIFO order!
 public class MacroCommand implements Command {
     private Command[] commands;
     public MacroCommand(Command[] commands) { this.commands = commands; }
 
     public void execute() {
-        for (Command cmd : commands) cmd.execute();
+        for (Command cmd : commands) {
+            cmd.execute();
+        }
     }
+    // Klausur Requirement: Reverse LIFO order protects inter-command state invariants!
     public void undo() {
         for (int i = commands.length - 1; i >= 0; i--) {
             commands[i].undo();
@@ -775,17 +910,18 @@ public class MacroCommand implements Command {
     }
 }
 
-// Null Object Pattern: Eliminates null checks in the invoker
+// Null Object Pattern: Default no-op command eliminating defensive null checks in invoker
 public class NoCommand implements Command {
-    public void execute() { }
-    public void undo()    { }
+    public void execute() { /* No-op */ }
+    public void undo()    { /* No-op */ }
 }
 
 // ----------------------- Invoker -----------------------
+// The RemoteControl triggers commands without coupling to concrete receivers
 public class RemoteControl {
     private Command[] onCommands = new Command[7];
     private Command[] offCommands = new Command[7];
-    private Command undoCommand;
+    private Command undoCommand; // Tracks the last executed command for 1-step undo
 
     public RemoteControl() {
         Command noCommand = new NoCommand();
@@ -812,7 +948,8 @@ public class RemoteControl {
         undoCommand.undo();
     }
 }</code></pre>
-      </div>
+        </div>
+      </details>
 
       <!-- 3 Exam Rules Tested by Prof. Schäfer -->
       <div class="guide-card">
