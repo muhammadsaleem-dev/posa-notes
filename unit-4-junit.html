@@ -1,1124 +1,556 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html lang="en" data-theme="dark" data-mode="concept">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Unit 4: Case Study JUnit (Cook’s Tour) | POSA 2026 Masterclass</title>
-<meta name="description" content="Master Erich Gamma and Kent Beck's classic 'JUnit: A Cook's Tour' architecture, compounded patterns (Command, Composite, Template Method, Collecting Parameter, Observer), and JUnit 5 with Prof. Dr. Jörg Schäfer.">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232563eb'/%3E%3Cpath d='M8 10h16M8 16h16M8 22h10' stroke='%23fff' stroke-width='2.2' stroke-linecap='round'/%3E%3C/svg%3E">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Unit 4 · Frameworks &amp; Case Study JUnit · POSA Masterclass 2026</title>
+<meta name="description" content="Master JUnit architecture (A Cook’s Tour), the 5 compounded patterns, Inversion of Control, Hot Spots vs Frozen Spots, and JUnit 3 to 5 evolution.">
+<link rel="stylesheet" href="assets/style.css?v=2026.18">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/style.css?v=2026.16">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,600;0,700;1,400&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,600;1,700&display=swap" rel="stylesheet">
+<script>
+  window.MathJax = {
+    tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
+    svg: { fontCache: 'global' }
+  };
+</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<script>(function(){try{var t=localStorage.getItem('posa-theme')||localStorage.getItem('dm2026-theme')||'dark';document.documentElement.setAttribute('data-theme',t);var m=localStorage.getItem('posa-mode')||'concept';document.documentElement.setAttribute('data-mode',m);}catch(e){}})();</script>
 <style>
-  .reading-progress-bar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    height: 3px;
-    background: linear-gradient(90deg, #2563eb 0%, #3b82f6 50%, #60a5fa 100%);
-    width: 0%;
-    z-index: 9999;
-    transition: width 0.1s ease-out;
-  }
-  .stage-takeaways-box {
-    background: rgba(37, 99, 235, 0.05);
-    border: 1px solid rgba(37, 99, 235, 0.2);
+  .guide-card {
+    background: var(--bg-raised);
+    border: 1px solid var(--border);
     border-radius: var(--radius-md);
     padding: 1.5rem;
-    margin: 2rem 0;
+    margin-bottom: 2rem;
   }
-  [data-theme="light"] .stage-takeaways-box {
-    background: #eff6ff;
-    border-color: #bfdbfe;
-  }
-  .stage-takeaways-title {
-    font-weight: 800;
-    color: #2563eb;
-    margin-bottom: 0.75rem;
+  .guide-card-header {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
-    font-size: 1.05rem;
-  }
-  .takeaway-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: 1rem;
-    margin-top: 1rem;
-  }
-  .takeaway-item {
-    background: var(--bg-raised);
-    padding: 1rem;
-    border-radius: var(--radius-sm);
-    border: 1px solid var(--border);
-  }
-  .takeaway-item strong {
+    gap: 0.6rem;
+    font-size: 1.15rem;
+    font-weight: 700;
     color: var(--text);
-    display: block;
-    margin-bottom: 0.35rem;
-    font-size: 0.92rem;
+    margin-bottom: 0.75rem;
   }
-  .takeaway-item p {
-    margin: 0;
-    font-size: 0.85rem;
-    color: var(--text-muted);
-    line-height: 1.5;
+  .rule-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.2rem 0.55rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 800;
+    font-family: var(--font-mono);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    background: rgba(99, 102, 241, 0.12);
+    color: #6366f1;
+    border: 1px solid rgba(99, 102, 241, 0.25);
   }
-  /* Interactive JUnit Runner Lab */
-  .junit-runner-card {
+  .rule-badge.warn {
+    background: rgba(245, 158, 11, 0.12);
+    color: #f59e0b;
+    border-color: rgba(245, 158, 11, 0.25);
+  }
+  .rule-badge.danger {
+    background: rgba(239, 68, 68, 0.12);
+    color: #ef4444;
+    border-color: rgba(239, 68, 68, 0.25);
+  }
+  .headfirst-card {
+    background: var(--bg-raised);
+    border: 1px solid var(--border);
+    border-left: 4px solid #6366f1;
+    border-radius: var(--radius-md);
+    margin-bottom: 2rem;
+    overflow: hidden;
+  }
+  .headfirst-summary {
+    list-style: none;
+    cursor: pointer;
+    user-select: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.15rem 1.4rem;
+    background: var(--bg-subtle);
+    border-bottom: 1px solid transparent;
+    transition: background 0.15s ease;
+  }
+  .headfirst-summary:hover {
+    background: var(--code-bg);
+  }
+  .headfirst-summary::-webkit-details-marker {
+    display: none;
+  }
+  .headfirst-card[open] .headfirst-summary {
+    border-bottom: 1px solid var(--border);
+  }
+  .headfirst-title {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--text);
+  }
+  .headfirst-badge {
+    font-size: 0.72rem;
+    font-weight: 800;
+    padding: 0.15rem 0.5rem;
+    border-radius: 4px;
+    background: rgba(99, 102, 241, 0.15);
+    color: var(--accent);
+    border: 1px solid rgba(99, 102, 241, 0.25);
+  }
+  .headfirst-body {
+    padding: 1.5rem;
+  }
+  .pattern-spec-box {
     background: var(--bg-raised);
     border: 1px solid var(--border);
     border-radius: var(--radius-md);
-    padding: 1.5rem;
-    margin: 2rem 0;
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 1.5rem;
   }
-  .junit-tree {
-    background: var(--bg);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
-    padding: 1rem;
+  .spec-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+  .spec-row {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .spec-row:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+  .spec-label {
+    font-size: 0.8rem;
     font-family: var(--font-mono);
-    font-size: 0.85rem;
-    margin: 1rem 0;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 700;
   }
-  .junit-bar {
-    height: 10px;
-    border-radius: 5px;
-    background: #22c55e;
-    width: 100%;
-    margin-top: 0.5rem;
-    transition: background 0.3s ease;
+  .spec-val {
+    font-size: 0.95rem;
+    color: var(--text);
+    line-height: 1.55;
   }
-  .junit-bar.has-failure {
-    background: #ef4444;
+  .qa-block {
+    margin: 1.5rem 0;
+    padding: 1.5rem;
+    background: var(--bg-raised);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+  }
+  .qa-q {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 1rem;
+    line-height: 1.45;
+  }
+  .qa-q .pts-badge {
+    display: inline-block;
+    padding: 0.2rem 0.6rem;
+    background: var(--accent-soft);
+    color: var(--accent);
+    border-radius: 999px;
+    font-size: 0.78rem;
+    font-family: var(--font-mono);
+    font-weight: 700;
+    margin-left: 0.5rem;
+  }
+  .qa-a {
+    padding: 1.25rem 1.5rem;
+    background: var(--bg);
+    border-left: 4px solid var(--accent);
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    font-size: 0.95rem;
+    line-height: 1.65;
+    color: var(--text);
+  }
+  .qa-a .ans-label {
+    display: block;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    font-weight: 800;
+    font-family: var(--font-mono);
+    color: var(--accent);
+    margin-bottom: 0.75rem;
+    letter-spacing: 0.05em;
   }
 </style>
-<script>(function(){try{var t=localStorage.getItem('posa-theme')||'dark';document.documentElement.setAttribute('data-theme',t);var m=localStorage.getItem('posa-mode')||'concept';document.documentElement.setAttribute('data-mode',m);}catch(e){}})();</script>
 </head>
-<body class="mode-stage-focused">
+<body>
+  <!-- Top Navigation -->
+  <nav class="sitenav" aria-label="Main Navigation">
+    <div class="sitenav-inner">
+      <a href="index.html" class="sitenav-brand">
+        <span class="brand-badge">POSA 2026</span>
+        <span class="brand-title">Pattern Architecture</span>
+      </a>
+      <div class="sitenav-links">
+        <a href="index.html">Overview</a>
+        <a href="unit-3-composite.html">Unit 3A: Composite</a>
+        <a href="unit-3-iterator.html">Unit 3B: Iterator</a>
+        <a href="unit-4-junit.html" class="active">Unit 4: JUnit</a>
+        <a href="mock-1.html">🎓 Mock Exam 1</a>
+        <a href="mock-2.html">📝 Mock Exam 2</a>
+        <a href="past-papers.html">Practice Hub</a>
+      </div>
+      <button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle theme">
+        <span class="theme-icon light-icon">☀️</span>
+        <span class="theme-icon dark-icon">🌙</span>
+      </button>
+    </div>
+  </nav>
 
-<div class="reading-progress-bar" id="readingProgressBar"></div>
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-block">
+      <span class="sidebar-label">Unit Navigation</span>
+      <a href="#sec-profile" class="active"><span class="toc-num">1</span>Framework &amp; Cook's Tour</a>
+      <a href="#sec-code"><span class="toc-num">2</span>Minimal Architecture Code</a>
+      <a href="#sec-rules"><span class="toc-num">3</span>Hot Spots &amp; Evolution</a>
+      <a href="#sec-drills"><span class="toc-num">4</span>Core Exam Drills</a>
+    </div>
 
-<nav class="sitenav">
-  <div class="sitenav-inner">
-    <a class="sitenav-home" href="index.html">
-      <span style="background:linear-gradient(135deg, #2563eb 0%, #3b82f6 100%);color:#fff;padding:0.2rem 0.55rem;border-radius:6px;font-size:0.82rem;font-weight:800;letter-spacing:0.04em;">POSA</span>
-      <span style="font-weight:800;letter-spacing:-0.02em;">2026</span>
-    </a>
-                <div class="sitenav-links">
-      <a href="index.html">Overview</a>
-      <a href="index.html#curriculum-roadmap">16 Units</a>
-      <a href="mock-1.html">🎓 Mock Exam 1</a>
-      <a href="mock-2.html">📝 Mock Exam 2</a>
+    <div class="sidebar-block">
+      <span class="sidebar-label">Related Modules</span>
+      <a href="unit-2-template.html">Unit 2A · Template Method</a>
+      <a href="unit-2-command.html">Unit 2B · Command Pattern</a>
+      <a href="unit-3-composite.html">Unit 3A · Composite Pattern</a>
+      <a href="unit-3-iterator.html">Unit 3B · Iterator Pattern</a>
+      <a href="mock-2.html">📝 Mock Exam 2 (Module 2)</a>
     </div>
-    <button class="nav-toggle" id="navToggle" type="button" aria-expanded="false" aria-controls="navPanel">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
-      Menu
-    </button>
-    <button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle color theme">
-      <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path></svg>
-      <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
-    </button>
-    <button class="mode-toggle" id="modeToggle" type="button" aria-label="Toggle technical mode" style="font-size: 1.1rem; line-height: 1;">🎓</button>
-  </div>
-  <div class="nav-panel" id="navPanel">
-    <div class="nav-panel-section">
-      <span class="nav-panel-label">Course Navigation</span>
-      <a href="index.html">Course Overview</a>
-      <a href="unit-3-structural.html">Unit 3 · Structural Patterns</a>
-      <a href="unit-4-junit.html" class="active">Unit 4 · Case Study: JUnit Architecture</a>
-      <a href="unit-5-theory.html">Unit 5 · Software Pattern Theory</a>
-      <a href="unit-6-solid.html">Unit 6 · SOLID &amp; Code Smells</a>
-      <a href="mock-1.html">📝 Mock Exam 1</a>
-    </div>
-  </div>
-</nav>
 
-<div class="page-shell">
-  <aside class="sidebar-toc">
     <div class="sidebar-block">
-      <span class="sidebar-label">PART 1 · RUBRIC</span>
-      <a href="#pillar-1"><span class="toc-num">P1</span>Intent &amp; Goals</a>
-      <a href="#pillar-2"><span class="toc-num">P2</span>Structural Topology</a>
-      <a href="#pillar-3"><span class="toc-num">P3</span>Dynamic Sequence</a>
-      <a href="#pillar-4"><span class="toc-num">P4</span>Trade-Offs &amp; Evolution</a>
-      <a href="#pillar-5"><span class="toc-num">P5</span>The 5 Compounded Patterns</a>
-      <a href="#pillar-6"><span class="toc-num">P6</span>Framework Anti-Patterns</a>
-      <a href="#pillar-7"><span class="toc-num">P7</span>Production Code</a>
-      <a href="#pillar-8"><span class="toc-num">P8</span>Frankfurt UAS Exam Traps</a>
-    </div>
-    <div class="sidebar-block">
-      <span class="sidebar-label">PART 2 · CURRICULUM</span>
-      <a href="#stage-1"><span class="toc-num">1</span>Cook's Tour Goals</a>
-      <a href="#stage-2"><span class="toc-num">2</span>Patterns in Harmony</a>
-      <a href="#stage-3"><span class="toc-num">3</span>Interactive Runner Lab</a>
-      <a href="#stage-4"><span class="toc-num">4</span>Handcrafted Engine</a>
-      <a href="#stage-5"><span class="toc-num">5</span>Exam Drills</a>
-    </div>
-    <div class="sidebar-block">
-      <span class="sidebar-label">Academic Profile</span>
-      <p style="font-size: 0.85rem; color: var(--text-muted); margin: 0; line-height: 1.4;">
-        <strong>Prof. Dr. Jörg Schäfer</strong><br>
-        Frankfurt University of Applied Sciences<br>
-        <span style="display:inline-block;margin-top:0.35rem;padding:0.15rem 0.4rem;background:rgba(37,99,235,0.15);border-radius:4px;color:#3b82f6;font-weight:700;font-size:0.75rem;">Cook's Tour &amp; Testing</span>
-      </p>
+      <span class="sidebar-label">Exam Profile</span>
+      <div style="font-size:0.75rem; font-weight:700; color:#38bdf8; background:rgba(56,189,248,0.12); border:1px solid rgba(56,189,248,0.25); padding:0.25rem 0.5rem; border-radius:4px; display:inline-block;">
+        ⏱️ 10–12 Mins · 14 Exam Pts
+      </div>
     </div>
   </aside>
 
+  <!-- Main Content -->
   <main class="page">
-    <div class="masthead">
-      <div class="eyebrow">Unit 4 · Architectural Case Study</div>
-      <h1 class="title">Case Study: JUnit Architecture (A Cook’s Tour)</h1>
+    
+    <header class="masthead">
+      <div>
+        <div class="eyebrow">Unit 4 · Frameworks &amp; Architecture Case Studies</div>
+        <h1 class="title">Case Study: JUnit Architecture (A Cook’s Tour)</h1>
+      </div>
       <p class="dek">
-        Erich Gamma and Kent Beck’s masterpiece: how Command, Composite, Template Method, Collecting Parameter, and Observer collaborate to construct a resilient, extensible testing framework.
+        Analyze how Kent Beck and Erich Gamma composed 5 foundational Gang of Four design patterns into JUnit, illustrating Inversion of Control, Hot Spots vs Frozen Spots, and framework extension mechanisms.
       </p>
-    </div>
-
-    <!-- Symmetrical Demarcation 1 -->
-    <div class="section-divider-wrapper" style="margin: 2.5rem 0 1.5rem;">
-      <div class="section-divider-line"></div>
-      <div class="section-divider-tag">
-        <span class="section-divider-dot"></span>
-        <span>PART 1 · ARCHITECTURAL RUBRIC</span>
-      </div>
-      <div class="section-divider-line"></div>
-    </div>
-
-    <section class="blueprint-suite" id="blueprintSuite" aria-label="8-Pillar Architecture Rubric">
-      <div class="blueprint-suite-top">
-        <div>
-          <div class="blueprint-suite-badge">
-            <span class="section-badge-pill">SECTION 1 OF 2</span>
-            <span class="badge-sep">·</span>
-            <span>8-PILLAR ARCHITECTURAL RUBRIC</span>
-          </div>
-          <h2 class="blueprint-suite-heading">The JUnit Compounded Pattern Blueprint</h2>
-          <p class="blueprint-suite-sub">
-            The canonical architectural specification of Gamma &amp; Beck’s JUnit 3.8.x and its evolution to JUnit 5 Jupiter.
-          </p>
-        </div>
-        <div class="blueprint-suite-actions">
-          <div class="blueprint-view-toggle" role="group" aria-label="Blueprint Layout">
-            <button class="blueprint-toggle-btn active" id="btnViewExplorer" type="button" onclick="setBlueprintView('explorer')">Explorer View</button>
-            <button class="blueprint-toggle-btn" id="btnViewMatrix" type="button" onclick="setBlueprintView('matrix')">Full Matrix</button>
-          </div>
-          <button class="rubric-action-btn" type="button" onclick="copyBlueprintRubric()">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-            Export Rubric (MD)
-          </button>
-          <button class="rubric-action-btn rubric-collapse-btn" id="btnCollapseRubric" type="button" onclick="toggleBlueprintCollapse()">
-            <span id="collapseLabel">▲ Collapse Rubric</span>
-          </button>
-        </div>
-      </div>
-
-      <div class="blueprint-collapsed-hint" id="blueprintCollapsedHint" style="display:none;">
-        <span class="hint-icon">💡</span>
-        <span>The 8-Pillar Rubric is currently collapsed. Click <strong>Expand Rubric</strong> above to inspect details.</span>
-      </div>
-
-      <div class="blueprint-suite-body" id="blueprintSuiteBody">
-        <div class="blueprint-tabs" role="tablist" aria-label="8 Pillars">
-          <button class="blueprint-tab active" role="tab" aria-selected="true" data-pillar="1" onclick="selectPillar(1)">
-            <span class="blueprint-tab-num">01</span>
-            <span class="blueprint-tab-title">Intent &amp; Goals</span>
-          </button>
-          <button class="blueprint-tab" role="tab" aria-selected="false" data-pillar="2" onclick="selectPillar(2)">
-            <span class="blueprint-tab-num">02</span>
-            <span class="blueprint-tab-title">Structural Topology</span>
-          </button>
-          <button class="blueprint-tab" role="tab" aria-selected="false" data-pillar="3" onclick="selectPillar(3)">
-            <span class="blueprint-tab-num">03</span>
-            <span class="blueprint-tab-title">Dynamic Sequence</span>
-          </button>
-          <button class="blueprint-tab" role="tab" aria-selected="false" data-pillar="4" onclick="selectPillar(4)">
-            <span class="blueprint-tab-num">04</span>
-            <span class="blueprint-tab-title">Trade-Offs &amp; Evolution</span>
-          </button>
-          <button class="blueprint-tab" role="tab" aria-selected="false" data-pillar="5" onclick="selectPillar(5)">
-            <span class="blueprint-tab-num">05</span>
-            <span class="blueprint-tab-title">Compounded Patterns</span>
-          </button>
-          <button class="blueprint-tab" role="tab" aria-selected="false" data-pillar="6" onclick="selectPillar(6)">
-            <span class="blueprint-tab-num">06</span>
-            <span class="blueprint-tab-title">Framework Smells</span>
-          </button>
-          <button class="blueprint-tab" role="tab" aria-selected="false" data-pillar="7" onclick="selectPillar(7)">
-            <span class="blueprint-tab-num">07</span>
-            <span class="blueprint-tab-title">Production Code</span>
-          </button>
-          <button class="blueprint-tab" role="tab" aria-selected="false" data-pillar="8" onclick="selectPillar(8)">
-            <span class="blueprint-tab-num">08</span>
-            <span class="blueprint-tab-title">Exam Traps (Schäfer)</span>
-          </button>
-        </div>
-
-        <div class="blueprint-content-area" id="blueprintContentArea">
-          <!-- Pillar 1 -->
-          <article class="pillar-panel active" id="pillar-1" data-pillar="1">
-            <div class="pillar-header">
-              <span class="pillar-tag">PILLAR 01 · FOUNDATIONAL INTENT</span>
-              <h3 class="pillar-title">Intent &amp; Cook’s Tour Design Objectives</h3>
-            </div>
-            <div class="pillar-body">
-              <div class="pillar-grid-2col">
-                <div>
-                  <h4 style="color:var(--text);margin-top:0;">The Challenge: Building a Test Framework</h4>
-                  <p>In 1997, on a flight from Zurich to Atlanta for OOPSLA, Erich Gamma and Kent Beck pair-programmed JUnit. Their goal was to create a framework that solved three conflicting constraints:</p>
-                  <ul>
-                    <li><strong>Low Writing Friction:</strong> Writing a test must be as simple as defining a method; zero ceremonial configuration files.</li>
-                    <li><strong>Preservation of Value:</strong> Tests must remain repeatable and self-verifying across years of refactoring without manual supervision.</li>
-                    <li><strong>Recursive Composability:</strong> Running a single test method, an entire test class, or a multi-module enterprise regression suite must appear completely uniform to the execution harness.</li>
-                  </ul>
-                </div>
-                <div>
-                  <h4 style="color:var(--text);margin-top:0;">The Architectural Solution: Compounded Patterns</h4>
-                  <p>Rather than invent bespoke framework mechanics, Gamma and Beck demonstrated Christopher Alexander's principle: <em>"Patterns collaborate in harmony to generate living structures."</em></p>
-                  <p>JUnit combines <strong>Command</strong>, <strong>Composite</strong>, <strong>Template Method</strong>, <strong>Collecting Parameter</strong>, and <strong>Observer</strong> into a seamless, micro-architectural gem of fewer than 1,000 lines of code that revolutionized the global software industry.</p>
-                </div>
-              </div>
-            </div>
-          </article>
-
-          <!-- Pillar 2 -->
-          <article class="pillar-panel" id="pillar-2" data-pillar="2">
-            <div class="pillar-header">
-              <span class="pillar-tag">PILLAR 02 · STRUCTURAL TOPOLOGY</span>
-              <h3 class="pillar-title">UML 2.5 Architecture &amp; Class Diagram (Vector SVG)</h3>
-            </div>
-            <div class="pillar-body">
-              <p>The pure vector topological collaboration between JUnit's core abstractions, strictly eliminating legacy ASCII art:</p>
-
-              <div style="background:var(--bg-raised);border:1px solid var(--border);border-radius:var(--radius-md);padding:1.5rem;margin:1.5rem 0;">
-                <svg viewBox="0 0 920 380" style="width:100%;height:auto;display:block;" xmlns="http://www.w3.org/2000/svg">
-                  <defs>
-                    <marker id="uml-tri-4" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
-                      <polygon points="0 0, 10 6, 0 12" fill="#fff" stroke="#2563eb" stroke-width="1.8"/>
-                    </marker>
-                    <marker id="uml-arrow-4" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
-                      <polygon points="0 2, 8 5, 0 8" fill="#2563eb"/>
-                    </marker>
-                    <marker id="uml-diamond-4" markerWidth="14" markerHeight="10" refX="1" refY="5" orient="auto">
-                      <polygon points="1 5, 7 1, 13 5, 7 9" fill="#2563eb"/>
-                    </marker>
-                  </defs>
-
-                  <!-- Test Interface -->
-                  <g transform="translate(360, 20)">
-                    <rect width="200" height="85" rx="6" fill="var(--bg)" stroke="#2563eb" stroke-width="2" stroke-dasharray="4 3"/>
-                    <text x="100" y="24" font-family="var(--font-mono)" font-size="11" fill="#2563eb" text-anchor="middle">&laquo;interface&raquo;</text>
-                    <text x="100" y="44" font-family="var(--font-display)" font-size="15" font-weight="800" fill="#2563eb" text-anchor="middle">Test</text>
-                    <line x1="0" y1="54" x2="200" y2="54" stroke="var(--border)" stroke-width="1"/>
-                    <text x="12" y="72" font-family="var(--font-mono)" font-size="11" fill="var(--text-muted)">+ run(result: TestResult)</text>
-                  </g>
-
-                  <!-- TestCase (Command / Leaf) -->
-                  <g transform="translate(60, 180)">
-                    <rect width="240" height="140" rx="6" fill="var(--bg)" stroke="#3b82f6" stroke-width="2"/>
-                    <text x="120" y="26" font-family="var(--font-display)" font-size="14" font-weight="800" fill="#3b82f6" text-anchor="middle">TestCase (Command)</text>
-                    <line x1="0" y1="36" x2="240" y2="36" stroke="var(--border)" stroke-width="1"/>
-                    <text x="12" y="56" font-family="var(--font-mono)" font-size="11" fill="var(--text-muted)">- fName: String</text>
-                    <line x1="0" y1="68" x2="240" y2="68" stroke="var(--border)" stroke-width="1"/>
-                    <text x="12" y="88" font-family="var(--font-mono)" font-size="11" fill="var(--text-muted)">+ run(result: TestResult)</text>
-                    <text x="12" y="106" font-family="var(--font-mono)" font-size="11" fill="var(--text-muted)">+ runBare() // Template</text>
-                    <text x="12" y="124" font-family="var(--font-mono)" font-size="11" fill="var(--text-muted)"># setUp() / tearDown()</text>
-                  </g>
-
-                  <!-- TestSuite (Composite) -->
-                  <g transform="translate(620, 180)">
-                    <rect width="240" height="140" rx="6" fill="var(--bg)" stroke="#10b981" stroke-width="2"/>
-                    <text x="120" y="26" font-family="var(--font-display)" font-size="14" font-weight="800" fill="#10b981" text-anchor="middle">TestSuite (Composite)</text>
-                    <line x1="0" y1="36" x2="240" y2="36" stroke="var(--border)" stroke-width="1"/>
-                    <text x="12" y="56" font-family="var(--font-mono)" font-size="11" fill="var(--text-muted)">- fTests: Vector&lt;Test&gt;</text>
-                    <line x1="0" y1="68" x2="240" y2="68" stroke="var(--border)" stroke-width="1"/>
-                    <text x="12" y="88" font-family="var(--font-mono)" font-size="11" fill="var(--text-muted)">+ addTest(test: Test)</text>
-                    <text x="12" y="106" font-family="var(--font-mono)" font-size="11" fill="var(--text-muted)">+ run(result: TestResult)</text>
-                    <text x="12" y="124" font-family="var(--font-mono)" font-size="11" fill="var(--text-muted)">+ countTestCases(): int</text>
-                  </g>
-
-                  <!-- TestResult (Collecting Parameter) -->
-                  <g transform="translate(350, 240)">
-                    <rect width="220" height="120" rx="6" fill="var(--bg)" stroke="#f59e0b" stroke-width="2"/>
-                    <text x="110" y="24" font-family="var(--font-display)" font-size="13" font-weight="800" fill="#f59e0b" text-anchor="middle">TestResult</text>
-                    <text x="110" y="40" font-family="var(--font-mono)" font-size="10" fill="var(--text-muted)" text-anchor="middle">&laquo;Collecting Parameter&raquo;</text>
-                    <line x1="0" y1="48" x2="220" y2="48" stroke="var(--border)" stroke-width="1"/>
-                    <text x="12" y="68" font-family="var(--font-mono)" font-size="10.5" fill="var(--text-muted)">+ addFailure(test, fail)</text>
-                    <text x="12" y="86" font-family="var(--font-mono)" font-size="10.5" fill="var(--text-muted)">+ addError(test, throwable)</text>
-                    <text x="12" y="104" font-family="var(--font-mono)" font-size="10.5" fill="var(--text-muted)">+ addListener(l: TestListener)</text>
-                  </g>
-
-                  <!-- Inheritance: TestCase implements Test -->
-                  <path d="M 180 180 L 180 135 L 430 135 L 430 115" fill="none" stroke="#2563eb" stroke-width="1.8" stroke-dasharray="4 4" marker-end="url(#uml-tri-4)"/>
-                  <!-- Inheritance: TestSuite implements Test -->
-                  <path d="M 740 180 L 740 135 L 490 135 L 490 115" fill="none" stroke="#2563eb" stroke-width="1.8" stroke-dasharray="4 4" marker-end="url(#uml-tri-4)"/>
-
-                  <!-- Composite aggregation: TestSuite contains Test -->
-                  <path d="M 780 180 C 780 80, 580 60, 560 60" fill="none" stroke="#2563eb" stroke-width="1.8" marker-start="url(#uml-diamond-4)" marker-end="url(#uml-arrow-4)"/>
-
-                  <!-- SUT updates TestResult -->
-                  <line x1="300" y1="280" x2="350" y2="280" stroke="#f59e0b" stroke-width="1.5" stroke-dasharray="3 3" marker-end="url(#uml-arrow-4)"/>
-                </svg>
-              </div>
-            </div>
-          </article>
-
-          <!-- Pillar 3 -->
-          <article class="pillar-panel" id="pillar-3" data-pillar="3">
-            <div class="pillar-header">
-              <span class="pillar-tag">PILLAR 03 · DYNAMIC EXECUTION TRACE</span>
-              <h3 class="pillar-title">Dynamic Lifecycle Sequence: runBare() &amp; Fixture Sandboxing</h3>
-            </div>
-            <div class="pillar-body">
-              <p>The Template Method <code>runBare()</code> guarantees that even if a test throws an assertion error, <code>tearDown()</code> runs in the <code>finally</code> block, ensuring zero resource leakage:</p>
-              
-              <div class="code-window">
-                <div class="code-window-bar">
-                  <div class="code-dots"><span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span></div>
-                  <span class="code-file">TestCase.java · runBare() Template Method Execution Sequence</span>
-                  <button class="code-copy-btn" onclick="copySnippet('codeRunBare')">Copy</button>
-                </div>
-                <pre class="code-pre" id="codeRunBare"><code><span class="k">public void</span> <span class="nf">runBare</span>() <span class="k">throws</span> <span class="nc">Throwable</span> {
-    <span class="nc">Throwable</span> exception = <span class="k">null</span>;
-    <span class="nf">setUp</span>(); <span class="c">// 1. Hook Method: Fresh fixture per test</span>
-    <span class="k">try</span> {
-        <span class="nf">runTest</span>(); <span class="c">// 2. Dynamic Adapter / Test execution</span>
-    } <span class="k">catch</span> (<span class="nc">Throwable</span> running) {
-        exception = running;
-    } <span class="k">finally</span> {
-        <span class="k">try</span> {
-            <span class="nf">tearDown</span>(); <span class="c">// 3. Invariant cleanup in finally</span>
-        } <span class="k">catch</span> (<span class="nc">Throwable</span> tearingDown) {
-            <span class="k">if</span> (exception == <span class="k">null</span>) exception = tearingDown;
-        }
-    }
-    <span class="k">if</span> (exception != <span class="k">null</span>) <span class="k">throw</span> exception;
-}</code></pre>
-              </div>
-            </div>
-          </article>
-
-          <!-- Pillar 4 -->
-          <article class="pillar-panel" id="pillar-4" data-pillar="4">
-            <div class="pillar-header">
-              <span class="pillar-tag">PILLAR 04 · TRADE-OFFS &amp; EVOLUTION</span>
-              <h3 class="pillar-title">Architectural Evolution: JUnit 3 vs JUnit 4 vs JUnit 5 Jupiter</h3>
-            </div>
-            <div class="pillar-body">
-              <table class="blueprint-table" style="width:100%;border-collapse:collapse;margin-top:0.5rem;font-size:0.88rem;">
-                <thead>
-                  <tr style="border-bottom:2px solid var(--border);text-align:left;">
-                    <th style="padding:0.6rem;">Dimension</th>
-                    <th style="padding:0.6rem;">JUnit 3.8.x (Cook's Tour)</th>
-                    <th style="padding:0.6rem;">JUnit 4 (Annotations)</th>
-                    <th style="padding:0.6rem;">JUnit 5 (Jupiter Engine)</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr style="border-bottom:1px solid var(--border);">
-                    <td style="padding:0.6rem;font-weight:700;">Subclassing Requirement</td>
-                    <td style="padding:0.6rem;color:#ef4444;">Mandatory (extends TestCase)</td>
-                    <td style="padding:0.6rem;color:#10b981;">None (POJO)</td>
-                    <td style="padding:0.6rem;color:#10b981;">None (Package-private POJO)</td>
-                  </tr>
-                  <tr style="border-bottom:1px solid var(--border);">
-                    <td style="padding:0.6rem;font-weight:700;">Method Identification</td>
-                    <td style="padding:0.6rem;">Naming convention (`test...`)</td>
-                    <td style="padding:0.6rem;">`@Test` annotation</td>
-                    <td style="padding:0.6rem;">`@Test`, `@TestFactory`, `@RepeatedTest`</td>
-                  </tr>
-                  <tr style="border-bottom:1px solid var(--border);">
-                    <td style="padding:0.6rem;font-weight:700;">Extensibility Model</td>
-                    <td style="padding:0.6rem;">Subclassing &amp; Decorators</td>
-                    <td style="padding:0.6rem;color:#eab308;">@RunWith &amp; @Rule (Monolithic)</td>
-                    <td style="padding:0.6rem;color:#10b981;">@ExtendWith (Composable Interceptors)</td>
-                  </tr>
-                  <tr>
-                    <td style="padding:0.6rem;font-weight:700;">Architecture Layering</td>
-                    <td style="padding:0.6rem;">Monolithic core</td>
-                    <td style="padding:0.6rem;">Monolithic jar</td>
-                    <td style="padding:0.6rem;color:#10b981;">Modular: Platform + Jupiter + Vintage</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </article>
-
-          <!-- Pillar 5 -->
-          <article class="pillar-panel" id="pillar-5" data-pillar="5">
-            <div class="pillar-header">
-              <span class="pillar-tag">PILLAR 05 · COMPOUNDED PATTERNS MATRIX</span>
-              <h3 class="pillar-title">The 5 Compounded Patterns in Cook’s Tour</h3>
-            </div>
-            <div class="pillar-body">
-              <div class="pillar-grid-2col">
-                <div class="takeaway-item">
-                  <strong>1. Command Pattern (TestCase)</strong>
-                  <p>Encapsulates a test execution request as an object. Decouples the invoker (TestRunner GUI/CLI) from the receiver (test business assertions).</p>
-                </div>
-                <div class="takeaway-item">
-                  <strong>2. Composite Pattern (TestSuite)</strong>
-                  <p>Enables treating individual test cases and collections of tests uniformly through the shared <code>Test</code> interface.</p>
-                </div>
-                <div class="takeaway-item">
-                  <strong>3. Template Method (runBare)</strong>
-                  <p>Defines the invariant skeleton algorithm <code>setUp() -> runTest() -> tearDown()</code>, deferring specific fixture setup to subclasses.</p>
-                </div>
-                <div class="takeaway-item">
-                  <strong>4. Collecting Parameter (TestResult)</strong>
-                  <p>Accumulates test failures, errors, and run counts across the entire composite tree without requiring exceptions to propagate upward.</p>
-                </div>
-                <div class="takeaway-item">
-                  <strong>5. Observer Pattern (TestListener)</strong>
-                  <p><code>TestResult</code> notifies registered <code>TestListener</code> observers (progress bars, text loggers) whenever a test starts, fails, or completes.</p>
-                </div>
-                <div class="takeaway-item">
-                  <strong>6. Adapter Pattern (Reflection)</strong>
-                  <p>Adapts arbitrarily named public methods (e.g. <code>testMoneyEquals()</code>) to the fixed <code>runTest()</code> interface dynamically.</p>
-                </div>
-              </div>
-            </div>
-          </article>
-
-          <!-- Pillar 6 -->
-          <article class="pillar-panel" id="pillar-6" data-pillar="6">
-            <div class="pillar-header">
-              <span class="pillar-tag">PILLAR 06 · FRAMEWORK ANTI-PATTERNS</span>
-              <h3 class="pillar-title">Test Framework Anti-Patterns &amp; Architectural Smells</h3>
-            </div>
-            <div class="pillar-body">
-              <div class="smell-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
-                <div style="background:var(--bg-raised);padding:1rem;border-left:4px solid #ef4444;border-radius:0 4px 4px 0;">
-                  <strong style="color:#ef4444;">1. Monolithic Runner Lock-In (JUnit 4)</strong>
-                  <p style="font-size:0.85rem;color:var(--text-muted);margin:0.4rem 0 0;">
-                    In JUnit 4, a test class could only declare a single `@RunWith` runner (e.g. `@RunWith(SpringRunner.class)` OR `@RunWith(MockitoJUnitRunner.class)`). You could not combine them.
-                  </p>
-                  <span style="font-size:0.78rem;color:#10b981;font-weight:700;">Remedy: JUnit 5's `@ExtendWith` supports multiple composable extensions.</span>
-                </div>
-                <div style="background:var(--bg-raised);padding:1rem;border-left:4px solid #ef4444;border-radius:0 4px 4px 0;">
-                  <strong style="color:#ef4444;">2. Leaky Shared Fixture</strong>
-                  <p style="font-size:0.85rem;color:var(--text-muted);margin:0.4rem 0 0;">
-                    Reusing a mutable instance field across multiple tests instead of reinstantiating fresh instances per test method execution.
-                  </p>
-                  <span style="font-size:0.78rem;color:#10b981;font-weight:700;">Remedy: Fresh instance per method (JUnit's default PER_METHOD lifecycle).</span>
-                </div>
-              </div>
-            </div>
-          </article>
-
-          <!-- Pillar 7 -->
-          <article class="pillar-panel" id="pillar-7" data-pillar="7">
-            <div class="pillar-header">
-              <span class="pillar-tag">PILLAR 07 · PRODUCTION CODE STANDARD</span>
-              <h3 class="pillar-title">Modern JUnit 5 Jupiter Extension Architecture</h3>
-            </div>
-            <div class="pillar-body">
-              <div class="code-window">
-                <div class="code-window-bar">
-                  <div class="code-dots"><span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span></div>
-                  <span class="code-file">TimingExtension.java · JUnit 5 Composable Extension</span>
-                  <button class="code-copy-btn" onclick="copySnippet('codeExtension')">Copy Code</button>
-                </div>
-                <pre class="code-pre" id="codeExtension"><code><span class="k">package</span> de.frankfurt.uas.posa.extensions;
-
-<span class="k">import</span> org.junit.jupiter.api.extension.*;
-<span class="k">import</span> java.lang.reflect.Method;
-
-<span class="c">// JUnit 5 composable interceptor replacing monolithic @RunWith</span>
-<span class="k">public class</span> <span class="nc">TimingExtension</span> <span class="k">implements</span> <span class="nc">BeforeTestExecutionCallback</span>, <span class="nc">AfterTestExecutionCallback</span> {
-
-    <span class="k">private static final</span> <span class="nc">ExtensionContext.Namespace</span> NAMESPACE =
-        <span class="nc">ExtensionContext.Namespace</span>.create(<span class="nc">TimingExtension</span>.<span class="k">class</span>);
-
-    <span class="nd">@Override</span>
-    <span class="k">public void</span> <span class="nf">beforeTestExecution</span>(<span class="nc">ExtensionContext</span> context) {
-        context.getStore(NAMESPACE).put(context.getRequiredTestMethod(), <span class="nc">System</span>.currentTimeMillis());
-    }
-
-    <span class="nd">@Override</span>
-    <span class="k">public void</span> <span class="nf">afterTestExecution</span>(<span class="nc">ExtensionContext</span> context) {
-        <span class="nc">Method</span> method = context.getRequiredTestMethod();
-        <span class="k">long</span> start = context.getStore(NAMESPACE).remove(method, <span class="k">long</span>.<span class="k">class</span>);
-        <span class="k">long</span> duration = <span class="nc">System</span>.currentTimeMillis() - start;
-        <span class="nc">System</span>.out.printf(<span class="s">"Method [%s] executed in %d ms%n"</span>, method.getName(), duration);
-    }
-}</code></pre>
-              </div>
-            </div>
-          </article>
-
-          <!-- Pillar 8 -->
-          <article class="pillar-panel" id="pillar-8" data-pillar="8">
-            <div class="pillar-header">
-              <span class="pillar-tag">PILLAR 08 · EXAM TRAPS &amp; DEFENSE</span>
-              <h3 class="pillar-title">Frankfurt UAS Examination Pitfalls (Prof. Dr. Jörg Schäfer)</h3>
-            </div>
-            <div class="pillar-body">
-              <div class="pillar-grid-2col">
-                <div style="background:rgba(239,68,68,0.06);border:1px solid rgba(239,68,68,0.3);border-radius:var(--radius-sm);padding:1rem;">
-                  <strong style="color:#ef4444;">Exam Trap 1: "Why does TestResult exist?"</strong>
-                  <p style="font-size:0.86rem;color:var(--text-muted);margin-top:0.4rem;">
-                    <strong>Schäfer's Trap:</strong> "Why didn't Gamma and Beck just have `TestCase.run()` throw an exception or return an error code integer?"<br>
-                    <strong>Correct UAS Defense:</strong> If a test threw an exception out of <code>run()</code>, the composite <code>TestSuite</code> iteration would immediately halt, preventing subsequent tests from running. Returning an integer would pollute method signatures. The <strong>Collecting Parameter</strong> pattern accumulates results across the entire composite hierarchy while decoupling test execution from GUI presentation.
-                  </p>
-                </div>
-                <div style="background:rgba(239,68,68,0.06);border:1px solid rgba(239,68,68,0.3);border-radius:var(--radius-sm);padding:1rem;">
-                  <strong style="color:#ef4444;">Exam Trap 2: Difference between Failure and Error</strong>
-                  <p style="font-size:0.86rem;color:var(--text-muted);margin-top:0.4rem;">
-                    <strong>Schäfer's Trap:</strong> "What is the structural difference between `addFailure` and `addError` in TestResult?"<br>
-                    <strong>Correct UAS Defense:</strong> A <strong>Failure</strong> is expected and handled: an <code>AssertionFailedError</code> was thrown by an assertion method. An <strong>Error</strong> is unexpected: an unhandled runtime exception (e.g. <code>NullPointerException</code>, <code>ArrayIndexOutOfBoundsException</code>) escaped during execution.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <!-- Symmetrical Demarcation 2 -->
-    <div class="section-divider-wrapper" style="margin: 3.5rem 0 1.5rem;">
-      <div class="section-divider-line"></div>
-      <div class="section-divider-tag">
-        <span class="section-divider-dot"></span>
-        <span>PART 2 · HANDS-ON CURRICULUM</span>
-      </div>
-      <div class="section-divider-line"></div>
-    </div>
-
-    <!-- Curriculum Super-Header -->
-    <header class="curriculum-header" id="curriculumHeader">
-      <div class="curriculum-meta-chip">
-        <span>⏱️ 40 Min Curriculum</span>
-        <span class="dot-sep">·</span>
-        <span>🎯 Exam Target: Gamma &amp; Beck Cook's Tour</span>
-        <span class="dot-sep">·</span>
-        <span>🏛️ Prof. Dr. Jörg Schäfer</span>
-      </div>
-      <h2 class="curriculum-title">5-Stage Masterclass: JUnit Architecture &amp; Compounded Patterns</h2>
-      <p class="curriculum-desc">
-        Explore how five GoF patterns intertwine to create the world's most widely used testing framework. Build a mini-JUnit engine by hand and master the architectural mechanics for the POSA exam.
-      </p>
-
-      <!-- Stage Navigation Bar -->
-      <nav class="masterclass-stage-nav" aria-label="Curriculum Stages">
-        <a class="stage-nav-pill active" href="#stage-1" data-stage="1">
-          <span class="pill-number">01</span>
-          <span class="pill-label">Cook's Tour</span>
-        </a>
-        <a class="stage-nav-pill" href="#stage-2" data-stage="2">
-          <span class="pill-number">02</span>
-          <span class="pill-label">Compounded Patterns</span>
-        </a>
-        <a class="stage-nav-pill" href="#stage-3" data-stage="3">
-          <span class="pill-number">03</span>
-          <span class="pill-label">Interactive Runner</span>
-        </a>
-        <a class="stage-nav-pill" href="#stage-4" data-stage="4">
-          <span class="pill-number">04</span>
-          <span class="pill-label">Handcrafted Engine</span>
-        </a>
-        <a class="stage-nav-pill" href="#stage-5" data-stage="5">
-          <span class="pill-number">05</span>
-          <span class="pill-label">Exam Drills</span>
-        </a>
-      </nav>
     </header>
 
-    <!-- Stage 1 -->
-    <section class="masterclass-stage" id="stage-1" data-stage="1">
-      <div class="stage-header-top">
+    <!-- ============================================================== -->
+    <!-- 1. FRAMEWORK SPECIFICATION & COOK'S TOUR UML                   -->
+    <!-- ============================================================== -->
+    <section class="chapter" id="sec-profile">
+      <div class="chapter-head">
+        <span class="chapter-num">1</span>
         <div>
-          <span class="stage-eyebrow-pill">STAGE 01 OF 05 · FOUNDATIONS</span>
-          <h3 class="stage-title">Cook’s Tour: Design Goals &amp; Philosophy</h3>
-        </div>
-        <button class="stage-mastery-btn" type="button" onclick="markStageComplete(1)">Mark Stage 1 Complete</button>
-      </div>
-
-      <div class="stage-takeaways-box">
-        <div class="stage-takeaways-title">
-          <span>⚡</span>
-          <span>Core Takeaways for Frankfurt UAS Students</span>
-        </div>
-        <div class="takeaway-grid">
-          <div class="takeaway-item">
-            <strong>1. Alexander's Living Pattern Web</strong>
-            <p>Patterns are not isolated silos. JUnit succeeds because its patterns support and reinforce one another.</p>
-          </div>
-          <div class="takeaway-item">
-            <strong>2. Low Cognitive Overhead</strong>
-            <p>A test framework must not force developers to write more boilerplate code than production code.</p>
-          </div>
-          <div class="takeaway-item">
-            <strong>3. Universal Uniformity</strong>
-            <p>The Composite pattern allows the test runner to treat 1 test or 10,000 tests identically.</p>
-          </div>
+          <h2>Framework Definition &amp; The 5 Compounded Patterns</h2>
+          <span style="font-size:0.85rem; color:var(--text-muted); font-weight:600;">A Cook's Tour Blueprint</span>
         </div>
       </div>
 
-      <p>
-        In the article <em>"JUnit: A Cook's Tour"</em>, Gamma and Beck outlined the primary engineering forces guiding their architecture. They wanted a system where developers would feel compelled to write unit tests because the framework never got in the way.
-      </p>
-
-      <div class="stage-next-card">
-        <div class="stage-next-body">
-          <span class="stage-next-eyebrow">UP NEXT · STAGE 02</span>
-          <h4 class="stage-next-title">Patterns in Harmony: The 5 Compounded Patterns</h4>
-          <p class="stage-next-desc">Deconstruct Command, Composite, Template Method, Collecting Parameter, and Observer.</p>
+      <div class="pattern-spec-box">
+        <div class="spec-grid">
+          <div class="spec-row">
+            <span class="spec-label">Library vs Framework:</span>
+            <span class="spec-val">
+              • <strong>Library:</strong> A collection of classes and functions that <em>your code calls</em>. Your application retains main control flow.<br>
+              • <strong>Framework:</strong> A semi-complete application structure that <em>calls your code</em> (<strong>Inversion of Control</strong> / Hollywood Principle). The framework defines the frozen architecture; developers plug in custom behavior at defined <strong>hot spots</strong>.
+            </span>
+          </div>
+          <div class="spec-row">
+            <span class="spec-label">The 5 Compounded Patterns in JUnit:</span>
+            <span class="spec-val">
+              <ol style="margin:0; padding-left:1.25rem; line-height:1.6;">
+                <li><strong>Command Pattern:</strong> Each individual test execution is encapsulated as a Command object (via <code>TestCase.runTest()</code>).</li>
+                <li><strong>Template Method Pattern:</strong> <code>TestCase.runBare()</code> fixes the invariant test lifecycle: <code>setUp() &rarr; runTest() &rarr; tearDown()</code>.</li>
+                <li><strong>Composite Pattern:</strong> <code>Test</code> interface allows individual <code>TestCase</code> leaves and hierarchical <code>TestSuite</code> composites to be run uniformly via <code>run(TestResult)</code>.</li>
+                <li><strong>Collecting Parameter Pattern:</strong> <code>TestResult</code> is passed through the test hierarchy to accumulate test counts, failures, and errors without coupling tests to reporting UI.</li>
+                <li><strong>Adapter Pattern:</strong> Wrapping test methods dynamically via reflection or anonymous inner classes to match the <code>Test</code> interface.</li>
+              </ol>
+            </span>
+          </div>
         </div>
-        <a class="stage-next-btn" href="#stage-2">Proceed to Stage 2 →</a>
+      </div>
+
+      <!-- Vector UML: Cook's Tour Core -->
+      <div class="guide-card">
+        <div class="guide-card-header">
+          <span>📐 Canonical Architecture: Figure 4.1 JUnit Cook’s Tour UML</span>
+        </div>
+        <div class="uml-diagram-box" style="text-align:center;">
+          <svg viewBox="0 0 680 280" style="max-width:100%; height:auto;" aria-label="Figure 4.1: JUnit Cook's Tour Core UML">
+            <!-- Test Interface Box -->
+            <rect x="250" y="20" width="180" height="65" rx="3" fill="var(--bg-raised)" stroke="var(--border)" stroke-width="1.5"/>
+            <rect x="250" y="20" width="180" height="24" rx="3" fill="var(--bg-subtle)"/>
+            <text x="340" y="37" fill="var(--text)" font-family="var(--font-display)" font-size="12" font-style="italic" font-weight="700" text-anchor="middle">&lt;&lt;interface&gt;&gt; Test</text>
+            <line x1="250" y1="44" x2="430" y2="44" stroke="var(--border)" stroke-width="1.5"/>
+            <text x="260" y="65" fill="var(--text)" font-family="var(--font-mono)" font-size="11">+ run(result: TestResult)</text>
+
+            <!-- TestCase Abstract Class Box -->
+            <rect x="60" y="140" width="220" height="115" rx="3" fill="var(--bg-raised)" stroke="var(--border)" stroke-width="1.5"/>
+            <rect x="60" y="140" width="220" height="24" rx="3" fill="var(--bg-subtle)"/>
+            <text x="170" y="157" fill="var(--text)" font-family="var(--font-display)" font-size="12" font-style="italic" font-weight="700" text-anchor="middle">&lt;&lt;abstract&gt;&gt; TestCase</text>
+            <line x1="60" y1="164" x2="280" y2="164" stroke="var(--border)" stroke-width="1.5"/>
+            <text x="70" y="180" fill="var(--text-muted)" font-family="var(--font-mono)" font-size="10">+ run(result: TestResult)</text>
+            <text x="70" y="196" fill="var(--accent)" font-family="var(--font-mono)" font-size="10" font-weight="700">+ runBare() [Template Method]</text>
+            <text x="70" y="212" fill="var(--text)" font-family="var(--font-mono)" font-size="10"># setUp() [Hook]</text>
+            <text x="70" y="228" fill="var(--text)" font-family="var(--font-mono)" font-size="10"># tearDown() [Hook]</text>
+            <text x="70" y="244" fill="var(--text)" font-family="var(--font-mono)" font-size="10"># runTest()</text>
+
+            <!-- TestSuite Class Box -->
+            <rect x="400" y="140" width="220" height="85" rx="3" fill="var(--bg-raised)" stroke="var(--border)" stroke-width="1.5"/>
+            <rect x="400" y="140" width="220" height="24" rx="3" fill="var(--bg-subtle)"/>
+            <text x="510" y="157" fill="var(--text)" font-family="var(--font-display)" font-size="12" font-weight="700" text-anchor="middle">TestSuite [Composite]</text>
+            <line x1="400" y1="164" x2="620" y2="164" stroke="var(--border)" stroke-width="1.5"/>
+            <text x="410" y="180" fill="var(--text-muted)" font-family="var(--font-mono)" font-size="10">- tests: List&lt;Test&gt;</text>
+            <text x="410" y="198" fill="var(--text)" font-family="var(--font-mono)" font-size="10">+ addTest(t: Test)</text>
+            <text x="410" y="214" fill="var(--text)" font-family="var(--font-mono)" font-size="10">+ run(result: TestResult)</text>
+
+            <!-- Realization from TestCase & TestSuite to Test -->
+            <line x1="340" y1="85" x2="340" y2="115" stroke="var(--border)" stroke-width="1.5" stroke-dasharray="4,4"/>
+            <polygon points="340,85 333,98 347,98" fill="var(--bg-raised)" stroke="var(--border)" stroke-width="1.5"/>
+            <line x1="170" y1="115" x2="510" y2="115" stroke="var(--border)" stroke-width="1.5"/>
+            <line x1="170" y1="115" x2="170" y2="140" stroke="var(--border)" stroke-width="1.5"/>
+            <line x1="510" y1="115" x2="510" y2="140" stroke="var(--border)" stroke-width="1.5"/>
+
+            <!-- Composite Aggregation from TestSuite back up to Test -->
+            <path d="M 620 170 L 650 170 L 650 50 L 430 50" fill="none" stroke="var(--border)" stroke-width="1.5"/>
+            <polygon points="620,170 628,165 636,170 628,175" fill="var(--bg-raised)" stroke="var(--border)" stroke-width="1.5"/>
+            <polygon points="430,50 440,45 440,55" fill="var(--border)"/>
+            <text x="610" y="42" fill="var(--accent)" font-family="var(--font-mono)" font-size="10" font-weight="700">0..* tests</text>
+          </svg>
+        </div>
       </div>
     </section>
 
-    <!-- Stage 2 -->
-    <section class="masterclass-stage" id="stage-2" data-stage="2">
-      <div class="stage-header-top">
+    <!-- ============================================================== -->
+    <!-- 2. MINIMAL JUNIT COOK'S TOUR CODE                              -->
+    <!-- ============================================================== -->
+    <section class="chapter" id="sec-code">
+      <div class="chapter-head">
+        <span class="chapter-num">2</span>
         <div>
-          <span class="stage-eyebrow-pill">STAGE 02 OF 05 · ARCHITECTURAL HARMONY</span>
-          <h3 class="stage-title">Patterns Working in Harmony</h3>
-        </div>
-        <button class="stage-mastery-btn" type="button" onclick="markStageComplete(2)">Mark Stage 2 Complete</button>
-      </div>
-
-      <div class="pillar-grid-2col" style="margin: 1.5rem 0;">
-        <div class="takeaway-item">
-          <h4 style="color:#2563eb;margin-top:0;">Command &amp; Composite Synergies</h4>
-          <p>
-            <code>TestCase</code> is a <strong>Command</strong> object encapsulating the execution of a test method. <code>TestSuite</code> is a <strong>Composite</strong> that aggregates multiple <code>Test</code> instances.
-          </p>
-          <p style="font-size:0.85rem;color:var(--text-muted);">
-            Because both implement the <code>Test</code> interface, a <code>TestSuite</code> can contain other <code>TestSuite</code> instances recursively. The runner calls <code>test.run(result)</code> without knowing whether it is executing a leaf or an entire module hierarchy.
-          </p>
-        </div>
-
-        <div class="takeaway-item">
-          <h4 style="color:#10b981;margin-top:0;">Template Method &amp; Collecting Parameter</h4>
-          <p>
-            <code>TestCase.runBare()</code> uses <strong>Template Method</strong> to bracket test execution with <code>setUp()</code> and <code>tearDown()</code>.
-          </p>
-          <p style="font-size:0.85rem;color:var(--text-muted);">
-            Errors are passed to <code>TestResult</code> via <strong>Collecting Parameter</strong>. Furthermore, <code>TestResult</code> is an <strong>Observer Subject</strong>: whenever a test finishes, it notifies GUI/CLI observers without coupling test code to UI libraries.
-          </p>
+          <h2>Minimal Architecture &amp; Clean Code</h2>
+          <span style="font-size:0.85rem; color:var(--text-muted); font-weight:600;">The Core Execution Engine in &lt; 35 Lines</span>
         </div>
       </div>
 
-      <div class="stage-next-card">
-        <div class="stage-next-body">
-          <span class="stage-next-eyebrow">UP NEXT · STAGE 03</span>
-          <h4 class="stage-next-title">Interactive Laboratory: The JUnit Runner &amp; Composite Hierarchy</h4>
-          <p class="stage-next-desc">Add test cases, inject assertion failures, and observe how TestResult and TestListener coordinate.</p>
-        </div>
-        <a class="stage-next-btn" href="#stage-3">Proceed to Stage 3 →</a>
-      </div>
-    </section>
-
-    <!-- Stage 3 -->
-    <section class="masterclass-stage" id="stage-3" data-stage="3">
-      <div class="stage-header-top">
-        <div>
-          <span class="stage-eyebrow-pill">STAGE 03 OF 05 · HANDS-ON LAB</span>
-          <h3 class="stage-title">Interactive JUnit Composite Runner &amp; Collecting Parameter Lab</h3>
-        </div>
-        <button class="stage-mastery-btn" type="button" onclick="markStageComplete(3)">Mark Stage 3 Complete</button>
-      </div>
-
-      <div class="junit-runner-card">
-        <h4 style="margin:0;color:var(--text);">Simulated Cook’s Tour TestRunner</h4>
-        <p style="font-size:0.85rem;color:var(--text-muted);margin:0.25rem 0 1rem;">
-          Configure test cases inside a composite tree, execute the test suite, and observe the Collecting Parameter and Observer UI progress bar:
-        </p>
-
-        <div style="display:flex;gap:1rem;flex-wrap:wrap;align-items:center;">
-          <button class="stage-mastery-btn" style="background:#2563eb;" onclick="runJunitSim(false)">▶ Run Suite (All Pass)</button>
-          <button class="stage-mastery-btn" style="background:#ef4444;" onclick="runJunitSim(true)">▶ Run Suite (With Failure &amp; Error)</button>
-        </div>
-
-        <div class="junit-tree" id="junitTree">
-Composite Hierarchy:
-└── RootTestSuite (TestSuite)
-    ├── OrderModuleTestSuite (TestSuite)
-    │   ├── testOrderCreation (TestCase - Command)
-    │   └── testTaxCalculation (TestCase - Command)
-    └── PaymentModuleTestSuite (TestSuite)
-        ├── testStripeTokenization (TestCase - Command)
-        └── testCurrencyConversion (TestCase - Command)
-        </div>
-
-        <div style="font-size:0.85rem;font-weight:700;color:var(--text-muted);margin-top:1rem;">
-          TestListener Observer Visual (Green/Red Bar):
-        </div>
-        <div class="junit-bar" id="junitProgressBar"></div>
-        <div id="junitStatusText" style="font-family:var(--font-mono);font-size:0.82rem;margin-top:0.5rem;color:var(--text-muted);">
-          Status: Ready to execute.
-        </div>
-      </div>
-
-      <div class="stage-next-card">
-        <div class="stage-next-body">
-          <span class="stage-next-eyebrow">UP NEXT · STAGE 04</span>
-          <h4 class="stage-next-title">Handcrafted Engine: Pure Java Mini-JUnit</h4>
-          <p class="stage-next-desc">Inspect an exact 150-line implementation of Gamma &amp; Beck's Cook's Tour in pure Java.</p>
-        </div>
-        <a class="stage-next-btn" href="#stage-4">Proceed to Stage 4 →</a>
-      </div>
-    </section>
-
-    <!-- Stage 4 -->
-    <section class="masterclass-stage" id="stage-4" data-stage="4">
-      <div class="stage-header-top">
-        <div>
-          <span class="stage-eyebrow-pill">STAGE 04 OF 05 · PRODUCTION ARCHITECTURE</span>
-          <h3 class="stage-title">Handcrafted Mini-JUnit Cook’s Tour Engine</h3>
-        </div>
-        <button class="stage-mastery-btn" type="button" onclick="markStageComplete(4)">Mark Stage 4 Complete</button>
-      </div>
-
-      <div class="code-window">
-        <div class="code-window-bar">
-          <div class="code-dots"><span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span></div>
-          <span class="code-file">MiniJUnitEngine.java · Complete Cook's Tour Core</span>
-          <button class="code-copy-btn" onclick="copySnippet('codeMiniJunit')">Copy Code</button>
-        </div>
-        <pre class="code-pre" id="codeMiniJunit"><code><span class="k">package</span> de.frankfurt.uas.posa.minijunit;
-
-<span class="k">import</span> java.util.*;
-
-<span class="c">// 1. COMPOSITE INTERFACE</span>
-<span class="k">public interface</span> <span class="nc">Test</span> {
-    <span class="k">void</span> <span class="nf">run</span>(<span class="nc">TestResult</span> result);
-    <span class="k">int</span> <span class="nf">countTestCases</span>();
+      <details class="headfirst-card" open>
+        <summary class="headfirst-summary">
+          <div class="headfirst-title">
+            <span>☕ Core JUnit Cook's Tour Implementation</span>
+          </div>
+          <span class="headfirst-badge">Template Method + Composite + Collecting Parameter</span>
+        </summary>
+        <div class="headfirst-body">
+          <pre style="background:var(--code-bg); padding:1rem; border-radius:6px; font-family:var(--font-mono); font-size:0.85rem; line-height:1.5; overflow-x:auto;"><code>// 1. Common Interface (Composite Component)
+public interface Test {
+    void run(TestResult result);
 }
 
-<span class="c">// 2. COMMAND &amp; TEMPLATE METHOD LEAF</span>
-<span class="k">public abstract class</span> <span class="nc">TestCase</span> <span class="k">implements</span> <span class="nc">Test</span> {
-    <span class="k">private final</span> <span class="nc">String</span> name;
-    <span class="k">public</span> <span class="nf">TestCase</span>(<span class="nc">String</span> name) { <span class="k">this</span>.name = name; }
+// 2. Leaf + Template Method
+public abstract class TestCase implements Test {
+    private final String name;
+    public TestCase(String name) { this.name = name; }
 
-    <span class="nd">@Override</span>
-    <span class="k">public void</span> <span class="nf">run</span>(<span class="nc">TestResult</span> result) {
-        result.startTest(<span class="k">this</span>);
-        <span class="k">try</span> {
-            runBare();
-        } <span class="k">catch</span> (<span class="nc">AssertionError</span> f) {
-            result.addFailure(<span class="k">this</span>, f);
-        } <span class="k">catch</span> (<span class="nc">Throwable</span> e) {
-            result.addError(<span class="k">this</span>, e);
-        } <span class="k">finally</span> {
-            result.endTest(<span class="k">this</span>);
-        }
-    }
-
-    <span class="c">// Template Method</span>
-    <span class="k">public void</span> <span class="nf">runBare</span>() <span class="k">throws</span> <span class="nc">Throwable</span> {
+    // Template Method: Defines the invariant execution skeleton
+    public void runBare() throws Throwable {
         setUp();
-        <span class="k">try</span> {
+        try {
             runTest();
-        } <span class="k">finally</span> {
-            tearDown();
+        } finally {
+            tearDown(); // Fixture sandboxing: always runs!
         }
     }
 
-    <span class="k">protected void</span> <span class="nf">setUp</span>() <span class="k">throws</span> <span class="nc">Exception</span> {}
-    <span class="k">protected void</span> <span class="nf">tearDown</span>() <span class="k">throws</span> <span class="nc">Exception</span> {}
-    <span class="k">protected abstract void</span> <span class="nf">runTest</span>() <span class="k">throws</span> <span class="nc">Throwable</span>;
+    protected void setUp() throws Exception {}    // Hook
+    protected void tearDown() throws Exception {} // Hook
+    protected abstract void runTest() throws Throwable;
 
-    <span class="nd">@Override</span>
-    <span class="k">public int</span> <span class="nf">countTestCases</span>() { <span class="k">return</span> <span class="m">1</span>; }
+    @Override
+    public void run(TestResult result) {
+        result.startTest(this);
+        try {
+            runBare();
+        } catch (Throwable t) {
+            result.addFailure(this, t);
+        }
+        result.endTest(this);
+    }
 }
 
-<span class="c">// 3. COMPOSITE SUITE</span>
-<span class="k">public class</span> <span class="nc">TestSuite</span> <span class="k">implements</span> <span class="nc">Test</span> {
-    <span class="k">private final</span> <span class="nc">List</span>&lt;<span class="nc">Test</span>&gt; tests = <span class="k">new</span> <span class="nc">ArrayList</span>&lt;&gt;();
-    <span class="k">public void</span> <span class="nf">addTest</span>(<span class="nc">Test</span> t) { tests.add(t); }
+// 3. Composite Container
+public class TestSuite implements Test {
+    private final List&lt;Test&gt; tests = new ArrayList&lt;&gt;();
+    public void addTest(Test t) { tests.add(t); }
 
-    <span class="nd">@Override</span>
-    <span class="k">public void</span> <span class="nf">run</span>(<span class="nc">TestResult</span> result) {
-        <span class="k">for</span> (<span class="nc">Test</span> t : tests) {
-            <span class="k">if</span> (result.shouldStop()) <span class="k">break</span>;
-            t.run(result);
+    @Override
+    public void run(TestResult result) {
+        for (Test t : tests) {
+            if (result.shouldStop()) break;
+            t.run(result); // Recursive uniform execution!
         }
     }
-
-    <span class="nd">@Override</span>
-    <span class="k">public int</span> <span class="nf">countTestCases</span>() {
-        <span class="k">return</span> tests.stream().mapToInt(<span class="nc">Test</span>::countTestCases).sum();
-    }
-}
-
-<span class="c">// 4. COLLECTING PARAMETER &amp; OBSERVER SUBJECT</span>
-<span class="k">public class</span> <span class="nc">TestResult</span> {
-    <span class="k">private int</span> runTests = <span class="m">0</span>;
-    <span class="k">private final</span> <span class="nc">List</span>&lt;<span class="nc">String</span>&gt; failures = <span class="k">new</span> <span class="nc">ArrayList</span>&lt;&gt;();
-    <span class="k">private final</span> <span class="nc">List</span>&lt;<span class="nc">String</span>&gt; errors = <span class="k">new</span> <span class="nc">ArrayList</span>&lt;&gt;();
-
-    <span class="k">public synchronized void</span> <span class="nf">startTest</span>(<span class="nc">Test</span> t) { runTests++; }
-    <span class="k">public synchronized void</span> <span class="nf">endTest</span>(<span class="nc">Test</span> t) {}
-    <span class="k">public synchronized void</span> <span class="nf">addFailure</span>(<span class="nc">Test</span> t, <span class="nc">AssertionError</span> f) { failures.add(t.toString() + <span class="s">": "</span> + f.getMessage()); }
-    <span class="k">public synchronized void</span> <span class="nf">addError</span>(<span class="nc">Test</span> t, <span class="nc">Throwable</span> e) { errors.add(t.toString() + <span class="s">": "</span> + e.getMessage()); }
-    <span class="k">public boolean</span> <span class="nf">wasSuccessful</span>() { <span class="k">return</span> failures.isEmpty() &amp;&amp; errors.isEmpty(); }
-    <span class="k">public boolean</span> <span class="nf">shouldStop</span>() { <span class="k">return false</span>; }
 }</code></pre>
-      </div>
-
-      <div class="stage-next-card">
-        <div class="stage-next-body">
-          <span class="stage-next-eyebrow">UP NEXT · STAGE 05</span>
-          <h4 class="stage-next-title">Frankfurt UAS Exam Drills &amp; Self-Study Traps</h4>
-          <p class="stage-next-desc">Direct exam preparation for Prof. Dr. Jörg Schäfer's Cook's Tour questions.</p>
         </div>
-        <a class="stage-next-btn" href="#stage-5">Proceed to Stage 5 →</a>
-      </div>
+      </details>
     </section>
 
-    <!-- Stage 5 -->
-    <section class="masterclass-stage" id="stage-5" data-stage="5">
-      <div class="stage-header-top">
+    <!-- ============================================================== -->
+    <!-- 3. HOT SPOTS & JUNIT EVOLUTION                                 -->
+    <!-- ============================================================== -->
+    <section class="chapter" id="sec-rules">
+      <div class="chapter-head">
+        <span class="chapter-num">3</span>
         <div>
-          <span class="stage-eyebrow-pill">STAGE 05 OF 05 · ACADEMIC VERIFICATION</span>
-          <h3 class="stage-title">Frankfurt UAS Examination Drills (Prof. Dr. Jörg Schäfer)</h3>
+          <h2>Hot Spots, Frozen Spots &amp; Architectural Evolution</h2>
+          <span style="font-size:0.85rem; color:var(--text-muted); font-weight:600;">Framework Extension Mechanisms</span>
         </div>
-        <button class="stage-mastery-btn" type="button" onclick="markStageComplete(5)">Mark Stage 5 Complete</button>
       </div>
 
-      <div class="drill-list">
-        <details class="drill-item" open>
-          <summary>
-            <span class="drill-tag">Exam Drill 1 · Pattern Collaboration</span>
-            <span class="drill-q">Name the four primary patterns in Gamma and Beck’s Cook’s Tour and describe how they interact.</span>
-            <span class="drill-reveal-hint"></span>
-          </summary>
-          <div class="drill-a">
-            <p><strong>Official Model Answer:</strong></p>
-            <ol>
-              <li><strong>Command (TestCase):</strong> Wraps test method executions as standalone command objects that can be collected and invoked polymorphically.</li>
-              <li><strong>Composite (TestSuite):</strong> Composes individual <code>TestCase</code> commands and nested <code>TestSuite</code> containers under the unified <code>Test</code> interface.</li>
-              <li><strong>Template Method (runBare):</strong> Defines the execution algorithm invariant: <code>setUp()</code> $\to$ <code>runTest()</code> $\to$ <code>tearDown()</code>, where <code>tearDown()</code> is protected inside a <code>finally</code> block.</li>
-              <li><strong>Collecting Parameter (TestResult):</strong> Thread-safe object passed across the composite hierarchy to record passed counts, failure stacks, and unhandled errors without stopping test execution.</li>
-            </ol>
-          </div>
-        </details>
-
-        <details class="drill-item">
-          <summary>
-            <span class="drill-tag">Exam Drill 2 · Decoupling</span>
-            <span class="drill-q">How does JUnit keep its core engine decoupled from graphical user interfaces (e.g. Swing, Eclipse, IntelliJ)?</span>
-            <span class="drill-reveal-hint"></span>
-          </summary>
-          <div class="drill-a">
-            <p><strong>Official Model Answer:</strong></p>
-            <p>
-              Via the <strong>Observer Pattern</strong>. <code>TestResult</code> acts as the Subject. GUI and CLI runners implement the <code>TestListener</code> interface and register themselves with <code>testResult.addListener(this)</code>. When tests start, fail, or end, <code>TestResult</code> notifies the listener, updating progress bars and counters without the core JUnit classes ever importing a UI framework.
+      <!-- Hot Spots vs Frozen Spots -->
+      <div class="guide-card">
+        <div class="guide-card-header">
+          <span class="rule-badge">FRAMEWORK AXIOM</span>
+          <span>Hot Spots vs. Frozen Spots</span>
+        </div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:1.25rem;">
+          <div style="background:var(--bg); border:1px solid var(--border); border-top:3px solid #6366f1; border-radius:6px; padding:1.2rem;">
+            <strong style="color:var(--accent); font-size:1rem;">Frozen Spots (Architecture Skeleton)</strong>
+            <p style="font-size:0.88rem; color:var(--text-muted); line-height:1.55; margin:0.5rem 0 0;">
+              The invariant parts of the framework that application code cannot alter: the test lifecycle sequence (<code>runBare()</code>), composite traversal (<code>TestSuite.run()</code>), and failure logging (<code>TestResult</code>).
             </p>
           </div>
-        </details>
-
-        <details class="drill-item">
-          <summary>
-            <span class="drill-tag">Exam Drill 3 · JUnit 5 Migration</span>
-            <span class="drill-q">Why was the monolithic `@RunWith` and `@Rule` model of JUnit 4 replaced with `@ExtendWith` in JUnit 5?</span>
-            <span class="drill-reveal-hint"></span>
-          </summary>
-          <div class="drill-a">
-            <p><strong>Official Model Answer:</strong></p>
-            <p>
-              JUnit 4 suffered from the <strong>Single Runner Limitation</strong>: a test class could only specify one `@RunWith` runner. This prevented developers from simultaneously using Spring's test runner, Mockito's runner, and parameterization. JUnit 5 solved this with the <strong>Jupiter Extension Model</strong> (`@ExtendWith`), which uses composable, multi-stage lifecycle interceptors that can be stacked arbitrarily on any test class or method.
+          <div style="background:var(--bg); border:1px solid var(--border); border-top:3px solid #10b981; border-radius:6px; padding:1.2rem;">
+            <strong style="color:#10b981; font-size:1rem;">Hot Spots (Extension Points)</strong>
+            <p style="font-size:0.88rem; color:var(--text-muted); line-height:1.55; margin:0.5rem 0 0;">
+              The variable parts where developers plug in custom domain logic: concrete test methods, fixture hooks (<code>setUp()</code>, <code>tearDown()</code>), custom runners, and assertions.
             </p>
           </div>
-        </details>
+        </div>
+      </div>
+
+      <!-- Evolution: JUnit 3 vs 4 vs 5 -->
+      <div class="guide-card">
+        <div class="guide-card-header">
+          <span class="rule-badge warn">EXAM COMPARISON</span>
+          <span>JUnit 3.8 vs. JUnit 4 vs. JUnit 5 (Jupiter)</span>
+        </div>
+        <div style="overflow-x:auto;">
+          <table style="width:100%; border-collapse:collapse; font-size:0.88rem;">
+            <thead>
+              <tr style="border-bottom:2px solid var(--border); text-align:left;">
+                <th style="padding:0.6rem;">Generation</th>
+                <th style="padding:0.6rem;">Coupling Mechanism</th>
+                <th style="padding:0.6rem;">Test Discovery</th>
+                <th style="padding:0.6rem;">Extension Architecture</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr style="border-bottom:1px solid var(--border);">
+                <td style="padding:0.6rem;"><strong>JUnit 3.8</strong></td>
+                <td style="padding:0.6rem;">Inheritance: Must extend <code>TestCase</code></td>
+                <td style="padding:0.6rem;">Naming convention (methods starting with <code>test*</code>)</td>
+                <td style="padding:0.6rem;">Subclassing &amp; overriding template hooks (<code>setUp/tearDown</code>)</td>
+              </tr>
+              <tr style="border-bottom:1px solid var(--border);">
+                <td style="padding:0.6rem;"><strong>JUnit 4</strong></td>
+                <td style="padding:0.6rem;">Annotations: Plain Java classes (POJO)</td>
+                <td style="padding:0.6rem;">Metadata: <code>@Test</code>, <code>@Before</code>, <code>@After</code></td>
+                <td style="padding:0.6rem;"><code>@RunWith(Runner.class)</code> and <code>@Rule</code> (Decorator/Interceptor)</td>
+              </tr>
+              <tr>
+                <td style="padding:0.6rem;"><strong>JUnit 5 (Jupiter)</strong></td>
+                <td style="padding:0.6rem;">Modular Architecture (Platform, Jupiter, Vintage)</td>
+                <td style="padding:0.6rem;">Annotations + dynamic tests (<code>@TestFactory</code>)</td>
+                <td style="padding:0.6rem;">Unified Extension Model via <code>@ExtendWith</code> (Dependency Injection)</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </section>
 
-    <!-- Footer Navigation -->
-    <footer class="page-footer" style="margin-top: 4rem; padding-top: 2rem; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
-      <a class="nav-prev" href="unit-3-structural.html" style="font-weight: 700; color: var(--accent); text-decoration: none;">← Previous: Unit 3 · Structural Patterns</a>
-      <a class="nav-next" href="unit-5-theory.html" style="font-weight: 700; color: var(--accent); text-decoration: none;">Next: Unit 5 · Software Pattern Theory →</a>
-    </footer>
+    <!-- ============================================================== -->
+    <!-- 4. CORE EXAM PRACTICE & DIRECT MODEL ANSWERS                   -->
+    <!-- ============================================================== -->
+    <section class="chapter" id="sec-drills">
+      <div class="chapter-head">
+        <span class="chapter-num">4</span>
+        <div>
+          <h2>Core Exam Practice &amp; Model Solutions</h2>
+          <span style="font-size:0.85rem; color:var(--text-muted); font-weight:600;">Direct Question &rarr; Answer Format</span>
+        </div>
+      </div>
+
+      <!-- QA 1: JUnit Patterns -->
+      <div class="qa-block">
+        <div class="qa-q">
+          Question 1: The Role of Template Method and Composite in JUnit
+          <span class="pts-badge">6 Points</span>
+          <p style="font-size:0.92rem; font-weight:400; color:var(--text-muted); margin-top:0.5rem;">
+            Explain how the Template Method and Composite patterns are utilized in the classic JUnit architecture (Cook's Tour) and describe what benefits they provide!
+          </p>
+        </div>
+        <div class="qa-a">
+          <span class="ans-label">Model Answer:</span>
+          <ol>
+            <li><strong>Template Method Pattern (in <code>TestCase.runBare()</code>):</strong>
+              <ul>
+                <li><strong>Role:</strong> Defines the invariant test execution algorithm: <code>setUp()</code> &rarr; <code>runTest()</code> &rarr; <code>tearDown()</code>.</li>
+                <li><strong>Benefit:</strong> Guarantees fixture sandboxing. Placing <code>tearDown()</code> in a <code>finally</code> block ensures resource cleanup even if the test method throws an exception. Subclasses only override hooks, preserving the execution lifecycle without code duplication.</li>
+              </ul>
+            </li>
+            <li><strong>Composite Pattern (in <code>Test</code>, <code>TestCase</code>, and <code>TestSuite</code>):</strong>
+              <ul>
+                <li><strong>Role:</strong> <code>Test</code> acts as the Component interface, <code>TestCase</code> acts as the Leaf, and <code>TestSuite</code> acts as the Composite.</li>
+                <li><strong>Benefit:</strong> Clients (such as a GUI or CLI <code>TestRunner</code>) treat individual test cases and complex nested test suites uniformly by invoking <code>test.run(result)</code>, enabling arbitrary hierarchical grouping.</li>
+              </ul>
+            </li>
+          </ol>
+        </div>
+      </div>
+
+      <!-- QA 2: Collecting Parameter -->
+      <div class="qa-block">
+        <div class="qa-q">
+          Question 2: The Collecting Parameter Pattern
+          <span class="pts-badge">4 Points</span>
+          <p style="font-size:0.92rem; font-weight:400; color:var(--text-muted); margin-top:0.5rem;">
+            Why does JUnit pass a <code>TestResult</code> object to <code>Test.run(result)</code> rather than having <code>run()</code> return test outcomes directly?
+          </p>
+        </div>
+        <div class="qa-a">
+          <span class="ans-label">Model Answer:</span>
+          <p>
+            Passing <code>TestResult</code> is an application of the <strong>Collecting Parameter Pattern</strong>:
+          </p>
+          <ul>
+            <li><strong>Decoupling Reporting from Execution:</strong> <code>TestCase</code> does not need to know how failures are logged, counted, or formatted for UI presentation.</li>
+            <li><strong>Accumulation Across Hierarchies:</strong> A single <code>TestResult</code> instance can be passed through thousands of nested tests in a <code>TestSuite</code> composite tree, accumulating results incrementally.</li>
+            <li><strong>Fail-Stop &amp; Concurrency Control:</strong> The <code>TestResult</code> object can signal tests to halt early (<code>result.shouldStop()</code>) and synchronize result logging across parallel test threads.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
   </main>
-</div>
-
-<script src="assets/site.js?v=2026.15" defer></script>
-<script>
-// Reading progress bar
-window.addEventListener('scroll', function() {
-  var h = document.documentElement, b = document.body;
-  var st = 'scrollTop', sh = 'scrollHeight';
-  var percent = (h[st]||b[st]) / ((h[sh]||b[sh]) - h.clientHeight) * 100;
-  var bar = document.getElementById('readingProgressBar');
-  if (bar) bar.style.width = percent + '%';
-});
-
-// Blueprint Pillar & Layout Controls
-var _blueprintCollapsed = false;
-var _lastInlineCollapseTime = 0;
-
-function selectPillar(num) {
-  var tabs = document.querySelectorAll('.blueprint-tab');
-  var panels = document.querySelectorAll('.pillar-panel');
-  tabs.forEach(function(t) {
-    var match = t.getAttribute('data-pillar') == num;
-    t.classList.toggle('active', match);
-    t.setAttribute('aria-selected', match ? 'true' : 'false');
-  });
-  panels.forEach(function(p) {
-    p.classList.toggle('active', p.getAttribute('data-pillar') == num);
-  });
-}
-
-function setBlueprintView(mode) {
-  var suite = document.getElementById('blueprintSuite');
-  var btnExplorer = document.getElementById('btnViewExplorer');
-  var btnMatrix = document.getElementById('btnViewMatrix');
-  if (!suite) return;
-
-  if (mode === 'matrix') {
-    suite.classList.add('view-matrix');
-    if (btnMatrix) btnMatrix.classList.add('active');
-    if (btnExplorer) btnExplorer.classList.remove('active');
-    document.querySelectorAll('.pillar-panel').forEach(function(p) { p.classList.add('active'); });
-  } else {
-    suite.classList.remove('view-matrix');
-    if (btnExplorer) btnExplorer.classList.add('active');
-    if (btnMatrix) btnMatrix.classList.remove('active');
-    var activeTab = document.querySelector('.blueprint-tab.active');
-    var pNum = activeTab ? activeTab.getAttribute('data-pillar') : 1;
-    selectPillar(pNum);
-  }
-}
-
-function toggleBlueprintCollapse() {
-  var now = Date.now();
-  if (now - _lastInlineCollapseTime < 250) return;
-  _lastInlineCollapseTime = now;
-
-  _blueprintCollapsed = !_blueprintCollapsed;
-  var body = document.getElementById('blueprintSuiteBody');
-  var hint = document.getElementById('blueprintCollapsedHint');
-  var label = document.getElementById('collapseLabel');
-
-  if (_blueprintCollapsed) {
-    if (body) body.style.display = 'none';
-    if (hint) hint.style.display = 'flex';
-    if (label) label.textContent = '▼ Expand Rubric';
-  } else {
-    if (body) body.style.display = '';
-    if (hint) hint.style.display = 'none';
-    if (label) label.textContent = '▲ Collapse Rubric';
-  }
-}
-
-function copyBlueprintRubric() {
-  var md = `# Unit 4: Case Study JUnit (Cook’s Tour) - 8-Pillar Architecture Rubric
-## Instructor: Prof. Dr. Jörg Schäfer · Frankfurt University of Applied Sciences
-
-### Pillar 1: Intent & Goals
-- Low writing friction, repeatable regression suites, and uniform recursive composability.
-
-### Pillar 2: Structural Topology
-- Test interface implemented by TestCase (Command Leaf) and TestSuite (Composite).
-
-### Pillar 3: Dynamic Lifecycle
-- runBare() Template Method: setUp() -> try { runTest() } finally { tearDown() }.
-
-### Pillar 4: Architectural Evolution
-- JUnit 3 (inheritance & reflection) -> JUnit 4 (@RunWith monolithic) -> JUnit 5 (@ExtendWith composable interceptors).
-
-### Pillar 5: Compounded Patterns
-- Command + Composite + Template Method + Collecting Parameter + Observer + Adapter.
-
-### Pillar 6: Framework Smells
-- Monolithic runner lock-in and leaky shared static fixtures.
-
-### Pillar 7: Production Standard
-- JUnit 5 Jupiter composable Before/After execution extensions.
-
-### Pillar 8: Frankfurt UAS Exam Traps
-- TestResult exists to avoid halting composite iteration on failure.
-- Failure (AssertionFailedError) vs Error (unexpected Throwable).
-`;
-
-  function updateLabelSuccess() {
-    var btn = document.querySelector('.blueprint-suite-actions button[onclick="copyBlueprintRubric()"]');
-    if (btn) {
-      var orig = btn.innerHTML;
-      btn.innerHTML = 'Copied to Clipboard! ✓';
-      setTimeout(function() { btn.innerHTML = orig; }, 2000);
-    }
-  }
-
-  if (navigator.clipboard && navigator.clipboard.writeText) {
-    navigator.clipboard.writeText(md).then(updateLabelSuccess);
-  } else {
-    var ta = document.createElement('textarea');
-    ta.value = md;
-    document.body.appendChild(ta);
-    ta.select();
-    try {
-      document.execCommand('copy');
-      updateLabelSuccess();
-    } catch (e) {
-      alert("Please press Ctrl+C to copy rubric");
-    }
-    document.body.removeChild(ta);
-  }
-}
-
-function copySnippet(elementId) {
-  var el = document.getElementById(elementId);
-  if (!el) return;
-  var text = el.innerText || el.textContent;
-  if (navigator.clipboard && navigator.clipboard.writeText) {
-    navigator.clipboard.writeText(text).then(function() {
-      if (typeof window.showToast === "function") window.showToast("Code snippet copied to clipboard!");
-    });
-  }
-}
-
-function markStageComplete(stageNum) {
-  var btn = event.target;
-  if (btn) {
-    btn.textContent = "Completed ✓";
-    btn.style.background = "#2563eb";
-    btn.style.color = "#fff";
-  }
-  var pill = document.querySelector('.stage-nav-pill[data-stage="' + stageNum + '"]');
-  if (pill) {
-    pill.style.borderColor = "#2563eb";
-  }
-  if (typeof window.showToast === "function") window.showToast("Stage " + stageNum + " marked complete! Great progress.");
-}
-
-// Simulated JUnit Runner Engine
-function runJunitSim(withFailure) {
-  var bar = document.getElementById('junitProgressBar');
-  var status = document.getElementById('junitStatusText');
-  if (!bar || !status) return;
-
-  status.textContent = "Executing TestSuite... running 4 tests across 2 composite suites...";
-  bar.style.width = "30%";
-  bar.classList.remove('has-failure');
-
-  setTimeout(function() {
-    bar.style.width = "70%";
-    setTimeout(function() {
-      bar.style.width = "100%";
-      if (withFailure) {
-        bar.classList.add('has-failure');
-        status.innerHTML = "<span style='color:#ef4444;font-weight:700;'>[TEST RUN FAILED]</span> 4 Tests Run, 1 Failure (AssertionFailedError: expected 150 but was 120), 0 Errors. TestResult collected outcome successfully!";
-      } else {
-        bar.classList.remove('has-failure');
-        status.innerHTML = "<span style='color:#22c55e;font-weight:700;'>[TEST RUN SUCCESSFUL ✓]</span> 4 Tests Run, 0 Failures, 0 Errors. Green Bar preserved!";
-      }
-    }, 300);
-  }, 300);
-}
-
-window.selectPillar = selectPillar;
-window.setBlueprintView = setBlueprintView;
-window.toggleBlueprintCollapse = toggleBlueprintCollapse;
-window.copyBlueprintRubric = copyBlueprintRubric;
-window.copySnippet = copySnippet;
-window.markStageComplete = markStageComplete;
-window.runJunitSim = runJunitSim;
-</script>
 </body>
 </html>
