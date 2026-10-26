@@ -1,1263 +1,379 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html lang="en" data-theme="dark" data-mode="concept">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Unit 11: Architectural Patterns (MVC, MVP, MVVM) | POSA 2026 Masterclass</title>
-<meta name="description" content="Master Model-View-Controller (MVC), the compound composition of Observer, Strategy, and Composite, the evolution to MVP and MVVM, and POSA exam drills with Prof. Dr. Jörg Schäfer.">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%236366f1'/%3E%3Cpath d='M8 10h16M8 16h16M8 22h10' stroke='%23fff' stroke-width='2.2' stroke-linecap='round'/%3E%3C/svg%3E">
-<link rel="preconnect" href="https://fonts.googleapis.com">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Unit 11 · Case Study: Model-View-Controller (MVC) · POSA Masterclass 2026</title>
+<meta name="description" content="Master the Model-View-Controller (MVC) compound pattern: Observer between Model & View, Strategy between View & Controller, and Composite in View hierarchies.">
+<link rel="stylesheet" href="assets/style.css?v=2026.18">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/style.css?v=2026.16">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,600;0,700;1,400&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,600;1,700&display=swap" rel="stylesheet">
+<script>
+  window.MathJax = {
+    tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
+    svg: { fontCache: 'global' }
+  };
+</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<script>(function(){try{var t=localStorage.getItem('posa-theme')||localStorage.getItem('dm2026-theme')||'dark';document.documentElement.setAttribute('data-theme',t);var m=localStorage.getItem('posa-mode')||'concept';document.documentElement.setAttribute('data-mode',m);}catch(e){}})();</script>
 <style>
-  .reading-progress-bar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    height: 3px;
-    background: linear-gradient(90deg, #6366f1 0%, #a855f7 50%, #38bdf8 100%);
-    width: 0%;
-    z-index: 9999;
-    transition: width 0.1s ease-out;
-  }
-  .stage-takeaways-box {
-    background: rgba(99, 102, 241, 0.05);
-    border: 1px solid rgba(99, 102, 241, 0.2);
+  .guide-card {
+    background: var(--bg-raised);
+    border: 1px solid var(--border);
     border-radius: var(--radius-md);
     padding: 1.5rem;
-    margin: 2rem 0;
+    margin-bottom: 2rem;
   }
-  [data-theme="light"] .stage-takeaways-box {
-    background: #f5f3ff;
-    border-color: #ddd6fe;
-  }
-  .stage-takeaways-title {
-    font-weight: 800;
-    color: #6366f1;
-    margin-bottom: 0.75rem;
+  .guide-card-header {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
-    font-size: 1.05rem;
-  }
-  .takeaway-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: 1rem;
-    margin-top: 1rem;
-  }
-  .takeaway-item {
-    background: var(--bg-raised);
-    padding: 1rem;
-    border-radius: var(--radius-sm);
-    border: 1px solid var(--border);
-  }
-  .takeaway-item strong {
+    gap: 0.6rem;
+    font-size: 1.15rem;
+    font-weight: 700;
     color: var(--text);
-    display: block;
-    margin-bottom: 0.35rem;
-    font-size: 0.92rem;
+    margin-bottom: 0.75rem;
   }
-  .takeaway-item p {
-    margin: 0;
-    font-size: 0.85rem;
-    color: var(--text-muted);
-    line-height: 1.5;
+  .rule-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.2rem 0.55rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 800;
+    font-family: var(--font-mono);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    background: rgba(99, 102, 241, 0.12);
+    color: #6366f1;
+    border: 1px solid rgba(99, 102, 241, 0.25);
   }
-  /* Interactive Compound MVC Sandbox */
-  .mvc-sandbox-card {
+  .pattern-spec-box {
     background: var(--bg-raised);
     border: 1px solid var(--border);
     border-radius: var(--radius-md);
-    padding: 1.5rem;
-    margin: 2rem 0;
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 1.5rem;
   }
-  .triad-flow-grid {
+  .spec-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 1rem;
-    margin: 1.5rem 0;
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
   }
-  .triad-box {
-    background: #090d16;
-    border: 1px solid #1e293b;
-    border-radius: 8px;
-    padding: 1.25rem;
-    text-align: center;
-    font-family: var(--font-mono);
-    position: relative;
-    transition: all 0.25s ease;
-  }
-  .triad-box.active-pulse {
-    border-color: #38bdf8;
-    box-shadow: 0 0 16px rgba(56, 189, 248, 0.4);
-    transform: translateY(-2px);
-  }
-  .terminal-output {
-    background: #090d16;
-    color: #38bdf8;
-    font-family: var(--font-mono);
-    padding: 0.85rem 1.25rem;
-    border-radius: var(--radius-sm);
-    font-size: 0.82rem;
-    min-height: 48px;
+  .spec-row {
     display: flex;
-    align-items: center;
-    border: 1px solid #1e293b;
-    margin-top: 1rem;
-    overflow-x: auto;
+    flex-direction: column;
+    gap: 0.25rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .spec-row:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+  .spec-label {
+    font-size: 0.8rem;
+    font-family: var(--font-mono);
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 700;
+  }
+  .spec-val {
+    font-size: 0.95rem;
+    color: var(--text);
+    line-height: 1.55;
+  }
+  .qa-block {
+    margin: 1.5rem 0;
+    padding: 1.5rem;
+    background: var(--bg-raised);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+  }
+  .qa-q {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 1rem;
+    line-height: 1.45;
+  }
+  .qa-q .pts-badge {
+    display: inline-block;
+    padding: 0.2rem 0.6rem;
+    background: var(--accent-soft);
+    color: var(--accent);
+    border-radius: 999px;
+    font-size: 0.78rem;
+    font-family: var(--font-mono);
+    font-weight: 700;
+    margin-left: 0.5rem;
+  }
+  .qa-a {
+    padding: 1.25rem 1.5rem;
+    background: var(--bg);
+    border-left: 4px solid var(--accent);
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    font-size: 0.95rem;
+    line-height: 1.65;
+    color: var(--text);
+  }
+  .qa-a .ans-label {
+    display: block;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    font-weight: 800;
+    font-family: var(--font-mono);
+    color: var(--accent);
+    margin-bottom: 0.75rem;
+    letter-spacing: 0.05em;
   }
 </style>
-<script>(function(){try{var t=localStorage.getItem('posa-theme')||'dark';document.documentElement.setAttribute('data-theme',t);var m=localStorage.getItem('posa-mode')||'concept';document.documentElement.setAttribute('data-mode',m);}catch(e){}})();</script>
 </head>
-<body class="mode-stage-focused">
-
-<div class="reading-progress-bar" id="readingProgressBar"></div>
-
-<nav class="sitenav">
-  <div class="sitenav-inner">
-    <a class="sitenav-home" href="index.html">
-      <span style="background:linear-gradient(135deg, #6366f1 0%, #38bdf8 100%);color:#fff;padding:0.2rem 0.55rem;border-radius:6px;font-size:0.82rem;font-weight:800;letter-spacing:0.04em;">POSA</span>
-      <span style="font-weight:800;letter-spacing:-0.02em;">2026</span>
-    </a>
-                <div class="sitenav-links">
-      <a href="index.html">Overview</a>
-      <a href="index.html#curriculum-roadmap">16 Units</a>
-      <a href="mock-1.html">🎓 Mock Exam 1</a>
-      <a href="mock-2.html">📝 Mock Exam 2</a>
+<body>
+  <nav class="sitenav" aria-label="Main Navigation">
+    <div class="sitenav-inner">
+      <a href="index.html" class="sitenav-brand">
+        <span class="brand-badge">POSA 2026</span>
+        <span class="brand-title">Pattern Architecture</span>
+      </a>
+      <div class="sitenav-links">
+        <a href="index.html">Overview</a>
+        <a href="unit-3-composite.html">Unit 3A: Composite</a>
+        <a href="unit-3-iterator.html">Unit 3B: Iterator</a>
+        <a href="unit-10-decoupling.html">Unit 10: Decoupling</a>
+        <a href="unit-11-mvc.html" class="active">Unit 11: MVC</a>
+        <a href="mock-1.html">🎓 Mock Exam 1</a>
+        <a href="mock-2.html">📝 Mock Exam 2</a>
+        <a href="past-papers.html">Practice Hub</a>
+      </div>
+      <button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle theme">
+        <span class="theme-icon light-icon">☀️</span>
+        <span class="theme-icon dark-icon">🌙</span>
+      </button>
     </div>
-    <button class="nav-toggle" id="navToggle" type="button" aria-expanded="false" aria-controls="navPanel">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
-      Menu
-    </button>
-    <button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle color theme">
-      <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path></svg>
-      <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
-    </button>
-    <button class="mode-toggle" id="modeToggle" type="button" aria-label="Toggle technical mode" style="font-size: 1.1rem; line-height: 1;">🎓</button>
-  </div>
-  <div class="nav-panel" id="navPanel">
-    <div class="nav-panel-section">
-      <span class="nav-panel-label">Course Navigation</span>
-      <a href="index.html">Overview</a>
-      <a href="unit-10-decoupling.html">Unit 10 · Decoupling Patterns</a>
-      <a href="unit-11-mvc.html" class="active">Unit 11 · Case Study MVC</a>
-      <a href="unit-12-architectural.html">Unit 12 · Architectural Patterns</a>
-      <a href="mock-1.html">📝 Mock Exam 1</a>
-    </div>
-  </div>
-</nav>
+  </nav>
 
-<!-- Mobile Native Bottom Dock (iOS App Bar) -->
-<nav class="mobile-bottom-dock" aria-label="Mobile Navigation Dock">
-  <a href="#stage-1-triad" class="dock-item active">
-    <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
-    <span>Triad</span>
-  </a>
-  <a href="#stage-2-compound" class="dock-item">
-    <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line><line x1="9" y1="21" x2="9" y2="9"></line></svg>
-    <span>Compound</span>
-  </a>
-  <a href="#stage-3-sandbox" class="dock-item">
-    <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 14 14"></polyline></svg>
-    <span>Sandbox</span>
-  </a>
-  <a href="#stage-4-evolution" class="dock-item">
-    <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
-    <span>MVP/MVVM</span>
-  </a>
-  <a href="#stage-5-exam" class="dock-item">
-    <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
-    <span>Drills</span>
-  </a>
-</nav>
-
-<div class="page-shell">
-  <aside class="sidebar-toc">
+  <aside class="sidebar">
     <div class="sidebar-block">
-      <span class="sidebar-label">Curriculum Navigation</span>
-      <a href="#stage-1-triad" class="jump-stage-btn" data-target-stage="stage-1-triad"><span class="toc-num">1</span>The Smalltalk-80 Triad</a>
-      <a href="#stage-2-compound" class="jump-stage-btn" data-target-stage="stage-2-compound"><span class="toc-num">2</span>The 3 Compounded Patterns</a>
-      <a href="#stage-3-sandbox" class="jump-stage-btn" data-target-stage="stage-3-sandbox"><span class="toc-num">3</span>Interactive MVC Sandbox Lab</a>
-      <a href="#stage-4-evolution" class="jump-stage-btn" data-target-stage="stage-4-evolution"><span class="toc-num">4</span>Evolution: Web MVC, MVP, MVVM</a>
-      <a href="#stage-5-exam" class="jump-stage-btn" data-target-stage="stage-5-exam"><span class="toc-num">5</span>Prof. Schäfer Exam Drills</a>
+      <span class="sidebar-label">Unit Navigation</span>
+      <a href="#sec-profile" class="active"><span class="toc-num">1</span>The MVC Triad</a>
+      <a href="#sec-compound"><span class="toc-num">2</span>The 3 Compounded Patterns</a>
+      <a href="#sec-web"><span class="toc-num">3</span>Desktop vs Web MVC</a>
+      <a href="#sec-drills"><span class="toc-num">4</span>Core Exam Drills</a>
     </div>
+
     <div class="sidebar-block">
-      <span class="sidebar-label">Course Origin</span>
-      <p style="font-size: 0.85rem; color: var(--text-muted); margin: 0 0 0.5rem; line-height: 1.5;">
-        <strong>Prof. Dr. Jörg Schäfer</strong><br>
-        Frankfurt University of Applied Sciences<br>
-        Fachbereich 2: Informatik
-      </p>
-      <div style="font-size:0.75rem; font-weight:700; color:#6366f1; background:rgba(99,102,241,0.12); border:1px solid rgba(99,102,241,0.25); padding:0.25rem 0.5rem; border-radius:4px; display:inline-block; margin-top:0.4rem;">
-        ⏱️ 45 Min · 20 Exam Pts
+      <span class="sidebar-label">Related Modules</span>
+      <a href="unit-1-strategy.html">Unit 1 · Strategy Pattern</a>
+      <a href="unit-3-composite.html">Unit 3A · Composite Pattern</a>
+      <a href="unit-10-decoupling.html">Unit 10 · Observer Pattern</a>
+      <a href="mock-1.html">🎓 Mock Exam 1 (Q7 MVC Model)</a>
+    </div>
+
+    <div class="sidebar-block">
+      <span class="sidebar-label">Exam Profile</span>
+      <div style="font-size:0.75rem; font-weight:700; color:#38bdf8; background:rgba(56,189,248,0.12); border:1px solid rgba(56,189,248,0.25); padding:0.25rem 0.5rem; border-radius:4px; display:inline-block;">
+        ⏱️ 8–10 Mins · 10 Exam Pts
       </div>
     </div>
   </aside>
 
-  <div class="page">
-    
-    <!-- Hero Masthead -->
+  <main class="page">
     <header class="masthead">
       <div>
-        <div class="eyebrow">
-          <span>Compound Architecture Masterclass · POSA UI Design</span>
-        </div>
-        <h1 class="title">Unit 11: Case Study: Model-View-Controller (MVC)</h1>
-        <p class="dek" style="font-size:1.05rem; line-height:1.65; max-width:68ch; color:var(--text-muted);">
-          Invented by Trygve Reenskaug for Smalltalk-80, MVC is the archetypal compound pattern. Master how Observer, Strategy, and Composite collaborate, and trace the architectural evolution to Web MVC, MVP, and MVVM.
-        </p>
-
-        <!-- Course Meta Metric Chips -->
-        <div class="masthead-metrics-grid">
-          <div class="metric-chip">
-            <div class="metric-chip-label">⏱️ Study Time</div>
-            <div class="metric-chip-val" style="color:#38bdf8;">45 Minutes</div>
-          </div>
-          <div class="metric-chip">
-            <div class="metric-chip-label">🎯 Exam Weight</div>
-            <div class="metric-chip-val" style="color:#10b981;">20 Pts (Grade 1.0)</div>
-          </div>
-          <div class="metric-chip">
-            <div class="metric-chip-label">🏛️ Category</div>
-            <div class="metric-chip-val" style="color:#a5b4fc;">Compound Architecture</div>
-          </div>
-          <div class="metric-chip">
-            <div class="metric-chip-label">⚙️ Visual Sandbox</div>
-            <div class="metric-chip-val" style="color:#f59e0b;">Compound Triad Simulator</div>
-          </div>
-        </div>
-
+        <div class="eyebrow">Unit 11 · Architectural &amp; Compound Patterns</div>
+        <h1 class="title">Case Study: Model-View-Controller (MVC)</h1>
       </div>
+      <p class="dek">
+        Master the archetypal compound pattern: the Model (domain state &amp; business logic), the View (rendering &amp; display), and the Controller (user gesture translation). Understand how Observer, Strategy, and Composite collaborate.
+      </p>
     </header>
 
-    <!-- ====================================================================
-         SECTION 1: 8-PILLAR ARCHITECTURAL BLUEPRINT (UNIVERSAL RUBRIC)
-         ==================================================================== -->
-    <div class="masterclass-section-divider" style="margin: 2.5rem 0 1.5rem;">
-      <div class="section-divider-line"></div>
-      <div class="section-divider-chip">
-        <span>PART 1 · ARCHITECTURAL RUBRIC</span>
-      </div>
-      <div class="section-divider-line"></div>
-    </div>
-
-    <section class="blueprint-suite" id="blueprintSuite" aria-label="8-Pillar Architecture Rubric">
-      <div class="blueprint-suite-top">
+    <!-- ============================================================== -->
+    <!-- 1. THE MVC TRIAD SPECIFICATION                                 -->
+    <!-- ============================================================== -->
+    <section class="chapter" id="sec-profile">
+      <div class="chapter-head">
+        <span class="chapter-num">1</span>
         <div>
-          <div class="blueprint-suite-badge">
-            <span class="section-badge-pill">SECTION 1 OF 2</span>
-            <span class="badge-sep">·</span>
-            <span>📐 Universal Pattern Rubric</span>
-            <span class="badge-sep">·</span>
-            <span>Exam &amp; Production Standard</span>
-          </div>
-          <h3 class="blueprint-suite-title">The 8 Pillars of Software Pattern Mastery</h3>
-          <p class="blueprint-suite-desc">
-            The definitive architectural rubric for compound architectural patterns: Model-View-Controller (MVC), Model-View-Presenter (MVP), and Model-View-ViewModel (MVVM).
-          </p>
-        </div>
-        <div class="blueprint-suite-actions">
-          <div class="blueprint-view-toggles" style="display:inline-flex; gap:0.4rem;">
-            <button type="button" class="btn-suite-toggle active" id="btnViewExplorer" onclick="setBlueprintView('explorer')" title="Explore one pillar at a time with interactive details">
-              <span>⚡ Interactive Explorer</span>
-            </button>
-            <button type="button" class="btn-suite-toggle" id="btnViewMatrix" onclick="setBlueprintView('matrix')" title="View all 8 pillars simultaneously in an executive grid">
-              <span>📊 Full Matrix</span>
-            </button>
-          </div>
-          <button type="button" class="btn-copy-rubric" id="btnCopyRubricSuite" onclick="copyBlueprintRubric()" title="Copy entire 8-pillar markdown study rubric to clipboard">
-            <span>📋</span>
-            <span id="copyRubricSuiteLabel">Copy Rubric</span>
-          </button>
-          <button type="button" class="btn-section-collapse" id="btnCollapseBlueprint" onclick="toggleBlueprintCollapse()" aria-expanded="true" title="Collapse or expand the 8-Pillar section">
-            <span class="collapse-icon">▲</span>
-            <span class="collapse-label">Collapse Rubric</span>
-          </button>
+          <h2>The MVC Triad Specification</h2>
+          <span style="font-size:0.85rem; color:var(--text-muted); font-weight:600;">Smalltalk-80 Architectural Heritage</span>
         </div>
       </div>
 
-      <!-- Collapsed Hint Bar -->
-      <div class="blueprint-collapsed-hint" id="blueprintCollapsedHint" style="display:none; padding:0.85rem 1.75rem; background:var(--bg-subtle); border-top:1px dashed var(--border); font-size:0.85rem; color:var(--text-muted); align-items:center; justify-content:space-between; flex-wrap:wrap; gap:0.5rem;">
-        <div style="display:flex; align-items:center; gap:0.6rem;">
-          <span style="font-size:1.1rem;">📐</span>
-          <span><strong>8-Pillar Architecture Rubric is Collapsed</strong> (Model-View-Controller &amp; Compound Patterns). Click to restore instant reference.</span>
+      <div class="pattern-spec-box">
+        <div class="spec-grid">
+          <div class="spec-row">
+            <span class="spec-label">1. The Model:</span>
+            <span class="spec-val">
+              Holds all application data, domain state, and core business logic. <strong>It has ZERO awareness of the View or Controller.</strong> It does not know how it is displayed. It maintains an observer list and notifies registered views whenever its state changes.
+            </span>
+          </div>
+          <div class="spec-row">
+            <span class="spec-label">2. The View:</span>
+            <span class="spec-val">
+              Renders the Model state to the screen and handles visual presentation. It registers itself as an <code>Observer</code> on the Model. When notified, it queries the Model to refresh its presentation.
+            </span>
+          </div>
+          <div class="spec-row">
+            <span class="spec-label">3. The Controller:</span>
+            <span class="spec-val">
+              Interprets user input gestures (button clicks, keyboard input, HTTP requests) and translates them into appropriate business method calls on the Model (and view state changes). It acts as the <code>Strategy</code> for the View.
+            </span>
+          </div>
         </div>
-        <button type="button" class="btn-restore-rubric" onclick="toggleBlueprintCollapse(false)" style="background:var(--accent); color:#fff; border:none; padding:0.35rem 0.85rem; border-radius:6px; font-weight:700; cursor:pointer; font-size:0.8rem;">
-          Restore Rubric ▲
-        </button>
       </div>
 
-      <div class="blueprint-collapsible-body" id="blueprintCollapsibleBody">
-        <!-- Explorer View -->
-        <div class="blueprint-explorer" id="blueprintExplorer">
-          <nav class="blueprint-pillar-tabs" role="tablist" aria-label="8 Pillars Navigation">
-            <button type="button" class="pillar-tab-btn active" role="tab" aria-selected="true" onclick="selectPillar(1)">
-              <span class="pillar-tab-num">1</span>
-              <span class="pillar-tab-label">Intent</span>
-            </button>
-            <button type="button" class="pillar-tab-btn" role="tab" aria-selected="false" onclick="selectPillar(2)">
-              <span class="pillar-tab-num">2</span>
-              <span class="pillar-tab-label">Roles</span>
-            </button>
-            <button type="button" class="pillar-tab-btn" role="tab" aria-selected="false" onclick="selectPillar(3)">
-              <span class="pillar-tab-num">3</span>
-              <span class="pillar-tab-label">UML</span>
-            </button>
-            <button type="button" class="pillar-tab-btn" role="tab" aria-selected="false" onclick="selectPillar(4)">
-              <span class="pillar-tab-num">4</span>
-              <span class="pillar-tab-label">Principles</span>
-            </button>
-            <button type="button" class="pillar-tab-btn" role="tab" aria-selected="false" onclick="selectPillar(5)">
-              <span class="pillar-tab-num">5</span>
-              <span class="pillar-tab-label">Mechanics</span>
-            </button>
-            <button type="button" class="pillar-tab-btn" role="tab" aria-selected="false" onclick="selectPillar(6)">
-              <span class="pillar-tab-num">6</span>
-              <span class="pillar-tab-label">Trade-offs</span>
-            </button>
-            <button type="button" class="pillar-tab-btn" role="tab" aria-selected="false" onclick="selectPillar(7)">
-              <span class="pillar-tab-num">7</span>
-              <span class="pillar-tab-label">Rivals</span>
-            </button>
-            <button type="button" class="pillar-tab-btn" role="tab" aria-selected="false" onclick="selectPillar(8)">
-              <span class="pillar-tab-num">8</span>
-              <span class="pillar-tab-label">Exam Traps</span>
-            </button>
-          </nav>
-
-          <div class="blueprint-active-pillar-card" id="pillarActiveCard">
-            <div class="pillar-panel active" id="pillarPanel1">
-              <div class="pillar-panel-badge">PILLAR 1 OF 8 · INTENT &amp; MOTIVATION</div>
-              <h4 class="pillar-panel-title">Separation of Concerns: The Compound Archetype</h4>
-              <p style="font-size:0.95rem; line-height:1.6; color:var(--text); margin-bottom:1rem;">
-                A compound pattern combines two or more patterns into a unified solution that addresses recurring architectural challenges. MVC isolates business state and domain rules from presentation and user gesture interpretation.
-              </p>
-              <div style="background:var(--bg-subtle); padding:1rem; border-radius:6px; border-left:3px solid #6366f1;">
-                <strong style="color:#6366f1; display:block; margin-bottom:0.35rem;">Core Architectural Intent</strong>
-                <p style="font-size:0.85rem; color:var(--text-muted); margin:0;">
-                  Ensure that business data and domain rules remain completely agnostic of display rendering and user input devices, enabling headless automated testing and multiple simultaneous views.
-                </p>
-              </div>
-            </div>
-
-            <div class="pillar-panel" id="pillarPanel2" style="display:none;">
-              <div class="pillar-panel-badge">PILLAR 2 OF 8 · PARTICIPANTS &amp; ROLES</div>
-              <h4 class="pillar-panel-title">The MVC Triad &amp; Their Internal Patterns</h4>
-              <div class="pillar-matrix-table-wrap">
-                <table class="pillar-matrix-table">
-                  <thead>
-                    <tr>
-                      <th>Participant</th>
-                      <th>Compounded Pattern</th>
-                      <th>Architectural Responsibility</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td><strong>Model</strong></td>
-                      <td><code>Observer (Subject)</code></td>
-                      <td>Holds business state and domain logic; has ZERO references to the View; broadcasts state changes.</td>
-                    </tr>
-                    <tr>
-                      <td><strong>View</strong></td>
-                      <td><code>Observer (Observer) &amp; Composite</code></td>
-                      <td>Renders the Model state into UI components (composite widgets); delegates user events to Controller.</td>
-                    </tr>
-                    <tr>
-                      <td><strong>Controller</strong></td>
-                      <td><code>Strategy</code></td>
-                      <td>Serves as the Strategy for the View; translates raw user gestures into semantic domain operations on the Model.</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-
-            <div class="pillar-panel" id="pillarPanel3" style="display:none;">
-              <div class="pillar-panel-badge">PILLAR 3 OF 8 · FORMAL UML ANATOMY</div>
-              <h4 class="pillar-panel-title">Vector SVG UML: The MVC Compound Cycle</h4>
-              <p style="font-size:0.88rem; color:var(--text-muted); margin-bottom:1rem;">
-                Notice the directed call paths: View delegates user actions to Controller $\to$ Controller updates Model $\to$ Model broadcasts updates to View via Observer pattern.
-              </p>
-              <div class="uml-svg-container" style="background:#090d16; border-radius:8px; padding:1.5rem; text-align:center; overflow-x:auto;">
-                <svg viewBox="0 0 760 250" width="100%" height="auto" xmlns="http://www.w3.org/2000/svg" style="font-family:'JetBrains Mono', 'SF Mono', monospace; font-size:12px;">
-                  <defs>
-                    <marker id="u11-arrow" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-                      <path d="M 0 1 L 10 5 L 0 9 z" fill="#38bdf8"/>
-                    </marker>
-                  </defs>
-
-                  <!-- Controller (Top) -->
-                  <rect x="250" y="15" width="260" height="70" rx="6" fill="#1e293b" stroke="#6366f1" stroke-width="2"/>
-                  <rect x="250" y="15" width="260" height="22" rx="6" fill="#4f46e5"/>
-                  <text x="380" y="31" fill="#ffffff" font-weight="700" text-anchor="middle">Controller (Strategy for View)</text>
-                  <text x="260" y="58" fill="#e2e8f0">+ handleInput() | - model : Model</text>
-
-                  <!-- Model (Left) -->
-                  <rect x="50" y="150" width="260" height="85" rx="6" fill="#1e293b" stroke="#10b981" stroke-width="2"/>
-                  <rect x="50" y="150" width="260" height="22" rx="6" fill="#059669"/>
-                  <text x="180" y="166" fill="#ffffff" font-weight="700" text-anchor="middle">Model (Observer Subject)</text>
-                  <text x="60" y="193" fill="#a7f3d0">+ setData() | + getData()</text>
-                  <text x="60" y="213" fill="#a7f3d0">+ notifyObservers()</text>
-
-                  <!-- View (Right) -->
-                  <rect x="450" y="150" width="260" height="85" rx="6" fill="#1e293b" stroke="#38bdf8" stroke-width="2"/>
-                  <rect x="450" y="150" width="260" height="22" rx="6" fill="#0284c7"/>
-                  <text x="580" y="166" fill="#ffffff" font-weight="700" text-anchor="middle">View (Observer &amp; Composite)</text>
-                  <text x="460" y="193" fill="#bae6fd">+ update() // Observer hook</text>
-                  <text x="460" y="213" fill="#bae6fd">+ render() | - controller : Controller</text>
-
-                  <!-- Arrows -->
-                  <!-- View to Controller -->
-                  <line x1="560" y1="150" x2="430" y2="85" stroke="#38bdf8" stroke-width="2" marker-end="url(#u11-arrow)"/>
-                  <text x="530" y="105" fill="#38bdf8" font-size="10">delegates user action</text>
-
-                  <!-- Controller to Model -->
-                  <line x1="330" y1="85" x2="200" y2="150" stroke="#6366f1" stroke-width="2" marker-end="url(#u11-arrow)"/>
-                  <text x="210" y="105" fill="#6366f1" font-size="10">modifies state</text>
-
-                  <!-- Model to View -->
-                  <line x1="310" y1="192" x2="440" y2="192" stroke="#10b981" stroke-width="2" marker-end="url(#u11-arrow)"/>
-                  <text x="375" y="184" fill="#10b981" font-size="10" text-anchor="middle">notifies (Observer)</text>
-                </svg>
-              </div>
-            </div>
-
-            <div class="pillar-panel" id="pillarPanel4" style="display:none;">
-              <div class="pillar-panel-badge">PILLAR 4 OF 8 · DESIGN PRINCIPLES</div>
-              <h4 class="pillar-panel-title">Zero UI Dependency in the Domain Model</h4>
-              <div class="takeaway-grid">
-                <div class="takeaway-item" style="border-left:3px solid #10b981;">
-                  <strong>Headless Business Logic</strong>
-                  <p>The Model must never import <code>java.awt.*</code>, <code>javax.swing.*</code>, or DOM APIs. It can be tested in automated CI/CD without spinning up a display server.</p>
-                </div>
-                <div class="takeaway-item" style="border-left:3px solid #6366f1;">
-                  <strong>Pluggable View Strategies</strong>
-                  <p>Swapping the Controller changes the View’s interaction behavior without touching the View rendering code.</p>
-                </div>
-                <div class="takeaway-item" style="border-left:3px solid #38bdf8;">
-                  <strong>Multiple Simultaneous Views</strong>
-                  <p>Because the Model is an Observer Subject, a Pie Chart View and a Spreadsheet Table View can observe and render the same Model concurrently.</p>
-                </div>
-              </div>
-            </div>
-
-            <div class="pillar-panel" id="pillarPanel5" style="display:none;">
-              <div class="pillar-panel-badge">PILLAR 5 OF 8 · IMPLEMENTATION MECHANICS</div>
-              <h4 class="pillar-panel-title">The Smalltalk Dispatch Loop</h4>
-              <div class="mac-ide-window" style="margin: 0.5rem 0;">
-                <div class="mac-ide-top">
-                  <div class="mac-ide-dots">
-                    <span class="mac-dot mac-dot-red"></span>
-                    <span class="mac-dot mac-dot-yellow"></span>
-                    <span class="mac-dot mac-dot-green"></span>
-                  </div>
-                  <div class="mac-ide-tab">BPMController.java · Strategy &amp; Model Dispatch</div>
-                  <button type="button" class="btn-copy-code" onclick="copySnippet('codeSnippetP5Mvc')">Copy Code</button>
-                </div>
-                <pre class="mac-ide-content" id="codeSnippetP5Mvc"><code>public class BeatController implements ControllerInterface {
-    private final BeatModelInterface model;
-    private final DJView view;
-
-    public BeatController(BeatModelInterface model) {
-        this.model = model;
-        this.view = new DJView(this, model); // Injects self as Strategy into View
-        this.view.createView();
-        this.model.initialize();
-    }
-
-    public void increaseBPM() {
-        int bpm = model.getBPM();
-        model.setBPM(bpm + 1); // Mutates Model -> Model notifies DJView automatically!
-    }
-}</code></pre>
-              </div>
-            </div>
-
-            <div class="pillar-panel" id="pillarPanel6" style="display:none;">
-              <div class="pillar-panel-badge">PILLAR 6 OF 8 · COSTS &amp; TRADE-OFFS</div>
-              <h4 class="pillar-panel-title">Architectural Liabilities &amp; Modern Evolution</h4>
-              <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
-                <div style="background:rgba(16,185,129,0.06); border:1px solid rgba(16,185,129,0.25); border-radius:6px; padding:1rem;">
-                  <strong style="color:#10b981; display:block; margin-bottom:0.5rem;">✅ Architectural Benefits</strong>
-                  <ul style="margin:0; padding-left:1.2rem; font-size:0.85rem; color:var(--text); line-height:1.5;">
-                    <li>Clear separation of concerns across large engineering teams.</li>
-                    <li>Domain models are 100% testable in headless unit tests.</li>
-                    <li>Enables multiple concurrent representations of identical data.</li>
-                  </ul>
-                </div>
-                <div style="background:rgba(239,68,68,0.06); border:1px solid rgba(239,68,68,0.25); border-radius:6px; padding:1rem;">
-                  <strong style="color:#ef4444; display:block; margin-bottom:0.5rem;">⚠️ Architectural Liabilities</strong>
-                  <ul style="margin:0; padding-left:1.2rem; font-size:0.85rem; color:var(--text); line-height:1.5;">
-                    <li>High class proliferation for simple forms (Model, View, Controller boilerplate).</li>
-                    <li>Controllers can become bloated "Massive View Controllers".</li>
-                    <li>Desktop MVC does not translate directly to stateless HTTP request/response loops.</li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-
-            <div class="pillar-panel" id="pillarPanel7" style="display:none;">
-              <div class="pillar-panel-badge">PILLAR 7 OF 8 · RIVAL PATTERN MATRIX</div>
-              <h4 class="pillar-panel-title">MVC vs MVP vs MVVM Architectural Comparison</h4>
-              <div class="pillar-matrix-table-wrap">
-                <table class="pillar-matrix-table">
-                  <thead>
-                    <tr>
-                      <th>Dimension</th>
-                      <th>Classic MVC</th>
-                      <th>MVP (Passive View)</th>
-                      <th>MVVM (Data-Binding)</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td><strong>View-Model Link</strong></td>
-                      <td>View observes Model directly</td>
-                      <td><strong>No direct link</strong> (Presenter bridges all)</td>
-                      <td>Declarative bidirectional data-binding</td>
-                    </tr>
-                    <tr>
-                      <td><strong>Intermediary</strong></td>
-                      <td>Controller (Strategy for user gestures)</td>
-                      <td>Presenter (Controls View via View interface)</td>
-                      <td>ViewModel (State projection of Model)</td>
-                    </tr>
-                    <tr>
-                      <td><strong>Testability</strong></td>
-                      <td>Model tested; View hard to test</td>
-                      <td><strong>Highest</strong> (Mock View interface in unit tests)</td>
-                      <td>ViewModel tested headlessly without UI</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-
-            <div class="pillar-panel" id="pillarPanel8" style="display:none;">
-              <div class="pillar-panel-badge">PILLAR 8 OF 8 · EXAM TRAPS &amp; BENCHMARKS</div>
-              <h4 class="pillar-panel-title">Prof. Schäfer Exam Traps: The 3 Compounded Patterns</h4>
-              <div style="background:rgba(245,158,11,0.08); border-left:4px solid #f59e0b; padding:1.25rem; border-radius:0 6px 6px 0; margin-bottom:1rem;">
-                <strong style="color:#f59e0b; font-size:0.92rem;">🚨 Frankfurt UAS Exam Trap #1: Name the 3 Patterns in MVC</strong>
-                <p style="font-size:0.86rem; color:var(--text); margin:0.35rem 0 0; line-height:1.5;">
-                  Question: <em>"MVC is described as a compound pattern. Name the three GoF design patterns that constitute classic MVC and identify the relationship where each is applied."</em><br>
-                  <strong>Model Answer:</strong><br>
-                  1. <strong>Observer:</strong> Model $\to$ View (Model is Subject, View is Observer).<br>
-                  2. <strong>Strategy:</strong> View $\to$ Controller (Controller is the behavioral Strategy for the View).<br>
-                  3. <strong>Composite:</strong> Internal View structure (GUI screens are composite trees of widgets).
-                </p>
-              </div>
-              <div style="font-size:0.85rem; color:var(--text-muted);">
-                <strong>Industry Standard:</strong> Spring MVC (`DispatcherServlet`), Angular/Vue (`MVVM`), Android Architecture Components.
-              </div>
-            </div>
-          </div>
+      <!-- Vector SVG: The MVC Compound Cycle -->
+      <div class="guide-card">
+        <div class="guide-card-header">
+          <span>📐 Canonical Architecture: Figure 11.1 The MVC Compound Pattern Cycle</span>
         </div>
+        <div class="uml-diagram-box" style="text-align:center;">
+          <svg viewBox="0 0 680 270" style="max-width:100%; height:auto;" aria-label="Figure 11.1: MVC Compound Cycle">
+            <!-- Model Box -->
+            <rect x="250" y="20" width="180" height="85" rx="4" fill="var(--bg-raised)" stroke="#10b981" stroke-width="2"/>
+            <rect x="250" y="20" width="180" height="24" rx="4" fill="rgba(16, 185, 129, 0.15)"/>
+            <text x="340" y="37" fill="#10b981" font-family="var(--font-display)" font-size="13" font-weight="800" text-anchor="middle">MODEL</text>
+            <line x1="250" y1="44" x2="430" y2="44" stroke="#10b981" stroke-width="1.5"/>
+            <text x="260" y="62" fill="var(--text)" font-family="var(--font-mono)" font-size="10">• Business Logic</text>
+            <text x="260" y="78" fill="var(--text)" font-family="var(--font-mono)" font-size="10">• State Data</text>
+            <text x="260" y="94" fill="var(--accent)" font-family="var(--font-mono)" font-size="10" font-weight="700">• Observer Subject</text>
 
-        <!-- Full Matrix View (Hidden by default) -->
-        <div class="blueprint-matrix-view" id="blueprintMatrix" style="display:none;">
-          <div class="pillar-matrix-table-wrap">
-            <table class="pillar-matrix-table">
-              <thead>
-                <tr>
-                  <th style="width:12%;">Pillar #</th>
-                  <th style="width:20%;">Mastery Dimension</th>
-                  <th style="width:34%;">Classic Smalltalk MVC</th>
-                  <th style="width:34%;">Modern Web MVC &amp; MVVM</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td><strong>Pillar 1</strong></td>
-                  <td><strong>Intent &amp; Motivation</strong></td>
-                  <td>Isolate business data and domain rules from presentation rendering and user input.</td>
-                  <td>Decouple HTTP request routing from database queries and template HTML generation.</td>
-                </tr>
-                <tr>
-                  <td><strong>Pillar 2</strong></td>
-                  <td><strong>Participants</strong></td>
-                  <td><code>Model</code> (Domain), <code>View</code> (UI), <code>Controller</code> (User Action Strategy).</td>
-                  <td><code>DispatcherServlet</code> (Front Controller), <code>Service</code> (Model), <code>Thymeleaf/React</code> (View).</td>
-                </tr>
-                <tr>
-                  <td><strong>Pillar 3</strong></td>
-                  <td><strong>UML Anatomy</strong></td>
-                  <td>Cyclic collaborative loop: View $\to$ Controller $\to$ Model $\to$ View.</td>
-                  <td>Pipeline request-response cycle; MVVM two-way data-binding.</td>
-                </tr>
-                <tr>
-                  <td><strong>Pillar 4</strong></td>
-                  <td><strong>Design Principles</strong></td>
-                  <td>Separation of Concerns; Zero UI dependencies in domain entity logic.</td>
-                  <td>Single Responsibility; Declarative UI binding.</td>
-                </tr>
-                <tr>
-                  <td><strong>Pillar 5</strong></td>
-                  <td><strong>Mechanics</strong></td>
-                  <td>Observer (Model $\to$ View); Strategy (View $\to$ Controller); Composite (View).</td>
-                  <td>Front Controller dispatches requests; ViewModels expose observable properties.</td>
-                </tr>
-                <tr>
-                  <td><strong>Pillar 6</strong></td>
-                  <td><strong>Trade-offs</strong></td>
-                  <td>Massive View Controller bloat; high initial architectural ceremony.</td>
-                  <td>Complex data-binding performance overhead; asynchronous state synchronization.</td>
-                </tr>
-                <tr>
-                  <td><strong>Pillar 7</strong></td>
-                  <td><strong>Rival Disambiguation</strong></td>
-                  <td>MVC (View knows Model) vs MVP (Presenter mediates all; Passive View).</td>
-                  <td>MVVM (Automated data-binding engine synchronizes View and ViewModel).</td>
-                </tr>
-                <tr>
-                  <td><strong>Pillar 8</strong></td>
-                  <td><strong>Exam Traps</strong></td>
-                  <td>Forgetting that the Controller is the Strategy for the View, not vice versa.</td>
-                  <td>Assuming Web MVC operates with persistent state Observer callbacks.</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
+            <!-- Controller Box -->
+            <rect x="50" y="150" width="180" height="95" rx="4" fill="var(--bg-raised)" stroke="#6366f1" stroke-width="1.5"/>
+            <rect x="50" y="150" width="180" height="24" rx="4" fill="rgba(99, 102, 241, 0.15)"/>
+            <text x="140" y="167" fill="#6366f1" font-family="var(--font-display)" font-size="13" font-weight="800" text-anchor="middle">CONTROLLER</text>
+            <line x1="50" y1="174" x2="230" y2="174" stroke="var(--border)" stroke-width="1.5"/>
+            <text x="60" y="194" fill="var(--text)" font-family="var(--font-mono)" font-size="10">• Input Translation</text>
+            <text x="60" y="210" fill="var(--text)" font-family="var(--font-mono)" font-size="10">• View's Strategy</text>
+            <text x="60" y="226" fill="var(--text-muted)" font-family="var(--font-mono)" font-size="10">• Updates Model</text>
+
+            <!-- View Box -->
+            <rect x="450" y="150" width="180" height="95" rx="4" fill="var(--bg-raised)" stroke="#38bdf8" stroke-width="1.5"/>
+            <rect x="450" y="150" width="180" height="24" rx="4" fill="rgba(56, 189, 248, 0.15)"/>
+            <text x="540" y="167" fill="#38bdf8" font-family="var(--font-display)" font-size="13" font-weight="800" text-anchor="middle">VIEW</text>
+            <line x1="450" y1="174" x2="630" y2="174" stroke="var(--border)" stroke-width="1.5"/>
+            <text x="460" y="194" fill="var(--text)" font-family="var(--font-mono)" font-size="10">• Visual Display</text>
+            <text x="460" y="210" fill="var(--text)" font-family="var(--font-mono)" font-size="10">• Model Observer</text>
+            <text x="460" y="226" fill="var(--text-muted)" font-family="var(--font-mono)" font-size="10">• Composite Tree</text>
+
+            <!-- Arrows -->
+            <!-- Controller calls Model methods -->
+            <line x1="160" y1="150" x2="260" y2="105" stroke="#6366f1" stroke-width="1.5"/>
+            <polygon points="260,105 248,107 254,116" fill="#6366f1"/>
+            <text x="180" y="115" fill="#6366f1" font-family="var(--font-mono)" font-size="10" font-weight="700">1. updates state</text>
+
+            <!-- Model notifies View (Observer notify) -->
+            <line x1="420" y1="105" x2="520" y2="150" stroke="#10b981" stroke-width="1.5" stroke-dasharray="4,4"/>
+            <polygon points="520,150 514,138 523,143" fill="#10b981"/>
+            <text x="495" y="115" fill="#10b981" font-family="var(--font-mono)" font-size="10" font-weight="700">2. notifies [Observer]</text>
+
+            <!-- View delegates to Controller (Strategy) -->
+            <line x1="450" y1="210" x2="230" y2="210" stroke="#38bdf8" stroke-width="1.5"/>
+            <polygon points="230,210 240,205 240,215" fill="#38bdf8"/>
+            <text x="340" y="202" fill="#38bdf8" font-family="var(--font-mono)" font-size="10" font-weight="700" text-anchor="middle">3. user gesture [Strategy]</text>
+          </svg>
         </div>
       </div>
     </section>
 
-    <!-- ====================================================================
-         SECTION 2: 5-STAGE HANDS-ON CURRICULUM
-         ==================================================================== -->
-    <div class="masterclass-section-divider" style="margin: 3.5rem 0 1.5rem;">
-      <div class="section-divider-line"></div>
-      <div class="section-divider-chip">
-        <span>PART 2 · HANDS-ON CURRICULUM</span>
-      </div>
-      <div class="section-divider-line"></div>
-    </div>
-
-    <!-- Curriculum Super-Header with Metadata Chips -->
-    <div class="curriculum-super-header" id="curriculumHeader" style="margin-bottom:1.5rem; background:var(--bg-raised); border:1px solid var(--border); border-radius:var(--radius-md); padding:1.5rem;">
-      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem;">
+    <!-- ============================================================== -->
+    <!-- 2. THE 3 COMPOUNDED GOF PATTERNS                               -->
+    <!-- ============================================================== -->
+    <section class="chapter" id="sec-compound">
+      <div class="chapter-head">
+        <span class="chapter-num">2</span>
         <div>
-          <div style="font-size:0.75rem; font-weight:800; letter-spacing:0.08em; text-transform:uppercase; color:#6366f1; margin-bottom:0.25rem;">
-            STAGE-DRIVEN MASTERY PATH
-          </div>
-          <h2 style="font-size:1.4rem; font-weight:800; margin:0; letter-spacing:-0.02em;">
-            Compound Architecture: 5 Stages to Grade 1.0
-          </h2>
-        </div>
-        <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
-          <span style="background:rgba(99,102,241,0.12); color:#6366f1; font-size:0.78rem; font-weight:700; padding:0.35rem 0.75rem; border-radius:20px; border:1px solid rgba(99,102,241,0.25);">⏱️ 45 Min Total</span>
-          <span style="background:rgba(16,185,129,0.12); color:#10b981; font-size:0.78rem; font-weight:700; padding:0.35rem 0.75rem; border-radius:20px; border:1px solid rgba(16,185,129,0.25);">🎯 20 Exam Points</span>
-          <span style="background:rgba(56,189,248,0.12); color:#38bdf8; font-size:0.78rem; font-weight:700; padding:0.35rem 0.75rem; border-radius:20px; border:1px solid rgba(56,189,248,0.25);">🏛️ Prof. Dr. Jörg Schäfer</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- Masterclass Stage Navigation Bar -->
-    <nav class="masterclass-stage-nav" aria-label="Curriculum Stages">
-      <a href="#stage-1-triad" class="stage-nav-pill active" data-stage="1">
-        <span class="pill-number">1</span>
-        <span class="pill-title">Smalltalk Triad</span>
-      </a>
-      <a href="#stage-2-compound" class="stage-nav-pill" data-stage="2">
-        <span class="pill-number">2</span>
-        <span class="pill-title">3 Patterns Inside</span>
-      </a>
-      <a href="#stage-3-sandbox" class="stage-nav-pill" data-stage="3">
-        <span class="pill-number">3</span>
-        <span class="pill-title">Triad Simulator</span>
-      </a>
-      <a href="#stage-4-evolution" class="stage-nav-pill" data-stage="4">
-        <span class="pill-number">4</span>
-        <span class="pill-title">MVP vs MVVM</span>
-      </a>
-      <a href="#stage-5-exam" class="stage-nav-pill" data-stage="5">
-        <span class="pill-number">5</span>
-        <span class="pill-title">Exam Traps</span>
-      </a>
-    </nav>
-
-    <!-- ====================================================================
-         STAGE 1: THE SMALLTALK-80 TRIAD
-         ==================================================================== -->
-    <section class="masterclass-stage-section" id="stage-1-triad">
-      <div class="stage-header-top">
-        <div class="stage-eyebrow-pill">● Stage 01 · The Smalltalk-80 Triad</div>
-        <button type="button" class="stage-mastery-btn" onclick="markStageComplete(1)">Mark Stage 1 Complete ✓</button>
-      </div>
-      <h2 class="stage-title">The Smalltalk-80 Triad: Model, View, and Controller</h2>
-
-      <p style="font-size:1rem; line-height:1.7; color:var(--text); margin-bottom:1.5rem;">
-        Before MVC, graphical applications bundled user interface widgets, event loops, and database queries into monolithic window classes. Trygve Reenskaug invented Model-View-Controller in 1979 at Xerox PARC to decouple these disparate responsibilities.
-      </p>
-
-      <div class="triad-flow-grid">
-        <div class="triad-box" style="border-left:4px solid #10b981;">
-          <h4 style="color:#10b981; margin:0 0 0.5rem; font-size:1.1rem;">1. The Model</h4>
-          <p style="font-size:0.88rem; color:var(--text); margin:0; line-height:1.5;">
-            Represents domain state and business logic. The Model has <strong>zero knowledge of the View</strong>. When its state changes, it broadcasts a notification via the Observer pattern.
-          </p>
-        </div>
-        <div class="triad-box" style="border-left:4px solid #38bdf8;">
-          <h4 style="color:#38bdf8; margin:0 0 0.5rem; font-size:1.1rem;">2. The View</h4>
-          <p style="font-size:0.88rem; color:var(--text); margin:0; line-height:1.5;">
-            Renders the visual representation of the Model. The View observes the Model for updates. When a user interacts (clicks a button), the View delegates the action to its Controller.
-          </p>
-        </div>
-        <div class="triad-box" style="border-left:4px solid #6366f1;">
-          <h4 style="color:#6366f1; margin:0 0 0.5rem; font-size:1.1rem;">3. The Controller</h4>
-          <p style="font-size:0.88rem; color:var(--text); margin:0; line-height:1.5;">
-            Acts as the <strong>Strategy</strong> for the View. It interprets user gestures and translates them into appropriate business method invocations on the Model.
-          </p>
+          <h2>The 3 Compounded Patterns in MVC</h2>
+          <span style="font-size:0.85rem; color:var(--text-muted); font-weight:600;">How GoF Patterns Combine</span>
         </div>
       </div>
 
-      <!-- Key Takeaways Box -->
-      <div class="stage-takeaways-box">
-        <div class="stage-takeaways-title">
-          <span>🧠 Key Takeaways: MVC Foundational Axioms</span>
-        </div>
-        <div class="takeaway-grid">
-          <div class="takeaway-item">
-            <strong>Headless Model Independence</strong>
-            <p>The Model does not depend on UI frameworks. It can be run in batch CLI scripts or headlessly unit-tested in automated CI/CD.</p>
-          </div>
-          <div class="takeaway-item">
-            <strong>Controller as Strategy</strong>
-            <p>The View delegates user interaction handling to its Controller. You can swap Controllers to change UI interaction policies.</p>
-          </div>
-          <div class="takeaway-item">
-            <strong>Multi-View Scalability</strong>
-            <p>Multiple independent Views can observe and render the same underlying Model state simultaneously.</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- Up Next Card -->
-      <div class="stage-next-card">
-        <div class="stage-next-card-content">
-          <div class="stage-next-card-label">UP NEXT · STAGE 02</div>
-          <div class="stage-next-card-title">The 3 Compounded Patterns Inside MVC</div>
-          <p class="stage-next-card-desc">Analyze how Observer, Strategy, and Composite collaborate with mathematical precision inside the triad.</p>
-        </div>
-        <a href="#stage-2-compound" class="stage-next-card-btn">Jump to Stage 2 →</a>
-      </div>
-    </section>
-
-    <!-- ====================================================================
-         STAGE 2: THE 3 COMPOUNDED PATTERNS
-         ==================================================================== -->
-    <section class="masterclass-stage-section" id="stage-2-compound">
-      <div class="stage-header-top">
-        <div class="stage-eyebrow-pill">● Stage 02 · Compounded Patterns</div>
-        <button type="button" class="stage-mastery-btn" onclick="markStageComplete(2)">Mark Stage 2 Complete ✓</button>
-      </div>
-      <h2 class="stage-title">Deconstructing the Compound Pattern</h2>
-
-      <p style="font-size:1rem; line-height:1.7; color:var(--text); margin-bottom:1.5rem;">
-        MVC is not a single isolated pattern; it is a <strong>compound pattern</strong> composed of three foundational Gang of Four design patterns working in concert:
-      </p>
-
-      <div style="display:flex; flex-direction:column; gap:1rem; margin:1.5rem 0;">
-        <div style="padding:1.25rem; background:var(--bg-raised); border:1px solid var(--border); border-radius:var(--radius-sm); border-left:4px solid #10b981;">
-          <strong style="color:#10b981; font-size:1.05rem;">1. The Observer Pattern (Model $\to$ View)</strong>
-          <p style="font-size:0.92rem; color:var(--text); margin:0.35rem 0 0; line-height:1.6;">
-            The Model is the <strong>Subject</strong>, and the View is an <strong>Observer</strong>. This keeps the Model completely decoupled from the View. When domain state changes, the Model calls <code>notifyObservers()</code>, and all registered Views re-render their visual state.
-          </p>
+      <div class="guide-card">
+        <div class="guide-card-header">
+          <span class="rule-badge">COMPOUND ARCHITECTURE</span>
+          <span>Where Each GoF Pattern Lives in MVC</span>
         </div>
 
-        <div style="padding:1.25rem; background:var(--bg-raised); border:1px solid var(--border); border-radius:var(--radius-sm); border-left:4px solid #6366f1;">
-          <strong style="color:#6366f1; font-size:1.05rem;">2. The Strategy Pattern (View $\to$ Controller)</strong>
-          <p style="font-size:0.92rem; color:var(--text); margin:0.35rem 0 0; line-height:1.6;">
-            The Controller is the <strong>Strategy</strong> for the View. The View delegates user gestures (button clicks, keystrokes) to the Controller. To change the interaction behavior (e.g. read-only administrator mode vs customer edit mode), you simply swap the Controller object.
-          </p>
-        </div>
-
-        <div style="padding:1.25rem; background:var(--bg-raised); border:1px solid var(--border); border-radius:var(--radius-sm); border-left:4px solid #38bdf8;">
-          <strong style="color:#38bdf8; font-size:1.05rem;">3. The Composite Pattern (Nested Views)</strong>
-          <p style="font-size:0.92rem; color:var(--text); margin:0.35rem 0 0; line-height:1.6;">
-            The graphical interface is structured as a <strong>Composite</strong> tree of nested components (windows containing panels, panels containing buttons and text labels). When the top-level view renders, layout and paint operations recursively traverse the composite hierarchy.
-          </p>
-        </div>
-      </div>
-
-      <!-- Up Next Card -->
-      <div class="stage-next-card">
-        <div class="stage-next-card-content">
-          <div class="stage-next-card-label">UP NEXT · STAGE 03</div>
-          <div class="stage-next-card-title">Live Interactive Lab: Compound Triad Simulator</div>
-          <p class="stage-next-card-desc">Execute user gestures in the View, observe the Controller strategy translate the event, and watch the Model broadcast updates.</p>
-        </div>
-        <a href="#stage-3-sandbox" class="stage-next-card-btn">Jump to Stage 3 →</a>
-      </div>
-    </section>
-
-    <!-- ====================================================================
-         STAGE 3: INTERACTIVE LABORATORY & VISUAL SANDBOX
-         ==================================================================== -->
-    <section class="masterclass-stage-section" id="stage-3-sandbox">
-      <div class="stage-header-top">
-        <div class="stage-eyebrow-pill">● Stage 03 · Interactive Laboratory</div>
-        <button type="button" class="stage-mastery-btn" onclick="markStageComplete(3)">Mark Stage 3 Complete ✓</button>
-      </div>
-      <h2 class="stage-title">Interactive Compound MVC Triad Simulator</h2>
-
-      <p style="font-size:1rem; line-height:1.7; color:var(--text); margin-bottom:1.5rem;">
-        Click <strong>"User Clicks [+ Increase BPM]"</strong> inside the View. Follow the visual signal as the View delegates to the Controller, the Controller updates the Model, and the Model broadcasts an Observer notification back to the View!
-      </p>
-
-      <div class="mvc-sandbox-card">
-        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem; margin-bottom:1rem;">
-          <div>
-            <h4 style="margin:0 0 0.25rem; font-size:1.1rem; color:var(--text);">DJ Beat Track Controller</h4>
-            <span style="font-size:0.82rem; color:var(--text-muted);">Compound Cycle: View (User Action) &rarr; Controller &rarr; Model &rarr; View (Observer)</span>
-          </div>
-          <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
-            <button type="button" id="btnUserActionInc" class="btn-suite-toggle active" style="font-weight:700;">
-              <span>User Clicks: [+ Increase BPM]</span>
-            </button>
-            <button type="button" id="btnUserActionDec" class="btn-suite-toggle" style="font-weight:700;">
-              <span>User Clicks: [- Decrease BPM]</span>
-            </button>
-          </div>
-        </div>
-
-        <!-- Visual Triad Boxes -->
-        <div class="triad-flow-grid">
-          <div class="triad-box" id="boxView">
-            <span style="font-size:0.75rem; font-weight:800; color:#38bdf8; text-transform:uppercase;">View (Observer / Composite)</span>
-            <div style="font-size:1.75rem; margin:0.5rem 0; font-weight:800; color:#f8fafc;" id="viewBpmDisplay">90 BPM</div>
-            <span style="font-size:0.75rem; color:var(--text-muted);">Displays current tempo</span>
-          </div>
-          <div class="triad-box" id="boxController">
-            <span style="font-size:0.75rem; font-weight:800; color:#6366f1; text-transform:uppercase;">Controller (Strategy)</span>
-            <div style="font-size:1.1rem; margin:0.5rem 0; font-weight:700; color:#a5b4fc;" id="controllerActionLabel">Idle</div>
-            <span style="font-size:0.75rem; color:var(--text-muted);">Validates &amp; routes requests</span>
-          </div>
-          <div class="triad-box" id="boxModel">
-            <span style="font-size:0.75rem; font-weight:800; color:#10b981; text-transform:uppercase;">Model (Subject)</span>
-            <div style="font-size:1.75rem; margin:0.5rem 0; font-weight:800; color:#34d399;" id="modelBpmDisplay">State: 90</div>
-            <span style="font-size:0.75rem; color:var(--text-muted);">Pure domain state</span>
-          </div>
-        </div>
-
-        <!-- Terminal Console Output -->
-        <div class="terminal-output" id="mvcConsole">
-          >> [System Initialized] MVC Triad wired. Click a View button to trigger the collaborative dispatch cycle.
-        </div>
-      </div>
-
-      <!-- Up Next Card -->
-      <div class="stage-next-card">
-        <div class="stage-next-card-content">
-          <div class="stage-next-card-label">UP NEXT · STAGE 04</div>
-          <div class="stage-next-card-title">Evolution to Web MVC, MVP, and MVVM</div>
-          <p class="stage-next-card-desc">Examine how desktop MVC evolved into modern web request pipelines and mobile MVP/MVVM architectures.</p>
-        </div>
-        <a href="#stage-4-evolution" class="stage-next-card-btn">Jump to Stage 4 →</a>
-      </div>
-    </section>
-
-    <!-- ====================================================================
-         STAGE 4: EVOLUTION: WEB MVC, MVP, AND MVVM
-         ==================================================================== -->
-    <section class="masterclass-stage-section" id="stage-4-evolution">
-      <div class="stage-header-top">
-        <div class="stage-eyebrow-pill">● Stage 04 · Architectural Evolution</div>
-        <button type="button" class="stage-mastery-btn" onclick="markStageComplete(4)">Mark Stage 4 Complete ✓</button>
-      </div>
-      <h2 class="stage-title">Evolution: Web MVC, MVP, and MVVM</h2>
-
-      <p style="font-size:1rem; line-height:1.7; color:var(--text); margin-bottom:1.5rem;">
-        As architectures evolved from Smalltalk desktop applications to HTTP web services and modern reactive frameworks, MVC branched into three primary variants:
-      </p>
-
-      <div style="display:flex; flex-direction:column; gap:1.25rem; margin:1.5rem 0;">
-        <div style="padding:1.25rem; background:var(--bg-raised); border:1px solid var(--border); border-radius:var(--radius-sm); border-left:4px solid #6366f1;">
-          <strong style="color:#6366f1; font-size:1.05rem;">1. Web MVC (Model 2 / Front Controller)</strong>
-          <p style="font-size:0.92rem; color:var(--text); margin:0.35rem 0 0; line-height:1.6;">
-            HTTP is stateless. Therefore, the Model cannot broadcast asynchronous Observer updates to a browser View without persistent WebSockets. Instead, a <strong>Front Controller</strong> (Spring <code>DispatcherServlet</code>) receives the HTTP POST/GET request, updates the Model, populates a Model map, and returns a template View to render HTML back over the wire.
-          </p>
-        </div>
-
-        <div style="padding:1.25rem; background:var(--bg-raised); border:1px solid var(--border); border-radius:var(--radius-sm); border-left:4px solid #10b981;">
-          <strong style="color:#10b981; font-size:1.05rem;">2. Model-View-Presenter (MVP - Passive View)</strong>
-          <p style="font-size:0.92rem; color:var(--text); margin:0.35rem 0 0; line-height:1.6;">
-            To achieve 100% automated testability in GUI applications, MVP severs all communication between View and Model. The <strong>Presenter</strong> acts as a strict intermediary: it updates the Model, extracts domain values, and updates the View directly through an abstract <code>IView</code> interface. In unit tests, developers easily mock <code>IView</code> without running a GUI.
-          </p>
-        </div>
-
-        <div style="padding:1.25rem; background:var(--bg-raised); border:1px solid var(--border); border-radius:var(--radius-sm); border-left:4px solid #38bdf8;">
-          <strong style="color:#38bdf8; font-size:1.05rem;">3. Model-View-ViewModel (MVVM)</strong>
-          <p style="font-size:0.92rem; color:var(--text); margin:0.35rem 0 0; line-height:1.6;">
-            Originating with WPF and popularized by Angular, React, and Vue, MVVM replaces the Controller with a <strong>ViewModel</strong> that represents an abstraction of the View's state. A declarative data-binding engine automatically synchronizes UI controls and ViewModel properties bidirectionally.
-          </p>
-        </div>
-      </div>
-
-      <!-- Up Next Card -->
-      <div class="stage-next-card">
-        <div class="stage-next-card-content">
-          <div class="stage-next-card-label">UP NEXT · STAGE 05</div>
-          <div class="stage-next-card-title">Frankfurt UAS Exam Traps &amp; Case Study Drills</div>
-          <p class="stage-next-card-desc">Practice real exam questions from Prof. Dr. Jörg Schäfer covering the MVC compound patterns and Model-View decoupling.</p>
-        </div>
-        <a href="#stage-5-exam" class="stage-next-card-btn">Jump to Stage 5 →</a>
-      </div>
-    </section>
-
-    <!-- ====================================================================
-         STAGE 5: EXAM TRAPS & SELF-STUDY DRILLS
-         ==================================================================== -->
-    <section class="masterclass-stage-section" id="stage-5-exam">
-      <div class="stage-header-top">
-        <div class="stage-eyebrow-pill">● Stage 05 · Exam Traps &amp; Self-Study</div>
-        <button type="button" class="stage-mastery-btn" onclick="markStageComplete(5)">Mark Stage 5 Complete ✓</button>
-      </div>
-      <h2 class="stage-title">Frankfurt UAS Exam Drills: Prof. Dr. Jörg Schäfer</h2>
-
-      <p style="font-size:1rem; line-height:1.7; color:var(--text); margin-bottom:1.5rem;">
-        Click each drill to reveal the exact grading rubric, common pitfalls, and 1.0 model answers expected in POSA examinations.
-      </p>
-
-      <div class="drill-list">
-        <!-- Authentic Exam Paper Question 7 -->
-        <details class="drill-item" open>
-          <summary>
-            <span class="drill-tag" style="background:var(--accent); color:#fff;">Authentic Exam Paper · Question 7 [4 Pts]</span>
-            <span class="drill-q">What is the main task/role of the model in MVC?</span>
-            <span class="drill-reveal-hint"></span>
-          </summary>
-          <div class="drill-a">
-            <p><strong>Official Model Answer &amp; Grading Rubric (Prof. Dr. Jörg Schäfer):</strong></p>
-            <p>
-              The <strong>Model</strong> is the core computational domain entity of an MVC architecture:
+        <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:1.2rem;">
+          
+          <div style="background:var(--bg); border:1px solid var(--border); border-top:3px solid #10b981; border-radius:6px; padding:1.2rem;">
+            <strong style="color:#10b981; font-size:1rem;">1. Observer Pattern</strong>
+            <p style="font-size:0.85rem; color:var(--text-muted); line-height:1.5; margin:0.4rem 0;">
+              <strong>Model &amp; View:</strong> The Model is the <code>Subject</code>; Views are <code>Observers</code>. Multiple views (e.g. pie chart, table, progress bar) register with the same model and update in sync without model coupling.
             </p>
-            <ol>
-              <li><strong>Domain State &amp; Business Invariants:</strong> Encapsulates all application state, business rules, calculations, and consistency constraints. It is the single source of truth.</li>
-              <li><strong>Subject in Observer Pattern:</strong> Acts as the subject/observable that broadcasts state-change notifications (<code>notifyObservers()</code>) to all registered views without knowing their concrete UI types.</li>
-              <li><strong>UI &amp; Presentation Decoupling:</strong> Operates completely decoupled from user interface widgets, event listeners, and platform-specific window managers, enabling headless automated testing.</li>
-            </ol>
           </div>
-        </details>
 
-        <!-- Drill 2 -->
-        <details class="drill-item">
-          <summary>
-            <span class="drill-tag">Exam Drill 2</span>
-            <span class="drill-q">Why does the Model have zero knowledge of the View in a well-architected MVC system? (8 Exam Points)</span>
-            <span class="drill-reveal-hint"></span>
-          </summary>
-          <div class="drill-a">
-            <p><strong>Model Answer (Prof. Schäfer 1.0 Standard):</strong></p>
-            <p>Ensuring the Model has no direct references to the View achieves complete <strong>Presentation Independence</strong>.</p>
-            <ol>
-              <li><strong>Headless Automated Testing:</strong> The Model contains pure domain business logic. It can be tested in CI/CD without launching GUI window managers, browser engines, or mock display drivers.</li>
-              <li><strong>Multiple Simultaneous Views:</strong> Because the Model communicates strictly via the Observer pattern, multiple heterogeneous views (e.g. graphical chart, tabular grid, mobile notification) can observe the same single Model instance concurrently.</li>
-              <li><strong>Technology Agility:</strong> The UI technology stack can be completely rewritten (e.g. migrating from Swing to JavaFX, or React to Vue) without altering a single line of domain Model logic.</li>
-            </ol>
+          <div style="background:var(--bg); border:1px solid var(--border); border-top:3px solid #6366f1; border-radius:6px; padding:1.2rem;">
+            <strong style="color:var(--accent); font-size:1rem;">2. Strategy Pattern</strong>
+            <p style="font-size:0.85rem; color:var(--text-muted); line-height:1.5; margin:0.4rem 0;">
+              <strong>View &amp; Controller:</strong> The Controller is the <code>Strategy</code> for the View. The View delegates input interpretation to the controller strategy, allowing controllers to be swapped dynamically (e.g. edit mode vs read-only).
+            </p>
           </div>
-        </details>
 
-        <!-- Drill 2 -->
-        <details class="drill-item">
-          <summary>
-            <span class="drill-tag">Exam Drill 2</span>
-            <span class="drill-q">Name the three GoF design patterns compounded inside classic Smalltalk MVC and identify where each is applied. (8 Exam Points)</span>
-            <span class="drill-reveal-hint"></span>
-          </summary>
-          <div class="drill-a">
-            <p><strong>The Three Patterns in MVC:</strong></p>
-            <ul>
-              <li><strong>Observer Pattern:</strong> Applied between <strong>Model and View</strong>. The Model acts as Subject, and the View acts as Observer. This synchronizes display output with state changes while maintaining zero coupling.</li>
-              <li><strong>Strategy Pattern:</strong> Applied between <strong>View and Controller</strong>. The Controller is the Strategy for the View. The View delegates user gesture interpretation to the Controller, allowing interaction policies to be swapped at runtime.</li>
-              <li><strong>Composite Pattern:</strong> Applied <strong>inside the View</strong>. GUI components form a recursive part-whole tree hierarchy (windows containing panels containing buttons), allowing uniform layout and render dispatch.</li>
-            </ul>
+          <div style="background:var(--bg); border:1px solid var(--border); border-top:3px solid #38bdf8; border-radius:6px; padding:1.2rem;">
+            <strong style="color:#38bdf8; font-size:1rem;">3. Composite Pattern</strong>
+            <p style="font-size:0.85rem; color:var(--text-muted); line-height:1.5; margin:0.4rem 0;">
+              <strong>View GUI Hierarchy:</strong> The GUI itself is structured as a <code>Composite</code> of nested widgets (Window contains Panels, Panels contain Buttons, TextFields, Labels) rendered recursively.
+            </p>
           </div>
-        </details>
 
-        <!-- Drill 3 -->
-        <details class="drill-item">
-          <summary>
-            <span class="drill-tag">Exam Drill 3</span>
-            <span class="drill-q">How does Model-View-Presenter (MVP) improve upon classic MVC for unit testing? (4 Exam Points)</span>
-            <span class="drill-reveal-hint"></span>
-          </summary>
-          <div class="drill-a">
-            <p><strong>Model Answer:</strong></p>
-            <p>In classic MVC, the View observes the Model directly, making it difficult to test whether UI elements update without running the actual UI rendering framework.</p>
-            <p>In MVP (Passive View), all communication goes through the <strong>Presenter</strong>. The Presenter controls the View through an abstract interface (<code>IView</code>). In automated unit tests, developers can inject a mock <code>IView</code> into the Presenter and verify method invocations (e.g. <code>verify(mockView).displayErrorMessage(...)</code>) without launching any GUI components.</p>
-          </div>
-        </details>
-      </div>
-
-      <!-- Final Masterclass Roadmap Transition Card -->
-      <div class="stage-next-card" style="margin-top:2.5rem; border:1px solid #8b5cf6; background:rgba(139,92,246,0.06);">
-        <div class="stage-next-card-content">
-          <div class="stage-next-card-label" style="color:#8b5cf6;">NEXT CHAPTER IN CURRICULUM · UNIT 12</div>
-          <div class="stage-next-card-title">Unit 12: Architectural Patterns &amp; Enterprise Styles</div>
-          <p class="stage-next-card-desc">Explore macro-architectural styles: Layered Architecture, Pipes &amp; Filters, Microservices, and the Broker Pattern.</p>
         </div>
-        <a href="unit-12-architectural.html" class="stage-next-card-btn" style="background:#7c3aed;">Go to Unit 12: Architecture →</a>
       </div>
     </section>
 
-    <!-- Footer -->
-    <footer class="page-footer" style="margin-top: 3.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border); display: flex; justify-content: space-between; flex-wrap:wrap; gap:1rem;">
-      <span><a href="unit-10-decoupling.html" style="color:var(--text-muted); font-weight:600;">← Previous: Unit 10 Decoupling</a></span>
-      <span><a href="unit-12-architectural.html" style="color:var(--accent); font-weight:700;">Next: Unit 12 Architectural Styles →</a></span>
-    </footer>
+    <!-- ============================================================== -->
+    <!-- 3. CORE EXAM PRACTICE & DIRECT MODEL ANSWERS                   -->
+    <!-- ============================================================== -->
+    <section class="chapter" id="sec-drills">
+      <div class="chapter-head">
+        <span class="chapter-num">3</span>
+        <div>
+          <h2>Core Exam Practice &amp; Model Solutions</h2>
+          <span style="font-size:0.85rem; color:var(--text-muted); font-weight:600;">Direct Question &rarr; Answer Format</span>
+        </div>
+      </div>
 
-  </div>
-</div>
+      <!-- QA 1: Role of Model in MVC -->
+      <div class="qa-block">
+        <div class="qa-q">
+          Question 1: What is the Role of the Model in MVC?
+          <span class="pts-badge">3 Points</span>
+          <p style="font-size:0.92rem; font-weight:400; color:var(--text-muted); margin-top:0.5rem;">
+            What is the role of the Model in the Model-View-Controller (MVC) architectural pattern?
+          </p>
+        </div>
+        <div class="qa-a">
+          <span class="ans-label">Model Answer:</span>
+          <ol>
+            <li><strong>State &amp; Domain Logic:</strong> The Model encapsulates all core business data, application state, and business validation rules.</li>
+            <li><strong>Zero UI Dependency:</strong> The Model is completely independent of visual representation and input handling. It has no references to or knowledge of View or Controller classes.</li>
+            <li><strong>Publisher / Subject Role:</strong> The Model implements the <code>Subject</code> in the Observer pattern. When its state mutates, it notifies all registered View observers so they can synchronize their display.</li>
+          </ol>
+        </div>
+      </div>
 
-<script src="assets/site.js?v=2026.15"></script>
-<script>
-// Reading Progress Bar
-window.addEventListener("scroll", function () {
-  var winScroll = document.body.scrollTop || document.documentElement.scrollTop;
-  var height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-  var scrolled = (winScroll / height) * 100;
-  var bar = document.getElementById("readingProgressBar");
-  if (bar) bar.style.width = scrolled + "%";
-});
+      <!-- QA 2: The 3 Compounded Patterns -->
+      <div class="qa-block">
+        <div class="qa-q">
+          Question 2: Which 3 GoF Patterns Compose the MVC Architecture?
+          <span class="pts-badge">6 Points</span>
+          <p style="font-size:0.92rem; font-weight:400; color:var(--text-muted); margin-top:0.5rem;">
+            Name the three Gang of Four design patterns that form the classic MVC compound pattern and identify between which components each pattern operates!
+          </p>
+        </div>
+        <div class="qa-a">
+          <span class="ans-label">Model Answer:</span>
+          <ol>
+            <li><strong>Observer Pattern (between Model and View):</strong> The Model acts as Subject; Views act as Observers. Enables multiple independent views to stay in sync with domain state automatically.</li>
+            <li><strong>Strategy Pattern (between View and Controller):</strong> The Controller acts as the input handling Strategy for the View. Swapping controllers alters how user gestures manipulate the model.</li>
+            <li><strong>Composite Pattern (within the View):</strong> GUI components are organized as hierarchical part-whole trees (nested windows, panels, labels, buttons) treated uniformly.</li>
+          </ol>
+        </div>
+      </div>
+    </section>
 
-// 8-Pillar Selection & Matrix View Toggles
-var _currentPillar = 1;
-function selectPillar(num) {
-  _currentPillar = num;
-  var tabs = document.querySelectorAll(".pillar-tab-btn");
-  tabs.forEach(function (t, i) {
-    if (i + 1 === num) {
-      t.classList.add("active");
-      t.setAttribute("aria-selected", "true");
-    } else {
-      t.classList.remove("active");
-      t.setAttribute("aria-selected", "false");
-    }
-  });
-
-  for (var i = 1; i <= 8; i++) {
-    var p = document.getElementById("pillarPanel" + i);
-    if (p) p.style.display = (i === num) ? "block" : "none";
-  }
-}
-
-function setBlueprintView(mode) {
-  var explorer = document.getElementById("blueprintExplorer");
-  var matrix = document.getElementById("blueprintMatrix");
-  var btnExp = document.getElementById("btnViewExplorer");
-  var btnMat = document.getElementById("btnViewMatrix");
-
-  if (mode === "matrix") {
-    if (explorer) explorer.style.display = "none";
-    if (matrix) matrix.style.display = "block";
-    if (btnExp) btnExp.classList.remove("active");
-    if (btnMat) btnMat.classList.add("active");
-  } else {
-    if (explorer) explorer.style.display = "block";
-    if (matrix) matrix.style.display = "none";
-    if (btnExp) btnExp.classList.add("active");
-    if (btnMat) btnMat.classList.remove("active");
-    selectPillar(_currentPillar);
-  }
-}
-
-// Debounced Collapse Handler
-var _lastInlineCollapseTime = 0;
-function toggleBlueprintCollapse(forceState) {
-  var now = Date.now();
-  if (typeof forceState !== "boolean" && now - _lastInlineCollapseTime < 250) {
-    return;
-  }
-  _lastInlineCollapseTime = now;
-
-  var suite = document.getElementById("blueprintSuite");
-  var collapseBtn = document.getElementById("btnCollapseBlueprint");
-  var body = document.getElementById("blueprintCollapsibleBody");
-  var hint = document.getElementById("blueprintCollapsedHint");
-  if (!suite) return;
-
-  var isCurrentlyCollapsed = suite.classList.contains("is-collapsed");
-  var willCollapse = (typeof forceState === "boolean") ? forceState : !isCurrentlyCollapsed;
-
-  if (willCollapse) {
-    suite.classList.add("is-collapsed");
-    if (body) body.style.display = "none";
-    if (hint) hint.style.display = "flex";
-  } else {
-    suite.classList.remove("is-collapsed");
-    if (body) body.style.display = "block";
-    if (hint) hint.style.display = "none";
-  }
-
-  if (collapseBtn) {
-    var icon = collapseBtn.querySelector(".collapse-icon");
-    var label = collapseBtn.querySelector(".collapse-label");
-    if (willCollapse) {
-      if (icon) icon.textContent = "▼";
-      if (label) label.textContent = "Expand Rubric";
-      collapseBtn.setAttribute("aria-expanded", "false");
-    } else {
-      if (icon) icon.textContent = "▲";
-      if (label) label.textContent = "Collapse Rubric";
-      collapseBtn.setAttribute("aria-expanded", "true");
-    }
-  }
-}
-
-function copyBlueprintRubric() {
-  var copyLabel = document.getElementById("copyRubricSuiteLabel");
-  var rubricMarkdown = 
-    "# Software Pattern Mastery: The 8-Pillar Architectural Rubric\n" +
-    "*(Standard for POSA Exams & Technical Architecture Reviews)*\n\n" +
-    "## Domain: Architectural Patterns (Model-View-Controller, MVP, MVVM)\n\n" +
-    "### 1. Intent & Architectural Motivation\n" +
-    "- Isolate business domain data from user interface presentation and input gesture interpretation.\n\n" +
-    "### 2. Structural Roles & Compound Patterns\n" +
-    "- Model: Domain state & rules (Observer Subject).\n" +
-    "- View: Renders presentation & receives user input (Observer & Composite).\n" +
-    "- Controller: Translates user gestures into Model operations (Strategy for View).\n\n" +
-    "### 3. Formal UML Anatomy & Relationships\n" +
-    "- Collaborative cyclic loop: View delegates to Controller -> Controller modifies Model -> Model notifies View via Observer.\n\n" +
-    "### 4. Core Design Principles Enforced\n" +
-    "- Zero UI dependencies in Model; Headless automated testability; Multiple simultaneous views.\n\n" +
-    "### 5. Implementation Mechanics\n" +
-    "- Observer registration, Strategy injection, and Front Controller HTTP dispatch loops.\n\n" +
-    "### 6. Architectural Costs & Trade-offs\n" +
-    "- Clear separation of concerns vs Massive View Controller bloat and class proliferation.\n\n" +
-    "### 7. Rival Pattern Decision Matrix\n" +
-    "- MVC (View knows Model) vs MVP (Presenter mediates all; Passive View) vs MVVM (Data-binding engine).\n\n" +
-    "### 8. Real-World JDK & Exam Traps\n" +
-    "- Exam Trap: Naming the 3 patterns in MVC (Observer, Strategy, Composite) and their specific roles.\n";
-
-  function updateLabelSuccess() {
-    if (copyLabel) copyLabel.textContent = "Copied to Clipboard!";
-    if (typeof window.showToast === "function") window.showToast("8-Pillar Study Rubric copied to clipboard!");
-    setTimeout(function () {
-      if (copyLabel) copyLabel.textContent = "Copy Rubric (Markdown)";
-    }, 2500);
-  }
-
-  if (navigator.clipboard && navigator.clipboard.writeText) {
-    navigator.clipboard.writeText(rubricMarkdown).then(updateLabelSuccess).catch(function () {
-      fallbackCopy(rubricMarkdown);
-    });
-  } else {
-    fallbackCopy(rubricMarkdown);
-  }
-
-  function fallbackCopy(text) {
-    var ta = document.createElement("textarea");
-    ta.value = text;
-    ta.style.position = "fixed";
-    ta.style.opacity = "0";
-    document.body.appendChild(ta);
-    ta.select();
-    try {
-      document.execCommand("copy");
-      updateLabelSuccess();
-    } catch (e) {
-      alert("Please press Ctrl+C to copy rubric");
-    }
-    document.body.removeChild(ta);
-  }
-}
-
-function copySnippet(elementId) {
-  var el = document.getElementById(elementId);
-  if (!el) return;
-  var text = el.innerText || el.textContent;
-  if (navigator.clipboard && navigator.clipboard.writeText) {
-    navigator.clipboard.writeText(text).then(function() {
-      if (typeof window.showToast === "function") window.showToast("Code snippet copied to clipboard!");
-    });
-  }
-}
-
-// Stage Completion Indicator
-function markStageComplete(stageNum) {
-  var btn = event.target;
-  if (btn) {
-    btn.textContent = "Completed ✓";
-    btn.style.background = "#10b981";
-    btn.style.color = "#fff";
-  }
-  var pill = document.querySelector('.stage-nav-pill[data-stage="' + stageNum + '"]');
-  if (pill) {
-    pill.style.borderColor = "#10b981";
-  }
-  if (typeof window.showToast === "function") window.showToast("Stage " + stageNum + " marked complete! Great progress.");
-}
-
-// Interactive Compound MVC Simulator Controller
-(function initMvcSandbox() {
-  var btnInc = document.getElementById("btnUserActionInc");
-  var btnDec = document.getElementById("btnUserActionDec");
-  var boxView = document.getElementById("boxView");
-  var boxController = document.getElementById("boxController");
-  var boxModel = document.getElementById("boxModel");
-  var viewDisplay = document.getElementById("viewBpmDisplay");
-  var modelDisplay = document.getElementById("modelBpmDisplay");
-  var actionLabel = document.getElementById("controllerActionLabel");
-  var consoleEl = document.getElementById("mvcConsole");
-
-  if (!btnInc || !btnDec || !boxView || !boxController || !boxModel || !viewDisplay || !modelDisplay || !actionLabel || !consoleEl) return;
-
-  var bpm = 90;
-
-  function triggerDispatchCycle(isInc) {
-    var delta = isInc ? 1 : -1;
-    var actionName = isInc ? "increaseBPM()" : "decreaseBPM()";
-
-    // Step 1: View triggers action
-    boxView.classList.add("active-pulse");
-    actionLabel.textContent = "Delegating: " + actionName;
-    consoleEl.textContent = ">> [Step 1: View] User action delegated to Controller (Strategy).";
-
-    setTimeout(function () {
-      boxView.classList.remove("active-pulse");
-      boxController.classList.add("active-pulse");
-      consoleEl.textContent = ">> [Step 2: Controller] Validates input -> calls model.setBPM(" + (bpm + delta) + ").";
-
-      setTimeout(function () {
-        boxController.classList.remove("active-pulse");
-        boxModel.classList.add("active-pulse");
-        bpm += delta;
-        modelDisplay.textContent = "State: " + bpm;
-        consoleEl.textContent = ">> [Step 3: Model] State updated to " + bpm + ". Calling notifyObservers()...";
-
-        setTimeout(function () {
-          boxModel.classList.remove("active-pulse");
-          boxView.classList.add("active-pulse");
-          viewDisplay.textContent = bpm + " BPM";
-          consoleEl.textContent = ">> [Step 4: Observer Hook] View.update() executed! UI re-rendered to " + bpm + " BPM. Collaborative cycle complete.";
-
-          setTimeout(function () {
-            boxView.classList.remove("active-pulse");
-            actionLabel.textContent = "Idle";
-          }, 600);
-        }, 350);
-      }, 350);
-    }, 350);
-  }
-
-  btnInc.addEventListener("click", function () {
-    triggerDispatchCycle(true);
-  });
-
-  btnDec.addEventListener("click", function () {
-    triggerDispatchCycle(false);
-  });
-})();
-
-window.selectPillar = selectPillar;
-window.setBlueprintView = setBlueprintView;
-window.toggleBlueprintCollapse = toggleBlueprintCollapse;
-window.copyBlueprintRubric = copyBlueprintRubric;
-window.copySnippet = copySnippet;
-window.markStageComplete = markStageComplete;
-</script>
+  </main>
 </body>
 </html>
