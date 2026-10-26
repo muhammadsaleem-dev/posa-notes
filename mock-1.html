@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Mock 1 · Authentic Written Exam Paper (exam-questions.pdf) | Prof. Dr. Jörg Schäfer</title>
-<meta name="description" content="Mock 1: Complete 11-page authentic written examination paper directly transcribed from Prof. Dr. Jörg Schäfer's genuine Klausur (exam-questions.pdf). Features all 8 Exercises (107 Points) with scans, solutions, code, and rubrics.">
+<meta name="description" content="Mock 1: Complete 11-page authentic written examination paper directly transcribed from Prof. Dr. Jörg Schäfer's genuine Klausur (exam-questions.pdf). Simple, direct Question and Answer format covering all 8 Exercises (107 Points).">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%236366f1'/%3E%3Cpath d='M8 10h16M8 16h16M8 22h10' stroke='%23fff' stroke-width='2.2' stroke-linecap='round'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -18,170 +18,86 @@
 </script>
 <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 <style>
-  .exam-meta-banner {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-    gap: 1rem;
-    margin: 1.5rem 0 2rem;
-    padding: 1.25rem 1.5rem;
+  .qa-block {
+    margin: 1.5rem 0;
+    padding: 1.5rem;
     background: var(--bg-raised);
     border: 1px solid var(--border);
     border-radius: var(--radius-md);
     box-shadow: var(--shadow-sm);
   }
-  .exam-meta-item {
-    display: flex;
-    flex-direction: column;
-    gap: 0.25rem;
-  }
-  .exam-meta-label {
-    font-size: 0.78rem;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: var(--text-muted);
-    font-weight: 600;
-  }
-  .exam-meta-val {
-    font-size: 1.2rem;
+  .qa-q {
+    font-size: 1.12rem;
     font-weight: 700;
-    color: var(--accent);
-    font-family: var(--font-mono);
-  }
-  .exam-actions-bar {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
-    padding: 1rem 1.25rem;
-    background: var(--accent-soft);
-    border-radius: var(--radius-md);
-    margin-bottom: 2rem;
-    border: 1px solid rgba(99, 102, 241, 0.25);
-  }
-  .exam-timer-wrap {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    font-weight: 700;
-    font-family: var(--font-mono);
-    font-size: 1.05rem;
-  }
-  .btn-exam {
-    background: var(--accent);
-    color: #ffffff;
-    border: none;
-    padding: 0.55rem 1.1rem;
-    border-radius: var(--radius-sm);
-    font-weight: 600;
-    font-size: 0.88rem;
-    cursor: pointer;
-    transition: opacity 0.2s;
-    text-decoration: none;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.4rem;
-  }
-  .btn-exam:hover { opacity: 0.9; }
-  .btn-outline {
-    background: transparent;
-    border: 1px solid var(--accent);
     color: var(--text);
+    margin-bottom: 1rem;
+    line-height: 1.45;
   }
-  .points-badge {
+  .qa-q .pts-badge {
     display: inline-block;
-    padding: 0.2rem 0.65rem;
+    padding: 0.2rem 0.6rem;
     background: var(--accent-soft);
     color: var(--accent);
     border-radius: 999px;
-    font-size: 0.75rem;
-    font-weight: 700;
+    font-size: 0.78rem;
     font-family: var(--font-mono);
+    font-weight: 700;
     margin-left: 0.5rem;
+    vertical-align: middle;
   }
-  .gotcha-box {
+  .qa-a {
+    padding: 1.25rem 1.5rem;
+    background: var(--bg);
+    border-left: 4px solid var(--accent);
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    font-size: 0.95rem;
+    line-height: 1.65;
+    color: var(--text);
+  }
+  .qa-a .ans-label {
+    display: block;
+    font-size: 0.82rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 800;
+    color: var(--accent);
+    margin-bottom: 0.75rem;
+  }
+  .context-box {
+    padding: 1.25rem 1.5rem;
+    background: var(--bg-raised);
+    border: 1px dashed var(--border);
+    border-radius: var(--radius-md);
+    margin: 1.25rem 0;
+    font-size: 0.92rem;
+    line-height: 1.6;
+  }
+  .ex-header {
+    margin: 3.5rem 0 1.25rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 2px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .ex-title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: 1.45rem;
+    color: var(--text);
+  }
+  .gotcha-alert {
     margin-top: 1rem;
-    padding: 0.9rem 1.15rem;
+    padding: 0.85rem 1.15rem;
     background: var(--warn-soft);
     border-left: 3px solid var(--warn);
     border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
     font-size: 0.9rem;
     color: var(--text);
-    line-height: 1.55;
   }
-  .gotcha-box strong { color: var(--warn); }
-  .authentic-tag {
-    display: inline-block;
-    padding: 0.22rem 0.6rem;
-    background: #ef4444;
-    color: #fff;
-    border-radius: 4px;
-    font-size: 0.75rem;
-    font-weight: 800;
-    letter-spacing: 0.03em;
-    margin-right: 0.5rem;
-  }
-  .exam-q-box {
-    background: var(--bg-raised);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-md);
-    padding: 1.5rem;
-    margin-bottom: 2rem;
-    box-shadow: var(--shadow-sm);
-    transition: border-color 0.2s ease;
-  }
-  .exam-q-box:hover {
-    border-color: var(--accent);
-  }
-  .exam-q-num {
-    font-size: 0.82rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: var(--accent);
-    display: block;
-    margin-bottom: 0.5rem;
-    font-family: var(--font-mono);
-  }
-  .exam-q-text {
-    font-size: 1.15rem;
-    font-weight: 700;
-    line-height: 1.45;
-    margin: 0 0 1.25rem;
-    color: var(--text);
-  }
-  .scan-evidence-box {
-    background: var(--bg);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-md);
-    padding: 0.75rem 1rem;
-    margin: 1rem 0 1.25rem;
-  }
-  .scan-evidence-box summary {
-    cursor: pointer;
-    font-weight: 700;
-    font-size: 0.88rem;
-    color: var(--text);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-  .scan-evidence-img {
-    width: 100%;
-    max-height: 380px;
-    object-fit: contain;
-    border-radius: var(--radius-sm);
-    background: #111;
-    display: block;
-    margin-top: 0.75rem;
-  }
-  .exercise-module-header {
-    margin: 3.5rem 0 1.5rem;
-    padding: 1rem 1.25rem;
-    background: var(--bg-raised);
-    border-left: 4px solid var(--accent);
-    border-radius: 0 var(--radius-md) var(--radius-md) 0;
-  }
+  .gotcha-alert strong { color: var(--warn); }
 </style>
 <script>(function(){try{var t=localStorage.getItem('posa-theme')||localStorage.getItem('dm2026-theme')||'dark';document.documentElement.setAttribute('data-theme',t);var m=localStorage.getItem('posa-mode')||'concept';document.documentElement.setAttribute('data-mode',m);}catch(e){}})();</script>
 </head>
@@ -215,7 +131,7 @@
       <a href="index.html">Course Overview</a>
       <a href="mock-1.html" class="active">🎓 Mock 1 (Exam Sheet)</a>
       <a href="mock-2.html">📝 Mock 2 (Exam Notes)</a>
-      <a href="#part-1">Part 1 · Core Sheet Questions (15 pts)</a>
+      <a href="#part-1">Questions 6–8 (15 pts)</a>
       <a href="#ex-2">Exercise 2 · Adapter &amp; Iterator (16 pts)</a>
       <a href="#ex-3">Exercise 3 · Strategy &amp; OCP (16 pts)</a>
       <a href="#ex-4">Exercise 4 · Template Refactoring (14 pts)</a>
@@ -227,36 +143,12 @@
   </div>
 </nav>
 
-<!-- Mobile Native Bottom Dock -->
-<nav class="mobile-bottom-dock" aria-label="Mobile Navigation Dock">
-  <a href="#part-1" class="dock-item active">
-    <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line><line x1="9" y1="21" x2="9" y2="9"></line></svg>
-    <span>Part 1</span>
-  </a>
-  <a href="#ex-2" class="dock-item">
-    <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
-    <span>Ex 2</span>
-  </a>
-  <a href="#ex-3" class="dock-item">
-    <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
-    <span>Ex 3</span>
-  </a>
-  <a href="#ex-8" class="dock-item">
-    <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
-    <span>Ex 8</span>
-  </a>
-  <a href="mock-2.html" class="dock-item">
-    <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
-    <span>Mock 2</span>
-  </a>
-</nav>
-
 <div class="page-shell">
   <aside class="sidebar-toc">
     <div class="sidebar-block">
-      <span class="sidebar-label">Exam Paper Navigation</span>
+      <span class="sidebar-label">Mock 1 Exercises</span>
       <a href="index.html">← Course Overview</a>
-      <a href="#part-1">Part 1 · Questions 6–8 (15 pts)</a>
+      <a href="#part-1">Questions 6–8 (15 pts)</a>
       <a href="#ex-2">Ex 2 · Adapter &amp; Iterator (16 pts)</a>
       <a href="#ex-3">Ex 3 · Strategy &amp; OCP (16 pts)</a>
       <a href="#ex-4">Ex 4 · Template Refactoring (14 pts)</a>
@@ -264,147 +156,75 @@
       <a href="#ex-6">Ex 6 · Singleton &amp; SOLID (12 pts)</a>
       <a href="#ex-7">Ex 7 · Criticism &amp; Python (12 pts)</a>
       <a href="#ex-8">Ex 8 · Banking Architecture (18 pts)</a>
-      <a href="#self-evaluation">📊 Grading Scale (107 pts)</a>
-      <a href="mock-2.html" style="color:var(--accent); font-weight:700; margin-top:0.75rem;">Next: Mock 2 (Exam Notes) →</a>
+      <a href="mock-2.html" style="color:var(--accent); font-weight:700; margin-top:0.75rem;">Go to Mock 2 (Exam Notes) →</a>
     </div>
   </aside>
 
   <main class="page-content" id="main-content">
     <header class="page-header">
-      <div class="eyebrow"><span class="authentic-tag">11-PAGE AUTHENTIC KLAUSUR</span> FRANKFURT UAS · PROF. DR. JÖRG SCHÄFER</div>
-      <h1 class="page-title">Mock 1 · Authentic Written Exam Paper</h1>
+      <div class="eyebrow" style="color:#ef4444; font-weight:800;">FRANKFURT UAS · OFFICIAL WRITTEN KLAUSUR (107 PTS)</div>
+      <h1 class="page-title">Mock 1 · Authentic Exam Paper</h1>
       <p class="page-subtitle">
-        Complete transcription of Prof. Dr. Jörg Schäfer's 11-page genuine written examination paper (<code style="color:var(--accent);">exam-questions.pdf</code>). Contains all 8 official Exercises covering 107 total points with genuine photo scans, model solutions, and grading keys.
+        Transcribed directly from Prof. Dr. Jörg Schäfer's 11-page examination paper (<code style="color:var(--accent);">exam-questions.pdf</code>). Direct Question and Answer layout.
       </p>
     </header>
 
-    <!-- Meta Banner -->
-    <div class="exam-meta-banner">
-      <div class="exam-meta-item">
-        <span class="exam-meta-label">Primary Source</span>
-        <span class="exam-meta-val" style="font-size:0.92rem;">exam-questions.pdf (11 pgs)</span>
-      </div>
-      <div class="exam-meta-item">
-        <span class="exam-meta-label">Official Exercises</span>
-        <span class="exam-meta-val">8 Exercises</span>
-      </div>
-      <div class="exam-meta-item">
-        <span class="exam-meta-label">Total Exam Points</span>
-        <span class="exam-meta-val">107 Points</span>
-      </div>
-      <div class="exam-meta-item">
-        <span class="exam-meta-label">Standard Klausur Time</span>
-        <span class="exam-meta-val">90 Minutes</span>
-      </div>
-    </div>
-
-    <!-- Exam Interactive Controls -->
-    <div class="exam-actions-bar">
-      <div class="exam-timer-wrap">
-        <span>⏱️ Time Remaining:</span>
-        <span id="examTimer" style="color:var(--accent);">90:00</span>
-      </div>
-      <div style="display:flex; gap:0.6rem; flex-wrap:wrap;">
-        <button class="btn-exam" id="timerStartBtn" onclick="toggleExamTimer()">▶ Start Timer</button>
-        <button class="btn-exam btn-outline" onclick="toggleAllAnswers(false)">▲ Hide Answers (Test Mode)</button>
-        <button class="btn-exam btn-outline" onclick="toggleAllAnswers(true)">▼ Reveal All Answers</button>
-      </div>
-    </div>
-
     <!-- ================================================================= -->
-    <!-- PART 1: CORE EXAM SHEET QUESTIONS (15 PTS)                        -->
+    <!-- PART 1: CORE QUESTIONS 6, 7, 8 (15 PTS)                           -->
     <!-- ================================================================= -->
-    <div class="exercise-module-header" id="part-1">
-      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem;">
-        <h2 style="margin:0; font-family:var(--font-display); font-size:1.35rem; color:var(--text);">
-          Part 1 · Core Written Questions (From Page 1)
-        </h2>
-        <span class="points-badge">15 Points Total</span>
+    <section id="part-1">
+      <div class="ex-header">
+        <h2 class="ex-title">Part 1 · Core Written Questions (From Page 1)</h2>
+        <span style="font-weight:700; color:var(--accent); font-family:var(--font-mono);">15 Points Total</span>
       </div>
-      <p style="margin:0.35rem 0 0; font-size:0.88rem; color:var(--text-muted);">
-        Questions 6, 7, and 8 directly transcribed from the printed sheet.
-      </p>
-    </div>
 
-    <!-- Scan Evidence 1 -->
-    <details class="scan-evidence-box">
-      <summary>
-        <span>📷 Original Exam Sheet Scan · Page 1</span>
-        <span style="font-size:0.8rem; color:var(--text-muted); font-family:var(--font-mono);">Click to inspect original paper</span>
-      </summary>
-      <img src="assets/exam-images/img-000.png" alt="Exam Sheet Page 1 Scan" class="scan-evidence-img">
-    </details>
-
-    <!-- Question 6 -->
-    <article class="exam-q-box" id="q6-decorator">
-      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem; margin-bottom:0.5rem;">
-        <span class="exam-q-num">Question 6 · Unit 9 (Decorator)</span>
-        <span class="points-badge">5 Points</span>
-      </div>
-      <h3 class="exam-q-text">Which of the OOP principles does decorator primarily follow: Inheritance or composition and briefly explain why?</h3>
-
-      <details class="drill-item" open>
-        <summary>
-          <span class="drill-tag">Official Solution &amp; Rubric</span>
-          <span class="drill-q">Model Answer</span>
-          <span class="drill-reveal-hint"></span>
-        </summary>
-        <div class="drill-a" style="margin-top:1rem;">
-          <p><strong>Primary Principle: <span style="color:var(--accent);">Composition</span> (Object Composition over Class Inheritance)</strong></p>
-          <ol style="padding-left:1.25rem; line-height:1.65; margin:0 0 1rem;">
-            <li><strong>Composition Provides Dynamic Behavior:</strong> The Decorator pattern dynamically attaches behavior at runtime by holding a reference to the wrapped component instance (<code>protected Component component;</code>) and delegating client method invocations to it.</li>
-            <li><strong>Inheritance is Purely for Type Conformance:</strong> Subclassing the <code>Component</code> class is done <em>solely for subtyping/interface matching</em>—so the decorator can transparently substitute for the component. It does NOT inherit its functional behavior from the parent.</li>
-            <li><strong>Prevents Subclass Explosion:</strong> Avoids the $2^N$ static subclass combinations created by naive inheritance.</li>
+      <!-- Question 6 -->
+      <div class="qa-block" id="q6">
+        <div class="qa-q">
+          Question 6: Which of the OOP principles does decorator primarily follow: Inheritance or composition and briefly explain why?
+          <span class="pts-badge">5 Points</span>
+        </div>
+        <div class="qa-a">
+          <span class="ans-label">Model Answer</span>
+          <p><strong>Primary Principle: Composition (Object Composition over Class Inheritance)</strong></p>
+          <ol style="padding-left:1.25rem; margin:0.5rem 0 1rem; line-height:1.65;">
+            <li><strong>Composition Provides Dynamic Extension:</strong> The Decorator pattern dynamically attaches behavior at runtime by holding a reference to the wrapped component instance (<code>protected Component component;</code>) and delegating method invocations to it.</li>
+            <li><strong>Inheritance is Purely for Type Conformance:</strong> Subclassing the <code>Component</code> class is done <em>solely for interface matching / subtyping</em>—so the decorator can substitute wherever a <code>Component</code> is expected. It does NOT inherit behavior from the superclass.</li>
+            <li><strong>Prevents Subclass Explosion:</strong> Avoids the $2^N$ static subclass combinations created by naive inheritance (e.g., Starbuzz coffee).</li>
           </ol>
-          <div class="gotcha-box">
-            ⚠️ <strong>Professor Gotcha:</strong> Answering "Inheritance" or simply "both" without clarifying that inheritance is only for <em>type matching</em> while composition provides the <em>actual functional extension</em> costs up to 50% deduction.
+          <div class="gotcha-alert">
+            ⚠️ <strong>Professor Gotcha:</strong> Answering "Inheritance" or simply "both" without clarifying that inheritance is only used for <em>type matching</em> while composition provides the <em>actual functional extension</em> results in up to a 50% deduction.
           </div>
         </div>
-      </details>
-    </article>
-
-    <!-- Question 7 -->
-    <article class="exam-q-box" id="q7-mvc">
-      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem; margin-bottom:0.5rem;">
-        <span class="exam-q-num">Question 7 · Unit 11 (MVC)</span>
-        <span class="points-badge">5 Points</span>
       </div>
-      <h3 class="exam-q-text">What is the main task/role of the model in MVC?</h3>
 
-      <details class="drill-item" open>
-        <summary>
-          <span class="drill-tag">Official Solution &amp; Rubric</span>
-          <span class="drill-q">Model Answer</span>
-          <span class="drill-reveal-hint"></span>
-        </summary>
-        <div class="drill-a" style="margin-top:1rem;">
-          <ol style="padding-left:1.25rem; line-height:1.65; margin:0 0 1rem;">
-            <li><strong>Encapsulates Business Data &amp; Domain State:</strong> Holds all domain data, business logic, entities, invariants, and calculations.</li>
-            <li><strong>Complete UI Independence:</strong> Contains zero presentation or GUI references. It is completely decoupled and testable in isolation.</li>
-            <li><strong>Observer Subject Role:</strong> Acts as the <code>Subject</code> in the Observer pattern. When its state changes, it notifies registered views, which pull the updated state.</li>
+      <!-- Question 7 -->
+      <div class="qa-block" id="q7">
+        <div class="qa-q">
+          Question 7: What is the main task/role of the model in MVC?
+          <span class="pts-badge">5 Points</span>
+        </div>
+        <div class="qa-a">
+          <span class="ans-label">Model Answer</span>
+          <ol style="padding-left:1.25rem; margin:0 0 1rem; line-height:1.65;">
+            <li><strong>Encapsulates Business Data &amp; Domain State:</strong> Holds all domain data, business logic, calculations, constraints, and persistence rules.</li>
+            <li><strong>Complete UI Independence:</strong> Contains zero UI code and has no direct reference to any Views or Controllers. It is testable in isolation.</li>
+            <li><strong>Observer Subject Role:</strong> Acts as the <code>Subject</code> in the Observer pattern. When its internal state changes (triggered by Controller actions), it notifies registered View observers, which then pull the updated data.</li>
           </ol>
-          <div class="gotcha-box">
-            ⚠️ <strong>Professor Gotcha:</strong> Never state that the Model directly updates or renders the View. The Model merely notifies observers; the View queries the Model!
+          <div class="gotcha-alert">
+            ⚠️ <strong>Professor Gotcha:</strong> Stating that the Model directly updates or renders the View is an automatic point deduction. The Model merely notifies observers; the View queries the Model!
           </div>
         </div>
-      </details>
-    </article>
-
-    <!-- Question 8 -->
-    <article class="exam-q-box" id="q8-strategy-template">
-      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem; margin-bottom:0.5rem;">
-        <span class="exam-q-num">Question 8 · Unit 1 &amp; Unit 2A</span>
-        <span class="points-badge">5 Points</span>
       </div>
-      <h3 class="exam-q-text">How does the Strategy Pattern differ from the Template Method Pattern?</h3>
 
-      <details class="drill-item" open>
-        <summary>
-          <span class="drill-tag">Official Solution &amp; Rubric</span>
-          <span class="drill-q">Model Answer</span>
-          <span class="drill-reveal-hint"></span>
-        </summary>
-        <div class="drill-a" style="margin-top:1rem;">
+      <!-- Question 8 -->
+      <div class="qa-block" id="q8">
+        <div class="qa-q">
+          Question 8: How does the Strategy Pattern differ from the Template Method Pattern?
+          <span class="pts-badge">5 Points</span>
+        </div>
+        <div class="qa-a">
+          <span class="ans-label">Model Answer</span>
           <table class="blueprint-table" style="width:100%; border-collapse:collapse; font-size:0.88rem; margin:0.5rem 0 1rem;">
             <thead>
               <tr style="border-bottom:2px solid var(--border); text-align:left; background:var(--bg-raised);">
@@ -421,102 +241,111 @@
               </tr>
               <tr style="border-bottom:1px solid var(--border);">
                 <td style="padding:0.6rem; font-weight:700;">Binding Time</td>
-                <td style="padding:0.6rem;"><strong>Dynamic at Runtime</strong> (swappable via setter)</td>
-                <td style="padding:0.6rem;"><strong>Static at Compile-Time</strong> (bound through subclass)</td>
+                <td style="padding:0.6rem;"><strong>Dynamic at Runtime</strong> (hot-swappable algorithms via setter)</td>
+                <td style="padding:0.6rem;"><strong>Static at Compile-Time</strong> (bound through subclass instantiation)</td>
               </tr>
               <tr style="border-bottom:1px solid var(--border);">
                 <td style="padding:0.6rem; font-weight:700;">Algorithm Granularity</td>
                 <td style="padding:0.6rem;">Swaps the <strong>entire algorithm</strong> via an interface</td>
-                <td style="padding:0.6rem;">Fixes <strong>skeletal invariant flow</strong>; overrides variant steps</td>
+                <td style="padding:0.6rem;">Fixes the <strong>skeletal invariant flow</strong>; subclasses override specific steps</td>
               </tr>
               <tr>
-                <td style="padding:0.6rem; font-weight:700;">Key Principle</td>
+                <td style="padding:0.6rem; font-weight:700;">Design Principle</td>
                 <td style="padding:0.6rem;">Favor composition over inheritance</td>
                 <td style="padding:0.6rem;">Hollywood Principle ("Don't call us, we'll call you!")</td>
               </tr>
             </tbody>
           </table>
-          <div class="gotcha-box">
-            ⚠️ <strong>GoF Quote:</strong> <em>"Template Method uses inheritance to vary parts of an algorithm. Strategy uses composition to vary the entire algorithm."</em>
-          </div>
+          <p style="margin:0.5rem 0 0; font-style:italic; color:var(--text-muted);">
+            GoF Quote: "Template Method uses inheritance to vary parts of an algorithm. Strategy uses composition to vary the entire algorithm."
+          </p>
         </div>
-      </details>
-    </article>
+      </div>
+    </section>
 
     <!-- ================================================================= -->
-    <!-- EXERCISE 2: ADAPTER & ITERATOR PATTERN (16 PTS)                   -->
+    <!-- EXERCISE 2: ADAPTER & ITERATOR (16 PTS)                           -->
     <!-- ================================================================= -->
-    <div class="exercise-module-header" id="ex-2">
-      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem;">
-        <h2 style="margin:0; font-family:var(--font-display); font-size:1.35rem; color:var(--text);">
-          Exercise 2 · Legacy Integration with Adapter &amp; Iterator
-        </h2>
-        <span class="points-badge">16 Points (2 + 4 + 6 + 4)</span>
-      </div>
-      <p style="margin:0.35rem 0 0; font-size:0.88rem; color:var(--text-muted);">
-        You want to use a legacy Quicksort library using <code>Vector quicksort(Vector vector)</code>, but your application code must call <code>List quicksort(List list)</code> and print all sorted elements.
-      </p>
-    </div>
-
-    <!-- Scan Evidence 2 -->
-    <details class="scan-evidence-box">
-      <summary>
-        <span>📷 Original Exam Sheet Scan · Exercise 2 (Pages 2 &amp; 3)</span>
-        <span style="font-size:0.8rem; color:var(--text-muted); font-family:var(--font-mono);">Click to inspect</span>
-      </summary>
-      <img src="assets/exam-images/img-001.png" alt="Ex 2 Scan 1" class="scan-evidence-img">
-      <img src="assets/exam-images/img-005.png" alt="Ex 2 Scan 2" class="scan-evidence-img">
-    </details>
-
-    <article class="exam-q-box" id="ex2-task">
-      <h3 class="exam-q-text">Exercise 2 Tasks &amp; Complete Solution</h3>
-
-      <div style="background:var(--bg); border:1px solid var(--border); border-radius:var(--radius-sm); padding:1rem; margin-bottom:1.25rem;">
-        <p style="margin:0 0 0.5rem; font-size:0.9rem; font-weight:700;">Legacy API Provided on Exam Sheet:</p>
-        <pre style="margin:0; font-family:var(--font-mono); font-size:0.85rem; line-height:1.5;">Vector quicksort(Vector vector)
-// Legacy Vector has: Vector(Collection c), Enumeration elements()
-// Enumeration has: boolean hasMoreElements(), Object nextElement()
-// Iterator has: boolean hasNext(), Object next()</pre>
+    <section id="ex-2">
+      <div class="ex-header">
+        <h2 class="ex-title">Exercise 2 · Legacy Integration with Adapter &amp; Iterator</h2>
+        <span style="font-weight:700; color:var(--accent); font-family:var(--font-mono);">16 Points (2 + 4 + 6 + 4)</span>
       </div>
 
-      <details class="drill-item" open>
-        <summary>
-          <span class="drill-tag">Solution (Part 1, 2, 3)</span>
-          <span class="drill-q">Model Answers &amp; Java Source Code</span>
-          <span class="drill-reveal-hint"></span>
-        </summary>
-        <div class="drill-a" style="margin-top:1rem;">
-          <p><strong>1. Which (two) patterns can you use to simplify your implementation? (2 Points)</strong></p>
-          <ul>
-            <li><strong>Adapter Pattern:</strong> To adapt the legacy <code>Vector</code> / <code>Enumeration</code> interfaces to the modern <code>List</code> / <code>Iterator</code> interfaces without modifying legacy code.</li>
-            <li><strong>Iterator Pattern:</strong> To sequentially traverse and print the sorted elements uniformly without exposing internal data structures.</li>
-          </ul>
+      <div class="context-box">
+        <strong>Exam Scenario:</strong> You want to use a legacy Quicksort library that takes <code>Vector</code> as part of its API:
+        <pre style="margin:0.5rem 0; font-family:var(--font-mono); font-size:0.85rem;">Vector quicksort(Vector vector)</pre>
+        However, in your code you want to use a <code>List</code> implementation by calling:
+        <pre style="margin:0.5rem 0; font-family:var(--font-mono); font-size:0.85rem;">List quicksort(List list)</pre>
+        to sort a list and after sorting you want to print all elements of the list.<br><br>
+        <strong>API Provided on Exam Sheet:</strong>
+        <pre style="margin:0.5rem 0; font-family:var(--font-mono); font-size:0.85rem;">
+Vector: public Vector(Collection c), Enumeration elements()
+Enumeration: boolean hasMoreElements(), Object nextElement()
+Iterator: boolean hasNext(), Object next()</pre>
+      </div>
 
-          <p><strong>2. Draw the UML of these patterns! (4 Points)</strong></p>
-          <div style="padding:1rem; background:var(--bg); border:1px solid var(--border); border-radius:var(--radius-sm); font-family:var(--font-mono); font-size:0.85rem; line-height:1.45; margin-bottom:1rem;">
-            [Client] --&gt; &lt;&lt;interface&gt;&gt; Iterator&lt;Object&gt; { +hasNext(), +next() }<br>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;^<br>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|<br>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;EnumerationIteratorAdapter ----&gt; &lt;&lt;interface&gt;&gt; Enumeration { +hasMoreElements(), +nextElement() }
-          </div>
+      <!-- Exercise 2 - Question 1 -->
+      <div class="qa-block" id="ex2-q1">
+        <div class="qa-q">
+          1. Which (two) patterns can you use to simplify your implementation?
+          <span class="pts-badge">2 Points</span>
+        </div>
+        <div class="qa-a">
+          <span class="ans-label">Model Answer</span>
+          <ol style="padding-left:1.25rem; margin:0; line-height:1.65;">
+            <li><strong>Adapter Pattern:</strong> To adapt the legacy <code>Vector</code> / <code>Enumeration</code> interfaces into the modern <code>List</code> / <code>Iterator</code> interfaces without modifying the legacy library code.</li>
+            <li><strong>Iterator Pattern:</strong> To sequentially traverse and print all elements of the sorted list uniformly.</li>
+          </ol>
+        </div>
+      </div>
 
-          <p><strong>3. Java Source Code Implementation of <code>List quicksort(List list)</code>: (6 + 4 Points)</strong></p>
-          <pre style="background:var(--bg); padding:1rem; border:1px solid var(--border); border-radius:var(--radius-sm); font-family:var(--font-mono); font-size:0.85rem; line-height:1.5; overflow-x:auto;">
-// 1. Adapter: Adapting Enumeration to Iterator
+      <!-- Exercise 2 - Question 2 -->
+      <div class="qa-block" id="ex2-q2">
+        <div class="qa-q">
+          2. Draw the UML of these patterns!
+          <span class="pts-badge">4 Points</span>
+        </div>
+        <div class="qa-a">
+          <span class="ans-label">Model Answer</span>
+          <pre style="background:var(--bg-raised); padding:1rem; border-radius:var(--radius-sm); font-family:var(--font-mono); font-size:0.85rem; line-height:1.45; overflow-x:auto;">
+[Client] ----> <<interface>> Iterator&lt;Object&gt;
+                     ^
+                     | (implements)
+      EnumerationIteratorAdapter ----> <<interface>> Enumeration (Adaptee)
+      - enumeration: Enumeration       + hasMoreElements(): boolean
+      + hasNext(): boolean             + nextElement(): Object
+      + next(): Object</pre>
+        </div>
+      </div>
+
+      <!-- Exercise 2 - Question 3 -->
+      <div class="qa-block" id="ex2-q3">
+        <div class="qa-q">
+          3. Please write down the source code of your implementation of: <code>List quicksort(List list)</code>. Do not forget to print all elements of the list!
+          <span class="pts-badge">10 Points (6 + 4)</span>
+        </div>
+        <div class="qa-a">
+          <span class="ans-label">Model Answer</span>
+          <pre style="background:var(--bg-raised); padding:1rem; border-radius:var(--radius-sm); font-family:var(--font-mono); font-size:0.85rem; line-height:1.5; overflow-x:auto;">
+// 1. Adapter: Adapting legacy Enumeration to modern Iterator
 public class EnumerationIteratorAdapter implements Iterator&lt;Object&gt; {
     private final Enumeration enumeration;
+
     public EnumerationIteratorAdapter(Enumeration enumeration) {
         this.enumeration = enumeration;
     }
+
     public boolean hasNext() {
         return enumeration.hasMoreElements();
     }
+
     public Object next() {
         return enumeration.nextElement();
     }
 }
 
-// 2. Client Quicksort Implementation
+// 2. Client implementation
 public List quicksort(List list) {
     if (list == null) return null;
 
@@ -524,7 +353,7 @@ public List quicksort(List list) {
     Vector legacyVector = new Vector(list);
 
     // Call the legacy sorting library
-    Vector sortedVector = LegacyLib.quicksort(legacyVector);
+    Vector sortedVector = LegacyLibrary.quicksort(legacyVector);
 
     // Adapt sorted Vector back to modern List using EnumerationIteratorAdapter
     List resultList = new ArrayList();
@@ -545,51 +374,38 @@ public List quicksort(List list) {
 
     return resultList;
 }</pre>
-          <div class="gotcha-box">
-            ⚠️ <strong>Professor Gotcha:</strong> Forgetting to print all elements in the final loop results in an automatic <strong>4-point deduction</strong>! Always read the prompt instruction: <em>"Do not forget to print all elements of the list!"</em>
+          <div class="gotcha-alert">
+            ⚠️ <strong>Professor Gotcha:</strong> Forgetting to print all elements in the final loop results in an automatic <strong>4-point deduction</strong>! The prompt explicitly said: <em>"Do not forget to print all elements of the list!"</em>
           </div>
         </div>
-      </details>
-    </article>
-
-    <!-- ================================================================= -->
-    <!-- EXERCISE 3: STRATEGY & OCP ADHERENCE (16 PTS)                      -->
-    <!-- ================================================================= -->
-    <div class="exercise-module-header" id="ex-3">
-      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem;">
-        <h2 style="margin:0; font-family:var(--font-display); font-size:1.35rem; color:var(--text);">
-          Exercise 3 · Strategy Pattern &amp; Open-Closed Principle (OCP)
-        </h2>
-        <span class="points-badge">16 Points (8 + 4 + 4)</span>
       </div>
-      <p style="margin:0.35rem 0 0; font-size:0.88rem; color:var(--text-muted);">
-        Implement a flexible way to sort Collections using different algorithms (QuickSort, MergeSort) and analyze whether it (fully?!) adheres to OCP.
-      </p>
-    </div>
+    </section>
 
-    <!-- Scan Evidence 3 -->
-    <details class="scan-evidence-box">
-      <summary>
-        <span>📷 Original Exam Sheet Scan · Exercise 3 (Pages 3, 4, 5)</span>
-        <span style="font-size:0.8rem; color:var(--text-muted); font-family:var(--font-mono);">Click to inspect</span>
-      </summary>
-      <img src="assets/exam-images/img-006.png" alt="Ex 3 Scan 1" class="scan-evidence-img">
-      <img src="assets/exam-images/img-008.png" alt="Ex 3 Scan 2" class="scan-evidence-img">
-      <img src="assets/exam-images/img-009.png" alt="Ex 3 Scan 3" class="scan-evidence-img">
-    </details>
+    <!-- ================================================================= -->
+    <!-- EXERCISE 3: STRATEGY & OCP (16 PTS)                               -->
+    <!-- ================================================================= -->
+    <section id="ex-3">
+      <div class="ex-header">
+        <h2 class="ex-title">Exercise 3 · Strategy Pattern &amp; Open-Closed Principle (OCP)</h2>
+        <span style="font-weight:700; color:var(--accent); font-family:var(--font-mono);">16 Points (8 + 4 + 4)</span>
+      </div>
 
-    <article class="exam-q-box" id="ex3-task">
-      <h3 class="exam-q-text">Exercise 3 Tasks &amp; OCP Analysis</h3>
+      <div class="context-box">
+        <strong>Exam Scenario:</strong> You have to implement a flexible way to sort Collections using different algorithms such as QuickSort or MergeSort.<br>
+        You can assume that the List contains a list of numbers and that you can call:<br>
+        • <code>Vector quicksort(Vector vector)</code><br>
+        • <code>List mergesort(List list)</code>
+      </div>
 
-      <details class="drill-item" open>
-        <summary>
-          <span class="drill-tag">Official Solution &amp; Rubric</span>
-          <span class="drill-q">Model Code, UML &amp; OCP Proof</span>
-          <span class="drill-reveal-hint"></span>
-        </summary>
-        <div class="drill-a" style="margin-top:1rem;">
-          <p><strong>1. Fill the gaps in the Java implementation: (8 Points)</strong></p>
-          <pre style="background:var(--bg); padding:1rem; border:1px solid var(--border); border-radius:var(--radius-sm); font-family:var(--font-mono); font-size:0.85rem; line-height:1.5; overflow-x:auto;">
+      <!-- Exercise 3 - Question 1 -->
+      <div class="qa-block" id="ex3-q1">
+        <div class="qa-q">
+          1. Fill the gaps indicated by the symbol =&gt; in the Java implementation below.
+          <span class="pts-badge">8 Points</span>
+        </div>
+        <div class="qa-a">
+          <span class="ans-label">Model Answer</span>
+          <pre style="background:var(--bg-raised); padding:1rem; border-radius:var(--radius-sm); font-family:var(--font-mono); font-size:0.85rem; line-height:1.5; overflow-x:auto;">
 public interface Sorter {
     List sort(List list);
 }
@@ -597,8 +413,7 @@ public interface Sorter {
 public class QuickSorter implements Sorter {
     public List sort(List list) {
         Vector v = new Vector(list);
-        Vector sorted = LegacyLib.quicksort(v);
-        // adapt back to List
+        Vector sorted = LegacyLibrary.quicksort(v);
         return new ArrayList(sorted);
     }
 }
@@ -607,208 +422,239 @@ public class MergeSorter implements Sorter {
     public List sort(List list) {
         return MergeSortLib.mergesort(list);
     }
+}
+
+public class SortContext {
+    private Sorter sorter;
+    public SortContext(Sorter sorter) { this.sorter = sorter; }
+    public void setSorter(Sorter sorter) { this.sorter = sorter; }
+    public List executeSort(List list) { return sorter.sort(list); }
 }</pre>
+        </div>
+      </div>
 
-          <p><strong>2. Draw the UML diagram and identify the pattern: (4 Points)</strong></p>
-          <p>Pattern Used: <strong>Strategy Pattern</strong>. Encapsulates sorting algorithms into interchangeable classes conforming to <code>Sorter</code>.</p>
+      <!-- Exercise 3 - Question 2 -->
+      <div class="qa-block" id="ex3-q2">
+        <div class="qa-q">
+          2. Draw the UML diagram and identify the design pattern used.
+          <span class="pts-badge">4 Points</span>
+        </div>
+        <div class="qa-a">
+          <span class="ans-label">Model Answer</span>
+          <p><strong>Design Pattern Used: Strategy Pattern</strong></p>
+          <pre style="background:var(--bg-raised); padding:1rem; border-radius:var(--radius-sm); font-family:var(--font-mono); font-size:0.85rem; line-height:1.45; overflow-x:auto;">
+[SortContext] o----> <<interface>> Sorter
+                     + sort(List): List
+                            ^
+              +-------------+-------------+
+              |                           |
+       [QuickSorter]               [MergeSorter]
+       + sort(List): List          + sort(List): List</pre>
+        </div>
+      </div>
 
-          <p><strong>3. Does the pattern (fully?!) adhere to the OCP (Open Closed Principle)? (4 Points)</strong></p>
+      <!-- Exercise 3 - Question 3 -->
+      <div class="qa-block" id="ex3-q3">
+        <div class="qa-q">
+          3. Does the pattern (fully?!) adhere to the OCP (Open Closed Principle)? (Please provide explanation!)
+          <span class="pts-badge">4 Points</span>
+        </div>
+        <div class="qa-a">
+          <span class="ans-label">Model Answer</span>
           <ul>
-            <li><strong>Why it adheres to OCP:</strong> The system is <em>open for extension</em> because a new sorting algorithm (e.g. <code>HeapSorter</code>, <code>TimSorter</code>) can be introduced simply by implementing <code>Sorter</code> without modifying existing code. It is <em>closed for modification</em> because existing sorters remain untouched.</li>
-            <li><strong>Does it FULLY adhere?</strong> <strong>NO</strong>, not unconditionally! Full adherence depends entirely on how the client selects and instantiates the concrete sorter:
+            <li><strong>Why it adheres to OCP:</strong> The system is <em>open for extension</em> because new sorting algorithms (e.g., <code>HeapSorter</code>, <code>TimSorter</code>) can be introduced simply by implementing <code>Sorter</code> without modifying existing code. It is <em>closed for modification</em> because existing sorter classes remain untouched.</li>
+            <li><strong>Does it FULLY adhere?</strong> <strong>NO, not unconditionally.</strong>
               <ul>
-                <li>If the client or factory uses a hardcoded <code>switch(algoType)</code> or <code>if-else</code> chain, adding a new sorter requires modifying that selection logic, thereby violating OCP!</li>
-                <li>It only <em>fully</em> adheres if selection is decoupled via <strong>Dependency Injection</strong>, reflection, or a configuration registry.</li>
+                <li>It only <em>fully</em> adheres if the client uses <strong>Dependency Injection</strong> or an abstract factory to inject the sorter.</li>
+                <li>If the client code uses a hardcoded <code>if-else</code> or <code>switch(algoType)</code> statement to instantiate concrete sorters (e.g. <code>if (type.equals("quick")) return new QuickSorter()</code>), then adding a new sorter requires modifying that selection code, partially violating OCP!</li>
               </ul>
             </li>
           </ul>
         </div>
-      </details>
-    </article>
+      </div>
+    </section>
 
     <!-- ================================================================= -->
     <!-- EXERCISE 4: TEMPLATE METHOD REFACTORING (14 PTS)                  -->
     <!-- ================================================================= -->
-    <div class="exercise-module-header" id="ex-4">
-      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem;">
-        <h2 style="margin:0; font-family:var(--font-display); font-size:1.35rem; color:var(--text);">
-          Exercise 4 · Template Method Pattern Refactoring
-        </h2>
-        <span class="points-badge">14 Points (3 + 6 + 2 + 3)</span>
+    <section id="ex-4">
+      <div class="ex-header">
+        <h2 class="ex-title">Exercise 4 · Template Method Pattern Refactoring</h2>
+        <span style="font-weight:700; color:var(--accent); font-family:var(--font-mono);">14 Points (3 + 6 + 2 + 3)</span>
       </div>
-      <p style="margin:0.35rem 0 0; font-size:0.88rem; color:var(--text-muted);">
-        Refactor a quicksort library supporting hardcoded <code>&lt;</code> comparison to flexibly sort Student objects by age or name.
-      </p>
-    </div>
 
-    <!-- Scan Evidence 4 -->
-    <details class="scan-evidence-box">
-      <summary>
-        <span>📷 Original Exam Sheet Scan · Exercise 4 (Pages 5 &amp; 6)</span>
-        <span style="font-size:0.8rem; color:var(--text-muted); font-family:var(--font-mono);">Click to inspect</span>
-      </summary>
-      <img src="assets/exam-images/img-010.png" alt="Ex 4 Scan 1" class="scan-evidence-img">
-      <img src="assets/exam-images/img-011.png" alt="Ex 4 Scan 2" class="scan-evidence-img">
-    </details>
+      <div class="context-box">
+        <strong>Exam Scenario:</strong> You want to refactor the code of a quicksort library so that it supports flexible sorting of student objects based on a configurable criteria (e.g., age or name). Assume the source code looks as follows:
+        <pre style="margin:0.5rem 0; font-family:var(--font-mono); font-size:0.85rem;">
+public List sort(List list) {
+    // ... long list of quicksort logic ...
+    if (arr[j] &lt; pivot) {  // Crucial hardcoded comparison
+        // ...
+    }
+}</pre>
+        A developer wants to use the Template Method pattern for this task.
+      </div>
 
-    <article class="exam-q-box" id="ex4-task">
-      <h3 class="exam-q-text">Exercise 4 Tasks &amp; Architecture Refactoring</h3>
-
-      <details class="drill-item" open>
-        <summary>
-          <span class="drill-tag">Official Solution &amp; Rubric</span>
-          <span class="drill-q">Model Commentary &amp; Refactoring Plan</span>
-          <span class="drill-reveal-hint"></span>
-        </summary>
-        <div class="drill-a" style="margin-top:1rem;">
-          <p><strong>1. Comment on the choice of the Template Pattern: (3 Points)</strong></p>
-          <p>
-            The choice of Template Method is <strong>sub-optimal</strong> compared to the Strategy pattern.
-          </p>
+      <!-- Exercise 4 - Question 1 -->
+      <div class="qa-block" id="ex4-q1">
+        <div class="qa-q">
+          1. Comment on the choice of the template pattern!
+          <span class="pts-badge">3 Points</span>
+        </div>
+        <div class="qa-a">
+          <span class="ans-label">Model Answer</span>
+          <p>The choice of Template Method is <strong>sub-optimal and rigid</strong>:</p>
           <ul>
-            <li>Template Method relies on <em>class inheritance</em>. To sort students by age, name, or GPA, one must create separate subclasses: <code>AgeQuickSorter</code>, <code>NameQuickSorter</code>, <code>GpaQuickSorter</code>.</li>
+            <li>Template Method relies on <em>class inheritance</em>. To sort students by age, name, or GPA, developers must create concrete subclasses: <code>AgeQuickSorter</code>, <code>NameQuickSorter</code>, <code>GpaQuickSorter</code>.</li>
             <li>This causes <strong>subclass explosion</strong> and ties the sorting criteria statically to the class hierarchy at compile-time.</li>
-            <li>In contrast, the Strategy pattern (like Java's <code>Comparator&lt;Student&gt;</code>) achieves this dynamically at runtime via object composition without creating any subclasses of the sorter.</li>
+            <li>The <strong>Strategy Pattern</strong> (like Java's <code>Comparator&lt;Student&gt;</code>) is far superior: it parameterizes the comparison via object composition dynamically at runtime without subclassing.</li>
           </ul>
+        </div>
+      </div>
 
-          <p><strong>2. Document your Refactoring: (11 Points)</strong></p>
-          <ol style="padding-left:1.25rem; line-height:1.65;">
+      <!-- Exercise 4 - Question 2 -->
+      <div class="qa-block" id="ex4-q2">
+        <div class="qa-q">
+          2. Document your refactoring: (a) How many primitiveOperations do you need? (b) Provide reasonable names for the primitiveOperation(s) and TemplateMethod. (c) Describe which parts of the source code go where.
+          <span class="pts-badge">11 Points (6 + 2 + 3)</span>
+        </div>
+        <div class="qa-a">
+          <span class="ans-label">Model Answer</span>
+          <ol style="padding-left:1.25rem; margin:0; line-height:1.65;">
             <li><strong>(a) How many primitiveOperations do you need? (6 Points)</strong><br>
-              Exactly <strong>1 primitiveOperation</strong> is needed: a comparison hook, e.g. <code>boolean isLessThan(Object a, Object b)</code> or <code>int compare(Object a, Object b)</code>.
+              Exactly <strong>1 primitiveOperation</strong> is needed: a comparison hook to compare two elements against each other (e.g. <code>boolean isLessThan(T a, T b)</code> or <code>int compare(T a, T b)</code>).
             </li>
             <li><strong>(b) Reasonable names for the methods: (2 Points)</strong><br>
-              • TemplateMethod: <code>public final List sort(List list)</code> (marked <code>final</code> to prevent overriding invariant skeletal flow).<br>
-              • PrimitiveOperation: <code>protected abstract boolean isLessThan(Object a, Object b)</code>.
+              • <code>TemplateMethod</code>: <code>public final List sort(List list)</code> (declared <code>final</code> so subclasses cannot alter the invariant skeletal algorithm).<br>
+              • <code>primitiveOperation</code>: <code>protected abstract boolean isLessThan(Object a, Object b)</code>.
             </li>
             <li><strong>(c) Which parts of the source code go where? (3 Points)</strong><br>
-              • <strong>TemplateMethod:</strong> Contains the entire invariant divide-and-conquer algorithm: partitioning logic, recursion, array indexing, and element swapping.<br>
-              • <strong>PrimitiveOperation:</strong> Strictly contains the variant comparison statement replacing <code>if (arr[j] &lt; pivot)</code> with <code>if (isLessThan(arr[j], pivot))</code>.
+              • <strong>TemplateMethod:</strong> Contains all invariant divide-and-conquer logic: pivot selection, partitioning loop, recursion boundaries (`p`, `r`, `q`), and array swapping.<br>
+              • <strong>primitiveOperation:</strong> Strictly contains the variant comparison statement replacing <code>if (arr[j] &lt; pivot)</code> with <code>if (isLessThan(arr[j], pivot))</code>.
             </li>
           </ol>
         </div>
-      </details>
-    </article>
+      </div>
+    </section>
 
     <!-- ================================================================= -->
     <!-- EXERCISE 5: COMPOSITE PATTERN & EXPRESSION TREE (14 PTS)          -->
     <!-- ================================================================= -->
-    <div class="exercise-module-header" id="ex-5">
-      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem;">
-        <h2 style="margin:0; font-family:var(--font-display); font-size:1.35rem; color:var(--text);">
-          Exercise 5 · Composite Pattern &amp; Arithmetic Expression Trees
-        </h2>
-        <span class="points-badge">14 Points (4 + 4 + 6)</span>
+    <section id="ex-5">
+      <div class="ex-header">
+        <h2 class="ex-title">Exercise 5 · Composite Pattern &amp; Arithmetic Expression Trees</h2>
+        <span style="font-weight:700; color:var(--accent); font-family:var(--font-mono);">14 Points (4 + 4 + 6)</span>
       </div>
-      <p style="margin:0.35rem 0 0; font-size:0.88rem; color:var(--text-muted);">
-        Identify composite structure for: $3 + 4 * (5 - 6 * 2 / (x + y))$, complete the UML diagram, and explain uniform recursive evaluation.
-      </p>
-    </div>
 
-    <!-- Scan Evidence 5 -->
-    <details class="scan-evidence-box">
-      <summary>
-        <span>📷 Original Exam Sheet Scan · Exercise 5 (Page 7)</span>
-        <span style="font-size:0.8rem; color:var(--text-muted); font-family:var(--font-mono);">Click to inspect</span>
-      </summary>
-      <img src="assets/exam-images/img-012.png" alt="Ex 5 Scan 1" class="scan-evidence-img">
-      <img src="assets/exam-images/img-013.png" alt="Ex 5 Scan 2" class="scan-evidence-img">
-    </details>
+      <div class="context-box">
+        <strong>Expression Given on Exam Sheet:</strong>
+        <p style="font-size:1.2rem; font-weight:700; font-family:var(--font-mono); margin:0.5rem 0; color:var(--accent);">
+          3 + 4 * (5 - 6 * 2 / (x + y))
+        </p>
+      </div>
 
-    <article class="exam-q-box" id="ex5-task">
-      <h3 class="exam-q-text">Exercise 5 Tasks &amp; Tree Derivation</h3>
-
-      <details class="drill-item" open>
-        <summary>
-          <span class="drill-tag">Official Solution &amp; Rubric</span>
-          <span class="drill-q">Expression Tree, UML &amp; Execution</span>
-          <span class="drill-reveal-hint"></span>
-        </summary>
-        <div class="drill-a" style="margin-top:1rem;">
-          <p><strong>1. Expression Tree for $3 + 4 * (5 - 6 * 2 / (x + y))$: (4 Points)</strong></p>
-          <div style="padding:1rem; background:var(--bg); border:1px solid var(--border); border-radius:var(--radius-sm); font-family:var(--font-mono); font-size:0.85rem; line-height:1.45; overflow-x:auto;">
-                  (+)  [Root]<br>
-                 /   \<br>
-               (3)   (*)<br>
-                    /   \<br>
-                  (4)   (-)<br>
-                       /   \<br>
-                     (5)   (/)<br>
-                          /   \<br>
-                        (*)   (+)<br>
-                       /   \  /  \<br>
-                     (6)  (2)(x) (y)
-          </div>
-
-          <p><strong>2. Composite UML Arrows &amp; Roles: (4 Points)</strong></p>
-          <ul>
-            <li><code>Leaf</code> (NumericOperand, Variable) <strong>generalizes (inherits from)</strong> <code>Component</code>.</li>
-            <li><code>Composite</code> (BinaryOperator) <strong>generalizes (inherits from)</strong> <code>Component</code>.</li>
-            <li><code>Composite</code> has a directed <strong>aggregation / composition reference</strong> pointing to <code>Component</code> with multiplicity <code>1..*</code> (or <code>left, right: Component</code>).</li>
-          </ul>
-
-          <p><strong>3. How the Composite pattern computes the expression: (6 Points)</strong></p>
-          <p>
-            The Composite pattern enables uniform recursive evaluation via polymorphism:
+      <!-- Exercise 5 - Question 1 -->
+      <div class="qa-block" id="ex5-q1">
+        <div class="qa-q">
+          1. Identify the composite structure in the following expression and draw the corresponding tree!
+          <span class="pts-badge">4 Points</span>
+        </div>
+        <div class="qa-a">
+          <span class="ans-label">Model Answer</span>
+          <pre style="background:var(--bg-raised); padding:1rem; border-radius:var(--radius-sm); font-family:var(--font-mono); font-size:0.85rem; line-height:1.45; overflow-x:auto;">
+                  (+)  [Root]
+                 /   \
+               (3)   (*)
+                    /   \
+                  (4)   (-)
+                       /   \
+                     (5)   (/)
+                          /   \
+                        (*)   (+)
+                       /   \  /  \
+                     (6)  (2)(x) (y)</pre>
+          <p style="margin:0.5rem 0 0;">
+            • <strong>Composite Nodes:</strong> Operators (<code>+</code>, <code>-</code>, <code>*</code>, <code>/</code>) holding sub-expression children.<br>
+            • <strong>Leaf Nodes:</strong> Operands (<code>3</code>, <code>4</code>, <code>5</code>, <code>6</code>, <code>2</code>, <code>x</code>, <code>y</code>) holding numeric literals or variables.
           </p>
-          <ol style="padding-left:1.25rem; line-height:1.65;">
-            <li>Clients invoke <code>root.evaluate()</code> on the top-level <code>Component</code> without querying whether it is a leaf or a composite.</li>
-            <li>When <code>evaluate()</code> is called on an operator (Composite), it recursively calls <code>left.evaluate()</code> and <code>right.evaluate()</code>, applying its operator (e.g. $+$ or $*$) to the returned scalar values.</li>
-            <li>When <code>evaluate()</code> reaches a <code>Leaf</code>, it immediately returns its literal number or looks up the variable's value.</li>
-            <li><strong>Result:</strong> Zero conditional branches (no <code>if (node instanceof ...)</code>) across the entire client codebase.</li>
+        </div>
+      </div>
+
+      <!-- Exercise 5 - Question 2 -->
+      <div class="qa-block" id="ex5-q2">
+        <div class="qa-q">
+          2. Fill all missing arrows in the Composite UML!
+          <span class="pts-badge">4 Points</span>
+        </div>
+        <div class="qa-a">
+          <span class="ans-label">Model Answer</span>
+          <pre style="background:var(--bg-raised); padding:1rem; border-radius:var(--radius-sm); font-family:var(--font-mono); font-size:0.85rem; line-height:1.45; overflow-x:auto;">
+<<interface>> Component
++ evaluate(): double
+       ^
+       | (generalization / inheritance)
++------+---------------------------+
+|                                  |
+Leaf (Number/Variable)      Composite (Operator)
+- value: double             - left: Component
++ evaluate(): double        - right: Component
+                            + evaluate(): double
+                            + add(c: Component)
+                            + remove(c: Component)
+                            + getChild(i: int): Component
+                                   |
+                                   +-----> points back to Component (aggregation 1..*)</pre>
+        </div>
+      </div>
+
+      <!-- Exercise 5 - Question 3 -->
+      <div class="qa-block" id="ex5-q3">
+        <div class="qa-q">
+          3. Explain how the Composite pattern enables to compute the expression in your own words using the (completed) UML diagram!
+          <span class="pts-badge">6 Points</span>
+        </div>
+        <div class="qa-a">
+          <span class="ans-label">Model Answer</span>
+          <ol style="padding-left:1.25rem; margin:0; line-height:1.65;">
+            <li><strong>Uniform Evaluation:</strong> Clients invoke <code>root.evaluate()</code> on the top-level <code>Component</code> without querying whether it is a leaf or a composite node.</li>
+            <li><strong>Recursive Evaluation:</strong> When <code>evaluate()</code> is called on an operator (Composite), it recursively calls <code>left.evaluate()</code> and <code>right.evaluate()</code>, applying its arithmetic operator (e.g. $+$ or $*$) to the returned scalar values.</li>
+            <li><strong>Terminal Base Case:</strong> When <code>evaluate()</code> reaches a <code>Leaf</code>, it immediately returns its literal number or looks up the variable's value.</li>
+            <li><strong>Consolidation of Conditionals:</strong> Zero conditional branches (no <code>if (node instanceof ...)</code> or <code>switch</code>) are needed across client code.</li>
           </ol>
         </div>
-      </details>
-    </article>
-
-    <!-- ================================================================= -->
-    <!-- EXERCISE 6: SINGLETON & SOLID VIOLATIONS (12 PTS)                 -->
-    <!-- ================================================================= -->
-    <div class="exercise-module-header" id="ex-6">
-      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem;">
-        <h2 style="margin:0; font-family:var(--font-display); font-size:1.35rem; color:var(--text);">
-          Exercise 6 · Singleton Implementation &amp; SOLID Violations
-        </h2>
-        <span class="points-badge">12 Points (6 + 4 + 2)</span>
       </div>
-      <p style="margin:0.35rem 0 0; font-size:0.88rem; color:var(--text-muted);">
-        Fill gaps in thread-safe Singleton with reflection guard, analyze SOLID violations, and provide real-world applications.
-      </p>
-    </div>
+    </section>
 
-    <!-- Scan Evidence 6 -->
-    <details class="scan-evidence-box">
-      <summary>
-        <span>📷 Original Exam Sheet Scan · Exercise 6 (Page 8)</span>
-        <span style="font-size:0.8rem; color:var(--text-muted); font-family:var(--font-mono);">Click to inspect</span>
-      </summary>
-      <img src="assets/exam-images/img-014.png" alt="Ex 6 Scan 1" class="scan-evidence-img">
-      <img src="assets/exam-images/img-015.png" alt="Ex 6 Scan 2" class="scan-evidence-img">
-    </details>
+    <!-- ================================================================= -->
+    <!-- EXERCISE 6: SINGLETON & SOLID (12 PTS)                            -->
+    <!-- ================================================================= -->
+    <section id="ex-6">
+      <div class="ex-header">
+        <h2 class="ex-title">Exercise 6 · Singleton Implementation &amp; SOLID Violations</h2>
+        <span style="font-weight:700; color:var(--accent); font-family:var(--font-mono);">12 Points (6 + 4 + 2)</span>
+      </div>
 
-    <article class="exam-q-box" id="ex6-task">
-      <h3 class="exam-q-text">Exercise 6 Tasks &amp; Architectural Evaluation</h3>
-
-      <details class="drill-item" open>
-        <summary>
-          <span class="drill-tag">Official Solution &amp; Rubric</span>
-          <span class="drill-q">Model Java Code &amp; SOLID Analysis</span>
-          <span class="drill-reveal-hint"></span>
-        </summary>
-        <div class="drill-a" style="margin-top:1rem;">
-          <p><strong>1. Java Code Implementation with Reflection Guard: (6 Points)</strong></p>
-          <pre style="background:var(--bg); padding:1rem; border:1px solid var(--border); border-radius:var(--radius-sm); font-family:var(--font-mono); font-size:0.85rem; line-height:1.5; overflow-x:auto;">
+      <!-- Exercise 6 - Question 1 -->
+      <div class="qa-block" id="ex6-q1">
+        <div class="qa-q">
+          1. Fill the gaps indicated by the symbol -&gt; in the following code to implement a Singleton instance of a class with reflection protection.
+          <span class="pts-badge">6 Points</span>
+        </div>
+        <div class="qa-a">
+          <span class="ans-label">Model Answer</span>
+          <pre style="background:var(--bg-raised); padding:1rem; border-radius:var(--radius-sm); font-family:var(--font-mono); font-size:0.85rem; line-height:1.5; overflow-x:auto;">
 public class Singleton {
-    // 1. Static reference to hold the single instance
+    // -> Gap 1: Private static instance variable
     private static Singleton instance;
 
-    // 2. Private constructor with reflection defense
+    // -> Gap 2: Private constructor with reflection defense
     private Singleton() {
         if (instance != null) {
             throw new RuntimeException("Singleton instance already exists! Reflection forbidden.");
         }
     }
 
-    // 3. Thread-safe global accessor
+    // -> Gap 3: Public static synchronized access method
     public static synchronized Singleton getInstance() {
         if (instance == null) {
             instance = new Singleton();
@@ -816,207 +662,155 @@ public class Singleton {
         return instance;
     }
 }</pre>
+        </div>
+      </div>
 
-          <p><strong>2. Which of the SOLID principle/s does Singleton violate? (4 Points)</strong></p>
+      <!-- Exercise 6 - Question 2 -->
+      <div class="qa-block" id="ex6-q2">
+        <div class="qa-q">
+          2. Which of the SOLID principle/s does Singleton violate?
+          <span class="pts-badge">4 Points</span>
+        </div>
+        <div class="qa-a">
+          <span class="ans-label">Model Answer</span>
           <ul>
-            <li><strong>Single Responsibility Principle (SRP):</strong> The class has two responsibilities: (1) its domain business responsibility, and (2) managing its own global lifecycle and enforcing instance uniqueness.</li>
-            <li><strong>Dependency Inversion Principle (DIP):</strong> Clients call the concrete static <code>Singleton.getInstance()</code> directly, tightly coupling caller code to a concrete class rather than an interface. This makes automated mocking and unit testing nearly impossible.</li>
-          </ul>
-
-          <p><strong>3. Valid Industrial Use Cases for Singleton: (2 Points)</strong></p>
-          <ul>
-            <li>Configuration registry / properties manager for an application.</li>
-            <li>Database connection pool or thread pool manager.</li>
-            <li>Hardware logger or printer spooler manager.</li>
+            <li><strong>Single Responsibility Principle (SRP):</strong> Singleton has two distinct responsibilities: (1) its domain business responsibility, and (2) managing its own global lifecycle and enforcing instance uniqueness.</li>
+            <li><strong>Dependency Inversion Principle (DIP):</strong> Clients call the concrete static <code>Singleton.getInstance()</code> directly, tightly coupling caller code to a concrete class rather than an abstraction/interface. This makes automated mocking and unit testing nearly impossible.</li>
           </ul>
         </div>
-      </details>
-    </article>
-
-    <!-- ================================================================= -->
-    <!-- EXERCISE 7: PATTERN CRITICISM & PYTHON IDIOMS (12 PTS)            -->
-    <!-- ================================================================= -->
-    <div class="exercise-module-header" id="ex-7">
-      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem;">
-        <h2 style="margin:0; font-family:var(--font-display); font-size:1.35rem; color:var(--text);">
-          Exercise 7 · Pattern Criticism &amp; Functional Python Idioms
-        </h2>
-        <span class="points-badge">12 Points (4 + 8)</span>
       </div>
-      <p style="margin:0.35rem 0 0; font-size:0.88rem; color:var(--text-muted);">
-        Analyze Mark Dominus's critique and explain why Python first-class function quicksort eliminates the need for Strategy objects.
-      </p>
-    </div>
 
-    <!-- Scan Evidence 7 -->
-    <details class="scan-evidence-box">
-      <summary>
-        <span>📷 Original Exam Sheet Scan · Exercise 7 (Pages 9 &amp; 10)</span>
-        <span style="font-size:0.8rem; color:var(--text-muted); font-family:var(--font-mono);">Click to inspect</span>
-      </summary>
-      <img src="assets/exam-images/img-016.png" alt="Ex 7 Scan 1" class="scan-evidence-img">
-      <img src="assets/exam-images/img-017.png" alt="Ex 7 Scan 2" class="scan-evidence-img">
-      <img src="assets/exam-images/img-018.png" alt="Ex 7 Scan 3" class="scan-evidence-img">
-    </details>
+      <!-- Exercise 6 - Question 3 -->
+      <div class="qa-block" id="ex6-q3">
+        <div class="qa-q">
+          3. Can you give an example where we can use Singleton pattern in an application?
+          <span class="pts-badge">2 Points</span>
+        </div>
+        <div class="qa-a">
+          <span class="ans-label">Model Answer</span>
+          <ul>
+            <li>Application configuration registry / properties loader.</li>
+            <li>Database connection pool or thread pool manager.</li>
+            <li>Centralized system logger (e.g. <code>Logger.getInstance()</code>).</li>
+          </ul>
+        </div>
+      </div>
+    </section>
 
-    <article class="exam-q-box" id="ex7-task">
-      <h3 class="exam-q-text">Exercise 7 Tasks &amp; Functional Analysis</h3>
+    <!-- ================================================================= -->
+    <!-- EXERCISE 7: PATTERN CRITICISM & PYTHON (12 PTS)                   -->
+    <!-- ================================================================= -->
+    <section id="ex-7">
+      <div class="ex-header">
+        <h2 class="ex-title">Exercise 7 · Pattern Criticism &amp; Functional Python Idioms</h2>
+        <span style="font-weight:700; color:var(--accent); font-family:var(--font-mono);">12 Points (4 + 8)</span>
+      </div>
 
-      <details class="drill-item" open>
-        <summary>
-          <span class="drill-tag">Official Solution &amp; Rubric</span>
-          <span class="drill-q">Model Arguments &amp; Python Code Analysis</span>
-          <span class="drill-reveal-hint"></span>
-        </summary>
-        <div class="drill-a" style="margin-top:1rem;">
-          <p><strong>1. "Patterns are signs of weakness in programming languages" (Mark Dominus): (4 Points)</strong></p>
-          <ol style="padding-left:1.25rem; line-height:1.65;">
-            <li><strong>Compensating for Missing Abstractions:</strong> Design patterns often arise as manual, boilerplate workarounds for limitations in static, early OOP languages (like C++ and Java 1.0) that lacked first-class functions, closures, dynamic dispatch, or macros.</li>
+      <!-- Exercise 7 - Question 1 -->
+      <div class="qa-block" id="ex7-q1">
+        <div class="qa-q">
+          1. "Patterns are signs of weakness in programming languages." (Mark Dominus) — provide at least two of his arguments!
+          <span class="pts-badge">4 Points</span>
+        </div>
+        <div class="qa-a">
+          <span class="ans-label">Model Answer</span>
+          <ol style="padding-left:1.25rem; margin:0; line-height:1.65;">
+            <li><strong>Workarounds for Missing Language Features:</strong> Design patterns often arise as manual boilerplate workarounds for limitations in static early OOP languages (like C++ and Java 1.0) that lacked first-class functions, closures, dynamic dispatch, or macros.</li>
             <li><strong>Patterns Evaporate into Syntax:</strong> When a programming language introduces modern features, the pattern ceases to be an architectural design structure and becomes basic language syntax (e.g. Strategy becomes a lambda argument, Iterator becomes <code>yield</code>, Visitor becomes multi-methods).</li>
           </ol>
+        </div>
+      </div>
 
-          <p><strong>2. Python Quicksort with First-Class Comparison Functions: (8 Points)</strong></p>
+      <!-- Exercise 7 - Question 2 -->
+      <div class="qa-block" id="ex7-q2">
+        <div class="qa-q">
+          2. Python Quicksort with Lambdas: (a) Explain how comp1 and comp2 sort in ascending/descending order and provide a substitute for Template Method. (b) Why do we not need the Strategy object in this code?
+          <span class="pts-badge">8 Points (4 + 4)</span>
+        </div>
+        <div class="qa-a">
+          <span class="ans-label">Model Answer</span>
+          <div style="background:var(--bg-raised); padding:0.75rem 1rem; border-radius:var(--radius-sm); font-family:var(--font-mono); font-size:0.85rem; margin-bottom:0.75rem;">
+            comp1 = lambda a, b: a &lt;= b<br>
+            comp2 = lambda a, b: a &gt;= b<br>
+            print(qsort([1, 9, 0, 5, 6], comp1))  # Ascending: [0, 1, 5, 6, 9]<br>
+            print(qsort([1, 9, 0, 5, 6], comp2))  # Descending: [9, 6, 5, 1, 0]
+          </div>
           <ul>
-            <li><strong>Ascending vs Descending Order:</strong> Passing <code>comp1 = lambda a, b: a &lt;= b</code> yields ascending order because the partition loop places smaller elements to the left. Passing <code>comp2 = lambda a, b: a &gt;= b</code> inverts the partition comparison, producing descending order.</li>
-            <li><strong>Substitute for Template Method:</strong> The skeletal quicksort flow (divide-and-conquer recursion) remains completely invariant in <code>quicksort()</code>, while the comparison criteria is parameterized without any class inheritance or subclassing.</li>
+            <li><strong>Ascending vs Descending Order:</strong> <code>comp1</code> moves elements smaller than or equal to pivot to the left partition, sorting ascending. <code>comp2</code> moves elements greater than or equal to pivot to the left partition, sorting descending.</li>
+            <li><strong>Substitute for Template Method:</strong> The invariant quicksort structure (recursion, partitioning) is kept intact in <code>quicksort()</code>, while the variant comparison is injected without any class inheritance or subclassing.</li>
             <li><strong>Why do we not need the Strategy object?</strong> In Python, functions are <strong>first-class citizens</strong>. They can be passed directly as arguments, stored in variables, and invoked anonymously. There is zero need to wrap algorithms inside boilerplate Strategy interfaces and concrete classes!</li>
           </ul>
         </div>
-      </details>
-    </article>
-
-    <!-- ================================================================= -->
-    <!-- EXERCISE 8: BANKING ARCHITECTURE DESIGN (18 PTS)                  -->
-    <!-- ================================================================= -->
-    <div class="exercise-module-header" id="ex-8">
-      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem;">
-        <h2 style="margin:0; font-family:var(--font-display); font-size:1.35rem; color:var(--text);">
-          Exercise 8 · System Architecture: Banking Application
-        </h2>
-        <span class="points-badge">18 Points (9 + 9)</span>
       </div>
-      <p style="margin:0.35rem 0 0; font-size:0.88rem; color:var(--text-muted);">
-        Lead engineer architectural design: Account management (Savings, Current, Business), Payment gateway integration (PayPal, external banks), and real-time transaction notifications.
-      </p>
-    </div>
+    </section>
 
-    <!-- Scan Evidence 8 -->
-    <details class="scan-evidence-box">
-      <summary>
-        <span>📷 Original Exam Sheet Scan · Exercise 8 (Page 11)</span>
-        <span style="font-size:0.8rem; color:var(--text-muted); font-family:var(--font-mono);">Click to inspect</span>
-      </summary>
-      <img src="assets/exam-images/img-019.png" alt="Ex 8 Scan 1" class="scan-evidence-img">
-    </details>
+    <!-- ================================================================= -->
+    <!-- EXERCISE 8: BANKING ARCHITECTURE (18 PTS)                         -->
+    <!-- ================================================================= -->
+    <section id="ex-8">
+      <div class="ex-header">
+        <h2 class="ex-title">Exercise 8 · System Architecture: Banking Application</h2>
+        <span style="font-weight:700; color:var(--accent); font-family:var(--font-mono);">18 Points (9 + 9)</span>
+      </div>
 
-    <article class="exam-q-box" id="ex8-task">
-      <h3 class="exam-q-text">Exercise 8 Architecture Blueprint &amp; Pattern Justifications</h3>
+      <div class="context-box">
+        <strong>Exam Scenario:</strong> Imagine you are the lead engineer of a team implementing a banking application enabling:
+        <ul>
+          <li><strong>Account Management:</strong> Option to create different types of accounts (savings, current, business, etc.).</li>
+          <li><strong>Payment System &amp; Wire Transfers:</strong> Wire transfer of money between accounts, including external banks and third-party gateways (e.g. PayPal).</li>
+          <li><strong>Real-time Notifications:</strong> Alerts for account activities (transaction alerts, balance updates) when one of those activities is completed.</li>
+        </ul>
+      </div>
 
-      <details class="drill-item" open>
-        <summary>
-          <span class="drill-tag">Official Solution &amp; Rubric</span>
-          <span class="drill-q">Architecture Patterns &amp; Rationale</span>
-          <span class="drill-reveal-hint"></span>
-        </summary>
-        <div class="drill-a" style="margin-top:1rem;">
-          <table class="blueprint-table" style="width:100%; border-collapse:collapse; font-size:0.88rem; margin:0.5rem 0 1.25rem;">
+      <div class="qa-block" id="ex8-task">
+        <div class="qa-q">
+          1. Provide a list of patterns you would use for your architecture! 2. Provide a short explanation why each pattern is helpful!
+          <span class="pts-badge">18 Points (9 + 9)</span>
+        </div>
+        <div class="qa-a">
+          <span class="ans-label">Model Architecture Blueprint</span>
+          <table class="blueprint-table" style="width:100%; border-collapse:collapse; font-size:0.88rem; margin:0.5rem 0 1rem;">
             <thead>
               <tr style="border-bottom:2px solid var(--border); text-align:left; background:var(--bg-raised);">
                 <th style="padding:0.6rem; width:25%;">Design Pattern</th>
-                <th style="padding:0.6rem; width:25%;">System Subsystem</th>
-                <th style="padding:0.6rem;">Architectural Justification &amp; Value</th>
+                <th style="padding:0.6rem; width:25%;">Subsystem Applied</th>
+                <th style="padding:0.6rem;">Why the Pattern is Helpful</th>
               </tr>
             </thead>
             <tbody>
               <tr style="border-bottom:1px solid var(--border);">
                 <td style="padding:0.6rem; font-weight:700; color:#6366f1;">Factory Method / Abstract Factory</td>
-                <td style="padding:0.6rem;">Account Management</td>
-                <td style="padding:0.6rem;">Encapsulates creation of different account types (<code>SavingsAccount</code>, <code>CurrentAccount</code>, <code>BusinessAccount</code>) without coupling caller code to concrete classes, adhering to OCP.</td>
+                <td style="padding:0.6rem;">Account Creation</td>
+                <td style="padding:0.6rem;">Encapsulates creation of different account types (<code>SavingsAccount</code>, <code>CurrentAccount</code>, <code>BusinessAccount</code>) without coupling client code to concrete classes, adhering to OCP.</td>
               </tr>
               <tr style="border-bottom:1px solid var(--border);">
                 <td style="padding:0.6rem; font-weight:700; color:#0ea5e9;">Adapter Pattern</td>
                 <td style="padding:0.6rem;">Payment Integration</td>
-                <td style="padding:0.6rem;">Adapts incompatible third-party payment APIs (e.g., PayPal REST API, SWIFT wire transfer protocol) into a unified internal <code>PaymentGateway</code> interface.</td>
+                <td style="padding:0.6rem;">Adapts incompatible external APIs (e.g., PayPal REST API, SWIFT wire protocols) to match the bank's standard internal <code>PaymentGateway</code> interface.</td>
               </tr>
               <tr style="border-bottom:1px solid var(--border);">
                 <td style="padding:0.6rem; font-weight:700; color:#10b981;">Observer Pattern</td>
-                <td style="padding:0.6rem;">Notification System</td>
-                <td style="padding:0.6rem;">Decouples account operations from user alerts. When a transaction completes or balance changes, the Account notifies registered observers (SMS, Email, Push Alert service).</td>
+                <td style="padding:0.6rem;">Notification Alerts</td>
+                <td style="padding:0.6rem;">Decouples account business operations from notification channels. When a transaction completes or balance changes, the account broadcasts notifications to registered observers (SMS, Email, Push).</td>
               </tr>
               <tr style="border-bottom:1px solid var(--border);">
                 <td style="padding:0.6rem; font-weight:700; color:#f59e0b;">Command Pattern</td>
                 <td style="padding:0.6rem;">Wire Transfer Engine</td>
-                <td style="padding:0.6rem;">Encapsulates each transaction as a discrete command object (<code>TransferCommand</code>), enabling transaction queues, audit logging, retry handling, and compensating rollbacks (undo).</td>
+                <td style="padding:0.6rem;">Encapsulates each transaction as an executable object (<code>TransferCommand</code>), enabling transaction queues, audit logs, validation, and compensating rollback (undo).</td>
               </tr>
               <tr style="border-bottom:1px solid var(--border);">
                 <td style="padding:0.6rem; font-weight:700; color:#8b5cf6;">Strategy Pattern</td>
-                <td style="padding:0.6rem;">Fee &amp; Interest Engine</td>
-                <td style="padding:0.6rem;">Allows interchangeable, runtime-configurable fee calculation and interest rate policies without modifying core Account entities.</td>
+                <td style="padding:0.6rem;">Interest &amp; Fee Engine</td>
+                <td style="padding:0.6rem;">Enables interchangeable, runtime-configurable fee calculation and interest rate policies without modifying core Account entities.</td>
               </tr>
               <tr>
                 <td style="padding:0.6rem; font-weight:700; color:#ec4899;">Decorator Pattern</td>
-                <td style="padding:0.6rem;">Account Enhancements</td>
+                <td style="padding:0.6rem;">Account Features</td>
                 <td style="padding:0.6rem;">Dynamically attaches optional features to accounts (e.g. overdraft protection, premium insurance, foreign currency wallets) without subclass explosion.</td>
               </tr>
             </tbody>
           </table>
         </div>
-      </details>
-    </article>
-
-    <!-- Self-Grading Rubric -->
-    <section class="section-block" id="self-evaluation" style="margin-top:3.5rem;">
-      <div class="section-header">
-        <h2 class="section-title">📊 Self-Grading Rubric &amp; Official Evaluation (107 Pts Total)</h2>
-        <p class="section-subtitle">Based on Prof. Dr. Jörg Schäfer's Frankfurt UAS Masterclass grading scale.</p>
-      </div>
-
-      <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:1rem; margin-top:1.5rem;">
-        <div style="background:var(--bg-raised); border:1px solid var(--border); border-top:3px solid #10b981; border-radius:var(--radius-md); padding:1rem;">
-          <h4 style="margin:0 0 0.25rem; color:#10b981;">95 – 107 Points (1.0 – 1.3)</h4>
-          <span style="font-size:0.8rem; font-weight:700; color:#10b981; font-family:var(--font-mono);">SEHR GUT / OUTSTANDING</span>
-          <p style="font-size:0.85rem; color:var(--text-muted); margin:0.5rem 0 0; line-height:1.45;">
-            Flawless Adapter/Iterator implementation, thorough OCP evaluation, complete expression tree, and robust banking architecture.
-          </p>
-        </div>
-
-        <div style="background:var(--bg-raised); border:1px solid var(--border); border-top:3px solid #38bdf8; border-radius:var(--radius-md); padding:1rem;">
-          <h4 style="margin:0 0 0.25rem; color:#38bdf8;">80 – 94 Points (1.7 – 2.3)</h4>
-          <span style="font-size:0.8rem; font-weight:700; color:#38bdf8; font-family:var(--font-mono);">GUT / SOLID PASS</span>
-          <p style="font-size:0.85rem; color:var(--text-muted); margin:0.5rem 0 0; line-height:1.45;">
-            Strong design pattern identification with minor omissions in reflection prevention or OCP switch nuance.
-          </p>
-        </div>
-
-        <div style="background:var(--bg-raised); border:1px solid var(--border); border-top:3px solid #f59e0b; border-radius:var(--radius-md); padding:1rem;">
-          <h4 style="margin:0 0 0.25rem; color:#f59e0b;">55 – 79 Points (2.7 – 3.7)</h4>
-          <span style="font-size:0.8rem; font-weight:700; color:#f59e0b; font-family:var(--font-mono);">BEFRIEDIGEND / PASS</span>
-          <p style="font-size:0.85rem; color:var(--text-muted); margin:0.5rem 0 0; line-height:1.45;">
-            Understood basic pattern mechanisms but lost points on missing print loop in Ex 2 or incomplete expression tree.
-          </p>
-        </div>
-
-        <div style="background:var(--bg-raised); border:1px solid var(--border); border-top:3px solid #ef4444; border-radius:var(--radius-md); padding:1rem;">
-          <h4 style="margin:0 0 0.25rem; color:#ef4444;">&lt; 55 Points (5.0)</h4>
-          <span style="font-size:0.8rem; font-weight:700; color:#ef4444; font-family:var(--font-mono);">NICHT BESTANDEN</span>
-          <p style="font-size:0.85rem; color:var(--text-muted); margin:0.5rem 0 0; line-height:1.45;">
-            Failed to meet minimum requirements. Retake recommended after reviewing course units.
-          </p>
-        </div>
-      </div>
-
-      <!-- Callout to Mock 2 -->
-      <div style="background:linear-gradient(135deg, rgba(99,102,241,0.12) 0%, rgba(56,189,248,0.12) 100%); border:1px solid rgba(99,102,241,0.3); border-radius:var(--radius-md); padding:1.5rem; margin-top:2rem; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem;">
-        <div>
-          <span style="font-size:0.8rem; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; color:var(--accent);">Ready for the 102-Page Lecture Exam Vault?</span>
-          <h3 style="margin:0.25rem 0 0.5rem; font-size:1.25rem; color:var(--text);">Proceed to Mock 2 · Course Notes Exam Vault</h3>
-          <p style="margin:0; font-size:0.9rem; color:var(--text-muted); max-width:65ch;">
-            Includes all ~17 oral and analytical exam questions extracted from Prof. Schäfer's notes (<code style="color:var(--accent);">POS-exams-notes.pdf</code>): JUnit Cook's Tour, Rice's theorem on LSP, Blackboard architecture, and Package Main Sequence ($I, A, D$) metrics.
-          </p>
-        </div>
-        <a href="mock-2.html" class="btn-exam" style="padding:0.75rem 1.4rem; font-size:0.95rem;">
-          Go to Mock 2 (Exam Notes) →
-        </a>
       </div>
     </section>
   </main>
@@ -1032,55 +826,5 @@ public class Singleton {
 </footer>
 
 <script src="assets/site.js?v=2026.17"></script>
-<script>
-  // Timer state (90 minutes)
-  var timerSeconds = 90 * 60;
-  var timerInterval = null;
-  var timerRunning = false;
-
-  function formatTime(s) {
-    var m = Math.floor(s / 60);
-    var sec = s % 60;
-    return (m < 10 ? '0' : '') + m + ':' + (sec < 10 ? '0' : '') + sec;
-  }
-
-  function toggleExamTimer() {
-    var btn = document.getElementById('timerStartBtn');
-    var display = document.getElementById('examTimer');
-    if (timerRunning) {
-      clearInterval(timerInterval);
-      timerRunning = false;
-      btn.textContent = '▶ Resume Timer';
-      btn.style.background = 'var(--accent)';
-    } else {
-      timerRunning = true;
-      btn.textContent = '⏸ Pause Timer';
-      btn.style.background = '#e11d48';
-      timerInterval = setInterval(function() {
-        if (timerSeconds <= 0) {
-          clearInterval(timerInterval);
-          timerRunning = false;
-          display.textContent = '00:00 (Time Up!)';
-          alert('Time is up for Mock 1! Please review your answers against the official rubrics.');
-          btn.textContent = '▶ Restart Timer';
-          return;
-        }
-        timerSeconds--;
-        display.textContent = formatTime(timerSeconds);
-      }, 1000);
-    }
-  }
-
-  function toggleAllAnswers(expand) {
-    var detailsList = document.querySelectorAll('.page-content details.drill-item');
-    detailsList.forEach(function(d) {
-      if (expand) {
-        d.setAttribute('open', '');
-      } else {
-        d.removeAttribute('open');
-      }
-    });
-  }
-</script>
 </body>
 </html>
