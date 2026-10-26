@@ -94,5 +94,6 @@
 - [x] Align on user's discussion points and requirements.
 - [x] Finalize the simplified specification for Unit 2.
 - [x] Split into dedicated chapters: Unit 2A (`unit-2-template.html`) and Unit 2B (`unit-2-command.html`).
-- [ ] Review Unit 2A & 2B with the user.
+- [x] Streamline Unit 1 Strategy Pattern (`unit-1-strategy.html`) into canonical 4-pillar blueprint.
+- [ ] Review Units with the user.
 - [ ] Roll out simplified structure to remaining units in planned batches.
