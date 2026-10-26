@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/style.css?v=2026.17">
+<link rel="stylesheet" href="assets/style.css?v=2026.19">
 <script>
   window.MathJax = {
     tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
@@ -157,6 +157,28 @@
     border-left: 4px solid var(--accent);
     border-radius: 0 var(--radius-md) var(--radius-md) 0;
   }
+
+  .study-guide-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.78rem;
+    font-weight: 700;
+    font-family: var(--font-mono);
+    color: #38bdf8;
+    background: rgba(56, 189, 248, 0.12);
+    border: 1px solid rgba(56, 189, 248, 0.28);
+    padding: 0.22rem 0.6rem;
+    border-radius: 4px;
+    text-decoration: none;
+    transition: all 0.15s ease;
+  }
+  .study-guide-pill:hover {
+    background: rgba(56, 189, 248, 0.22);
+    border-color: #38bdf8;
+    color: #ffffff;
+    transform: translateY(-1px);
+  }
 </style>
 <script>(function(){try{var t=localStorage.getItem('posa-theme')||localStorage.getItem('dm2026-theme')||'dark';document.documentElement.setAttribute('data-theme',t);var m=localStorage.getItem('posa-mode')||'concept';document.documentElement.setAttribute('data-mode',m);}catch(e){}})();</script>
 </head>
@@ -257,7 +279,7 @@
       </div>
       <div class="exam-meta-item">
         <span class="exam-meta-label">Total Points</span>
-        <span class="exam-meta-val">95 Points</span>
+        <span class="exam-meta-val">100 Points</span>
       </div>
       <div class="exam-meta-item">
         <span class="exam-meta-label">Exam Duration</span>
@@ -296,7 +318,10 @@
     <!-- Question 1.1 -->
     <article class="exam-q-box" id="q-template-tradeoff">
       <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem; margin-bottom:0.5rem;">
-        <span class="exam-q-num">Exam Notes Question 1 · Unit 2A</span>
+        <div style="display:flex; align-items:center; gap:0.6rem; flex-wrap:wrap;">
+          <span class="exam-q-num">Exam Notes Question 1 · Unit 2A</span>
+          <a href="unit-2-template.html" class="study-guide-pill">📖 Unit 2A · Template Method →</a>
+        </div>
         <span class="points-badge">5 Points</span>
       </div>
       <h3 class="exam-q-text">How could you achieve the functionality of a Template Method using object composition? What would some of the tradeoffs be?</h3>
@@ -334,7 +359,10 @@
     <!-- Question 1.2 -->
     <article class="exam-q-box" id="q-command-decoupling">
       <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem; margin-bottom:0.5rem;">
-        <span class="exam-q-num">Exam Notes Question 2 · Unit 2B</span>
+        <div style="display:flex; align-items:center; gap:0.6rem; flex-wrap:wrap;">
+          <span class="exam-q-num">Exam Notes Question 2 · Unit 2B</span>
+          <a href="unit-2-command.html" class="study-guide-pill">📖 Unit 2B · Command Pattern →</a>
+        </div>
         <span class="points-badge">5 Points</span>
       </div>
       <h3 class="exam-q-text">How does the Command Object get access to the data it needs to perform its job? How does one guarantee that this does not create a strong coupling?</h3>
@@ -367,7 +395,10 @@
     <!-- Question 1.3 -->
     <article class="exam-q-box" id="q-macro-undo">
       <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem; margin-bottom:0.5rem;">
-        <span class="exam-q-num">Exam Notes Question 3 · Unit 2B</span>
+        <div style="display:flex; align-items:center; gap:0.6rem; flex-wrap:wrap;">
+          <span class="exam-q-num">Exam Notes Question 3 · Unit 2B</span>
+          <a href="unit-2-command.html" class="study-guide-pill">📖 Unit 2B · Command Pattern →</a>
+        </div>
         <span class="points-badge">5 Points</span>
       </div>
       <h3 class="exam-q-text">In a MacroCommand, in what order must child commands execute, and in what order must undo() be invoked? Why?</h3>
@@ -392,7 +423,10 @@
     <!-- Question 1.4 -->
     <article class="exam-q-box" id="q-composite-conditionals">
       <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem; margin-bottom:0.5rem;">
-        <span class="exam-q-num">Exam Notes Question 4 · Unit 3</span>
+        <div style="display:flex; align-items:center; gap:0.6rem; flex-wrap:wrap;">
+          <span class="exam-q-num">Exam Notes Question 4 · Unit 3</span>
+          <a href="unit-3-composite.html" class="study-guide-pill">📖 Unit 3A · Composite Pattern →</a>
+        </div>
         <span class="points-badge">5 Points</span>
       </div>
       <h3 class="exam-q-text">How does the Composite pattern help to consolidate system-wide conditional logic?</h3>
@@ -417,7 +451,10 @@
     <!-- Question 1.5 -->
     <article class="exam-q-box" id="q-adapter-classes">
       <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem; margin-bottom:0.5rem;">
-        <span class="exam-q-num">Exam Notes Question 5 · Unit 9</span>
+        <div style="display:flex; align-items:center; gap:0.6rem; flex-wrap:wrap;">
+          <span class="exam-q-num">Exam Notes Question 5 · Unit 9</span>
+          <a href="unit-9-flexibility.html" class="study-guide-pill">📖 Unit 9 · Flexibility & Adapter →</a>
+        </div>
         <span class="points-badge">5 Points</span>
       </div>
       <h3 class="exam-q-text">Why is an Object Adapter generally preferred over a Class Adapter, and why is a Class Adapter impossible in Java when adapting two concrete classes?</h3>
@@ -457,7 +494,10 @@
     <!-- Question 2.1 -->
     <article class="exam-q-box" id="q-abstract-factory">
       <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem; margin-bottom:0.5rem;">
-        <span class="exam-q-num">Exam Notes Question 6 · Unit 8</span>
+        <div style="display:flex; align-items:center; gap:0.6rem; flex-wrap:wrap;">
+          <span class="exam-q-num">Exam Notes Question 6 · Unit 8</span>
+          <a href="unit-8-creational.html" class="study-guide-pill">📖 Unit 8 · Creational (Abstract Factory) →</a>
+        </div>
         <span class="points-badge">5 Points</span>
       </div>
       <h3 class="exam-q-text">In [GHJV95], an Abstract Factory is composed of Factory Methods, each with exactly one signature. Does this imply that the Factory Method can only create an object in one way? What do you do if you want to specify room color &amp; size in MakeRoom()?</h3>
@@ -489,7 +529,10 @@
     <!-- Question 2.2 -->
     <article class="exam-q-box" id="q-junit-extension">
       <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem; margin-bottom:0.5rem;">
-        <span class="exam-q-num">Exam Notes Question 7 · Unit 4 (JUnit Cook's Tour)</span>
+        <div style="display:flex; align-items:center; gap:0.6rem; flex-wrap:wrap;">
+          <span class="exam-q-num">Exam Notes Question 7 · Unit 4 (JUnit Cook's Tour)</span>
+          <a href="unit-4-junit.html" class="study-guide-pill">📖 Unit 4 · Case Study: JUnit →</a>
+        </div>
         <span class="points-badge">10 Points</span>
       </div>
       <h3 class="exam-q-text">From looking at the JUnit UML diagram (Gamma &amp; Beck 1999), where are the extension points used when using JUnit in a regular way vs extending JUnit with new framework capabilities?</h3>
@@ -538,7 +581,10 @@
     <!-- Question 2.3 -->
     <article class="exam-q-box" id="q-alexander-patterns">
       <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem; margin-bottom:0.5rem;">
-        <span class="exam-q-num">Exam Notes Question 8 · Unit 5</span>
+        <div style="display:flex; align-items:center; gap:0.6rem; flex-wrap:wrap;">
+          <span class="exam-q-num">Exam Notes Question 8 · Unit 5</span>
+          <a href="unit-5-theory.html" class="study-guide-pill">📖 Unit 5 · Pattern Theory & Alexander →</a>
+        </div>
         <span class="points-badge">10 Points</span>
       </div>
       <h3 class="exam-q-text">Name and explain 4 architectural building patterns from Christopher Alexander's 1977 book. Can you implement a reusable binary "pattern library" for software? If not, why not?</h3>
@@ -585,7 +631,10 @@
     <!-- Question 3.1 -->
     <article class="exam-q-box" id="q-lsp-automatic">
       <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem; margin-bottom:0.5rem;">
-        <span class="exam-q-num">Exam Notes Question 9 · Unit 6</span>
+        <div style="display:flex; align-items:center; gap:0.6rem; flex-wrap:wrap;">
+          <span class="exam-q-num">Exam Notes Question 9 · Unit 6</span>
+          <a href="unit-6-solid.html" class="study-guide-pill">📖 Unit 6 · SOLID (LSP & Refactoring) →</a>
+        </div>
         <span class="points-badge">5 Points</span>
       </div>
       <h3 class="exam-q-text">Can you check for conformance to the Liskov Substitution Principle (LSP) automatically using static analysis tools? Why or why not?</h3>
@@ -622,7 +671,10 @@
     <!-- Question 3.2 -->
     <article class="exam-q-box" id="q-ocp-validity">
       <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem; margin-bottom:0.5rem;">
-        <span class="exam-q-num">Exam Notes Question 10 · Unit 6</span>
+        <div style="display:flex; align-items:center; gap:0.6rem; flex-wrap:wrap;">
+          <span class="exam-q-num">Exam Notes Question 10 · Unit 6</span>
+          <a href="unit-6-solid.html" class="study-guide-pill">📖 Unit 6 · SOLID (OCP & Sorter) →</a>
+        </div>
         <span class="points-badge">5 Points</span>
       </div>
       <h3 class="exam-q-text">Does the sentence: “This class adheres to the Open Closed Principle” make sense in software architecture?</h3>
@@ -650,7 +702,10 @@
     <!-- Question 3.3 -->
     <article class="exam-q-box" id="q-solid-oral">
       <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem; margin-bottom:0.5rem;">
-        <span class="exam-q-num">Exam Notes Question 11 · Unit 6</span>
+        <div style="display:flex; align-items:center; gap:0.6rem; flex-wrap:wrap;">
+          <span class="exam-q-num">Exam Notes Question 11 · Unit 6</span>
+          <a href="unit-6-solid.html" class="study-guide-pill">📖 Unit 6 · SOLID (ISP & Interface Design) →</a>
+        </div>
         <span class="points-badge">5 Points</span>
       </div>
       <h3 class="exam-q-text">Why does the Single Responsibility Principle (SRP) make sense? Why does the Dependency Inversion Principle (DIP) make sense?</h3>
@@ -674,7 +729,10 @@
     <!-- Question 3.4 -->
     <article class="exam-q-box" id="q-package-metrics">
       <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem; margin-bottom:0.5rem;">
-        <span class="exam-q-num">Exam Notes Question 12 · Unit 7 (Main Sequence Calculation)</span>
+        <div style="display:flex; align-items:center; gap:0.6rem; flex-wrap:wrap;">
+          <span class="exam-q-num">Exam Notes Question 12 · Unit 7 (Main Sequence Calculation)</span>
+          <a href="unit-7-packaging.html" class="study-guide-pill">📖 Unit 7 · Packaging Principles & Metrics →</a>
+        </div>
         <span class="points-badge">10 Points</span>
       </div>
       <h3 class="exam-q-text">Given a package $P$ with 2 abstract classes, 8 concrete classes, 15 incoming dependencies ($C_a$), and 5 outgoing dependencies ($C_e$): Calculate Instability ($I$), Abstractness ($A$), and Normalized Distance ($D$). Interpret whether $P$ is well-designed.</h3>
@@ -719,7 +777,7 @@
         <h2 style="margin:0; font-family:var(--font-display); font-size:1.35rem; color:var(--text);">
           Module 4 · Architectural Patterns, Analysis Patterns &amp; Norvig
         </h2>
-        <span class="points-badge">20 Points</span>
+        <span class="points-badge">25 Points</span>
       </div>
       <p style="margin:0.35rem 0 0; font-size:0.88rem; color:var(--text-muted);">
         Questions directly transcribed from Unit 12, Unit 13, and Unit 15 exam notes.
@@ -729,7 +787,10 @@
     <!-- Question 4.1 -->
     <article class="exam-q-box" id="q-pipes-compiler">
       <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem; margin-bottom:0.5rem;">
-        <span class="exam-q-num">Exam Notes Question 13 · Unit 12</span>
+        <div style="display:flex; align-items:center; gap:0.6rem; flex-wrap:wrap;">
+          <span class="exam-q-num">Exam Notes Question 13 · Unit 12</span>
+          <a href="unit-12-architectural.html" class="study-guide-pill">📖 Unit 12 · Architectural Patterns (Layers) →</a>
+        </div>
         <span class="points-badge">5 Points</span>
       </div>
       <h3 class="exam-q-text">Could you implement a compiler using Pipes &amp; Filters? What features make the pipe architecture less suitable for a modern compiler?</h3>
@@ -759,7 +820,10 @@
     <!-- Question 4.2 -->
     <article class="exam-q-box" id="q-blackboard-stopping">
       <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem; margin-bottom:0.5rem;">
-        <span class="exam-q-num">Exam Notes Question 14 · Unit 12</span>
+        <div style="display:flex; align-items:center; gap:0.6rem; flex-wrap:wrap;">
+          <span class="exam-q-num">Exam Notes Question 14 · Unit 12</span>
+          <a href="unit-12-architectural.html" class="study-guide-pill">📖 Unit 12 · Architectural Patterns (Broker RPC) →</a>
+        </div>
         <span class="points-badge">5 Points</span>
       </div>
       <h3 class="exam-q-text">In the Blackboard architecture, when should the application main loop stop? What are the liabilities of the Blackboard architecture?</h3>
@@ -790,7 +854,10 @@
     <!-- Question 4.3 -->
     <article class="exam-q-box" id="q-analysis-vs-design">
       <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem; margin-bottom:0.5rem;">
-        <span class="exam-q-num">Exam Notes Question 15 · Unit 13</span>
+        <div style="display:flex; align-items:center; gap:0.6rem; flex-wrap:wrap;">
+          <span class="exam-q-num">Exam Notes Question 15 · Unit 13</span>
+          <a href="unit-13-analysis.html" class="study-guide-pill">📖 Unit 13 · Analysis Patterns (Fowler) →</a>
+        </div>
         <span class="points-badge">5 Points</span>
       </div>
       <h3 class="exam-q-text">Define in your own words the difference between Analysis Patterns and Design Patterns.</h3>
@@ -814,7 +881,10 @@
     <!-- Question 4.4 -->
     <article class="exam-q-box" id="q-norvig-critique">
       <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem; margin-bottom:0.5rem;">
-        <span class="exam-q-num">Exam Notes Question 16 · Unit 15</span>
+        <div style="display:flex; align-items:center; gap:0.6rem; flex-wrap:wrap;">
+          <span class="exam-q-num">Exam Notes Question 16 · Unit 15</span>
+          <a href="unit-15-criticism.html" class="study-guide-pill">📖 Unit 15 · Pattern Criticism (Dominus/Graham) →</a>
+        </div>
         <span class="points-badge">5 Points</span>
       </div>
       <h3 class="exam-q-text">What was Peter Norvig’s core critique regarding the 23 Gang of Four patterns in dynamic and functional programming languages?</h3>
@@ -848,7 +918,10 @@
     <!-- Question 4.5 -->
     <article class="exam-q-box" id="q-observer-rss">
       <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem; margin-bottom:0.5rem;">
-        <span class="exam-q-num">Exam Notes Question 17 · Unit 10</span>
+        <div style="display:flex; align-items:center; gap:0.6rem; flex-wrap:wrap;">
+          <span class="exam-q-num">Exam Notes Question 17 · Unit 10</span>
+          <a href="unit-10-decoupling.html" class="study-guide-pill">📖 Unit 10 · Decoupling (Observer vs Mediator) →</a>
+        </div>
         <span class="points-badge">5 Points</span>
       </div>
       <h3 class="exam-q-text">Is RSS really using the Observer Pattern in the technical sense?</h3>
@@ -928,7 +1001,7 @@
   </div>
 </footer>
 
-<script src="assets/site.js?v=2026.17"></script>
+<script src="assets/site.js?v=2026.19"></script>
 <script>
   // Timer state (90 minutes)
   var timerSeconds = 90 * 60;

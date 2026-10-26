@@ -45,3 +45,10 @@ These rules and preferences apply to all work, modifications, and generation of 
 - **Exercise 6 (Singleton Reflection Guard & SOLID · 12 Pts)**: [6+4+2 Pts]
 - **Exercise 7 (Functional Criticism & Python Quicksort · 12 Pts)**: [4+8 Pts]
 - **Exercise 8 (Banking System Architecture · 18 Pts)**: 6 GoF patterns with justifications.
+
+---
+
+## 5. Git Workflow & Commit Hygiene (No Spam Commits)
+- **Zero Micro-Commit Spam**: Do NOT commit or push after every small edit or single-file change.
+- **Batch Locally**: Keep all intermediate work, tests, and edits local until an entire unit of work, chapter, or milestone is finished and verified.
+- **Single Consolidated Push**: Push only when a milestone is completed, grouping related work into one clean, meaningful commit.

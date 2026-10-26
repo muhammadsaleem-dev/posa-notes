@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Unit 6 · SOLID Principles &amp; Design Smells · POSA Masterclass 2026</title>
 <meta name="description" content="Master the 5 SOLID principles (SRP, OCP, LSP, ISP, DIP), the 4 symptoms of rotting design, formal Liskov substitution proofs, and OCP refactoring.">
-<link rel="stylesheet" href="assets/style.css?v=2026.18">
+<link rel="stylesheet" href="assets/style.css?v=2026.19">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,600;0,700;1,400&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,600;1,700&display=swap" rel="stylesheet">
@@ -205,32 +205,60 @@
 </head>
 <body>
   <!-- Top Navigation -->
-  <nav class="sitenav" aria-label="Main Navigation">
-    <div class="sitenav-inner">
-      <a href="index.html" class="sitenav-brand">
-        <span class="brand-badge">POSA 2026</span>
-        <span class="brand-title">Pattern Architecture</span>
-      </a>
-      <div class="sitenav-links">
-        <a href="index.html">Overview</a>
-        <a href="unit-3-composite.html">Unit 3A: Composite</a>
-        <a href="unit-3-iterator.html">Unit 3B: Iterator</a>
-        <a href="unit-4-junit.html">Unit 4: JUnit</a>
-        <a href="unit-5-theory.html">Unit 5: Theory</a>
-        <a href="unit-6-solid.html" class="active">Unit 6: SOLID</a>
-        <a href="mock-1.html">🎓 Mock Exam 1</a>
-        <a href="mock-2.html">📝 Mock Exam 2</a>
-        <a href="past-papers.html">Practice Hub</a>
-      </div>
-      <button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle theme">
-        <span class="theme-icon light-icon">☀️</span>
-        <span class="theme-icon dark-icon">🌙</span>
-      </button>
+  <nav class="sitenav">
+  <div class="sitenav-inner">
+    <a class="sitenav-home" href="index.html">
+      <span style="background:linear-gradient(135deg, #6366f1 0%, #38bdf8 100%);color:#fff;padding:0.2rem 0.55rem;border-radius:6px;font-size:0.82rem;font-weight:800;letter-spacing:0.04em;">POSA</span>
+      <span style="font-weight:800;letter-spacing:-0.02em;">2026</span>
+    </a>
+    <div class="sitenav-links">
+      <a href="index.html">Overview</a>
+      <a href="index.html#curriculum-roadmap">16 Units</a>
+      <a href="mock-1.html">🎓 Mock Exam 1</a>
+      <a href="mock-2.html">📝 Mock Exam 2</a>
     </div>
-  </nav>
+    <button class="nav-toggle" id="navToggle" type="button" aria-expanded="false" aria-controls="navPanel">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+      Menu
+    </button>
+    <button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle color theme">
+      <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path></svg>
+      <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+    </button>
+    <button class="mode-toggle" id="modeToggle" type="button" aria-label="Toggle technical mode" style="font-size: 1.1rem; line-height: 1;">🎓</button>
+  </div>
+  <div class="nav-panel" id="navPanel">
+    <div class="nav-panel-section">
+      <span class="nav-panel-label">Course Navigation</span>
+      <a href="index.html">Course Overview</a>
+      <a href="mock-1.html">🎓 Mock Exam 1</a>
+      <a href="mock-2.html">📝 Mock Exam 2</a>
+      <a href="mock-practice-bank.html">📚 Extended Practice Bank</a>
+      <a href="unit-1-strategy.html">Unit 1 · Strategy Pattern</a>
+      <a href="unit-2-template.html">Unit 2A · Template Method</a>
+      <a href="unit-2-command.html">Unit 2B · Command Pattern</a>
+      <a href="unit-3-composite.html">Unit 3A · Composite Pattern</a>
+      <a href="unit-3-iterator.html">Unit 3B · Iterator Pattern</a>
+      <a href="unit-4-junit.html">Unit 4 · Case Study JUnit</a>
+      <a href="unit-5-theory.html">Unit 5 · Pattern Theory & History</a>
+      <a href="unit-6-solid.html" class="active">Unit 6 · SOLID Principles</a>
+      <a href="unit-7-packaging.html">Unit 7 · Packaging Principles</a>
+      <a href="unit-8-creational.html">Unit 8 · Creational Patterns</a>
+      <a href="unit-9-flexibility.html">Unit 9 · Flexibility Patterns</a>
+      <a href="unit-10-decoupling.html">Unit 10 · Decoupling Patterns</a>
+      <a href="unit-11-mvc.html">Unit 11 · Case Study MVC</a>
+      <a href="unit-12-architectural.html">Unit 12 · Architectural Patterns</a>
+      <a href="unit-13-analysis.html">Unit 13 · Analysis & Static Quality</a>
+      <a href="unit-14-testing.html">Unit 14 · Advanced Testing</a>
+      <a href="unit-15-criticism.html">Unit 15 · Pattern Criticism</a>
+      <a href="unit-16-genai.html">Unit 16 · GenAI & Pattern Engineering</a>
+    </div>
+  </div>
+</nav>
 
-  <!-- Sidebar -->
-  <aside class="sidebar">
+<div class="page-shell">
+  <!-- Desktop Sticky Sidebar TOC -->
+  <aside class="sidebar-toc">
     <div class="sidebar-block">
       <span class="sidebar-label">Unit Navigation</span>
       <a href="#sec-profile" class="active"><span class="toc-num">1</span>The 5 Principles</a>
@@ -262,7 +290,7 @@
     <header class="masthead">
       <div>
         <div class="eyebrow">Unit 6 · Core Object-Oriented Design Principles</div>
-        <h1 class="title">SOLID Principles &amp; Design Smells</h1>
+        <h1 class="title">SOLID Principles &amp; Architectural Decay</h1>
       </div>
       <p class="dek">
         Master Robert C. Martin's 5 foundational design principles, the 4 classic symptoms of architectural rot (Rigidity, Fragility, Immobility, Viscosity), and the formal proof of why Square is NOT a Rectangle in object orientation.
@@ -270,7 +298,7 @@
     </header>
 
     <!-- ============================================================== -->
-    <!-- 1. THE 5 SOLID PRINCIPLES & DIP UML                            -->
+    <!-- 1. THE 5 SOLID PRINCIPLES & DEEP CODE ANATOMY                  -->
     <!-- ============================================================== -->
     <section class="chapter" id="sec-profile">
       <div class="chapter-head">
@@ -286,19 +314,19 @@
           <div class="spec-row">
             <span class="spec-label"><span class="solid-letter">S</span> SRP &mdash; Single Responsibility Principle:</span>
             <span class="spec-val">
-              <em>"A class should have one, and only one, reason to change."</em> Each class must be responsible to only one single actor or business role. Cohesive behavior belongs together; divergent responsibilities must be segregated.
+              <em>"A class should have one, and only one, reason to change."</em> In enterprise architecture, this translates to: <strong>A class should be responsible to one, and only one, actor or business stakeholder.</strong> Cohesive behavior belongs together; divergent responsibilities must be segregated.
             </span>
           </div>
           <div class="spec-row">
             <span class="spec-label"><span class="solid-letter">O</span> OCP &mdash; Open-Closed Principle:</span>
             <span class="spec-val">
-              <em>"Software entities should be open for extension, but closed for modification."</em> You should be able to add new features or algorithms without modifying existing, tested classes (achieved via polymorphism: Strategy, Template Method, Decorator).
+              <em>"Software entities should be open for extension, but closed for modification."</em> You should be able to introduce new business features or algorithmic variations without altering existing, tested source code (achieved via polymorphism: Strategy, Template Method, Decorator).
             </span>
           </div>
           <div class="spec-row">
             <span class="spec-label"><span class="solid-letter">L</span> LSP &mdash; Liskov Substitution Principle:</span>
             <span class="spec-val">
-              <em>"Subtypes must be substitutable for their base types without altering the correctness of the program."</em> Derived classes must fulfill all behavioral contracts guaranteed by the superclass (preconditions, postconditions, invariants).
+              <em>"Subtypes must be substitutable for their base types without altering the correctness of the program."</em> Derived classes must fulfill all behavioral contracts guaranteed by the superclass (preconditions, postconditions, and class invariants).
             </span>
           </div>
           <div class="spec-row">
@@ -316,45 +344,297 @@
         </div>
       </div>
 
-      <!-- Vector UML: Dependency Inversion Architecture -->
+      <!-- ============================================================== -->
+      <!-- DEEP DIVE 1: S - SINGLE RESPONSIBILITY PRINCIPLE (SRP)         -->
+      <!-- ============================================================== -->
       <div class="guide-card">
         <div class="guide-card-header">
-          <span>📐 Canonical Architecture: Figure 6.1 Dependency Inversion in Action</span>
+          <span class="rule-badge">S &middot; SRP DEEP DIVE</span>
+          <span>The Multi-Actor Collision Anti-Pattern &amp; Cohesive Separation</span>
         </div>
-        <div class="uml-diagram-box" style="text-align:center;">
+        <p style="font-size:0.95rem; line-height:1.6; color:var(--text); margin-bottom:1rem;">
+          The Single Responsibility Principle is fundamentally about <strong>people and organizational actors</strong>. When multiple business stakeholders demand changes to the same source file, changes collide catastrophically:
+        </p>
+
+        <pre><code class="language-java">// VIOLATION: Employee class serves 3 different business stakeholders!
+public class Employee {
+    // 1. Actor: CFO / Accounting Department
+    public Money calculatePay() {
+        return regularHours() * hourlyRate + calculateOvertime();
+    }
+
+    // 2. Actor: COO / HR Operations Department
+    public String reportHours() {
+        return "Regular Hours: " + regularHours() + " | Overtime: " + reportOvertime();
+    }
+
+    // 3. Actor: CTO / Database Administrators
+    public void save() {
+        Database.getConnection().execute("INSERT INTO employees VALUES (" + this.id + ", ...)");
+    }
+
+    // SHARED PRIVATE METHOD: The fatal architectural coupling!
+    private int regularHours() {
+        return Math.min(this.loggedHours, 40);
+    }
+}</code></pre>
+
+        <div style="margin:1.25rem 0; padding:1rem; background:rgba(239,68,68,0.08); border-left:3px solid #ef4444; border-radius:4px; font-size:0.9rem; line-height:1.6; color:var(--text);">
+          <strong>The Catastrophic Failure Scenario:</strong>
+          <p style="margin:0.4rem 0 0;">
+            The HR department (COO) requests a policy change: non-overtime regular hours should be capped at 35 instead of 40. A developer updates <code>regularHours()</code> to return <code>Math.min(this.loggedHours, 35)</code>. The change passes HR's acceptance tests and is deployed.
+            <br><br>
+            <strong>The Result:</strong> Payroll (CFO) now computes regular pay based on 35 hours instead of 40! Employees across the corporation receive incorrect paychecks because two separate business actors shared a single class.
+          </p>
+        </div>
+
+        <p style="font-size:0.95rem; line-height:1.6; color:var(--text); margin:1rem 0 0.5rem;">
+          <strong>The SRP Refactoring: Separate Classes Bound by Single Actor Cohesion:</strong>
+        </p>
+        <pre><code class="language-java">// Clean Architecture: Each class has exactly ONE actor and ONE reason to change
+public class PayCalculator {
+    public Money calculatePay(EmployeeData employee) { /* CFO logic */ }
+}
+
+public class HourReporter {
+    public String reportHours(EmployeeData employee) { /* COO logic */ }
+}
+
+public class EmployeeRepository {
+    public void save(EmployeeData employee) { /* CTO / DB logic */ }
+}
+
+// Lightweight shared data structure (pure entity record without behavior)
+public record EmployeeData(String id, int loggedHours, Money hourlyRate) {}</code></pre>
+      </div>
+
+      <!-- ============================================================== -->
+      <!-- DEEP DIVE 2: O - OPEN-CLOSED PRINCIPLE (OCP)                   -->
+      <!-- ============================================================== -->
+      <div class="guide-card">
+        <div class="guide-card-header">
+          <span class="rule-badge">O &middot; OCP DEEP DIVE</span>
+          <span>Polymorphic Abstraction vs. Fragile Type-Switching</span>
+        </div>
+        <p style="font-size:0.95rem; line-height:1.6; color:var(--text); margin-bottom:1rem;">
+          The Open-Closed Principle states that software entities should be <strong>open for extension</strong> (can add new behavior) but <strong>closed for modification</strong> (without modifying already-tested, deployed source code).
+        </p>
+
+        <pre><code class="language-java">// VIOLATION: GraphicEditor must be modified every time a new shape is invented!
+public class GraphicEditor {
+    public void drawShape(Object shape) {
+        if (shape instanceof Circle c) {
+            drawCircle(c);
+        } else if (shape instanceof Rectangle r) {
+            drawRectangle(r);
+        } else if (shape instanceof Triangle t) {
+            drawTriangle(t); // Every new shape requires editing and re-testing GraphicEditor!
+        }
+    }
+    private void drawCircle(Circle c) { /* Circle rendering */ }
+    private void drawRectangle(Rectangle r) { /* Rectangle rendering */ }
+    private void drawTriangle(Triangle t) { /* Triangle rendering */ }
+}</code></pre>
+
+        <p style="font-size:0.95rem; line-height:1.6; color:var(--text); margin:1rem 0 0.5rem;">
+          <strong>The OCP Refactoring via Polymorphism:</strong>
+        </p>
+        <pre><code class="language-java">// 1. The Abstraction is closed for modification
+public interface Shape {
+    void draw();
+}
+
+// 2. Extensions are open: simply introduce new classes implementing the interface
+public class Circle implements Shape {
+    public void draw() { /* Render Circle */ }
+}
+
+public class Rectangle implements Shape {
+    public void draw() { /* Render Rectangle */ }
+}
+
+public class Triangle implements Shape {
+    public void draw() { /* Render Triangle */ }
+}
+
+// 3. Client is 100% closed against all future shape additions!
+public class GraphicEditor {
+    public void drawShape(Shape shape) {
+        shape.draw(); // Polymorphic dynamic dispatch: zero modifications ever needed!
+    }
+}</code></pre>
+
+        <div style="margin-top:1.25rem; padding:1rem; background:rgba(99,102,241,0.08); border-left:3px solid #6366f1; border-radius:4px; font-size:0.9rem; line-height:1.6; color:var(--text);">
+          <strong>Meyer's OCP (1988) vs. Martin's OCP (Uncle Bob):</strong>
+          <ul style="margin:0.4rem 0 0; padding-left:1.25rem;">
+            <li><strong>Bertrand Meyer (Original):</strong> Advocated using <em>implementation inheritance</em>. A class can be closed once compiled, and extended by subclassing it and overriding methods. (Weakness: tight coupling to base class internals via the Fragile Base Class Problem).</li>
+            <li><strong>Robert C. Martin (Modern):</strong> Advocates using <em>polymorphic interfaces</em>. Depend on stable interfaces; swap behavior using composition (Strategy, Decorator, Template Method). Zero inheritance coupling.</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- ============================================================== -->
+      <!-- DEEP DIVE 3: L - LISKOV SUBSTITUTION PRINCIPLE (LSP)           -->
+      <!-- ============================================================== -->
+      <div class="guide-card">
+        <div class="guide-card-header">
+          <span class="rule-badge">L &middot; LSP DEEP DIVE</span>
+          <span>Behavioral Subtyping &amp; Contract Preservation</span>
+        </div>
+        <p style="font-size:0.95rem; line-height:1.6; color:var(--text); margin-bottom:1rem;">
+          Formulated by Turing Award laureate <strong>Barbara Liskov (1987)</strong>: <em>"If for each object $o_1$ of type $S$ there is an object $o_2$ of type $T$ such that for all programs $P$ defined in terms of $T$, the behavior of $P$ is unchanged when $o_1$ is substituted for $o_2$, then $S$ is a subtype of $T$."</em>
+        </p>
+
+        <pre><code class="language-java">// VIOLATION: Subclass breaks superclass contract by throwing unexpected exception
+public class CustomReadOnlyList&lt;E&gt; extends ArrayList&lt;E&gt; {
+    @Override
+    public boolean add(E element) {
+        // Contract of Collection.add() guarantees element is inserted!
+        throw new UnsupportedOperationException("Read-only list!");
+    }
+}
+
+// Client expecting base ArrayList contract:
+void processData(List&lt;String&gt; list) {
+    list.add("test"); // CRASHES at runtime if CustomReadOnlyList is passed!
+}</code></pre>
+
+        <div style="margin-top:1.25rem; padding:1.25rem; background:rgba(239,68,68,0.08); border-left:3px solid #ef4444; border-radius:4px; font-size:0.92rem; line-height:1.65; color:var(--text);">
+          <strong>The 3 Formal Rules of Barbara Liskov &amp; Jeannette Wing (1994):</strong>
+          <ol style="margin:0.5rem 0 0; padding-left:1.25rem;">
+            <li><strong>Preconditions cannot be strengthened in a subtype:</strong> The subclass cannot demand stricter validation or narrower parameter ranges than the superclass.</li>
+            <li><strong>Postconditions cannot be weakened in a subtype:</strong> The subclass must guarantee at least as much outcome/state guarantee to callers as the superclass.</li>
+            <li><strong>Invariants of the supertype must be preserved:</strong> Any state constraint guaranteed by the superclass must hold before and after every public method of the subclass.</li>
+          </ol>
+          <p style="margin:0.75rem 0 0; font-size:0.85rem; color:var(--text-muted);">
+            👉 <em>See Section 3 below for the complete mathematical postcondition proof of why Square is NOT a Rectangle!</em>
+          </p>
+        </div>
+      </div>
+
+      <!-- ============================================================== -->
+      <!-- DEEP DIVE 4: I - INTERFACE SEGREGATION PRINCIPLE (ISP)         -->
+      <!-- ============================================================== -->
+      <div class="guide-card">
+        <div class="guide-card-header">
+          <span class="rule-badge">I &middot; ISP DEEP DIVE</span>
+          <span>Fat Interfaces vs. Role Interfaces</span>
+        </div>
+        <p style="font-size:0.95rem; line-height:1.6; color:var(--text); margin-bottom:1rem;">
+          When an interface becomes "fat", it forces client classes to depend on operations they never invoke, triggering unnecessary re-compilation, bloated testing harnesses, and dummy exception throws:
+        </p>
+
+        <pre><code class="language-java">// VIOLATION: Fat Interface forcing bloated contracts
+public interface MultiFunctionDevice {
+    void print(Document doc);
+    void scan(Document doc);
+    void fax(Document doc);
+    void staple(Document doc);
+}
+
+// Low-cost DeskJet Printer forced to implement irrelevant methods:
+public class SimpleDeskJet implements MultiFunctionDevice {
+    public void print(Document doc) { /* Print logic */ }
+    public void scan(Document doc) { throw new UnsupportedOperationException("No scanner!"); }
+    public void fax(Document doc) { throw new UnsupportedOperationException("No fax!"); }
+    public void staple(Document doc) { throw new UnsupportedOperationException("No stapler!"); }
+}
+
+// REFACTORED: Segregated Role Interfaces
+public interface Printer { void print(Document doc); }
+public interface Scanner { void scan(Document doc); }
+public interface FaxMachine { void fax(Document doc); }
+
+// High-end enterprise device implements all roles:
+public class EnterpriseCopier implements Printer, Scanner, FaxMachine {
+    public void print(Document doc) { ... }
+    public void scan(Document doc) { ... }
+    public void fax(Document doc) { ... }
+}
+
+// Simple device implements only what it supports:
+public class SimpleDeskJet implements Printer {
+    public void print(Document doc) { /* Print logic only */ }
+}</code></pre>
+      </div>
+
+      <!-- ============================================================== -->
+      <!-- DEEP DIVE 5: D - DEPENDENCY INVERSION PRINCIPLE (DIP)          -->
+      <!-- ============================================================== -->
+      <div class="guide-card">
+        <div class="guide-card-header">
+          <span class="rule-badge">D &middot; DIP DEEP DIVE</span>
+          <span>Decoupling High-Level Business Policy from Low-Level I/O Details</span>
+        </div>
+        <p style="font-size:0.95rem; line-height:1.6; color:var(--text); margin-bottom:1rem;">
+          Traditional software dependencies flow downwards: high-level business logic depends on mid-level algorithms, which depend on low-level database drivers and hardware I/O. <strong>DIP inverts this hierarchy:</strong>
+        </p>
+
+        <pre><code class="language-java">// VIOLATION: High-level business logic is directly coupled to low-level volatile mechanisms!
+public class OrderProcessor {
+    private MySQLDatabase database = new MySQLDatabase(); // Tight coupling to MySQL
+    private StripePaymentGateway payment = new StripePaymentGateway(); // Tight coupling to Stripe
+
+    public void checkout(Order order) {
+        payment.charge(order.total());
+        database.insertOrder(order);
+    }
+}
+
+// REFACTORED: Both High-Level and Low-Level depend on Abstractions
+public interface PaymentGateway {
+    void processPayment(Money amount);
+}
+
+public interface OrderRepository {
+    void save(Order order);
+}
+
+// High-level policy depends ONLY on stable interfaces (Constructor Injection)
+public class OrderProcessor {
+    private final PaymentGateway paymentGateway;
+    private final OrderRepository orderRepository;
+
+    public OrderProcessor(PaymentGateway paymentGateway, OrderRepository orderRepository) {
+        this.paymentGateway = paymentGateway;
+        this.orderRepository = orderRepository;
+    }
+
+    public void checkout(Order order) {
+        paymentGateway.processPayment(order.total());
+        orderRepository.save(order);
+    }
+}</code></pre>
+
+        <!-- Vector UML: Dependency Inversion Architecture -->
+        <div class="uml-diagram-box" style="text-align:center; margin-top:1.5rem;">
           <svg viewBox="0 0 680 200" style="max-width:100%; height:auto;" aria-label="Figure 6.1: DIP Architecture UML">
-            <!-- High-Level Module Box -->
             <rect x="30" y="40" width="180" height="70" rx="3" fill="var(--bg-raised)" stroke="var(--border)" stroke-width="1.5"/>
             <rect x="30" y="40" width="180" height="24" rx="3" fill="var(--bg-subtle)"/>
             <text x="120" y="57" fill="var(--text)" font-family="var(--font-display)" font-size="12" font-weight="700" text-anchor="middle">OrderProcessor (High-Level)</text>
             <line x1="30" y1="64" x2="210" y2="64" stroke="var(--border)" stroke-width="1.5"/>
             <text x="40" y="85" fill="var(--text-muted)" font-family="var(--font-mono)" font-size="10">+ processOrder(o: Order)</text>
 
-            <!-- Interface Abstraction Box -->
             <rect x="270" y="40" width="170" height="70" rx="3" fill="var(--bg-raised)" stroke="var(--accent)" stroke-width="1.5"/>
             <rect x="270" y="40" width="170" height="24" rx="3" fill="var(--accent-soft)"/>
             <text x="355" y="57" fill="var(--accent)" font-family="var(--font-display)" font-size="12" font-style="italic" font-weight="700" text-anchor="middle">&lt;&lt;interface&gt;&gt; PaymentGateway</text>
             <line x1="270" y1="64" x2="440" y2="64" stroke="var(--border)" stroke-width="1.5"/>
             <text x="280" y="85" fill="var(--text)" font-family="var(--font-mono)" font-size="10">+ pay(amount: double)</text>
 
-            <!-- Low-Level Concrete Detail Box -->
             <rect x="500" y="40" width="160" height="70" rx="3" fill="var(--bg-raised)" stroke="var(--border)" stroke-width="1.5"/>
             <rect x="500" y="40" width="160" height="24" rx="3" fill="var(--bg-subtle)"/>
             <text x="580" y="57" fill="var(--text)" font-family="var(--font-display)" font-size="12" font-weight="700" text-anchor="middle">StripeGateway (Low-Level)</text>
             <line x1="500" y1="64" x2="660" y2="64" stroke="var(--border)" stroke-width="1.5"/>
             <text x="510" y="85" fill="var(--text)" font-family="var(--font-mono)" font-size="10">+ pay(amount: double)</text>
 
-            <!-- Association from OrderProcessor to PaymentGateway -->
             <line x1="210" y1="75" x2="270" y2="75" stroke="var(--border)" stroke-width="1.5"/>
             <polygon points="270,75 260,70 260,80" fill="var(--border)"/>
             <text x="240" y="65" fill="var(--text-muted)" font-family="var(--font-mono)" font-size="10" text-anchor="middle">depends on</text>
 
-            <!-- Realization from StripeGateway to PaymentGateway (INVERTED ARROW pointing left!) -->
             <line x1="500" y1="75" x2="440" y2="75" stroke="var(--border)" stroke-width="1.5" stroke-dasharray="4,4"/>
             <polygon points="440,75 453,68 453,82" fill="var(--bg-raised)" stroke="var(--border)" stroke-width="1.5"/>
             <text x="470" y="65" fill="var(--accent)" font-family="var(--font-mono)" font-size="10" font-weight="700" text-anchor="middle">inverts &larr;</text>
 
-            <!-- Label explaining DIP -->
             <text x="340" y="150" fill="var(--text)" font-family="var(--font-mono)" font-size="11" text-anchor="middle">
               Both High-Level and Low-Level depend on the Abstraction.
             </text>
@@ -365,11 +645,7 @@
         </div>
       </div>
     </section>
-
-    <!-- ============================================================== -->
-    <!-- 2. THE 4 SYMPTOMS OF ROTTING DESIGN                            -->
-    <!-- ============================================================== -->
-    <section class="chapter" id="sec-smells">
+<section class="chapter" id="sec-smells">
       <div class="chapter-head">
         <span class="chapter-num">2</span>
         <div>
@@ -387,29 +663,30 @@
           
           <div style="background:var(--bg); border:1px solid var(--border); border-radius:6px; padding:1.2rem;">
             <strong style="color:#ef4444; font-size:1rem;">1. Rigidity</strong>
-            <p style="font-size:0.88rem; color:var(--text-muted); line-height:1.5; margin:0.4rem 0 0;">
+            <p style="font-size:0.88rem; color:var(--text-muted); line-height:1.55; margin:0.4rem 0 0;">
               The tendency for software to be hard to change because every single change forces a cascade of subsequent changes in dependent modules. The engineer fears touching code because simple tasks explode into multi-module rewrites.
             </p>
           </div>
 
           <div style="background:var(--bg); border:1px solid var(--border); border-radius:6px; padding:1.2rem;">
             <strong style="color:#f59e0b; font-size:1rem;">2. Fragility</strong>
-            <p style="font-size:0.88rem; color:var(--text-muted); line-height:1.5; margin:0.4rem 0 0;">
+            <p style="font-size:0.88rem; color:var(--text-muted); line-height:1.55; margin:0.4rem 0 0;">
               The tendency for software to break in places that have no conceptual or logical relationship to the modified area. Fixes introduce new bugs elsewhere, destroying developer confidence.
             </p>
           </div>
 
           <div style="background:var(--bg); border:1px solid var(--border); border-radius:6px; padding:1.2rem;">
             <strong style="color:#6366f1; font-size:1rem;">3. Immobility</strong>
-            <p style="font-size:0.88rem; color:var(--text-muted); line-height:1.5; margin:0.4rem 0 0;">
+            <p style="font-size:0.88rem; color:var(--text-muted); line-height:1.55; margin:0.4rem 0 0;">
               The inability to reuse software from other projects or parts of the same project because it cannot be disentangled from the current application context. It is easier to rewrite the code from scratch than to separate it.
             </p>
           </div>
 
           <div style="background:var(--bg); border:1px solid var(--border); border-radius:6px; padding:1.2rem;">
             <strong style="color:#10b981; font-size:1rem;">4. Viscosity</strong>
-            <p style="font-size:0.88rem; color:var(--text-muted); line-height:1.5; margin:0.4rem 0 0;">
-              When doing things the <em>right architectural way</em> is slow, tedious, or cumbersome, whereas applying a quick, dirty hack is instantaneous. Developers inevitably choose the path of least resistance, compounding technical debt.
+            <p style="font-size:0.88rem; color:var(--text-muted); line-height:1.55; margin:0.4rem 0 0;">
+              <strong>Design Viscosity:</strong> When doing things the <em>right architectural way</em> is slow, tedious, or cumbersome, whereas applying a quick, dirty hack is instantaneous.<br>
+              <strong>Environment Viscosity:</strong> When compilation, test runs, or deployment cycles take hours, encouraging engineers to make quick dirty patches rather than clean refactorings.
             </p>
           </div>
 
@@ -438,7 +715,7 @@
           In mathematics, every square is a rectangle ($is-a$). But in Object-Oriented Design, <strong>a Square cannot substitute for a Rectangle without violating LSP</strong>:
         </p>
 
-        <pre style="background:var(--code-bg); padding:1rem; border-radius:6px; font-family:var(--font-mono); font-size:0.85rem; line-height:1.5; overflow-x:auto;"><code>public class Rectangle {
+        <pre><code class="language-java">public class Rectangle {
     protected int width, height;
     public void setWidth(int w) { this.width = w; }
     public void setHeight(int h) { this.height = h; }
@@ -461,12 +738,12 @@ void verifyArea(Rectangle r) {
     assert r.getArea() == 20; // FAILS for Square (yields 16)!
 }</code></pre>
 
-        <div style="margin-top:1.25rem; padding:1rem; background:rgba(239,68,68,0.08); border-left:3px solid #ef4444; border-radius:4px; font-size:0.9rem; line-height:1.6; color:var(--text);">
-          <strong>The 3 Formal Rules of Barbara Liskov's Behavioral Subtyping:</strong>
+        <div style="margin-top:1.25rem; padding:1.25rem; background:rgba(239,68,68,0.08); border-left:3px solid #ef4444; border-radius:4px; font-size:0.92rem; line-height:1.65; color:var(--text);">
+          <strong>The 3 Formal Rules of Barbara Liskov's Behavioral Subtyping (1987):</strong>
           <ol style="margin:0.5rem 0 0; padding-left:1.25rem;">
-            <li><strong>Preconditions cannot be strengthened</strong> in a subtype (the subtype cannot demand more from callers than the supertype).</li>
-            <li><strong>Postconditions cannot be weakened</strong> in a subtype (the subtype must guarantee at least as much to callers as the supertype). <em>Square weakens Rectangle's postcondition: changing height alters width!</em></li>
-            <li><strong>Invariants of the supertype must be preserved</strong> in all subtypes.</li>
+            <li><strong>Preconditions cannot be strengthened in a subtype:</strong> The subtype cannot demand more from callers than the supertype. If a base method accepts any integer $\ge 0$, a subclass cannot mandate integers $\ge 10$.</li>
+            <li><strong>Postconditions cannot be weakened in a subtype:</strong> The subtype must guarantee at least as much to callers as the supertype. <em>Square weakens Rectangle's postcondition: setting height has the side effect of altering width!</em></li>
+            <li><strong>Invariants of the supertype must be preserved:</strong> Any condition guaranteed true before and after every public method call on the supertype must remain true for all subtypes.</li>
           </ol>
         </div>
       </div>
@@ -484,7 +761,7 @@ void verifyArea(Rectangle r) {
         </div>
       </div>
 
-      <!-- QA 1: OCP Sorter Refactoring -->
+      <!-- QA 1: OCP Sorter Refactoring (Mock 1 Ex 3 · 8 Pts) -->
       <div class="qa-block">
         <div class="qa-q">
           Question 1: Open-Closed Principle (OCP) Sorter Refactoring
@@ -498,9 +775,9 @@ void verifyArea(Rectangle r) {
         <div class="qa-a">
           <span class="ans-label">Model Answer:</span>
           <ol>
-            <li><strong>OCP Violation:</strong> Whenever a new sorting algorithm (e.g. <code>MERGE_SORT</code>) is introduced, the existing, tested <code>DataSorter</code> class must be modified to add a new <code>else if</code> branch. It is not closed for modification.</li>
+            <li><strong>OCP Violation:</strong> Whenever a new sorting algorithm (e.g. <code>MERGE_SORT</code>) is introduced, the existing, tested <code>DataSorter</code> class must be modified to add a new <code>else if</code> branch. It is closed neither for modification nor resilient to regression.</li>
             <li><strong>Refactoring via Strategy Pattern:</strong>
-              <pre style="background:var(--code-bg); padding:0.75rem; border-radius:4px; font-family:var(--font-mono); font-size:0.85rem; margin-top:0.5rem;"><code>public interface Sorter {
+              <pre><code class="language-java">public interface Sorter {
     void sort(int[] data);
 }
 
@@ -518,7 +795,7 @@ public class DataSorter {
         </div>
       </div>
 
-      <!-- QA 2: Singleton SOLID Violations -->
+      <!-- QA 2: Singleton SOLID Violations (Mock 1 Ex 6 · 6 Pts) -->
       <div class="qa-block">
         <div class="qa-q">
           Question 2: Why Classic Singleton Violates SOLID Principles
@@ -532,12 +809,12 @@ public class DataSorter {
           <ol>
             <li><strong>Single Responsibility Principle (SRP):</strong> The Singleton class is responsible for its actual domain business logic (e.g., logging, database queries) AND managing its own instantiation and lifecycle (ensuring exactly one instance). That represents two distinct reasons to change.</li>
             <li><strong>Dependency Inversion Principle (DIP):</strong> Classes using the Singleton call <code>Singleton.getInstance()</code> directly, binding themselves to a concrete class rather than an abstract interface. High-level modules become tightly coupled to a low-level concrete implementation.</li>
-            <li><strong>Open-Closed Principle (OCP):</strong> A Singleton is sealed via private constructors. It cannot be extended with polymorphic alternatives (e.g., a mock for testing) without changing the call sites throughout the application.</li>
+            <li><strong>Open-Closed Principle (OCP):</strong> A Singleton is sealed via private constructors. It cannot be extended with polymorphic alternatives (e.g., a test double or mock) without modifying all call sites throughout the application.</li>
           </ol>
         </div>
       </div>
 
-      <!-- QA 3: Square vs Rectangle Proof -->
+      <!-- QA 3: Square vs Rectangle Proof (Mock 1 Ex 6 · 6 Pts) -->
       <div class="qa-block">
         <div class="qa-q">
           Question 3: Formal LSP Proof for Square and Rectangle
@@ -560,8 +837,74 @@ public class DataSorter {
           </p>
         </div>
       </div>
+
+      <!-- QA 4: Automated LSP Checking (Mock 2 Q9 · 5 Pts) -->
+      <div class="qa-block">
+        <div class="qa-q">
+          Question 4: Can LSP Conformance Be Checked Automatically?
+          <span class="pts-badge">5 Points</span>
+          <p style="font-size:0.92rem; font-weight:400; color:var(--text-muted); margin-top:0.5rem;">
+            Can a compiler or static analysis tool automatically verify whether a class adheres to the Liskov Substitution Principle (LSP)? Explain why or why not.
+          </p>
+        </div>
+        <div class="qa-a">
+          <span class="ans-label">Model Answer:</span>
+          <p><strong>NO, automated verification of LSP is theoretically impossible in the general case.</strong></p>
+          <ol>
+            <li><strong>Rice's Theorem / Halting Problem:</strong> Determining whether two arbitrary programs or methods produce equivalent behavioral semantics across all possible inputs is undecidable.</li>
+            <li><strong>Syntactic vs. Behavioral Subtyping:</strong> Compilers (like Java's <code>javac</code>) only check <em>syntactic conformance</em> (type signatures, parameter counts, return types). They have zero visibility into method semantics, preconditions, or side effects.</li>
+            <li><strong>Partial Runtime Mitigations:</strong> Design-by-Contract frameworks (e.g., Eiffel, JML) and runtime property-based test suites can detect <em>individual contract violations</em> at runtime, but no static tool can prove universal LSP adherence.</li>
+          </ol>
+        </div>
+      </div>
+
+      <!-- QA 5: "Adheres to OCP" Semantic Incompleteness (Mock 2 Q10 · 5 Pts) -->
+      <div class="qa-block">
+        <div class="qa-q">
+          Question 5: Semantic Analysis: "This Class Adheres to the Open-Closed Principle"
+          <span class="pts-badge">5 Points</span>
+          <p style="font-size:0.92rem; font-weight:400; color:var(--text-muted); margin-top:0.5rem;">
+            Does the statement: <em>"This class adheres to the Open-Closed Principle"</em> make sense as an absolute claim? Explain why or why not.
+          </p>
+        </div>
+        <div class="qa-a">
+          <span class="ans-label">Model Answer:</span>
+          <p><strong>NO, the statement is semantically incomplete.</strong></p>
+          <ol>
+            <li><strong>Closure is Never Absolute:</strong> No non-trivial class can be closed against all possible future changes. A class closed against sorting variations (e.g., via a <code>Sorter</code> interface) is still open to changes in logging, persistence, serialization, or multithreading.</li>
+            <li><strong>Closure is Relative to Specific Variations:</strong> Closure must always be qualified: <em>"This class is closed against changes in the sorting algorithm, but open to new sorting implementations."</em></li>
+            <li><strong>Strategic Closure:</strong> Experienced architects choose which dimensions of change to close based on domain experience. Closing against every conceivable future variation produces catastrophic over-engineering.</li>
+          </ol>
+        </div>
+      </div>
+
+      <!-- QA 6: Enterprise Stakeholder Rationale (Mock 2 Q11 · 5 Pts) -->
+      <div class="qa-block">
+        <div class="qa-q">
+          Question 6: Enterprise Rationale: Why SRP and DIP Make Sense
+          <span class="pts-badge">5 Points</span>
+          <p style="font-size:0.92rem; font-weight:400; color:var(--text-muted); margin-top:0.5rem;">
+            Why does the Single Responsibility Principle (SRP) make sense from an organizational perspective? Why does the Dependency Inversion Principle (DIP) make sense from an architectural perspective?
+          </p>
+        </div>
+        <div class="qa-a">
+          <span class="ans-label">Model Answer:</span>
+          <ul>
+            <li><strong>SRP Organizational Rationale:</strong> Software changes because people request changes. Different business stakeholders (e.g., Accounting, HR, Operations, Security) have divergent, often conflicting goals. When code for multiple actors is housed in the same module, a change requested by one stakeholder risks breaking features relied upon by another. SRP aligns code boundaries with human organizational boundaries.</li>
+            <li><strong>DIP Architectural Rationale:</strong> High-level business rules represent the core intellectual property and value of the enterprise. Low-level details (databases, network protocols, UI toolkits) are volatile mechanisms that change frequently. DIP prevents volatile external mechanisms from dictating the structure of precious domain rules.</li>
+          </ul>
+        </div>
+      </div>
+
     </section>
+<footer class="page-footer" style="margin-top: 4rem; padding-top: 2rem; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+      <a class="nav-prev" href="unit-5-theory.html" style="font-weight: 700; color: var(--accent); text-decoration: none;">← Previous: Unit 5 · Pattern Theory & History</a>
+      <a class="nav-next" href="unit-7-packaging.html" style="font-weight: 700; color: var(--accent); text-decoration: none;">Next: Unit 7 · Packaging Principles →</a>
+    </footer>
 
   </main>
+</div>
+
+<script src="assets/site.js?v=2026.19" defer></script>
 </body>
 </html>

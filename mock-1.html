@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/style.css?v=2026.18">
+<link rel="stylesheet" href="assets/style.css?v=2026.19">
 <script>
   window.MathJax = {
     tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
@@ -98,6 +98,28 @@
     color: var(--text);
   }
   .gotcha-alert strong { color: var(--warn); }
+
+  .study-guide-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.78rem;
+    font-weight: 700;
+    font-family: var(--font-mono);
+    color: #38bdf8;
+    background: rgba(56, 189, 248, 0.12);
+    border: 1px solid rgba(56, 189, 248, 0.28);
+    padding: 0.22rem 0.6rem;
+    border-radius: 4px;
+    text-decoration: none;
+    transition: all 0.15s ease;
+  }
+  .study-guide-pill:hover {
+    background: rgba(56, 189, 248, 0.22);
+    border-color: #38bdf8;
+    color: #ffffff;
+    transform: translateY(-1px);
+  }
 </style>
 <script>(function(){try{var t=localStorage.getItem('posa-theme')||localStorage.getItem('dm2026-theme')||'dark';document.documentElement.setAttribute('data-theme',t);var m=localStorage.getItem('posa-mode')||'concept';document.documentElement.setAttribute('data-mode',m);}catch(e){}})();</script>
 </head>
@@ -165,7 +187,7 @@
       <div class="eyebrow" style="color:var(--accent); font-weight:800;">PATTERN-ORIENTED SOFTWARE ARCHITECTURE · MOCK EXAM 1</div>
       <h1 class="page-title">Mock Exam 1 · Core Practice Paper</h1>
       <p class="page-subtitle">
-        Comprehensive practice examination covering 8 core exercises across design patterns, OCP adherence, refactoring, and software architecture (103 Points total · 90 min recommended pace). Direct Question and Answer layout.
+        Comprehensive practice examination covering 8 core exercises across design patterns, OCP adherence, refactoring, and software architecture (113 Points total · 90 min recommended pace). Direct Question and Answer layout.
       </p>
     </header>
 
@@ -176,13 +198,17 @@
       <div class="ex-header">
         <h2 class="ex-title">Part 1 · Core Design Pattern Principles</h2>
         <span style="font-weight:700; color:var(--accent); font-family:var(--font-mono);">12 Points Total</span>
+      <div style="display:flex; align-items:center; gap:0.5rem; flex-wrap:wrap; margin-top:0.6rem;">
+          <span style="font-size:0.75rem; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.04em;">Curriculum Deep Dive:</span>
+          <a href="unit-7-packaging.html" class="study-guide-pill">📖 Unit 7 · Packaging (ADP) →</a> <a href="unit-9-flexibility.html" class="study-guide-pill">📖 Unit 9 · Decorator →</a> <a href="unit-11-mvc.html" class="study-guide-pill">📖 Unit 11 · MVC →</a> <a href="unit-1-strategy.html" class="study-guide-pill">📖 Unit 1 · Strategy →</a> <a href="unit-2-template.html" class="study-guide-pill">📖 Unit 2A · Template →</a>
+        </div>
       </div>
 
       <!-- Question 5 -->
       <div class="qa-block" id="q5">
         <div class="qa-q">
           5. Explain the Acyclic Dependencies Principle (ADP)
-          <span class="pts-badge">3 Points</span>
+          <div style="display:inline-flex; align-items:center; gap:0.5rem; margin-left:auto;"><a href="unit-7-packaging.html" class="study-guide-pill" style="margin-left:auto;">📖 Unit 7 · Packaging (ADP) →</a> <span class="pts-badge">3 Points</span></div>
         </div>
         <div class="qa-a">
           <span class="ans-label">Model Answer</span>
@@ -291,16 +317,19 @@
       <div class="ex-header">
         <h2 class="ex-title">Exercise 2 · Legacy Integration with Adapter &amp; Iterator</h2>
         <span style="font-weight:700; color:var(--accent); font-family:var(--font-mono);">[2+4+6+3 Points]</span>
+      <div style="display:flex; align-items:center; gap:0.5rem; flex-wrap:wrap; margin-top:0.6rem;">
+          <span style="font-size:0.75rem; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.04em;">Curriculum Deep Dive:</span>
+          <a href="unit-3-iterator.html" class="study-guide-pill">📖 Unit 3B · Iterator Pattern →</a> <a href="unit-9-flexibility.html" class="study-guide-pill">📖 Unit 9 · Adapter Pattern →</a>
+        </div>
       </div>
 
       <div class="context-box">
         <strong>Problem Description:</strong> You want to use a library using an implementation of quicksort algorithm that uses the legacy class <code>Vector</code> as part of its API:
-        <pre style="margin:0.5rem 0; font-family:var(--font-mono); font-size:0.85rem;">Vector quicksort(Vector vector)</pre>
+        <pre><code class="language-java">Vector quicksort(Vector vector)</code></pre>
         However, in your code you want to use a <code>List</code> (or <code>ArrayList</code>) implementation by calling:
-        <pre style="margin:0.5rem 0; font-family:var(--font-mono); font-size:0.85rem;">List quicksort(List list)</pre>
+        <pre><code class="language-java">List quicksort(List list)</code></pre>
         to sort a list and after sorting you want to print all elements of the list. Below, you find useful parts of the source code:
-        <pre style="margin:0.5rem 0; font-family:var(--font-mono); font-size:0.85rem; line-height:1.45;">
-public class Vector {
+        <pre><code class="language-java">public class Vector {
     /** Constructs a vector containing the elements of the specified
         collection, in the order they are returned by the collection's
         iterator. */
@@ -325,7 +354,7 @@ public abstract interface Iterator {
 
     /* Returns the next element in the interation. */
     Object next();
-}</pre>
+}</code></pre>
       </div>
 
       <!-- Exercise 2 - Question 1 -->
@@ -351,14 +380,13 @@ public abstract interface Iterator {
         </div>
         <div class="qa-a">
           <span class="ans-label">Model Answer</span>
-          <pre style="background:var(--bg-raised); padding:1rem; border-radius:var(--radius-sm); font-family:var(--font-mono); font-size:0.85rem; line-height:1.45; overflow-x:auto;">
-[Client] ----> <<interface>> Iterator&lt;Object&gt;
+          <pre><code class="language-plaintext">[Client] ----> <<interface>> Iterator&lt;Object&gt;
                      ^
                      | (implements)
       EnumerationIteratorAdapter o----> <<interface>> Enumeration (Adaptee)
       - enumeration: Enumeration        + hasMoreElements(): boolean
       + hasNext(): boolean              + nextElement(): Object
-      + next(): Object</pre>
+      + next(): Object</code></pre>
         </div>
       </div>
 
@@ -370,8 +398,7 @@ public abstract interface Iterator {
         </div>
         <div class="qa-a">
           <span class="ans-label">Model Answer</span>
-          <pre style="background:var(--bg-raised); padding:1rem; border-radius:var(--radius-sm); font-family:var(--font-mono); font-size:0.85rem; line-height:1.5; overflow-x:auto;">
-// 1. Adapter: Adapting legacy Enumeration to modern Iterator
+          <pre><code class="language-java">// 1. Adapter: Adapting legacy Enumeration to modern Iterator
 public class EnumerationIteratorAdapter implements Iterator&lt;Object&gt; {
     private final Enumeration enumeration;
 
@@ -416,7 +443,7 @@ public List quicksort(List list) {
     System.out.println();
 
     return resultList;
-}</pre>
+}</code></pre>
           <div class="gotcha-alert">
             ⚠️ <strong>Exam Pitfall:</strong> Forgetting to print all elements in the final loop results in an automatic <strong>3-point deduction</strong>! The prompt explicitly warns: <em>"Do not forget to print all elements of the list!"</em>
           </div>
@@ -431,6 +458,10 @@ public List quicksort(List list) {
       <div class="ex-header">
         <h2 class="ex-title">Exercise 3 · Strategy Pattern &amp; Open-Closed Principle (OCP)</h2>
         <span style="font-weight:700; color:var(--accent); font-family:var(--font-mono);">[8+4+4 Points]</span>
+      <div style="display:flex; align-items:center; gap:0.5rem; flex-wrap:wrap; margin-top:0.6rem;">
+          <span style="font-size:0.75rem; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.04em;">Curriculum Deep Dive:</span>
+          <a href="unit-1-strategy.html" class="study-guide-pill">📖 Unit 1 · Strategy Pattern →</a> <a href="unit-6-solid.html" class="study-guide-pill">📖 Unit 6 · SOLID (OCP) →</a>
+        </div>
       </div>
 
       <div class="context-box">
@@ -448,8 +479,7 @@ public List quicksort(List list) {
         </div>
         <div class="qa-a">
           <span class="ans-label">Model Answer</span>
-          <pre style="background:var(--bg-raised); padding:1rem; border-radius:var(--radius-sm); font-family:var(--font-mono); font-size:0.85rem; line-height:1.5; overflow-x:auto;">
-public interface Sorter {
+          <pre><code class="language-java">public interface Sorter {
     List sort(List list);
 }
 
@@ -479,7 +509,7 @@ public class SortContext {
     public SortContext(Sorter sorter) { this.sorter = sorter; }
     public void setSorter(Sorter sorter) { this.sorter = sorter; }
     public List executeSort(List list) { return sorter.sort(list); }
-}</pre>
+}</code></pre>
         </div>
       </div>
 
@@ -492,14 +522,13 @@ public class SortContext {
         <div class="qa-a">
           <span class="ans-label">Model Answer</span>
           <p><strong>Design Pattern Used: Strategy Pattern</strong></p>
-          <pre style="background:var(--bg-raised); padding:1rem; border-radius:var(--radius-sm); font-family:var(--font-mono); font-size:0.85rem; line-height:1.45; overflow-x:auto;">
-[SortContext] o----> <<interface>> Sorter
+          <pre><code class="language-plaintext">[SortContext] o----> <<interface>> Sorter
                      + sort(List): List
                             ^
               +-------------+-------------+
               |                           |
         [QuickSorter]               [MergeSorter]
-        + sort(List): List          + sort(List): List</pre>
+        + sort(List): List          + sort(List): List</code></pre>
         </div>
       </div>
 
@@ -531,12 +560,15 @@ public class SortContext {
       <div class="ex-header">
         <h2 class="ex-title">Exercise 4 · Template Method Pattern Refactoring</h2>
         <span style="font-weight:700; color:var(--accent); font-family:var(--font-mono);">[3+6+2+3 Points]</span>
+      <div style="display:flex; align-items:center; gap:0.5rem; flex-wrap:wrap; margin-top:0.6rem;">
+          <span style="font-size:0.75rem; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.04em;">Curriculum Deep Dive:</span>
+          <a href="unit-2-template.html" class="study-guide-pill">📖 Unit 2A · Template Method Pattern →</a>
+        </div>
       </div>
 
       <div class="context-box">
         <strong>Problem Description:</strong> You want to refactor the Code of a quicksort library so that it supports flexible sorting of elements (objects) based on a configurable criteria. For example, assume your List contains student objects and suppose you want to sort using the age or name in a flexible manner. Assume that the source code looks as follows:
-        <pre style="margin:0.5rem 0; font-family:var(--font-mono); font-size:0.85rem; line-height:1.45;">
-public List sort(List list) {
+        <pre><code class="language-java">public List sort(List list) {
     // Below a long list of complicated code
     ...
     /** Crucial part that compares each element against pivot
@@ -544,7 +576,7 @@ public List sort(List list) {
     if (arr[j] &lt; pivot) {
         ...
     }
-}</pre>
+}</code></pre>
         A developer wants to use the template pattern for this task:
         <div style="font-family:var(--font-mono); font-size:0.82rem; margin-top:0.5rem; background:var(--bg); padding:0.5rem; border-radius:4px;">
           [AbstractClass: TemplateMethod() calls PrimitiveOperation1(), PrimitiveOperation2()]
@@ -600,6 +632,10 @@ public List sort(List list) {
       <div class="ex-header">
         <h2 class="ex-title">Exercise 5 · Composite Pattern &amp; Arithmetic Expression Trees</h2>
         <span style="font-weight:700; color:var(--accent); font-family:var(--font-mono);">[4+4+6 Points]</span>
+      <div style="display:flex; align-items:center; gap:0.5rem; flex-wrap:wrap; margin-top:0.6rem;">
+          <span style="font-size:0.75rem; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.04em;">Curriculum Deep Dive:</span>
+          <a href="unit-3-composite.html" class="study-guide-pill">📖 Unit 3A · Composite Pattern →</a>
+        </div>
       </div>
 
       <div class="context-box">
@@ -617,8 +653,7 @@ public List sort(List list) {
         </div>
         <div class="qa-a">
           <span class="ans-label">Model Answer</span>
-          <pre style="background:var(--bg-raised); padding:1rem; border-radius:var(--radius-sm); font-family:var(--font-mono); font-size:0.85rem; line-height:1.45; overflow-x:auto;">
-                  (+)  [Root]
+          <pre><code class="language-plaintext">(+)  [Root]
                  /   \
                (3)   (*)
                     /   \
@@ -628,7 +663,7 @@ public List sort(List list) {
                           /   \
                         (*)   (+)
                        /   \  /  \
-                     (6)  (z)(x) (y)</pre>
+                     (6)  (z)(x) (y)</code></pre>
           <ul style="margin:0.5rem 0 0;">
             <li><strong>Composite Nodes (Internal Operations):</strong> Operators <code>+</code>, <code>*</code>, <code>-</code>, <code>/</code> which hold child sub-expressions.</li>
             <li><strong>Leaf Nodes (Operands):</strong> Numeric literals and variables: <code>3</code>, <code>4</code>, <code>5</code>, <code>6</code>, <code>z</code>, <code>x</code>, <code>y</code>.</li>
@@ -644,8 +679,7 @@ public List sort(List list) {
         </div>
         <div class="qa-a">
           <span class="ans-label">Model Answer</span>
-          <pre style="background:var(--bg-raised); padding:1rem; border-radius:var(--radius-sm); font-family:var(--font-mono); font-size:0.85rem; line-height:1.45; overflow-x:auto;">
-                  [Client] ----> <<interface>> Component
+          <pre><code class="language-plaintext">[Client] ----> <<interface>> Component
                                  + Operation(): double
                                  + Add(c: Component)
                                  + Remove(c: Component)
@@ -660,7 +694,7 @@ public List sort(List list) {
                                              + Remove(c: Component)
                                              + GetChild(i: int)
                                                    |
-                                                   +-----> Component (aggregation 1..*)</pre>
+                                                   +-----> Component (aggregation 1..*)</code></pre>
           <ol style="padding-left:1.25rem; margin:0.5rem 0 0; line-height:1.65;">
             <li><strong>Client Arrow:</strong> Directed association arrow from <code>Client</code> to <code>Component</code>.</li>
             <li><strong>Generalization Arrows:</strong> Hollow triangle arrows from <code>Leaf</code> to <code>Component</code> and from <code>Composite</code> to <code>Component</code>.</li>
@@ -694,6 +728,10 @@ public List sort(List list) {
       <div class="ex-header">
         <h2 class="ex-title">Exercise 6 · Singleton Implementation &amp; SOLID Violations</h2>
         <span style="font-weight:700; color:var(--accent); font-family:var(--font-mono);">[6+4+2 Points]</span>
+      <div style="display:flex; align-items:center; gap:0.5rem; flex-wrap:wrap; margin-top:0.6rem;">
+          <span style="font-size:0.75rem; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.04em;">Curriculum Deep Dive:</span>
+          <a href="unit-8-creational.html" class="study-guide-pill">📖 Unit 8 · Creational (Singleton) →</a> <a href="unit-6-solid.html" class="study-guide-pill">📖 Unit 6 · SOLID (SRP/DIP) →</a>
+        </div>
       </div>
 
       <!-- Exercise 6 - Question 1 -->
@@ -704,8 +742,7 @@ public List sort(List list) {
         </div>
         <div class="qa-a">
           <span class="ans-label">Model Answer</span>
-          <pre style="background:var(--bg-raised); padding:1rem; border-radius:var(--radius-sm); font-family:var(--font-mono); font-size:0.85rem; line-height:1.5; overflow-x:auto;">
-public class Singleton {
+          <pre><code class="language-java">public class Singleton {
     // Singleton instance;
     // -> Gap 1:
     private static Singleton instance;
@@ -727,7 +764,7 @@ public class Singleton {
         }
         return instance;
     }
-}</pre>
+}</code></pre>
         </div>
       </div>
 
@@ -770,6 +807,10 @@ public class Singleton {
       <div class="ex-header">
         <h2 class="ex-title">Exercise 7 · Pattern Criticism &amp; Functional Python Idioms</h2>
         <span style="font-weight:700; color:var(--accent); font-family:var(--font-mono);">[4+8 Points]</span>
+      <div style="display:flex; align-items:center; gap:0.5rem; flex-wrap:wrap; margin-top:0.6rem;">
+          <span style="font-size:0.75rem; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.04em;">Curriculum Deep Dive:</span>
+          <a href="unit-15-criticism.html" class="study-guide-pill">📖 Unit 15 · Pattern Criticism →</a>
+        </div>
       </div>
 
       <!-- Exercise 7 - Question 1 -->
@@ -795,8 +836,7 @@ public class Singleton {
         </div>
         <div class="qa-a">
           <span class="ans-label">Python Source Code &amp; Analysis</span>
-          <pre style="background:var(--bg-raised); padding:1rem; border-radius:var(--radius-sm); font-family:var(--font-mono); font-size:0.85rem; line-height:1.45; overflow-x:auto;">
-def quicksort(a, p, r, comp):
+          <pre><code class="language-python">def quicksort(a, p, r, comp):
     if p &lt; r:
         q = partition(a, p, r, comp)
         quicksort(a, p, q-1, comp)
@@ -820,7 +860,7 @@ comp1 = lambda a, b: a &lt;= b
 comp2 = lambda a, b: a &gt;= b
 
 print(qsort([1, 9, 0, 5, 6, 7, 8, 2, 4, 3], comp1))  # Ascending:  [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
-print(qsort([1, 9, 0, 5, 6, 7, 8, 2, 4, 3], comp2))  # Descending: [9, 8, 7, 6, 5, 4, 3, 2, 1, 0]</pre>
+print(qsort([1, 9, 0, 5, 6, 7, 8, 2, 4, 3], comp2))  # Descending: [9, 8, 7, 6, 5, 4, 3, 2, 1, 0]</code></pre>
 
           <div style="margin-top:1.25rem;">
             <strong>(a) Look at the definition of the comparison function comp, explain how this is used to sort in an ascending and descending manner depending on comp1 or comp2 and argue that this provides a good substitute for the Template Pattern! [4 Points]</strong>
@@ -847,6 +887,10 @@ print(qsort([1, 9, 0, 5, 6, 7, 8, 2, 4, 3], comp2))  # Descending: [9, 8, 7, 6, 
       <div class="ex-header">
         <h2 class="ex-title">Exercise 8 · System Architecture: Banking Application</h2>
         <span style="font-weight:700; color:var(--accent); font-family:var(--font-mono);">[18 Points]</span>
+      <div style="display:flex; align-items:center; gap:0.5rem; flex-wrap:wrap; margin-top:0.6rem;">
+          <span style="font-size:0.75rem; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.04em;">Curriculum Deep Dive:</span>
+          <a href="unit-12-architectural.html" class="study-guide-pill">📖 Unit 12 · Architectural Patterns (Layers & Pipes) →</a>
+        </div>
       </div>
 
       <div class="context-box">
@@ -916,6 +960,6 @@ print(qsort([1, 9, 0, 5, 6, 7, 8, 2, 4, 3], comp2))  # Descending: [9, 8, 7, 6, 
   </div>
 </footer>
 
-<script src="assets/site.js?v=2026.18"></script>
+<script src="assets/site.js?v=2026.19"></script>
 </body>
 </html>

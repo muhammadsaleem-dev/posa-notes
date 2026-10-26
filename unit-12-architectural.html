@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Unit 12 · Architectural Patterns · POSA Masterclass 2026</title>
 <meta name="description" content="Master macro-architectural patterns: Pipes &amp; Filters (Active vs Passive), Blackboard (Knowledge Sources, Central Data Store, Control), and Microkernel.">
-<link rel="stylesheet" href="assets/style.css?v=2026.18">
+<link rel="stylesheet" href="assets/style.css?v=2026.19">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,600;0,700;1,400&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,600;1,700&display=swap" rel="stylesheet">
 <script>
@@ -87,30 +87,60 @@
 </style>
 </head>
 <body>
-  <nav class="sitenav" aria-label="Main Navigation">
-    <div class="sitenav-inner">
-      <a href="index.html" class="sitenav-brand">
-        <span class="brand-badge">POSA 2026</span>
-        <span class="brand-title">Pattern Architecture</span>
-      </a>
-      <div class="sitenav-links">
-        <a href="index.html">Overview</a>
-        <a href="unit-3-composite.html">Unit 3A: Composite</a>
-        <a href="unit-3-iterator.html">Unit 3B: Iterator</a>
-        <a href="unit-11-mvc.html">Unit 11: MVC</a>
-        <a href="unit-12-architectural.html" class="active">Unit 12: Architectural</a>
-        <a href="mock-1.html">🎓 Mock Exam 1</a>
-        <a href="mock-2.html">📝 Mock Exam 2</a>
-        <a href="past-papers.html">Practice Hub</a>
-      </div>
-      <button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle theme">
-        <span class="theme-icon light-icon">☀️</span>
-        <span class="theme-icon dark-icon">🌙</span>
-      </button>
+  <nav class="sitenav">
+  <div class="sitenav-inner">
+    <a class="sitenav-home" href="index.html">
+      <span style="background:linear-gradient(135deg, #6366f1 0%, #38bdf8 100%);color:#fff;padding:0.2rem 0.55rem;border-radius:6px;font-size:0.82rem;font-weight:800;letter-spacing:0.04em;">POSA</span>
+      <span style="font-weight:800;letter-spacing:-0.02em;">2026</span>
+    </a>
+    <div class="sitenav-links">
+      <a href="index.html">Overview</a>
+      <a href="index.html#curriculum-roadmap">16 Units</a>
+      <a href="mock-1.html">🎓 Mock Exam 1</a>
+      <a href="mock-2.html">📝 Mock Exam 2</a>
     </div>
-  </nav>
+    <button class="nav-toggle" id="navToggle" type="button" aria-expanded="false" aria-controls="navPanel">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+      Menu
+    </button>
+    <button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle color theme">
+      <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path></svg>
+      <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+    </button>
+    <button class="mode-toggle" id="modeToggle" type="button" aria-label="Toggle technical mode" style="font-size: 1.1rem; line-height: 1;">🎓</button>
+  </div>
+  <div class="nav-panel" id="navPanel">
+    <div class="nav-panel-section">
+      <span class="nav-panel-label">Course Navigation</span>
+      <a href="index.html">Course Overview</a>
+      <a href="mock-1.html">🎓 Mock Exam 1</a>
+      <a href="mock-2.html">📝 Mock Exam 2</a>
+      <a href="mock-practice-bank.html">📚 Extended Practice Bank</a>
+      <a href="unit-1-strategy.html">Unit 1 · Strategy Pattern</a>
+      <a href="unit-2-template.html">Unit 2A · Template Method</a>
+      <a href="unit-2-command.html">Unit 2B · Command Pattern</a>
+      <a href="unit-3-composite.html">Unit 3A · Composite Pattern</a>
+      <a href="unit-3-iterator.html">Unit 3B · Iterator Pattern</a>
+      <a href="unit-4-junit.html">Unit 4 · Case Study JUnit</a>
+      <a href="unit-5-theory.html">Unit 5 · Pattern Theory & History</a>
+      <a href="unit-6-solid.html">Unit 6 · SOLID Principles</a>
+      <a href="unit-7-packaging.html">Unit 7 · Packaging Principles</a>
+      <a href="unit-8-creational.html">Unit 8 · Creational Patterns</a>
+      <a href="unit-9-flexibility.html">Unit 9 · Flexibility Patterns</a>
+      <a href="unit-10-decoupling.html">Unit 10 · Decoupling Patterns</a>
+      <a href="unit-11-mvc.html">Unit 11 · Case Study MVC</a>
+      <a href="unit-12-architectural.html" class="active">Unit 12 · Architectural Patterns</a>
+      <a href="unit-13-analysis.html">Unit 13 · Analysis & Static Quality</a>
+      <a href="unit-14-testing.html">Unit 14 · Advanced Testing</a>
+      <a href="unit-15-criticism.html">Unit 15 · Pattern Criticism</a>
+      <a href="unit-16-genai.html">Unit 16 · GenAI & Pattern Engineering</a>
+    </div>
+  </div>
+</nav>
 
-  <aside class="sidebar">
+<div class="page-shell">
+  <!-- Desktop Sticky Sidebar TOC -->
+  <aside class="sidebar-toc">
     <div class="sidebar-block">
       <span class="sidebar-label">Unit Navigation</span>
       <a href="#sec-profile" class="active"><span class="toc-num">1</span>Macro Patterns Profile</a>
@@ -318,7 +348,15 @@
         </div>
       </div>
     </section>
+    <!-- Footer Navigation -->
+    <footer class="page-footer" style="margin-top: 4rem; padding-top: 2rem; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+      <a class="nav-prev" href="unit-11-mvc.html" style="font-weight: 700; color: var(--accent); text-decoration: none;">← Previous: Unit 11 · Case Study MVC</a>
+      <a class="nav-next" href="unit-13-analysis.html" style="font-weight: 700; color: var(--accent); text-decoration: none;">Next: Unit 13 · Analysis & Static Quality →</a>
+    </footer>
 
   </main>
+</div>
+
+<script src="assets/site.js?v=2026.19" defer></script>
 </body>
 </html>
