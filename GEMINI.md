@@ -52,3 +52,15 @@ These rules and preferences apply to all work, modifications, and generation of 
 - **Zero Micro-Commit Spam**: Do NOT commit or push after every small edit or single-file change.
 - **Batch Locally**: Keep all intermediate work, tests, and edits local until an entire unit of work, chapter, or milestone is finished and verified.
 - **Single Consolidated Push**: Push only when a milestone is completed, grouping related work into one clean, meaningful commit.
+
+---
+
+## 6. Responsive Breakpoints & Desktop Layout
+- **Desktop / Laptop Breakpoint (`min-width: 1024px`)**:
+  - The sticky desktop navigation sidebar (`.sidebar-toc`) activates at $1024\text{px}$ so users on MacBooks, laptops, and desktop Chrome viewports always see the navigation sidebar on the left.
+  - Container shell (`.page-shell`) and top navigation (`.sitenav-inner`) align at `max-width: 1320px; margin: 0 auto; padding: 0 1.75rem;`.
+  - The content area (`.page`, `.page-content`) expands flexibly (`minmax(0, 1fr)`) up to $1000\text{px}$ max reading width.
+- **Mobile / Tablet Breakpoint (`max-width: 1023px`)**:
+  - Desktop sidebar is hidden (`display: none !important;`).
+  - Hamburger toggle (`#navToggle`) and slide drawer (`#navPanel`) provide mobile navigation.
+  - Page content fills full screen width with clean responsive margins.

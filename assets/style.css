@@ -142,9 +142,9 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outlin
   box-shadow: 0 2px 10px rgba(15, 23, 42, 0.05);
 }
 .sitenav-inner {
-  max-width: 1200px;
+  max-width: 1320px;
   margin: 0 auto;
-  padding: 0.65rem 1.75rem;
+  padding: 0.65rem 1.5rem;
   display: flex;
   align-items: center;
   gap: 0.85rem;
@@ -257,7 +257,7 @@ html[data-mode="concept"] .mode-tech { display: none !important; }
 .nav-toggle:hover { border-color: var(--border-strong); }
 .nav-panel { display: none; }
 
-@media (max-width: 1024px) {
+@media (max-width: 1023px) {
   .sitenav-links { display: none; }
   .nav-toggle { display: inline-flex; }
   .nav-panel.open {
@@ -295,11 +295,13 @@ html[data-mode="concept"] .mode-tech { display: none !important; }
   .nav-panel .toc-num { color: var(--accent-ink); font-weight: 700; margin-right: 0.4rem; font-family: var(--font-display); }
 }
 
-/* ---------- Page shell ---------- */
-.page {
+/* ---------- Page shell & main container ---------- */
+.page, .page-content {
+  width: 100%;
   max-width: 920px;
   margin: 0 auto;
   padding: 2.75rem 1.75rem 4rem;
+  box-sizing: border-box;
 }
 
 /* ---------- Wide-screen sidebar (chapters + on-page contents) ---------- */
@@ -310,13 +312,24 @@ aside.sidebar {
   display: none;
 }
 
-@media (min-width: 1240px) {
+/* Desktop & Laptop layout (1024px and up) */
+@media (min-width: 1024px) {
   .page-shell {
     display: grid;
-    grid-template-columns: 230px minmax(0, 920px);
-    justify-content: center;
-    gap: 2.25rem;
+    grid-template-columns: 230px minmax(0, 1fr);
+    max-width: 1320px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+    gap: 2rem;
     align-items: start;
+    box-sizing: border-box;
+  }
+  .page-shell > .page,
+  .page-shell > .page-content {
+    max-width: 1000px;
+    width: 100%;
+    margin: 0;
+    padding: 2.5rem 0 4rem;
   }
   .sidebar-toc,
   .sidebar,
@@ -325,9 +338,11 @@ aside.sidebar {
     display: block;
     position: sticky;
     top: 4.25rem;
+    align-self: start;
+    z-index: 40;
     max-height: calc(100vh - 5.25rem);
     overflow-y: auto;
-    padding: 2.75rem 0.5rem 2rem 0;
+    padding: 2.5rem 0.5rem 2rem 0;
   }
   .sidebar-block + .sidebar-block {
     margin-top: 1.85rem;
@@ -6616,20 +6631,31 @@ body.mode-stage-focused .stage-view.active {
    MOBILE & VIEWPORT RESPONSIVE PERFECTION (ZERO HORIZONTAL OVERFLOW)
    ========================================================================== */
 html, body {
-  max-width: 100vw;
-  overflow-x: hidden;
+  max-width: 100%;
+}
+
+@media (max-width: 1023px) {
+  html, body {
+    overflow-x: hidden;
+  }
+}
+
+@media (min-width: 1024px) {
+  html, body {
+    overflow-x: clip;
+  }
+  .page-shell {
+    overflow: visible;
+  }
 }
 
 .page-shell {
   width: 100%;
-  max-width: 100vw;
   min-width: 0;
-  overflow-x: hidden;
 }
 
-.page {
+.page, .page-content {
   width: 100%;
-  max-width: 920px;
   min-width: 0;
   box-sizing: border-box;
 }
@@ -6744,7 +6770,7 @@ h1.title {
 }
 
 @media (max-width: 768px) {
-  .page {
+  .page, .page-content {
     padding: 1.25rem 0.85rem 5.5rem;
     overflow-x: hidden;
   }
