@@ -120,11 +120,11 @@
       <span style="background:linear-gradient(135deg, #6366f1 0%, #38bdf8 100%);color:#fff;padding:0.2rem 0.55rem;border-radius:6px;font-size:0.82rem;font-weight:800;letter-spacing:0.04em;">POSA</span>
       <span style="font-weight:800;letter-spacing:-0.02em;">2026</span>
     </a>
-            <div class="sitenav-links">
+                <div class="sitenav-links">
       <a href="index.html">Overview</a>
       <a href="index.html#curriculum-roadmap">16 Units</a>
-      <a href="mock-1.html">🎓 Mock 1 (Exam Sheet)</a>
-      <a href="mock-2.html">📝 Mock 2 (Exam Notes)</a>
+      <a href="mock-1.html">🎓 Mock Exam 1</a>
+      <a href="mock-2.html">📝 Mock Exam 2</a>
     </div>
     <button class="nav-toggle" id="navToggle" type="button" aria-expanded="false" aria-controls="navPanel">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
@@ -236,26 +236,23 @@
       </div>
     </div>
 
-    <!-- Authentic Exam Questions Highlight Banner -->
-    <div style="background:rgba(239, 68, 68, 0.08); border: 2px solid #ef4444; border-radius: var(--radius-md); padding: 1.25rem 1.5rem; margin: 1.5rem 0 2rem;">
-      <div style="display:flex; align-items:center; gap:0.5rem; font-weight:800; color:#ef4444; font-size:1.05rem; margin-bottom:0.4rem;">
-        <span>🎯 Where to Find Prof. Dr. Jörg Schäfer's Authentic Exam Questions (exam-questions.pdf)</span>
+    <!-- Exam Navigation Banner -->
+    <div style="background:var(--accent-soft); border: 1px solid var(--accent); border-radius: var(--radius-md); padding: 1.25rem 1.5rem; margin: 1.5rem 0 2rem;">
+      <div style="display:flex; align-items:center; gap:0.5rem; font-weight:800; color:var(--accent); font-size:1.05rem; margin-bottom:0.4rem;">
+        <span>🎯 Practice Exams Navigation</span>
       </div>
       <p style="margin:0 0 0.75rem; font-size:0.92rem; line-height:1.6; color:var(--text);">
-        Mock 1 focuses strictly on <strong>POSA 1 &amp; POSA 2 (Architecture, Concurrency &amp; Networking)</strong>. The authentic written exam sheet questions from <strong><code>exam-questions.pdf</code></strong> (Questions 6, 7, and 8 covering Decorator, MVC Model, and Strategy vs Template Method) are located in:
+        Looking for timed practice papers? Choose from our comprehensive mock exams:
       </p>
       <div style="display:flex; flex-wrap:wrap; gap: 0.75rem; font-size:0.88rem;">
-        <a href="mock-2.html#q-exam-8" style="padding:0.6rem 0.8rem; background:var(--bg-raised); border:1px solid var(--border); border-radius:6px; color:var(--text); text-decoration:none;">
-          <strong style="color:#ef4444;">Mock 2 (Section 1):</strong> Q8 · Strategy vs Template Method →
+        <a href="mock-1.html" style="padding:0.6rem 0.8rem; background:var(--bg-raised); border:1px solid var(--border); border-radius:6px; color:var(--text); text-decoration:none;">
+          <strong style="color:var(--accent);">Mock Exam 1:</strong> 8 Core Exercises (107 Points) →
         </a>
-        <a href="mock-2.html#q-exam-6" style="padding:0.6rem 0.8rem; background:var(--bg-raised); border:1px solid var(--border); border-radius:6px; color:var(--text); text-decoration:none;">
-          <strong style="color:#ef4444;">Mock 2 (Section 3):</strong> Q6 · Decorator (Inheritance vs Composition) →
+        <a href="mock-2.html" style="padding:0.6rem 0.8rem; background:var(--bg-raised); border:1px solid var(--border); border-radius:6px; color:var(--text); text-decoration:none;">
+          <strong style="color:var(--accent);">Mock Exam 2:</strong> 17 Advanced Questions (95 Points) →
         </a>
-        <a href="mock-2.html#q-exam-7" style="padding:0.6rem 0.8rem; background:var(--bg-raised); border:1px solid var(--border); border-radius:6px; color:var(--text); text-decoration:none;">
-          <strong style="color:#ef4444;">Mock 2 (Section 4):</strong> Q7 · MVC Task of the Model →
-        </a>
-        <a href="past-papers.html#written-paper" style="padding:0.6rem 0.8rem; background:linear-gradient(135deg, #6366f1 0%, #38bdf8 100%); color:#fff; border-radius:6px; text-decoration:none; font-weight:700;">
-          📝 Official Past Papers &amp; Solutions Archive →
+        <a href="past-papers.html" style="padding:0.6rem 0.8rem; background:linear-gradient(135deg, #6366f1 0%, #38bdf8 100%); color:#fff; border-radius:6px; text-decoration:none; font-weight:700;">
+          📝 Mock Exam Practice Hub →
         </a>
       </div>
     </div>
@@ -356,7 +353,7 @@
               </table>
             </div>
             <div class="gotcha-box">
-              <strong>⚠️ Authentic Frankfurt UAS Exam Follow-Ups (POS-exams-notes.pdf):</strong>
+              <strong>⚠️ Key Architectural Pitfalls &amp; Exam Follow-Ups:</strong>
               <ul style="margin: 0.5rem 0 0 1rem; padding: 0;">
                 <li><strong>Blackboard Communication Rule:</strong> <em>Knowledge Sources NEVER communicate directly with one another</em>. All communication is strictly mediated via reads and writes to the shared Blackboard state.</li>
                 <li><strong>Blackboard 3 Exit Conditions:</strong> 1) A hypothesis reaches the target confidence threshold; 2) Quiescence/deadlock (no KS can trigger); 3) Compute/time budget exhausted.</li>

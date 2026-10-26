@@ -3,13 +3,13 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Mock 1 · Authentic Written Exam Paper (exam-questions.pdf) | Prof. Dr. Jörg Schäfer</title>
-<meta name="description" content="Mock 1: Complete 11-page authentic written examination paper directly transcribed from Prof. Dr. Jörg Schäfer's genuine Klausur (exam-questions.pdf). Simple, direct Question and Answer format covering all 8 Exercises (107 Points).">
+<title>Mock Exam 1 · Core Practice Paper (107 Points) | POSA 2026</title>
+<meta name="description" content="Mock Exam 1: Comprehensive practice examination covering 8 core exercises across design patterns, OCP adherence, refactoring, and software architecture (107 Points). Direct Question and Answer format.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%236366f1'/%3E%3Cpath d='M8 10h16M8 16h16M8 22h10' stroke='%23fff' stroke-width='2.2' stroke-linecap='round'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/style.css?v=2026.17">
+<link rel="stylesheet" href="assets/style.css?v=2026.18">
 <script>
   window.MathJax = {
     tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
@@ -109,11 +109,11 @@
       <span style="background:linear-gradient(135deg, #6366f1 0%, #38bdf8 100%);color:#fff;padding:0.2rem 0.55rem;border-radius:6px;font-size:0.82rem;font-weight:800;letter-spacing:0.04em;">POSA</span>
       <span style="font-weight:800;letter-spacing:-0.02em;">2026</span>
     </a>
-    <div class="sitenav-links">
+        <div class="sitenav-links">
       <a href="index.html">Overview</a>
       <a href="index.html#curriculum-roadmap">16 Units</a>
-      <a href="mock-1.html" class="active" style="color:var(--accent); font-weight:700;">🎓 Mock 1 (Exam Sheet)</a>
-      <a href="mock-2.html">📝 Mock 2 (Exam Notes)</a>
+      <a href="mock-1.html">🎓 Mock Exam 1</a>
+      <a href="mock-2.html">📝 Mock Exam 2</a>
     </div>
     <button class="nav-toggle" id="navToggle" type="button" aria-expanded="false" aria-controls="navPanel">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
@@ -129,8 +129,8 @@
     <div class="nav-panel-section">
       <span class="nav-panel-label">Course Navigation</span>
       <a href="index.html">Course Overview</a>
-      <a href="mock-1.html" class="active">🎓 Mock 1 (Exam Sheet)</a>
-      <a href="mock-2.html">📝 Mock 2 (Exam Notes)</a>
+      <a href="mock-1.html" class="active">🎓 Mock Exam 1</a>
+      <a href="mock-2.html">📝 Mock Exam 2</a>
       <a href="#part-1">Questions 6–8 (15 pts)</a>
       <a href="#ex-2">Exercise 2 · Adapter &amp; Iterator (16 pts)</a>
       <a href="#ex-3">Exercise 3 · Strategy &amp; OCP (16 pts)</a>
@@ -156,16 +156,16 @@
       <a href="#ex-6">Ex 6 · Singleton &amp; SOLID (12 pts)</a>
       <a href="#ex-7">Ex 7 · Criticism &amp; Python (12 pts)</a>
       <a href="#ex-8">Ex 8 · Banking Architecture (18 pts)</a>
-      <a href="mock-2.html" style="color:var(--accent); font-weight:700; margin-top:0.75rem;">Go to Mock 2 (Exam Notes) →</a>
+      <a href="mock-2.html" style="color:var(--accent); font-weight:700; margin-top:0.75rem;">Go to Mock 2 →</a>
     </div>
   </aside>
 
   <main class="page-content" id="main-content">
     <header class="page-header">
-      <div class="eyebrow" style="color:#ef4444; font-weight:800;">FRANKFURT UAS · OFFICIAL WRITTEN KLAUSUR (107 PTS)</div>
-      <h1 class="page-title">Mock 1 · Authentic Exam Paper</h1>
+      <div class="eyebrow" style="color:var(--accent); font-weight:800;">PATTERN-ORIENTED SOFTWARE ARCHITECTURE · MOCK EXAM 1</div>
+      <h1 class="page-title">Mock Exam 1 · Core Practice Paper</h1>
       <p class="page-subtitle">
-        Transcribed directly from Prof. Dr. Jörg Schäfer's 11-page examination paper (<code style="color:var(--accent);">exam-questions.pdf</code>). Direct Question and Answer layout.
+        Comprehensive practice examination covering 8 core exercises across design patterns, OCP adherence, refactoring, and software architecture (107 Points total). Direct Question and Answer layout.
       </p>
     </header>
 
@@ -174,7 +174,7 @@
     <!-- ================================================================= -->
     <section id="part-1">
       <div class="ex-header">
-        <h2 class="ex-title">Part 1 · Core Written Questions (From Page 1)</h2>
+        <h2 class="ex-title">Part 1 · Core Design Pattern Principles</h2>
         <span style="font-weight:700; color:var(--accent); font-family:var(--font-mono);">15 Points Total</span>
       </div>
 
@@ -193,7 +193,7 @@
             <li><strong>Prevents Subclass Explosion:</strong> Avoids the $2^N$ static subclass combinations created by naive inheritance (e.g., Starbuzz coffee).</li>
           </ol>
           <div class="gotcha-alert">
-            ⚠️ <strong>Professor Gotcha:</strong> Answering "Inheritance" or simply "both" without clarifying that inheritance is only used for <em>type matching</em> while composition provides the <em>actual functional extension</em> results in up to a 50% deduction.
+            ⚠️ <strong>Exam Pitfall:</strong> Answering "Inheritance" or simply "both" without clarifying that inheritance is only used for <em>type matching</em> while composition provides the <em>actual functional extension</em> results in up to a 50% deduction.
           </div>
         </div>
       </div>
@@ -212,7 +212,7 @@
             <li><strong>Observer Subject Role:</strong> Acts as the <code>Subject</code> in the Observer pattern. When its internal state changes (triggered by Controller actions), it notifies registered View observers, which then pull the updated data.</li>
           </ol>
           <div class="gotcha-alert">
-            ⚠️ <strong>Professor Gotcha:</strong> Stating that the Model directly updates or renders the View is an automatic point deduction. The Model merely notifies observers; the View queries the Model!
+            ⚠️ <strong>Exam Pitfall:</strong> Stating that the Model directly updates or renders the View is an automatic point deduction. The Model merely notifies observers; the View queries the Model!
           </div>
         </div>
       </div>
@@ -273,12 +273,12 @@
       </div>
 
       <div class="context-box">
-        <strong>Exam Scenario:</strong> You want to use a legacy Quicksort library that takes <code>Vector</code> as part of its API:
+        <strong>Scenario:</strong> You want to use a legacy Quicksort library that takes <code>Vector</code> as part of its API:
         <pre style="margin:0.5rem 0; font-family:var(--font-mono); font-size:0.85rem;">Vector quicksort(Vector vector)</pre>
         However, in your code you want to use a <code>List</code> implementation by calling:
         <pre style="margin:0.5rem 0; font-family:var(--font-mono); font-size:0.85rem;">List quicksort(List list)</pre>
         to sort a list and after sorting you want to print all elements of the list.<br><br>
-        <strong>API Provided on Exam Sheet:</strong>
+        <strong>API Provided:</strong>
         <pre style="margin:0.5rem 0; font-family:var(--font-mono); font-size:0.85rem;">
 Vector: public Vector(Collection c), Enumeration elements()
 Enumeration: boolean hasMoreElements(), Object nextElement()
@@ -375,7 +375,7 @@ public List quicksort(List list) {
     return resultList;
 }</pre>
           <div class="gotcha-alert">
-            ⚠️ <strong>Professor Gotcha:</strong> Forgetting to print all elements in the final loop results in an automatic <strong>4-point deduction</strong>! The prompt explicitly said: <em>"Do not forget to print all elements of the list!"</em>
+            ⚠️ <strong>Exam Pitfall:</strong> Forgetting to print all elements in the final loop results in an automatic <strong>4-point deduction</strong>! The prompt explicitly states: <em>"Do not forget to print all elements of the list!"</em>
           </div>
         </div>
       </div>
@@ -391,7 +391,7 @@ public List quicksort(List list) {
       </div>
 
       <div class="context-box">
-        <strong>Exam Scenario:</strong> You have to implement a flexible way to sort Collections using different algorithms such as QuickSort or MergeSort.<br>
+        <strong>Scenario:</strong> You have to implement a flexible way to sort Collections using different algorithms such as QuickSort or MergeSort.<br>
         You can assume that the List contains a list of numbers and that you can call:<br>
         • <code>Vector quicksort(Vector vector)</code><br>
         • <code>List mergesort(List list)</code>
@@ -484,7 +484,7 @@ public class SortContext {
       </div>
 
       <div class="context-box">
-        <strong>Exam Scenario:</strong> You want to refactor the code of a quicksort library so that it supports flexible sorting of student objects based on a configurable criteria (e.g., age or name). Assume the source code looks as follows:
+        <strong>Scenario:</strong> You want to refactor the code of a quicksort library so that it supports flexible sorting of student objects based on a configurable criteria (e.g., age or name). Assume the source code looks as follows:
         <pre style="margin:0.5rem 0; font-family:var(--font-mono); font-size:0.85rem;">
 public List sort(List list) {
     // ... long list of quicksort logic ...
@@ -547,7 +547,7 @@ public List sort(List list) {
       </div>
 
       <div class="context-box">
-        <strong>Expression Given on Exam Sheet:</strong>
+        <strong>Expression:</strong>
         <p style="font-size:1.2rem; font-weight:700; font-family:var(--font-mono); margin:0.5rem 0; color:var(--accent);">
           3 + 4 * (5 - 6 * 2 / (x + y))
         </p>
@@ -754,7 +754,7 @@ public class Singleton {
       </div>
 
       <div class="context-box">
-        <strong>Exam Scenario:</strong> Imagine you are the lead engineer of a team implementing a banking application enabling:
+        <strong>Scenario:</strong> Imagine you are the lead engineer of a team implementing a banking application enabling:
         <ul>
           <li><strong>Account Management:</strong> Option to create different types of accounts (savings, current, business, etc.).</li>
           <li><strong>Payment System &amp; Wire Transfers:</strong> Wire transfer of money between accounts, including external banks and third-party gateways (e.g. PayPal).</li>
@@ -818,13 +818,13 @@ public class Singleton {
 
 <footer class="site-footer">
   <div class="site-footer-inner">
-    <p>Frankfurt University of Applied Sciences · Fachbereich 2 · Patterns &amp; Frameworks Masterclass</p>
+    <p>Pattern-Oriented Software Architecture · Masterclass Practice Exams</p>
     <p style="font-size:0.82rem; color:var(--text-muted); margin-top:0.35rem;">
-      Curriculum by Prof. Dr. Jörg Schäfer · Mock 1 based on <code style="color:var(--accent);">exam-questions.pdf</code>
+      Mock Exam 1 · 8 Comprehensive Exercises (107 Points)
     </p>
   </div>
 </footer>
 
-<script src="assets/site.js?v=2026.17"></script>
+<script src="assets/site.js?v=2026.18"></script>
 </body>
 </html>
