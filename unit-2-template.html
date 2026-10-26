@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Unit 2A · Template Method Pattern · POSA Masterclass 2026</title>
-<meta name="description" content="Master the Template Method Pattern, the Hollywood Principle, invariant algorithm skeletons, hooks, and inheritance vs composition tradeoffs. Prof. Dr. Jörg Schäfer Klausur prep.">
+<meta name="description" content="Master the Template Method Pattern, the Hollywood Principle, invariant algorithm skeletons, hooks, and inheritance vs composition tradeoffs. Course Faculty Exam prep.">
 <link rel="stylesheet" href="assets/style.css?v=2026.16">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -305,13 +305,13 @@
       <a href="#headfirst-template"><span class="toc-num">2</span>Head First Beverage Walkthrough</a>
       <a href="#sec-rules"><span class="toc-num">3</span>The 3 Architectural Rules</a>
       <a href="#sec-tradeoff"><span class="toc-num">4</span>Tradeoff: Inheritance vs Composition</a>
-      <a href="#sec-drills"><span class="toc-num">5</span>Official Klausur Drills</a>
+      <a href="#sec-drills"><span class="toc-num">5</span>Core Exam Practice & Model Solutions</a>
     </div>
 
     <div class="sidebar-block">
       <span class="sidebar-label">Academic Profile</span>
       <p style="font-size: 0.82rem; color: var(--text-muted); line-height: 1.5; margin: 0 0 0.5rem;">
-        <strong>Prof. Dr. Jörg Schäfer</strong><br>
+        <strong>Course Faculty</strong><br>
         Frankfurt University of Applied Sciences<br>
         Fachbereich 2: Informatik
       </p>
@@ -330,7 +330,7 @@
         <h1 class="title">Template Method Pattern</h1>
       </div>
       <p class="dek">
-        Master invariant algorithm skeletons, Inversion of Control (IoC), and the Hollywood Principle (<em>"Don't call us, we'll call you"</em>). Directly synthesized from Prof. Dr. Jörg Schäfer's lecture notes and authentic exam sheets.
+        Master invariant algorithm skeletons, Inversion of Control (IoC), and the Hollywood Principle (<em>"Don't call us, we'll call you"</em>). Directly synthesized from Course Faculty's lecture notes and authentic exam sheets.
       </p>
     </header>
 
@@ -372,7 +372,7 @@
                 <li>Control how subclasses extend superclass operations. Define a template method calling <strong>hook</strong> operations at specific points, thereby permitting extensions at precisely that point &mdash; <strong>Open Closed Principle (OCP)</strong>.</li>
               </ul>
               <div style="margin-top:0.5rem; font-size:0.85rem; color:var(--warn);">
-                <em>⚠️ Note from Prof. Schäfer:</em> Beware the template method can appear in different states apart from the textbook implementation.
+                <em>⚠️ Note from Course Faculty:</em> Beware the template method can appear in different states apart from the textbook implementation.
               </div>
             </span>
           </div>
@@ -588,8 +588,8 @@ public abstract class CaffeineBeverageWithHook {
       <div class="chapter-head">
         <span class="chapter-num">3</span>
         <div>
-          <h2>The 3 Architectural Rules Tested by Prof. Schäfer</h2>
-          <span style="font-size:0.85rem; color:var(--text-muted); font-weight:600;">Klausur Essentials</span>
+          <h2>3 Core Architectural Rules Tested in Exams</h2>
+          <span style="font-size:0.85rem; color:var(--text-muted); font-weight:600;">Exam Essentials</span>
         </div>
       </div>
 
@@ -629,20 +629,20 @@ public abstract class CaffeineBeverageWithHook {
     </section>
 
     <!-- ============================================================== -->
-    <!-- 4. THE BIG KLAUSUR TRADE-OFF                                  -->
+    <!-- 4. THE BIG EXAM TRADE-OFF                                  -->
     <!-- ============================================================== -->
     <section class="chapter" id="sec-tradeoff">
       <div class="chapter-head">
         <span class="chapter-num">4</span>
         <div>
-          <h2>The Big Klausur Trade-off: Inheritance vs. Composition</h2>
+          <h2>The Big Exam Trade-off: Inheritance vs. Composition</h2>
           <span style="font-size:0.85rem; color:var(--text-muted); font-weight:600;">Duck / Comparator Exam Case Study</span>
         </div>
       </div>
 
       <div class="guide-card">
         <p style="margin:0 0 0.75rem; font-size:0.9rem; color:var(--text); line-height:1.6;">
-          <strong>Klausur Question from Prof. Schäfer's Notes:</strong> <em>&ldquo;The Template Method relies on inheritance. Would it be possible to get the same functionality of a Template Method, using object composition? What would some of the tradeoffs be?&rdquo;</em>
+          <strong>Exam Question from Course Faculty's Notes:</strong> <em>&ldquo;The Template Method relies on inheritance. Would it be possible to get the same functionality of a Template Method, using object composition? What would some of the tradeoffs be?&rdquo;</em>
         </p>
         <p style="margin:0 0 1rem; font-size:0.9rem; color:var(--text-muted); line-height:1.6;">
           <strong>Yes:</strong> Instead of relying on subclassing, we inject a strategy object (such as a <code>Comparator&lt;Duck&gt;</code>) directly into the class via <strong>Constructor Dependency Injection</strong>.
@@ -746,19 +746,19 @@ public class Duck {
     </section>
 
     <!-- ============================================================== -->
-    <!-- 5. AUTHENTIC FRANKFURT UAS KLAUSUR DRILLS                     -->
+    <!-- 5. CORE EXAM PRACTICE DRILLS                     -->
     <!-- ============================================================== -->
     <section class="chapter" id="sec-drills">
       <div class="chapter-head">
         <span class="chapter-num">5</span>
         <div>
-          <h2>Prof. Dr. Jörg Schäfer Official Klausur Drill</h2>
+          <h2>Core Exam Practice & Model Solutions</h2>
           <span style="font-size:0.85rem; color:var(--text-muted); font-weight:600;">Verified Written Exam Task</span>
         </div>
       </div>
 
       <p style="font-size:0.95rem; color:var(--text-muted); margin-bottom:1.5rem; line-height:1.6;">
-        This is the authentic examination task on the Template Method from Prof. Schäfer's written exam sheets (<code style="color:var(--accent);">exam-questions.pdf</code>). Test yourself before clicking to reveal the model solution.
+        This is the authentic examination task on the Template Method from Course Faculty's written exam sheets (<code style="color:var(--accent);">exam-questions.pdf</code>). Test yourself before clicking to reveal the model solution.
       </p>
 
       <div class="drill-list">
@@ -770,7 +770,7 @@ public class Duck {
             <span class="drill-reveal-hint"></span>
           </summary>
           <div class="drill-a">
-            <p><strong>Official Model Answer &amp; Grading Rubric (Prof. Dr. Jörg Schäfer Standard):</strong></p>
+            <p><strong>Official Model Answer &amp; Grading Rubric (Exam Standard):</strong></p>
             <p>The difference centers around <strong>coupling mechanism, runtime mutability, and algorithm granularity</strong>:</p>
             <ol>
               <li><strong>Coupling Mechanism:</strong>

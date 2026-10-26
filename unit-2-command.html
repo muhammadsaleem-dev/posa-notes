@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Unit 2B · Command Pattern · POSA Masterclass 2026</title>
-<meta name="description" content="Master the Command Pattern, request encapsulation, the Null Object Pattern, stateful undo, and reversible LIFO macro execution. Prof. Dr. Jörg Schäfer Klausur prep.">
+<meta name="description" content="Master the Command Pattern, request encapsulation, the Null Object Pattern, stateful undo, and reversible LIFO macro execution. Course Faculty Exam prep.">
 <link rel="stylesheet" href="assets/style.css?v=2026.16">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -279,13 +279,13 @@
       <a href="#headfirst-command"><span class="toc-num">2</span>Head First Remote Control</a>
       <a href="#sec-rules"><span class="toc-num">3</span>The 3 Architectural Rules</a>
       <a href="#sec-decoupling"><span class="toc-num">4</span>Decoupling &amp; DI (p. 32)</a>
-      <a href="#sec-drills"><span class="toc-num">5</span>Official Klausur Drills</a>
+      <a href="#sec-drills"><span class="toc-num">5</span>Core Exam Practice & Model Solutions</a>
     </div>
 
     <div class="sidebar-block">
       <span class="sidebar-label">Academic Profile</span>
       <p style="font-size: 0.82rem; color: var(--text-muted); line-height: 1.5; margin: 0 0 0.5rem;">
-        <strong>Prof. Dr. Jörg Schäfer</strong><br>
+        <strong>Course Faculty</strong><br>
         Frankfurt University of Applied Sciences<br>
         Fachbereich 2: Informatik
       </p>
@@ -304,7 +304,7 @@
         <h1 class="title">Command Pattern</h1>
       </div>
       <p class="dek">
-        Master request encapsulation, modeling verbs as first-class objects, the Null Object Pattern, and reversible LIFO undo sequences. Directly synthesized from Prof. Dr. Jörg Schäfer's lecture notes and authentic exam sheets.
+        Master request encapsulation, modeling verbs as first-class objects, the Null Object Pattern, and reversible LIFO undo sequences. Directly synthesized from Course Faculty's lecture notes and authentic exam sheets.
       </p>
     </header>
 
@@ -514,7 +514,7 @@ public class MacroCommand implements Command {
             cmd.execute();
         }
     }
-    // Klausur Requirement: Reverse LIFO order protects inter-command state invariants!
+    // Exam Requirement: Reverse LIFO order protects inter-command state invariants!
     public void undo() {
         for (int i = commands.length - 1; i >= 0; i--) {
             commands[i].undo();
@@ -571,8 +571,8 @@ public class RemoteControl {
       <div class="chapter-head">
         <span class="chapter-num">3</span>
         <div>
-          <h2>The 3 Architectural Rules Tested by Prof. Schäfer</h2>
-          <span style="font-size:0.85rem; color:var(--text-muted); font-weight:600;">Klausur Essentials</span>
+          <h2>3 Core Architectural Rules Tested in Exams</h2>
+          <span style="font-size:0.85rem; color:var(--text-muted); font-weight:600;">Exam Essentials</span>
         </div>
       </div>
 
@@ -600,7 +600,7 @@ public class RemoteControl {
 
           <div style="background:var(--bg-subtle); padding:1rem; border-radius:var(--radius-sm); border-left:3px solid #ef4444;">
             <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:0.35rem;">
-              <span class="rule-badge danger">Rule 3 · Klausur Rule</span>
+              <span class="rule-badge danger">Rule 3 · Exam Rule</span>
               <strong style="color:var(--text);">MacroCommand Undo MUST Run in Reverse LIFO Order!</strong>
             </div>
             <p style="margin:0; font-size:0.88rem; color:var(--text-muted); line-height:1.5;">
@@ -625,7 +625,7 @@ public class RemoteControl {
 
       <div class="guide-card">
         <p style="margin:0 0 0.75rem; font-size:0.9rem; color:var(--text); line-height:1.6;">
-          <strong>Klausur Question from Prof. Schäfer's Lecture Notes (p. 32):</strong><br>
+          <strong>Exam Question from Course Faculty's Lecture Notes (p. 32):</strong><br>
           <em>&ldquo;How does the Command Object get access to the data it needs to perform its job? How does one guarantee that this does not create a strong coupling?&rdquo;</em>
         </p>
         <div style="background:var(--bg-subtle); padding:1rem 1.25rem; border-radius:var(--radius-sm); border-left:3px solid #6366f1; margin:1rem 0;">
@@ -642,19 +642,19 @@ public class RemoteControl {
     </section>
 
     <!-- ============================================================== -->
-    <!-- 5. AUTHENTIC FRANKFURT UAS KLAUSUR DRILLS                     -->
+    <!-- 5. CORE EXAM PRACTICE DRILLS                     -->
     <!-- ============================================================== -->
     <section class="chapter" id="sec-drills">
       <div class="chapter-head">
         <span class="chapter-num">5</span>
         <div>
-          <h2>Prof. Dr. Jörg Schäfer Official Klausur Drills</h2>
+          <h2>Core Exam Practice & Model Solutions</h2>
           <span style="font-size:0.85rem; color:var(--text-muted); font-weight:600;">Verified Examination Tasks</span>
         </div>
       </div>
 
       <p style="font-size:0.95rem; color:var(--text-muted); margin-bottom:1.5rem; line-height:1.6;">
-        Every question below is an authentic examination task on the Command Pattern from Prof. Schäfer's lecture notes (<code style="color:var(--accent);">POS-exams-notes.pdf</code>). Test yourself before clicking to reveal the model solution.
+        Every question below is an authentic examination task on the Command Pattern from Course Faculty's lecture notes (<code style="color:var(--accent);">POS-exams-notes.pdf</code>). Test yourself before clicking to reveal the model solution.
       </p>
 
       <div class="drill-list">
@@ -666,7 +666,7 @@ public class RemoteControl {
             <span class="drill-reveal-hint"></span>
           </summary>
           <div class="drill-a">
-            <p><strong>Official Model Answer (Prof. Dr. Jörg Schäfer Standard):</strong></p>
+            <p><strong>Official Model Answer (Exam Standard):</strong></p>
             <p>
               The Command object typically receives the data it needs—often through its <strong>constructor or setter methods</strong>—in the form of references to receivers and any additional parameters required to perform the action.
             </p>
