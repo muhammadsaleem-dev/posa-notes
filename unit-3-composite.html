@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark" data-mode="concept">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Unit 3A · Composite Pattern · POSA Masterclass 2026</title>
+<meta name="description" content="Master the Composite Pattern, part-whole tree hierarchies, uniform treatment of leaves and composites, transparency vs safety trade-offs, and expression tree evaluation.">
+<link rel="stylesheet" href="assets/style.css?v=2026.18">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,600;0,700;1,400&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,600;1,700&display=swap" rel="stylesheet">
+<script>
+  window.MathJax = {
+    tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
+    svg: { fontCache: 'global' }
+  };
+</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<script>(function(){try{var t=localStorage.getItem('posa-theme')||localStorage.getItem('dm2026-theme')||'dark';document.documentElement.setAttribute('data-theme',t);var m=localStorage.getItem('posa-mode')||'concept';document.documentElement.setAttribute('data-mode',m);}catch(e){}})();</script>
+<style>
+  .guide-card {
+    background: var(--bg-raised);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+  }
+  .guide-card-header {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 0.75rem;
+  }
+  .rule-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.2rem 0.55rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 800;
+    font-family: var(--font-mono);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    background: rgba(99, 102, 241, 0.12);
+    color: #6366f1;
+    border: 1px solid rgba(99, 102, 241, 0.25);
+  }
+  .rule-badge.warn {
+    background: rgba(245, 158, 11, 0.12);
+    color: #f59e0b;
+    border-color: rgba(245, 158, 11, 0.25);
+  }
+  .rule-badge.danger {
+    background: rgba(239, 68, 68, 0.12);
+    color: #ef4444;
+    border-color: rgba(239, 68, 68, 0.25);
+  }
+  .headfirst-card {
+    background: var(--bg-raised);
+    border: 1px solid var(--border);
+    border-left: 4px solid #6366f1;
+    border-radius: var(--radius-md);
+    margin-bottom: 2rem;
+    overflow: hidden;
+  }
+  .headfirst-summary {
+    list-style: none;
+    cursor: pointer;
+    user-select: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.15rem 1.4rem;
+    background: var(--bg-subtle);
+    border-bottom: 1px solid transparent;
+    transition: background 0.15s ease;
+  }
+  .headfirst-summary:hover {
+    background: var(--code-bg);
+  }
+  .headfirst-summary::-webkit-details-marker {
+    display: none;
+  }
+  .headfirst-card[open] .headfirst-summary {
+    border-bottom: 1px solid var(--border);
+  }
+  .headfirst-title {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--text);
+  }
+  .headfirst-badge {
+    font-size: 0.72rem;
+    font-weight: 800;
+    padding: 0.15rem 0.5rem;
+    border-radius: 4px;
+    background: rgba(99, 102, 241, 0.15);
+    color: var(--accent);
+    border: 1px solid rgba(99, 102, 241, 0.25);
+  }
+  .headfirst-body {
+    padding: 1.5rem;
+  }
+  .pattern-spec-box {
+    background: var(--bg-raised);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+  .spec-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+  .spec-row {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .spec-row:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+  .spec-label {
+    font-size: 0.8rem;
+    font-family: var(--font-mono);
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 700;
+  }
+  .spec-val {
+    font-size: 0.95rem;
+    color: var(--text);
+    line-height: 1.55;
+  }
+  .qa-block {
+    margin: 1.5rem 0;
+    padding: 1.5rem;
+    background: var(--bg-raised);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+  }
+  .qa-q {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 1rem;
+    line-height: 1.45;
+  }
+  .qa-q .pts-badge {
+    display: inline-block;
+    padding: 0.2rem 0.6rem;
+    background: var(--accent-soft);
+    color: var(--accent);
+    border-radius: 999px;
+    font-size: 0.78rem;
+    font-family: var(--font-mono);
+    font-weight: 700;
+    margin-left: 0.5rem;
+  }
+  .qa-a {
+    padding: 1.25rem 1.5rem;
+    background: var(--bg);
+    border-left: 4px solid var(--accent);
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    font-size: 0.95rem;
+    line-height: 1.65;
+    color: var(--text);
+  }
+  .qa-a .ans-label {
+    display: block;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    font-weight: 800;
+    font-family: var(--font-mono);
+    color: var(--accent);
+    margin-bottom: 0.75rem;
+    letter-spacing: 0.05em;
+  }
+</style>
+</head>
+<body>
+  <!-- Top Navigation -->
+  <nav class="sitenav" aria-label="Main Navigation">
+    <div class="sitenav-inner">
+      <a href="index.html" class="sitenav-brand">
+        <span class="brand-badge">POSA 2026</span>
+        <span class="brand-title">Pattern Architecture</span>
+      </a>
+      <div class="sitenav-links">
+        <a href="index.html">Overview</a>
+        <a href="unit-3-composite.html" class="active">Unit 3A: Composite</a>
+        <a href="unit-3-iterator.html">Unit 3B: Iterator</a>
+        <a href="mock-1.html">🎓 Mock Exam 1</a>
+        <a href="mock-2.html">📝 Mock Exam 2</a>
+        <a href="past-papers.html">Practice Hub</a>
+      </div>
+      <button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle theme">
+        <span class="theme-icon light-icon">☀️</span>
+        <span class="theme-icon dark-icon">🌙</span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-block">
+      <span class="sidebar-label">Unit Navigation</span>
+      <a href="#sec-profile" class="active"><span class="toc-num">1</span>Pattern Profile &amp; UML</a>
+      <a href="#sec-domains"><span class="toc-num">2</span>Menus &amp; Expression Trees</a>
+      <a href="#sec-rules"><span class="toc-num">3</span>Transparency vs Safety</a>
+      <a href="#sec-drills"><span class="toc-num">4</span>Core Exam Drills</a>
+    </div>
+
+    <div class="sidebar-block">
+      <span class="sidebar-label">Related Modules</span>
+      <a href="unit-1-strategy.html">Unit 1 · Strategy Pattern</a>
+      <a href="unit-2-template.html">Unit 2A · Template Method</a>
+      <a href="unit-2-command.html">Unit 2B · Command Pattern</a>
+      <a href="unit-3-iterator.html">Unit 3B · Iterator Pattern</a>
+      <a href="unit-9-flexibility.html">Unit 9 · Adapter &amp; Decorator</a>
+      <a href="mock-1.html">🎓 Mock Exam 1 (103 Pts)</a>
+    </div>
+
+    <div class="sidebar-block">
+      <span class="sidebar-label">Exam Profile</span>
+      <div style="font-size:0.75rem; font-weight:700; color:#38bdf8; background:rgba(56,189,248,0.12); border:1px solid rgba(56,189,248,0.25); padding:0.25rem 0.5rem; border-radius:4px; display:inline-block;">
+        ⏱️ 8–10 Mins · 14 Exam Pts
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="page">
+    
+    <header class="masthead">
+      <div>
+        <div class="eyebrow">Unit 3A · Structural Design Patterns · GoF Pattern 3 of 23</div>
+        <h1 class="title">Composite Pattern</h1>
+      </div>
+      <p class="dek">
+        Master part-whole object hierarchies, recursive aggregation, and the fundamental trade-off between Transparency and Safety. Essential for recursive UI menus, graphics hierarchies, and arithmetic expression trees.
+      </p>
+    </header>
+
+    <!-- ============================================================== -->
+    <!-- 1. PATTERN PROFILE & UML                                       -->
+    <!-- ============================================================== -->
+    <section class="chapter" id="sec-profile">
+      <div class="chapter-head">
+        <span class="chapter-num">1</span>
+        <div>
+          <h2>Pattern Profile &amp; Canonical UML Architecture</h2>
+          <span style="font-size:0.85rem; color:var(--text-muted); font-weight:600;">Core GoF Specification</span>
+        </div>
+      </div>
+
+      <div class="pattern-spec-box">
+        <div class="spec-grid">
+          <div class="spec-row">
+            <span class="spec-label">Name:</span>
+            <span class="spec-val"><strong>Composite Pattern</strong></span>
+          </div>
+          <div class="spec-row">
+            <span class="spec-label">Type:</span>
+            <span class="spec-val"><strong>Structural Pattern</strong> &mdash; focuses on how classes and objects are composed to form larger structures while keeping them flexible and efficient.</span>
+          </div>
+          <div class="spec-row">
+            <span class="spec-label">Policy:</span>
+            <span class="spec-val"><em>"Compose objects into tree structures to represent part-whole hierarchies. Composite lets clients treat individual objects and compositions of objects uniformly."</em></span>
+          </div>
+          <div class="spec-row">
+            <span class="spec-label">Problem:</span>
+            <span class="spec-val">
+              In recursive tree structures (like menus with submenus or expressions with sub-expressions), client code must constantly check whether a node is a leaf or a composite (e.g. via <code>instanceof</code>). This introduces conditional branching, tight coupling to concrete types, and fragile code whenever new elements are added.
+            </span>
+          </div>
+          <div class="spec-row">
+            <span class="spec-label">Solution:</span>
+            <span class="spec-val">
+              Define a common <code>Component</code> abstraction implemented by both individual elements (<strong>Leaf</strong>) and container elements (<strong>Composite</strong>). The Composite holds a collection of <code>Component</code> references (recursive composition) and delegates operations down to all children.
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Vector UML Diagram: Canonical Composite -->
+      <div class="guide-card">
+        <div class="guide-card-header">
+          <span>📐 Canonical Architecture: Figure 3.1 Composite Structure</span>
+        </div>
+        <div class="uml-diagram-box" style="text-align:center;">
+          <svg viewBox="0 0 680 280" style="max-width:100%; height:auto;" aria-label="Figure 3.1: Composite Pattern UML">
+            <!-- Client Box -->
+            <rect x="20" y="40" width="120" height="60" rx="3" fill="var(--bg-raised)" stroke="var(--border)" stroke-width="1.5"/>
+            <rect x="20" y="40" width="120" height="24" rx="3" fill="var(--bg-subtle)"/>
+            <text x="80" y="57" fill="var(--text)" font-family="var(--font-display)" font-size="12" font-weight="700" text-anchor="middle">Client</text>
+            <line x1="20" y1="64" x2="140" y2="64" stroke="var(--border)" stroke-width="1.5"/>
+            <text x="30" y="82" fill="var(--text-muted)" font-family="var(--font-mono)" font-size="10">+ execute()</text>
+
+            <!-- Arrow from Client to Component -->
+            <line x1="140" y1="70" x2="270" y2="70" stroke="var(--border)" stroke-width="1.5"/>
+            <polygon points="270,70 260,65 260,75" fill="var(--border)"/>
+
+            <!-- Component Abstract Class -->
+            <rect x="270" y="25" width="220" height="110" rx="3" fill="var(--bg-raised)" stroke="var(--border)" stroke-width="1.5"/>
+            <rect x="270" y="25" width="220" height="26" rx="3" fill="var(--bg-subtle)"/>
+            <text x="380" y="42" fill="var(--text)" font-family="var(--font-display)" font-size="12" font-style="italic" font-weight="700" text-anchor="middle">&lt;&lt;abstract&gt;&gt; Component</text>
+            <line x1="270" y1="51" x2="490" y2="51" stroke="var(--border)" stroke-width="1.5"/>
+            <text x="282" y="68" fill="var(--text-muted)" font-family="var(--font-mono)" font-size="10">+ operation()</text>
+            <text x="282" y="84" fill="var(--text-muted)" font-family="var(--font-mono)" font-size="10">+ add(c: Component)</text>
+            <text x="282" y="100" fill="var(--text-muted)" font-family="var(--font-mono)" font-size="10">+ remove(c: Component)</text>
+            <text x="282" y="116" fill="var(--text-muted)" font-family="var(--font-mono)" font-size="10">+ getChild(i: int): Component</text>
+
+            <!-- Inheritance Tree down to Leaf and Composite -->
+            <line x1="380" y1="135" x2="380" y2="165" stroke="var(--border)" stroke-width="1.5"/>
+            <polygon points="380,135 373,148 387,148" fill="var(--bg-raised)" stroke="var(--border)" stroke-width="1.5"/>
+
+            <line x1="220" y1="165" x2="540" y2="165" stroke="var(--border)" stroke-width="1.5"/>
+            <line x1="220" y1="165" x2="220" y2="190" stroke="var(--border)" stroke-width="1.5"/>
+            <line x1="540" y1="165" x2="540" y2="190" stroke="var(--border)" stroke-width="1.5"/>
+
+            <!-- Leaf Box -->
+            <rect x="150" y="190" width="140" height="65" rx="3" fill="var(--bg-raised)" stroke="var(--border)" stroke-width="1.5"/>
+            <rect x="150" y="190" width="140" height="24" rx="3" fill="var(--bg-subtle)"/>
+            <text x="220" y="207" fill="var(--text)" font-family="var(--font-display)" font-size="12" font-weight="700" text-anchor="middle">Leaf</text>
+            <line x1="150" y1="214" x2="290" y2="214" stroke="var(--border)" stroke-width="1.5"/>
+            <text x="160" y="235" fill="var(--text)" font-family="var(--font-mono)" font-size="10" font-weight="700">+ operation()</text>
+
+            <!-- Composite Box -->
+            <rect x="440" y="190" width="200" height="85" rx="3" fill="var(--bg-raised)" stroke="var(--border)" stroke-width="1.5"/>
+            <rect x="440" y="190" width="200" height="24" rx="3" fill="var(--bg-subtle)"/>
+            <text x="540" y="207" fill="var(--text)" font-family="var(--font-display)" font-size="12" font-weight="700" text-anchor="middle">Composite</text>
+            <line x1="440" y1="214" x2="640" y2="214" stroke="var(--border)" stroke-width="1.5"/>
+            <text x="450" y="230" fill="var(--text)" font-family="var(--font-mono)" font-size="10" font-weight="700">+ operation()</text>
+            <text x="450" y="246" fill="var(--text)" font-family="var(--font-mono)" font-size="10">+ add(c: Component)</text>
+            <text x="450" y="262" fill="var(--text)" font-family="var(--font-mono)" font-size="10">+ getChild(i: int)</text>
+
+            <!-- Recursive Aggregation: Composite has 0..* Component -->
+            <!-- Path going from right of Composite up and back to Component -->
+            <path d="M 640 220 L 670 220 L 670 70 L 490 70" fill="none" stroke="var(--border)" stroke-width="1.5"/>
+            <!-- White Aggregation Diamond on Composite side -->
+            <polygon points="640,220 648,215 656,220 648,225" fill="var(--bg-raised)" stroke="var(--border)" stroke-width="1.5"/>
+            <!-- Arrowhead pointing to Component -->
+            <polygon points="490,70 500,65 500,75" fill="var(--border)"/>
+            <text x="630" y="62" fill="var(--accent)" font-family="var(--font-mono)" font-size="11" font-weight="700">children 0..*</text>
+          </svg>
+        </div>
+      </div>
+
+      <!-- Core Participants Table -->
+      <div class="guide-card">
+        <div class="guide-card-header">
+          <span>👥 The 3 Core Participants</span>
+        </div>
+        <div style="overflow-x:auto;">
+          <table style="width:100%; border-collapse:collapse; font-size:0.92rem;">
+            <thead>
+              <tr style="border-bottom:2px solid var(--border); text-align:left;">
+                <th style="padding:0.6rem;">Participant</th>
+                <th style="padding:0.6rem;">Role</th>
+                <th style="padding:0.6rem;">Key Characteristic</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr style="border-bottom:1px solid var(--border);">
+                <td style="padding:0.6rem;"><code>Component</code></td>
+                <td style="padding:0.6rem;">Abstract supertype declaring common interface for all nodes in the tree.</td>
+                <td style="padding:0.6rem;">Declares core business operation (e.g. <code>print()</code>, <code>evaluate()</code>) and child management.</td>
+              </tr>
+              <tr style="border-bottom:1px solid var(--border);">
+                <td style="padding:0.6rem;"><code>Leaf</code></td>
+                <td style="padding:0.6rem;">Represents leaf objects in the composition. A leaf has no children.</td>
+                <td style="padding:0.6rem;">Defines behavior for primitive objects. Throws exception or ignores child management calls.</td>
+              </tr>
+              <tr>
+                <td style="padding:0.6rem;"><code>Composite</code></td>
+                <td style="padding:0.6rem;">Defines behavior for components having children and stores child components.</td>
+                <td style="padding:0.6rem;">Implements <code>operation()</code> by recursively iterating over its children collection.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================== -->
+    <!-- 2. DOMAIN WALKTHROUGHS: MENUS & EXPRESSION TREES               -->
+    <!-- ============================================================== -->
+    <section class="chapter" id="sec-domains">
+      <div class="chapter-head">
+        <span class="chapter-num">2</span>
+        <div>
+          <h2>Head First &amp; Expression Tree Walkthroughs</h2>
+          <span style="font-size:0.85rem; color:var(--text-muted); font-weight:600;">Concrete Implementations</span>
+        </div>
+      </div>
+
+      <!-- Domain 1: Head First Restaurant Menu Component -->
+      <details class="headfirst-card" open>
+        <summary class="headfirst-summary">
+          <div class="headfirst-title">
+            <span>🍽️ Domain 1: Head First Diner Menus &amp; Submenus</span>
+          </div>
+          <span class="headfirst-badge">MenuComponent Hierarchy</span>
+        </summary>
+        <div class="headfirst-body">
+          <p style="font-size:0.93rem; color:var(--text-muted); line-height:1.6; margin-bottom:1rem;">
+            A restaurant menu can contain both single <code>MenuItem</code> leaves (e.g. Pasta, Pancake) and full sub-<code>Menu</code> composites (e.g. Dessert Menu, Dinner Menu). The client (the <code>Waitress</code>) needs only one call: <code>allMenus.print()</code>.
+          </p>
+          <pre style="background:var(--code-bg); padding:1rem; border-radius:6px; font-family:var(--font-mono); font-size:0.85rem; line-height:1.5; overflow-x:auto;"><code>// 1. Abstract Component base class
+public abstract class MenuComponent {
+    public void add(MenuComponent c) { throw new UnsupportedOperationException(); }
+    public void remove(MenuComponent c) { throw new UnsupportedOperationException(); }
+    public MenuComponent getChild(int i) { throw new UnsupportedOperationException(); }
+    public String getName() { throw new UnsupportedOperationException(); }
+    public double getPrice() { throw new UnsupportedOperationException(); }
+    public void print() { throw new UnsupportedOperationException(); }
+}
+
+// 2. Leaf (MenuItem)
+public class MenuItem extends MenuComponent {
+    private String name;
+    private double price;
+    public MenuItem(String name, double price) { this.name = name; this.price = price; }
+    public String getName() { return name; }
+    public double getPrice() { return price; }
+    public void print() { System.out.println("  " + getName() + ", $" + getPrice()); }
+}
+
+// 3. Composite (Menu)
+public class Menu extends MenuComponent {
+    private List&lt;MenuComponent&gt; children = new ArrayList&lt;&gt;();
+    private String name;
+    public Menu(String name) { this.name = name; }
+    public void add(MenuComponent c) { children.add(c); }
+    public void print() {
+        System.out.println("\n--- " + name + " ---");
+        for (MenuComponent child : children) {
+            child.print(); // Recursive delegation!
+        }
+    }
+}</code></pre>
+        </div>
+      </details>
+
+      <!-- Domain 2: Exam Core Arithmetic Expression Tree -->
+      <details class="headfirst-card" open>
+        <summary class="headfirst-summary">
+          <div class="headfirst-title">
+            <span>🧮 Domain 2: Arithmetic Expression Tree (Exam Topic)</span>
+          </div>
+          <span class="headfirst-badge">Expression Evaluation</span>
+        </summary>
+        <div class="headfirst-body">
+          <p style="font-size:0.93rem; color:var(--text-muted); line-height:1.6; margin-bottom:1rem;">
+            Evaluating mathematical expressions like $3 + 4 * (5 - 6 * z / (x + y))$ is the canonical exam use-case for the Composite pattern. Operands (constants and variables) are <strong>Leaves</strong>, while operators ($+$, $-$, $*$, $/$) are <strong>Composites</strong>.
+          </p>
+          <pre style="background:var(--code-bg); padding:1rem; border-radius:6px; font-family:var(--font-mono); font-size:0.85rem; line-height:1.5; overflow-x:auto;"><code>// 1. Component
+public interface Expression {
+    double evaluate(Map&lt;String, Double&gt; context);
+}
+
+// 2. Leaves (Operands)
+public class Constant implements Expression {
+    private final double value;
+    public Constant(double value) { this.value = value; }
+    public double evaluate(Map&lt;String, Double&gt; ctx) { return value; }
+}
+
+public class Variable implements Expression {
+    private final String name;
+    public Variable(String name) { this.name = name; }
+    public double evaluate(Map&lt;String, Double&gt; ctx) { return ctx.get(name); }
+}
+
+// 3. Composite (Binary Operator)
+public abstract class BinaryOperator implements Expression {
+    protected final Expression left;
+    protected final Expression right;
+    public BinaryOperator(Expression left, Expression right) {
+        this.left = left; this.right = right;
+    }
+}
+
+public class Add extends BinaryOperator {
+    public Add(Expression left, Expression right) { super(left, right); }
+    public double evaluate(Map&lt;String, Double&gt; ctx) {
+        return left.evaluate(ctx) + right.evaluate(ctx); // Recursive delegation
+    }
+}
+
+public class Multiply extends BinaryOperator {
+    public Multiply(Expression left, Expression right) { super(left, right); }
+    public double evaluate(Map&lt;String, Double&gt; ctx) {
+        return left.evaluate(ctx) * right.evaluate(ctx); // Recursive delegation
+    }
+}</code></pre>
+        </div>
+      </details>
+    </section>
+
+    <!-- ============================================================== -->
+    <!-- 3. KEY ARCHITECTURAL RULES & TRAPS                             -->
+    <!-- ============================================================== -->
+    <section class="chapter" id="sec-rules">
+      <div class="chapter-head">
+        <span class="chapter-num">3</span>
+        <div>
+          <h2>Transparency vs. Safety Trade-off</h2>
+          <span style="font-size:0.85rem; color:var(--text-muted); font-weight:600;">The #1 Architectural Dilemma</span>
+        </div>
+      </div>
+
+      <div class="guide-card">
+        <div class="guide-card-header">
+          <span class="rule-badge danger">CRITICAL EXAM AXIOM</span>
+          <span>Transparency vs. Safety</span>
+        </div>
+        <p style="font-size:0.95rem; line-height:1.6; color:var(--text); margin-bottom:1rem;">
+          In the Composite pattern, there is a fundamental conflict between the <strong>Single Responsibility Principle (SRP)</strong> / <strong>Interface Segregation Principle (ISP)</strong> and <strong>uniformity of treatment</strong>:
+        </p>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:1.25rem;">
+          <!-- Transparency Box -->
+          <div style="background:var(--bg); border:1px solid var(--border); border-top:3px solid #6366f1; border-radius:6px; padding:1.25rem;">
+            <h4 style="margin:0 0 0.5rem; color:var(--accent); font-size:1.05rem;">Transparency (GoF Preference)</h4>
+            <ul style="font-size:0.88rem; line-height:1.55; color:var(--text); padding-left:1.2rem; margin:0;">
+              <li><strong>Approach:</strong> Define child management methods (<code>add</code>, <code>remove</code>, <code>getChild</code>) in the abstract <code>Component</code> base class.</li>
+              <li><strong>Advantage:</strong> Maximum uniformity. Clients treat Leaves and Composites completely identically; zero downcasting or <code>instanceof</code> checks required.</li>
+              <li><strong>Disadvantage:</strong> <em>Loss of compile-time safety</em>. Leaf nodes inherit operations that are meaningless for them and must throw runtime exceptions (e.g. <code>UnsupportedOperationException</code>). Violates LSP and ISP.</li>
+            </ul>
+          </div>
+
+          <!-- Safety Box -->
+          <div style="background:var(--bg); border:1px solid var(--border); border-top:3px solid #10b981; border-radius:6px; padding:1.25rem;">
+            <h4 style="margin:0 0 0.5rem; color:#10b981; font-size:1.05rem;">Safety (Java API Preference)</h4>
+            <ul style="font-size:0.88rem; line-height:1.55; color:var(--text); padding-left:1.2rem; margin:0;">
+              <li><strong>Approach:</strong> Define child management methods <em>only</em> on the concrete <code>Composite</code> class. <code>Component</code> only declares business operations (<code>operation()</code>).</li>
+              <li><strong>Advantage:</strong> <em>Type-safe at compile-time</em>. Impossible to call <code>add()</code> on a Leaf; compiler rejects it outright. Adheres to ISP.</li>
+              <li><strong>Disadvantage:</strong> Loss of transparency. Clients cannot treat all nodes uniformly. To add children, client must downcast using <code>((Composite) node).add(child)</code> or inspect types with <code>instanceof</code>.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div style="margin-top:1.25rem; padding:0.75rem 1rem; background:rgba(99,102,241,0.08); border-left:3px solid var(--accent); border-radius:4px; font-size:0.88rem; color:var(--text);">
+          💡 <strong>Exam Rule:</strong> Gang of Four emphasizes <em>Transparency</em> because treating leaf and composite identically is the primary purpose of the pattern, even if it trades away compile-time type safety.
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================== -->
+    <!-- 4. CORE EXAM PRACTICE & DIRECT MODEL ANSWERS                   -->
+    <!-- ============================================================== -->
+    <section class="chapter" id="sec-drills">
+      <div class="chapter-head">
+        <span class="chapter-num">4</span>
+        <div>
+          <h2>Core Exam Practice &amp; Model Solutions</h2>
+          <span style="font-size:0.85rem; color:var(--text-muted); font-weight:600;">Direct Question &rarr; Answer Format</span>
+        </div>
+      </div>
+
+      <!-- QA 1: Expression Tree Construction -->
+      <div class="qa-block">
+        <div class="qa-q">
+          Question 1: Expression Tree Construction
+          <span class="pts-badge">4 Points</span>
+          <p style="font-size:0.92rem; font-weight:400; color:var(--text-muted); margin-top:0.5rem;">
+            Given the mathematical expression:
+            $$3 + 4 * (5 - 6 * z / (x + y))$$
+            Draw the expression tree according to standard operator precedence and parentheses!
+          </p>
+        </div>
+        <div class="qa-a">
+          <span class="ans-label">Model Answer:</span>
+          <p>
+            Following standard precedence (parentheses first, then multiplication/division left-to-right, then addition/subtraction):
+          </p>
+          <pre style="background:var(--code-bg); padding:1rem; border-radius:6px; font-family:var(--font-mono); font-size:0.85rem; line-height:1.5;"><code>                     (+)
+                    /   \
+                   3     (*)
+                        /   \
+                       4     (-)
+                            /   \
+                           5     (/)
+                                /   \
+                              (*)   (+)
+                              / \   / \
+                             6   z x   y</code></pre>
+          <p style="margin-top:0.75rem; font-size:0.9rem; color:var(--text-muted);">
+            • <strong>Root:</strong> The outermost addition ($+$), combining $3$ and the right-hand multiplication subtree.<br>
+            • <strong>Inner Division:</strong> Subtree $(6 * z) / (x + y)$.<br>
+            • <strong>Leaves:</strong> Operands $3, 4, 5, 6, z, x, y$.
+          </p>
+        </div>
+      </div>
+
+      <!-- QA 2: UML Class Diagram Completion -->
+      <div class="qa-block">
+        <div class="qa-q">
+          Question 2: UML Class Diagram for Expression Evaluation
+          <span class="pts-badge">4 Points</span>
+          <p style="font-size:0.92rem; font-weight:400; color:var(--text-muted); margin-top:0.5rem;">
+            Complete the UML class diagram for the Composite pattern to represent and evaluate such expressions. Identify the abstract Component, the Leaf classes, and the Composite operator classes!
+          </p>
+        </div>
+        <div class="qa-a">
+          <span class="ans-label">Model Answer:</span>
+          <ol>
+            <li><strong>Abstract Component:</strong> <code>abstract class Expression</code>
+              <ul>
+                <li>Method: <code>+ evaluate(context: Map&lt;String, Double&gt;): double</code></li>
+              </ul>
+            </li>
+            <li><strong>Leaves:</strong>
+              <ul>
+                <li><code>Constant</code>: holds <code>value: double</code>; <code>evaluate()</code> returns <code>value</code>.</li>
+                <li><code>Variable</code>: holds <code>name: String</code>; <code>evaluate()</code> looks up <code>context.get(name)</code>.</li>
+              </ul>
+            </li>
+            <li><strong>Composite (Operator):</strong>
+              <ul>
+                <li><code>abstract class BinaryOperator extends Expression</code>: holds <code>left: Expression</code>, <code>right: Expression</code> (Aggregation association back to <code>Expression</code>).</li>
+                <li>Concrete subclasses: <code>Add</code>, <code>Subtract</code>, <code>Multiply</code>, <code>Divide</code> each implement <code>evaluate()</code> by recursively evaluating left and right child nodes.</li>
+              </ul>
+            </li>
+          </ol>
+        </div>
+      </div>
+
+      <!-- QA 3: Execution Mechanism -->
+      <div class="qa-block">
+        <div class="qa-q">
+          Question 3: How Composite Enables Expression Evaluation
+          <span class="pts-badge">6 Points</span>
+          <p style="font-size:0.92rem; font-weight:400; color:var(--text-muted); margin-top:0.5rem;">
+            Explain how the Composite pattern enables the evaluation of the expression in your own words using the (completed) UML diagram!
+          </p>
+        </div>
+        <div class="qa-a">
+          <span class="ans-label">Model Answer:</span>
+          <p>
+            The Composite pattern enables expression evaluation through <strong>polymorphic recursive delegation</strong>:
+          </p>
+          <ol>
+            <li><strong>Uniform Treatment:</strong> The client triggers evaluation by calling <code>evaluate(context)</code> on the root node (e.g. <code>Add</code>). The client does not need to know whether the node is an operator or a simple operand.</li>
+            <li><strong>Recursive Delegation:</strong> Each <code>BinaryOperator</code> composite implements <code>evaluate()</code> by recursively calling <code>left.evaluate(context)</code> and <code>right.evaluate(context)</code>. It then applies its specific arithmetic operation (e.g., $+$, $*$) to the two returned scalar values.</li>
+            <li><strong>Base Case Termination:</strong> When recursion reaches a <code>Constant</code> or <code>Variable</code> (Leaf), no further delegation occurs:
+              <ul>
+                <li><code>Constant</code> returns its stored numerical value directly.</li>
+                <li><code>Variable</code> looks up its variable name in the provided <code>context</code> map.</li>
+              </ul>
+            </li>
+            <li><strong>Extensibility:</strong> New operators (e.g., <code>Power</code>, <code>Modulo</code>, or unary functions like <code>Sin</code>, <code>Cos</code>) can be introduced without modifying existing leaf classes or client evaluation code, satisfying the <strong>Open-Closed Principle</strong>.</li>
+          </ol>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</body>
+</html>

@@ -110,7 +110,8 @@
       <a href="unit-1-strategy.html">Unit 1 · Strategy Pattern</a>
       <a href="unit-2-template.html">Unit 2A · Template Method</a>
       <a href="unit-2-command.html">Unit 2B · Command Pattern</a>
-      <a href="unit-3-structural.html">Unit 3 · Structural Patterns</a>
+      <a href="unit-3-composite.html">Unit 3A · Composite Pattern</a>
+      <a href="unit-3-iterator.html">Unit 3B · Iterator Pattern</a>
       <a href="unit-4-junit.html">Unit 4 · Case Study JUnit</a>
       <a href="unit-5-theory.html">Unit 5 · Pattern Theory</a>
       <a href="unit-6-solid.html">Unit 6 · SOLID Principles</a>
@@ -266,13 +267,16 @@
       <!-- Unit 3 -->
       <div class="module-card">
         <div>
-          <span class="card-badge">Unit 3 · Structural</span>
-          <h3 class="card-title">Iterator &amp; Composite</h3>
+          <span class="card-badge">Unit 3A &amp; 3B · Structural &amp; Behavioral</span>
+          <h3 class="card-title">Composite &amp; Iterator</h3>
           <p class="card-desc">
-            Walking composite structures without exposing internal arrays. Representing nested menus and part-whole trees uniformly while eliminating recursive conditionals.
+            Walking composite structures without exposing internal arrays. Representing nested trees uniformly and evaluating arithmetic expression trees.
           </p>
         </div>
-        <a href="unit-3-structural.html" class="card-link">Explore Unit 3 &rarr;</a>
+        <div style="display:flex; gap:0.5rem; margin-top:0.5rem;">
+          <a href="unit-3-composite.html" class="card-link" style="font-size:0.85rem;">Unit 3A: Composite &rarr;</a>
+          <a href="unit-3-iterator.html" class="card-link" style="font-size:0.85rem;">Unit 3B: Iterator &rarr;</a>
+        </div>
       </div>
 
       <!-- Unit 6 -->
@@ -345,10 +349,16 @@
             <td style="padding: 0.75rem 0.5rem;"><a href="unit-2-command.html" class="card-link">View Notes &rarr;</a></td>
           </tr>
           <tr style="border-bottom: 1px solid var(--border);">
-            <td style="padding: 0.75rem 0.5rem; font-weight: 700;"><a href="unit-3-structural.html">Unit 3</a></td>
-            <td style="padding: 0.75rem 0.5rem;">Structural: Iterator &amp; Composite</td>
-            <td style="padding: 0.75rem 0.5rem; color: var(--text-muted);">Uniform client handling of leaf and tree hierarchies</td>
-            <td style="padding: 0.75rem 0.5rem;"><a href="unit-3-structural.html" class="card-link">View Notes &rarr;</a></td>
+            <td style="padding: 0.75rem 0.5rem; font-weight: 700;"><a href="unit-3-composite.html">Unit 3A</a></td>
+            <td style="padding: 0.75rem 0.5rem;">Composite Pattern (Part-Whole Trees)</td>
+            <td style="padding: 0.75rem 0.5rem; color: var(--text-muted);">Uniform client handling of leaf and tree hierarchies, expression trees</td>
+            <td style="padding: 0.75rem 0.5rem;"><a href="unit-3-composite.html" class="card-link">View Notes &rarr;</a></td>
+          </tr>
+          <tr style="border-bottom: 1px solid var(--border);">
+            <td style="padding: 0.75rem 0.5rem; font-weight: 700;"><a href="unit-3-iterator.html">Unit 3B</a></td>
+            <td style="padding: 0.75rem 0.5rem;">Iterator Pattern (Sequential Traversal)</td>
+            <td style="padding: 0.75rem 0.5rem; color: var(--text-muted);">Decoupling traversal from storage, SRP, Fail-Fast traversal</td>
+            <td style="padding: 0.75rem 0.5rem;"><a href="unit-3-iterator.html" class="card-link">View Notes &rarr;</a></td>
           </tr>
           <tr style="border-bottom: 1px solid var(--border);">
             <td style="padding: 0.75rem 0.5rem; font-weight: 700;"><a href="unit-4-junit.html">Unit 4</a></td>
