@@ -1,1267 +1,296 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html lang="en" data-theme="dark" data-mode="concept">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Unit 14: Testing Patterns &amp; Test Doubles | POSA 2026 Masterclass</title>
-<meta name="description" content="Master Gerard Meszaros's 5 Test Doubles (Dummy, Fake, Stub, Spy, Mock), State vs. Behavior verification, Test Smells, and Consumer-Driven Contract Testing with Prof. Dr. Jörg Schäfer.">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23059669'/%3E%3Cpath d='M8 10h16M8 16h16M8 22h10' stroke='%23fff' stroke-width='2.2' stroke-linecap='round'/%3E%3C/svg%3E">
-<link rel="preconnect" href="https://fonts.googleapis.com">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Unit 14 · Testing Patterns &amp; Test Doubles · POSA Masterclass 2026</title>
+<meta name="description" content="Master Gerard Meszaros' 5 test doubles (Dummy, Stub, Spy, Mock, Fake) and State vs Behavior verification (Detroit vs London school).">
+<link rel="stylesheet" href="assets/style.css?v=2026.18">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/style.css?v=2026.16">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,600;0,700;1,400&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,600;1,700&display=swap" rel="stylesheet">
+<script>
+  window.MathJax = {
+    tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
+    svg: { fontCache: 'global' }
+  };
+</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<script>(function(){try{var t=localStorage.getItem('posa-theme')||localStorage.getItem('dm2026-theme')||'dark';document.documentElement.setAttribute('data-theme',t);var m=localStorage.getItem('posa-mode')||'concept';document.documentElement.setAttribute('data-mode',m);}catch(e){}})();</script>
 <style>
-  .reading-progress-bar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    height: 3px;
-    background: linear-gradient(90deg, #059669 0%, #10b981 50%, #34d399 100%);
-    width: 0%;
-    z-index: 9999;
-    transition: width 0.1s ease-out;
-  }
-  .stage-takeaways-box {
-    background: rgba(5, 150, 105, 0.05);
-    border: 1px solid rgba(5, 150, 105, 0.2);
+  .guide-card {
+    background: var(--bg-raised);
+    border: 1px solid var(--border);
     border-radius: var(--radius-md);
     padding: 1.5rem;
-    margin: 2rem 0;
+    margin-bottom: 2rem;
   }
-  [data-theme="light"] .stage-takeaways-box {
-    background: #ecfdf5;
-    border-color: #a7f3d0;
-  }
-  .stage-takeaways-title {
-    font-weight: 800;
-    color: #059669;
-    margin-bottom: 0.75rem;
+  .guide-card-header {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
-    font-size: 1.05rem;
-  }
-  .takeaway-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: 1rem;
-    margin-top: 1rem;
-  }
-  .takeaway-item {
-    background: var(--bg-raised);
-    padding: 1rem;
-    border-radius: var(--radius-sm);
-    border: 1px solid var(--border);
-  }
-  .takeaway-item strong {
+    gap: 0.6rem;
+    font-size: 1.15rem;
+    font-weight: 700;
     color: var(--text);
-    display: block;
-    margin-bottom: 0.35rem;
-    font-size: 0.92rem;
+    margin-bottom: 0.75rem;
   }
-  .takeaway-item p {
-    margin: 0;
-    font-size: 0.85rem;
-    color: var(--text-muted);
-    line-height: 1.5;
+  .rule-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.2rem 0.55rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 800;
+    font-family: var(--font-mono);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    background: rgba(99, 102, 241, 0.12);
+    color: #6366f1;
+    border: 1px solid rgba(99, 102, 241, 0.25);
   }
-  /* Interactive Double Simulator */
-  .double-sim-card {
+  .pattern-spec-box {
     background: var(--bg-raised);
     border: 1px solid var(--border);
     border-radius: var(--radius-md);
-    padding: 1.5rem;
-    margin: 2rem 0;
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 1.5rem;
   }
-  .sim-controls {
-    display: flex;
-    flex-wrap: wrap;
+  .spec-grid {
+    display: grid;
+    grid-template-columns: 1fr;
     gap: 0.75rem;
-    margin: 1.25rem 0;
   }
-  .sim-btn {
-    padding: 0.5rem 1rem;
-    border-radius: var(--radius-sm);
-    border: 1px solid var(--border);
-    background: var(--bg);
-    color: var(--text);
-    font-size: 0.85rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s ease;
+  .spec-row {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--border);
   }
-  .sim-btn.active {
-    background: #059669;
-    color: #fff;
-    border-color: #059669;
+  .spec-row:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
   }
-  .sim-terminal {
-    background: #090d16;
-    color: #34d399;
+  .spec-label {
+    font-size: 0.8rem;
     font-family: var(--font-mono);
-    padding: 1rem 1.25rem;
-    border-radius: var(--radius-sm);
-    font-size: 0.85rem;
-    min-height: 90px;
-    border: 1px solid #1e293b;
-    margin-top: 1rem;
-    white-space: pre-wrap;
-    line-height: 1.5;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 700;
+  }
+  .spec-val {
+    font-size: 0.95rem;
+    color: var(--text);
+    line-height: 1.55;
+  }
+  .qa-block {
+    margin: 1.5rem 0;
+    padding: 1.5rem;
+    background: var(--bg-raised);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+  }
+  .qa-q {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 1rem;
+    line-height: 1.45;
+  }
+  .qa-q .pts-badge {
+    display: inline-block;
+    padding: 0.2rem 0.6rem;
+    background: var(--accent-soft);
+    color: var(--accent);
+    border-radius: 999px;
+    font-size: 0.78rem;
+    font-family: var(--font-mono);
+    font-weight: 700;
+    margin-left: 0.5rem;
+  }
+  .qa-a {
+    padding: 1.25rem 1.5rem;
+    background: var(--bg);
+    border-left: 4px solid var(--accent);
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    font-size: 0.95rem;
+    line-height: 1.65;
+    color: var(--text);
+  }
+  .qa-a .ans-label {
+    display: block;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    font-weight: 800;
+    font-family: var(--font-mono);
+    color: var(--accent);
+    margin-bottom: 0.75rem;
+    letter-spacing: 0.05em;
   }
 </style>
-<script>(function(){try{var t=localStorage.getItem('posa-theme')||'dark';document.documentElement.setAttribute('data-theme',t);var m=localStorage.getItem('posa-mode')||'concept';document.documentElement.setAttribute('data-mode',m);}catch(e){}})();</script>
 </head>
-<body class="mode-stage-focused">
+<body>
+  <nav class="sitenav" aria-label="Main Navigation">
+    <div class="sitenav-inner">
+      <a href="index.html" class="sitenav-brand">
+        <span class="brand-badge">POSA 2026</span>
+        <span class="brand-title">Pattern Architecture</span>
+      </a>
+      <div class="sitenav-links">
+        <a href="index.html">Overview</a>
+        <a href="unit-4-junit.html">Unit 4: JUnit</a>
+        <a href="unit-14-testing.html" class="active">Unit 14: Testing</a>
+        <a href="unit-15-criticism.html">Unit 15: Criticism</a>
+        <a href="mock-1.html">🎓 Mock Exam 1</a>
+        <a href="mock-2.html">📝 Mock Exam 2</a>
+        <a href="past-papers.html">Practice Hub</a>
+      </div>
+      <button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle theme">
+        <span class="theme-icon light-icon">☀️</span>
+        <span class="theme-icon dark-icon">🌙</span>
+      </button>
+    </div>
+  </nav>
 
-<div class="reading-progress-bar" id="readingProgressBar"></div>
+  <aside class="sidebar">
+    <div class="sidebar-block">
+      <span class="sidebar-label">Unit Navigation</span>
+      <a href="#sec-taxonomy" class="active"><span class="toc-num">1</span>The 5 Test Doubles</a>
+      <a href="#sec-verification"><span class="toc-num">2</span>State vs Behavior</a>
+      <a href="#sec-drills"><span class="toc-num">3</span>Core Exam Drills</a>
+    </div>
 
-<nav class="sitenav">
-  <div class="sitenav-inner">
-    <a class="sitenav-home" href="index.html">
-      <span style="background:linear-gradient(135deg, #059669 0%, #10b981 100%);color:#fff;padding:0.2rem 0.55rem;border-radius:6px;font-size:0.82rem;font-weight:800;letter-spacing:0.04em;">POSA</span>
-      <span style="font-weight:800;letter-spacing:-0.02em;">2026</span>
-    </a>
-                <div class="sitenav-links">
-      <a href="index.html">Overview</a>
-      <a href="index.html#curriculum-roadmap">16 Units</a>
-      <a href="mock-1.html">🎓 Mock Exam 1</a>
+    <div class="sidebar-block">
+      <span class="sidebar-label">Related Modules</span>
+      <a href="unit-4-junit.html">Unit 4 · Case Study JUnit</a>
       <a href="mock-2.html">📝 Mock Exam 2</a>
     </div>
-    <button class="nav-toggle" id="navToggle" type="button" aria-expanded="false" aria-controls="navPanel">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
-      Menu
-    </button>
-    <button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle color theme">
-      <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path></svg>
-      <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
-    </button>
-    <button class="mode-toggle" id="modeToggle" type="button" aria-label="Toggle technical mode" style="font-size: 1.1rem; line-height: 1;">🎓</button>
-  </div>
-  <div class="nav-panel" id="navPanel">
-    <div class="nav-panel-section">
-      <span class="nav-panel-label">Course Navigation</span>
-      <a href="index.html">Course Overview</a>
-      <a href="unit-1-strategy.html">Unit 1 · Strategy Pattern</a>
-      <a href="unit-12-architectural.html">Unit 12 · Architectural Patterns</a>
-      <a href="unit-13-analysis.html">Unit 13 · Analysis &amp; Enterprise</a>
-      <a href="unit-14-testing.html" class="active">Unit 14 · Testing Patterns &amp; Test Doubles</a>
-      <a href="unit-15-criticism.html">Unit 15 · Pattern Criticism</a>
-      <a href="mock-1.html">📝 Mock Exam 1</a>
-    </div>
-  </div>
-</nav>
 
-<div class="page-shell">
-  <aside class="sidebar-toc">
     <div class="sidebar-block">
-      <span class="sidebar-label">PART 1 · RUBRIC</span>
-      <a href="#pillar-1"><span class="toc-num">P1</span>Intent &amp; Problem</a>
-      <a href="#pillar-2"><span class="toc-num">P2</span>Structural Topology</a>
-      <a href="#pillar-3"><span class="toc-num">P3</span>Dynamic Interaction</a>
-      <a href="#pillar-4"><span class="toc-num">P4</span>Trade-Offs &amp; Risks</a>
-      <a href="#pillar-5"><span class="toc-num">P5</span>Cross-Pattern Map</a>
-      <a href="#pillar-6"><span class="toc-num">P6</span>Test Smells &amp; Anti-Patterns</a>
-      <a href="#pillar-7"><span class="toc-num">P7</span>Production Code</a>
-      <a href="#pillar-8"><span class="toc-num">P8</span>Frankfurt UAS Exam Traps</a>
-    </div>
-    <div class="sidebar-block">
-      <span class="sidebar-label">PART 2 · CURRICULUM</span>
-      <a href="#stage-1"><span class="toc-num">1</span>Meszaros Taxonomy</a>
-      <a href="#stage-2"><span class="toc-num">2</span>State vs Behavior</a>
-      <a href="#stage-3"><span class="toc-num">3</span>Interactive Sandbox</a>
-      <a href="#stage-4"><span class="toc-num">4</span>Production Doubles</a>
-      <a href="#stage-5"><span class="toc-num">5</span>Exam Drills</a>
-    </div>
-    <div class="sidebar-block">
-      <span class="sidebar-label">Academic Profile</span>
-      <p style="font-size: 0.85rem; color: var(--text-muted); margin: 0; line-height: 1.4;">
-        <strong>Prof. Dr. Jörg Schäfer</strong><br>
-        Frankfurt University of Applied Sciences<br>
-        <span style="display:inline-block;margin-top:0.35rem;padding:0.15rem 0.4rem;background:rgba(5,150,105,0.15);border-radius:4px;color:#10b981;font-weight:700;font-size:0.75rem;">Quality &amp; Testing</span>
-      </p>
+      <span class="sidebar-label">Exam Profile</span>
+      <div style="font-size:0.75rem; font-weight:700; color:#38bdf8; background:rgba(56,189,248,0.12); border:1px solid rgba(56,189,248,0.25); padding:0.25rem 0.5rem; border-radius:4px; display:inline-block;">
+        ⏱️ 8–10 Mins · 8 Exam Pts
+      </div>
     </div>
   </aside>
 
   <main class="page">
-    <div class="masthead">
-      <div class="eyebrow">Unit 14 · Quality Assurance &amp; Verification</div>
-      <h1 class="title">Testing Patterns &amp; Test Doubles</h1>
+    <header class="masthead">
+      <div>
+        <div class="eyebrow">Unit 14 · Verification Patterns &amp; Test Architecture</div>
+        <h1 class="title">Testing Patterns: The 5 Test Doubles</h1>
+      </div>
       <p class="dek">
-        Master Gerard Meszaros's 5 Test Doubles (Dummy, Stub, Spy, Mock, Fake), classical Detroit vs mockist London school verification, contract testing, and architectural anti-patterns in automated verification.
+        Master Gerard Meszaros’ canonical xUnit Test Double taxonomy (Dummy, Stub, Spy, Mock, Fake) and the architectural debate between State Verification (Detroit) and Behavior Verification (London).
       </p>
-    </div>
-
-    <!-- Symmetrical Demarcation 1 -->
-    <div class="section-divider-wrapper" style="margin: 2.5rem 0 1.5rem;">
-      <div class="section-divider-line"></div>
-      <div class="section-divider-tag">
-        <span class="section-divider-dot"></span>
-        <span>PART 1 · ARCHITECTURAL RUBRIC</span>
-      </div>
-      <div class="section-divider-line"></div>
-    </div>
-
-    <section class="blueprint-suite" id="blueprintSuite" aria-label="8-Pillar Architecture Rubric">
-      <div class="blueprint-suite-top">
-        <div>
-          <div class="blueprint-suite-badge">
-            <span class="section-badge-pill">SECTION 1 OF 2</span>
-            <span class="badge-sep">·</span>
-            <span>8-PILLAR ARCHITECTURAL RUBRIC</span>
-          </div>
-          <h2 class="blueprint-suite-heading">System Under Test (SUT) &amp; Test Double Taxonomy</h2>
-          <p class="blueprint-suite-sub">
-            The canonical engineering blueprint for isolating dependencies, avoiding brittle tests, and enforcing deterministic test suites.
-          </p>
-        </div>
-        <div class="blueprint-suite-actions">
-          <div class="blueprint-view-toggle" role="group" aria-label="Blueprint Layout">
-            <button class="blueprint-toggle-btn active" id="btnViewExplorer" type="button" onclick="setBlueprintView('explorer')">Explorer View</button>
-            <button class="blueprint-toggle-btn" id="btnViewMatrix" type="button" onclick="setBlueprintView('matrix')">Full Matrix</button>
-          </div>
-          <button class="rubric-action-btn" type="button" onclick="copyBlueprintRubric()">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-            Export Rubric (MD)
-          </button>
-          <button class="rubric-action-btn rubric-collapse-btn" id="btnCollapseRubric" type="button" onclick="toggleBlueprintCollapse()">
-            <span id="collapseLabel">▲ Collapse Rubric</span>
-          </button>
-        </div>
-      </div>
-
-      <div class="blueprint-collapsed-hint" id="blueprintCollapsedHint" style="display:none;">
-        <span class="hint-icon">💡</span>
-        <span>The 8-Pillar Rubric is currently collapsed. Click <strong>Expand Rubric</strong> above to inspect details.</span>
-      </div>
-
-      <div class="blueprint-suite-body" id="blueprintSuiteBody">
-        <div class="blueprint-tabs" role="tablist" aria-label="8 Pillars">
-          <button class="blueprint-tab active" role="tab" aria-selected="true" data-pillar="1" onclick="selectPillar(1)">
-            <span class="blueprint-tab-num">01</span>
-            <span class="blueprint-tab-title">Intent &amp; Problem</span>
-          </button>
-          <button class="blueprint-tab" role="tab" aria-selected="false" data-pillar="2" onclick="selectPillar(2)">
-            <span class="blueprint-tab-num">02</span>
-            <span class="blueprint-tab-title">Structural Topology</span>
-          </button>
-          <button class="blueprint-tab" role="tab" aria-selected="false" data-pillar="3" onclick="selectPillar(3)">
-            <span class="blueprint-tab-num">03</span>
-            <span class="blueprint-tab-title">Dynamic Interaction</span>
-          </button>
-          <button class="blueprint-tab" role="tab" aria-selected="false" data-pillar="4" onclick="selectPillar(4)">
-            <span class="blueprint-tab-num">04</span>
-            <span class="blueprint-tab-title">Trade-Offs &amp; Risks</span>
-          </button>
-          <button class="blueprint-tab" role="tab" aria-selected="false" data-pillar="5" onclick="selectPillar(5)">
-            <span class="blueprint-tab-num">05</span>
-            <span class="blueprint-tab-title">Cross-Pattern Map</span>
-          </button>
-          <button class="blueprint-tab" role="tab" aria-selected="false" data-pillar="6" onclick="selectPillar(6)">
-            <span class="blueprint-tab-num">06</span>
-            <span class="blueprint-tab-title">Smells &amp; Anti-Patterns</span>
-          </button>
-          <button class="blueprint-tab" role="tab" aria-selected="false" data-pillar="7" onclick="selectPillar(7)">
-            <span class="blueprint-tab-num">07</span>
-            <span class="blueprint-tab-title">Production Code</span>
-          </button>
-          <button class="blueprint-tab" role="tab" aria-selected="false" data-pillar="8" onclick="selectPillar(8)">
-            <span class="blueprint-tab-num">08</span>
-            <span class="blueprint-tab-title">Exam Traps (Schäfer)</span>
-          </button>
-        </div>
-
-        <div class="blueprint-content-area" id="blueprintContentArea">
-          <!-- Pillar 1 -->
-          <article class="pillar-panel active" id="pillar-1" data-pillar="1">
-            <div class="pillar-header">
-              <span class="pillar-tag">PILLAR 01 · FOUNDATIONAL INTENT</span>
-              <h3 class="pillar-title">Intent, Context &amp; Problem Framing</h3>
-            </div>
-            <div class="pillar-body">
-              <div class="pillar-grid-2col">
-                <div>
-                  <h4 style="color:var(--text);margin-top:0;">The Core Dilemma: Shared State &amp; Slow Collaborators</h4>
-                  <p>In production enterprise architectures, the <strong>System Under Test (SUT)</strong> depends on external collaborators: SQL databases, RESTful payment microservices, distributed queues, SMTP servers, and system clocks. Directly executing these collaborators inside unit test suites causes:</p>
-                  <ul>
-                    <li><strong>Non-Determinism &amp; Flakiness:</strong> Network latency spikes, socket timeouts, and transient connection drops randomly fail tests.</li>
-                    <li><strong>Shared-State Leakage:</strong> Database rows inserted by Test A pollute Test B, requiring complex test run order dependencies.</li>
-                    <li><strong>Glacial Execution Speeds:</strong> Connecting to real services inflates build times from seconds to hours, destroying the rapid feedback cycle required for TDD.</li>
-                  </ul>
-                </div>
-                <div>
-                  <h4 style="color:var(--text);margin-top:0;">The Solution: Gerard Meszaros Test Doubles</h4>
-                  <p>In <em>xUnit Test Patterns: Refactoring Test Code</em> (2007), Gerard Meszaros introduced the concept of the <strong>Test Double</strong> (analogous to a stunt double in film). Any pretend object substituted for a real collaborator during test execution is a Test Double.</p>
-                  <p>Crucially, Meszaros taxonomized test doubles into five strictly distinct varieties: <strong>Dummy</strong>, <strong>Stub</strong>, <strong>Spy</strong>, <strong>Mock</strong>, and <strong>Fake</strong>. Confusing these terms leads to disastrous architectural choices, such as brittle behavior-coupled mock assertions where simple state stubs were needed.</p>
-                </div>
-              </div>
-            </div>
-          </article>
-
-          <!-- Pillar 2 -->
-          <article class="pillar-panel" id="pillar-2" data-pillar="2">
-            <div class="pillar-header">
-              <span class="pillar-tag">PILLAR 02 · STRUCTURAL TOPOLOGY</span>
-              <h3 class="pillar-title">UML Class Topology &amp; Test Double Hierarchy</h3>
-            </div>
-            <div class="pillar-body">
-              <p>All test doubles fulfill the collaborator interface expected by the System Under Test (SUT), enabling seamless Dependency Injection:</p>
-              
-              <div style="background:var(--bg-raised);border:1px solid var(--border);border-radius:var(--radius-md);padding:1.5rem;margin:1.5rem 0;">
-                <svg viewBox="0 0 880 340" style="width:100%;height:auto;display:block;" xmlns="http://www.w3.org/2000/svg">
-                  <defs>
-                    <marker id="uml-tri-14" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
-                      <polygon points="0 0, 10 6, 0 12" fill="#fff" stroke="#10b981" stroke-width="1.8"/>
-                    </marker>
-                    <marker id="uml-arrow-14" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
-                      <polygon points="0 2, 8 5, 0 8" fill="#10b981"/>
-                    </marker>
-                  </defs>
-                  <!-- SUT -->
-                  <g transform="translate(40, 40)">
-                    <rect width="210" height="90" rx="6" fill="var(--bg)" stroke="#059669" stroke-width="2"/>
-                    <text x="105" y="28" font-family="var(--font-display)" font-size="14" font-weight="800" fill="#059669" text-anchor="middle">OrderService (SUT)</text>
-                    <line x1="0" y1="40" x2="210" y2="40" stroke="var(--border)" stroke-width="1"/>
-                    <text x="12" y="60" font-family="var(--font-mono)" font-size="11" fill="var(--text-muted)">- gateway: PaymentGateway</text>
-                    <text x="12" y="78" font-family="var(--font-mono)" font-size="11" fill="var(--text-muted)">+ placeOrder(order: Order)</text>
-                  </g>
-                  <!-- Interface -->
-                  <g transform="translate(360, 40)">
-                    <rect width="220" height="90" rx="6" fill="var(--bg)" stroke="#10b981" stroke-width="2" stroke-dasharray="4 3"/>
-                    <text x="110" y="24" font-family="var(--font-mono)" font-size="11" fill="#10b981" text-anchor="middle">&laquo;interface&raquo;</text>
-                    <text x="110" y="42" font-family="var(--font-display)" font-size="14" font-weight="800" fill="#10b981" text-anchor="middle">PaymentGateway</text>
-                    <line x1="0" y1="52" x2="220" y2="52" stroke="var(--border)" stroke-width="1"/>
-                    <text x="12" y="74" font-family="var(--font-mono)" font-size="11" fill="var(--text-muted)">+ process(amount: Money): bool</text>
-                  </g>
-                  <!-- Real Implementation -->
-                  <g transform="translate(680, 40)">
-                    <rect width="170" height="90" rx="6" fill="var(--bg)" stroke="var(--border)" stroke-width="1.5"/>
-                    <text x="85" y="28" font-family="var(--font-display)" font-size="13" font-weight="700" fill="var(--text)" text-anchor="middle">StripeGateway</text>
-                    <text x="85" y="44" font-family="var(--font-mono)" font-size="10" fill="var(--text-muted)" text-anchor="middle">(Production Live)</text>
-                    <line x1="0" y1="54" x2="170" y2="54" stroke="var(--border)" stroke-width="1"/>
-                    <text x="10" y="74" font-family="var(--font-mono)" font-size="10" fill="var(--text-muted)">- apiKey: String</text>
-                  </g>
-                  <!-- 5 Test Doubles -->
-                  <g transform="translate(30, 200)">
-                    <rect width="140" height="100" rx="6" fill="var(--bg)" stroke="#64748b" stroke-width="1.5"/>
-                    <text x="70" y="24" font-family="var(--font-mono)" font-size="10" fill="#64748b" text-anchor="middle">&laquo;dummy&raquo;</text>
-                    <text x="70" y="42" font-family="var(--font-display)" font-size="12" font-weight="700" fill="var(--text)" text-anchor="middle">DummyGateway</text>
-                    <line x1="0" y1="52" x2="140" y2="52" stroke="var(--border)" stroke-width="1"/>
-                    <text x="10" y="72" font-family="var(--font-mono)" font-size="9" fill="var(--text-muted)">throws Unsupported-</text>
-                    <text x="10" y="86" font-family="var(--font-mono)" font-size="9" fill="var(--text-muted)">OperationException</text>
-                  </g>
-                  <g transform="translate(200, 200)">
-                    <rect width="140" height="100" rx="6" fill="var(--bg)" stroke="#0284c7" stroke-width="1.5"/>
-                    <text x="70" y="24" font-family="var(--font-mono)" font-size="10" fill="#0284c7" text-anchor="middle">&laquo;stub&raquo;</text>
-                    <text x="70" y="42" font-family="var(--font-display)" font-size="12" font-weight="700" fill="var(--text)" text-anchor="middle">StubGateway</text>
-                    <line x1="0" y1="52" x2="140" y2="52" stroke="var(--border)" stroke-width="1"/>
-                    <text x="10" y="72" font-family="var(--font-mono)" font-size="9" fill="var(--text-muted)">+ returnSuccess: bool</text>
-                    <text x="10" y="88" font-family="var(--font-mono)" font-size="9" fill="var(--text-muted)">returns canned bool</text>
-                  </g>
-                  <g transform="translate(370, 200)">
-                    <rect width="140" height="100" rx="6" fill="var(--bg)" stroke="#8b5cf6" stroke-width="1.5"/>
-                    <text x="70" y="24" font-family="var(--font-mono)" font-size="10" fill="#8b5cf6" text-anchor="middle">&laquo;spy&raquo;</text>
-                    <text x="70" y="42" font-family="var(--font-display)" font-size="12" font-weight="700" fill="var(--text)" text-anchor="middle">SpyGateway</text>
-                    <line x1="0" y1="52" x2="140" y2="52" stroke="var(--border)" stroke-width="1"/>
-                    <text x="10" y="72" font-family="var(--font-mono)" font-size="9" fill="var(--text-muted)">+ callCount: int</text>
-                    <text x="10" y="88" font-family="var(--font-mono)" font-size="9" fill="var(--text-muted)">+ lastAmount: Money</text>
-                  </g>
-                  <g transform="translate(540, 200)">
-                    <rect width="140" height="100" rx="6" fill="var(--bg)" stroke="#ec4899" stroke-width="1.5"/>
-                    <text x="70" y="24" font-family="var(--font-mono)" font-size="10" fill="#ec4899" text-anchor="middle">&laquo;mock&raquo;</text>
-                    <text x="70" y="42" font-family="var(--font-display)" font-size="12" font-weight="700" fill="var(--text)" text-anchor="middle">MockGateway</text>
-                    <line x1="0" y1="52" x2="140" y2="52" stroke="var(--border)" stroke-width="1"/>
-                    <text x="10" y="72" font-family="var(--font-mono)" font-size="9" fill="var(--text-muted)">+ verifyExpectations()</text>
-                    <text x="10" y="88" font-family="var(--font-mono)" font-size="9" fill="var(--text-muted)">fails on unexpected</text>
-                  </g>
-                  <g transform="translate(710, 200)">
-                    <rect width="140" height="100" rx="6" fill="var(--bg)" stroke="#10b981" stroke-width="1.5"/>
-                    <text x="70" y="24" font-family="var(--font-mono)" font-size="10" fill="#10b981" text-anchor="middle">&laquo;fake&raquo;</text>
-                    <text x="70" y="42" font-family="var(--font-display)" font-size="12" font-weight="700" fill="var(--text)" text-anchor="middle">FakeGateway</text>
-                    <line x1="0" y1="52" x2="140" y2="52" stroke="var(--border)" stroke-width="1"/>
-                    <text x="10" y="72" font-family="var(--font-mono)" font-size="9" fill="var(--text-muted)">- ledger: Map&lt;Id, Tx&gt;</text>
-                    <text x="10" y="88" font-family="var(--font-mono)" font-size="9" fill="var(--text-muted)">in-memory logic</text>
-                  </g>
-
-                  <!-- Dependency connection -->
-                  <line x1="250" y1="85" x2="350" y2="85" stroke="#10b981" stroke-width="2" marker-end="url(#uml-arrow-14)"/>
-                  <!-- Real Impl inheritance -->
-                  <line x1="680" y1="85" x2="590" y2="85" stroke="#10b981" stroke-width="1.8" stroke-dasharray="4 4" marker-end="url(#uml-tri-14)"/>
-                  <!-- Test doubles inheritance lines -->
-                  <line x1="100" y1="200" x2="470" y2="140" stroke="#64748b" stroke-width="1.5" stroke-dasharray="3 3"/>
-                  <line x1="270" y1="200" x2="470" y2="140" stroke="#0284c7" stroke-width="1.5" stroke-dasharray="3 3"/>
-                  <line x1="440" y1="200" x2="470" y2="140" stroke="#8b5cf6" stroke-width="1.5" stroke-dasharray="3 3"/>
-                  <line x1="610" y1="200" x2="470" y2="140" stroke="#ec4899" stroke-width="1.5" stroke-dasharray="3 3"/>
-                  <line x1="780" y1="200" x2="470" y2="140" stroke="#10b981" stroke-width="1.5" stroke-dasharray="3 3"/>
-                </svg>
-              </div>
-            </div>
-          </article>
-
-          <!-- Pillar 3 -->
-          <article class="pillar-panel" id="pillar-3" data-pillar="3">
-            <div class="pillar-header">
-              <span class="pillar-tag">PILLAR 03 · DYNAMIC INTERACTION</span>
-              <h3 class="pillar-title">State Verification vs. Behavior Verification Sequences</h3>
-            </div>
-            <div class="pillar-body">
-              <div class="pillar-grid-2col">
-                <div>
-                  <h4 style="color:#0284c7;margin-top:0;">1. State Verification (Detroit / Classical School)</h4>
-                  <p>In classical state verification, the test establishes preconditions, invokes the SUT method, and inspects the resulting state of the SUT or collaborator:</p>
-                  <ol style="font-size:0.9rem;line-height:1.6;color:var(--text-muted);padding-left:1.2rem;">
-                    <li><strong>Setup:</strong> Instantiate SUT with a <code>StubGateway</code> returning <code>true</code>.</li>
-                    <li><strong>Exercise:</strong> Call <code>orderService.placeOrder(cart)</code>.</li>
-                    <li><strong>Verify:</strong> Assert on state: <code>assertEquals(OrderStatus.PAID, order.getStatus())</code>.</li>
-                  </ol>
-                  <p style="font-size:0.85rem;color:var(--text-muted);"><strong>Advantage:</strong> Completely resilient to internal refactoring. If you rewrite how methods are called internally without altering state, tests remain green.</p>
-                </div>
-                <div>
-                  <h4 style="color:#ec4899;margin-top:0;">2. Behavior Verification (London / Mockist School)</h4>
-                  <p>In mockist behavior verification, the test establishes expected interactions, executes the SUT, and verifies that the exact protocol was satisfied:</p>
-                  <ol style="font-size:0.9rem;line-height:1.6;color:var(--text-muted);padding-left:1.2rem;">
-                    <li><strong>Setup:</strong> Create mock collaborator. Define expectation: <code>when(gateway.process(any())).thenReturn(true)</code>.</li>
-                    <li><strong>Exercise:</strong> Call <code>orderService.placeOrder(cart)</code>.</li>
-                    <li><strong>Verify:</strong> <code>verify(gateway, times(1)).process(expectedMoney)</code>.</li>
-                  </ol>
-                  <p style="font-size:0.85rem;color:var(--text-muted);"><strong>Advantage:</strong> Exceptional for isolating side effects (e.g. verifying an email was dispatched or audit record logged) where no public state is stored.</p>
-                </div>
-              </div>
-            </div>
-          </article>
-
-          <!-- Pillar 4 -->
-          <article class="pillar-panel" id="pillar-4" data-pillar="4">
-            <div class="pillar-header">
-              <span class="pillar-tag">PILLAR 04 · TRADE-OFFS &amp; RISKS</span>
-              <h3 class="pillar-title">Enterprise Trade-Offs &amp; Architectural Consequences</h3>
-            </div>
-            <div class="pillar-body">
-              <table class="blueprint-table" style="width:100%;border-collapse:collapse;margin-top:0.5rem;font-size:0.88rem;">
-                <thead>
-                  <tr style="border-bottom:2px solid var(--border);text-align:left;">
-                    <th style="padding:0.6rem;">Double Type</th>
-                    <th style="padding:0.6rem;">Primary Purpose</th>
-                    <th style="padding:0.6rem;">Implementation Cost</th>
-                    <th style="padding:0.6rem;">Fragility / Maintenance Risk</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr style="border-bottom:1px solid var(--border);">
-                    <td style="padding:0.6rem;font-weight:700;color:#64748b;">Dummy</td>
-                    <td style="padding:0.6rem;">Parameter filler to satisfy compiler</td>
-                    <td style="padding:0.6rem;color:#10b981;">Trivial (pass null or empty obj)</td>
-                    <td style="padding:0.6rem;color:#10b981;">Zero (never invoked)</td>
-                  </tr>
-                  <tr style="border-bottom:1px solid var(--border);">
-                    <td style="padding:0.6rem;font-weight:700;color:#0284c7;">Stub</td>
-                    <td style="padding:0.6rem;">Supplies canned data to SUT queries</td>
-                    <td style="padding:0.6rem;color:#10b981;">Low (hardcoded return values)</td>
-                    <td style="padding:0.6rem;color:#10b981;">Low (resilient to code refactoring)</td>
-                  </tr>
-                  <tr style="border-bottom:1px solid var(--border);">
-                    <td style="padding:0.6rem;font-weight:700;color:#8b5cf6;">Spy</td>
-                    <td style="padding:0.6rem;">Records invocations for assertion inspection</td>
-                    <td style="padding:0.6rem;color:#eab308;">Medium (wrapper around real/stub)</td>
-                    <td style="padding:0.6rem;color:#eab308;">Medium (checks invocation counts)</td>
-                  </tr>
-                  <tr style="border-bottom:1px solid var(--border);">
-                    <td style="padding:0.6rem;font-weight:700;color:#ec4899;">Mock</td>
-                    <td style="padding:0.6rem;">Strict protocol and behavior verification</td>
-                    <td style="padding:0.6rem;color:#eab308;">Low with Mockito / High manually</td>
-                    <td style="padding:0.6rem;color:#ef4444;">High (Brittle Tests risk on refactoring)</td>
-                  </tr>
-                  <tr>
-                    <td style="padding:0.6rem;font-weight:700;color:#10b981;">Fake</td>
-                    <td style="padding:0.6rem;">In-memory functional simulation (H2, Maps)</td>
-                    <td style="padding:0.6rem;color:#ef4444;">High (requires domain logic)</td>
-                    <td style="padding:0.6rem;color:#10b981;">Low (reusable across entire test suite)</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </article>
-
-          <!-- Pillar 5 -->
-          <article class="pillar-panel" id="pillar-5" data-pillar="5">
-            <div class="pillar-header">
-              <span class="pillar-tag">PILLAR 05 · CROSS-PATTERN ECOSYSTEM</span>
-              <h3 class="pillar-title">GoF &amp; Enterprise Pattern Synergies</h3>
-            </div>
-            <div class="pillar-body">
-              <div class="pillar-grid-2col">
-                <div class="takeaway-item">
-                  <strong>Strategy &amp; Dependency Injection (Unit 1)</strong>
-                  <p>Test doubles are fundamentally interchangeable Concrete Strategies injected into a Context. Without Strategy/DIP, unit testing requires reflection hacks or bytecode manipulation.</p>
-                </div>
-                <div class="takeaway-item">
-                  <strong>Null Object Pattern (GoF / Fowler)</strong>
-                  <p>A Dummy object is often a formalized Null Object that adheres to the interface but provides empty no-op method implementations.</p>
-                </div>
-                <div class="takeaway-item">
-                  <strong>Decorator &amp; Proxy Patterns (GoF)</strong>
-                  <p>A Test Spy is an implementation of the Decorator / Proxy pattern: it wraps the collaborator, intercepts calls to record arguments and timestamps, and delegates to the underlying instance.</p>
-                </div>
-                <div class="takeaway-item">
-                  <strong>Adapter Pattern (Unit 3)</strong>
-                  <p>Fakes and Stubs act as Test Adapters, translating in-memory simulated semantics into the enterprise boundary interfaces demanded by the SUT.</p>
-                </div>
-              </div>
-            </div>
-          </article>
-
-          <!-- Pillar 6 -->
-          <article class="pillar-panel" id="pillar-6" data-pillar="6">
-            <div class="pillar-header">
-              <span class="pillar-tag">PILLAR 06 · TEST SMELLS &amp; ANTI-PATTERNS</span>
-              <h3 class="pillar-title">Meszaros Test Smells &amp; Production Red Flags</h3>
-            </div>
-            <div class="pillar-body">
-              <div class="smell-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
-                <div style="background:var(--bg-raised);padding:1rem;border-left:4px solid #ef4444;border-radius:0 4px 4px 0;">
-                  <strong style="color:#ef4444;">1. The Brittle Test (Over-Mocking)</strong>
-                  <p style="font-size:0.85rem;color:var(--text-muted);margin:0.4rem 0 0;">
-                    Mocking every single internal method call. When an engineer extracts a private method or delegates to a helper without changing system behavior, 50 unit tests break.
-                  </p>
-                  <span style="font-size:0.78rem;color:#10b981;font-weight:700;">Remedy: Verify state/outputs rather than internal collaboration choreography.</span>
-                </div>
-                <div style="background:var(--bg-raised);padding:1rem;border-left:4px solid #ef4444;border-radius:0 4px 4px 0;">
-                  <strong style="color:#ef4444;">2. The Mystery Guest</strong>
-                  <p style="font-size:0.85rem;color:var(--text-muted);margin:0.4rem 0 0;">
-                    A test that reads external database rows or fixture files on disk without defining them in the test body. The reader cannot understand why the assertions pass.
-                  </p>
-                  <span style="font-size:0.78rem;color:#10b981;font-weight:700;">Remedy: Use in-line Test Data Builders (Given-When-Then clarity).</span>
-                </div>
-                <div style="background:var(--bg-raised);padding:1rem;border-left:4px solid #eab308;border-radius:0 4px 4px 0;">
-                  <strong style="color:#eab308;">3. Fragile Fixture / Shared State</strong>
-                  <p style="font-size:0.85rem;color:var(--text-muted);margin:0.4rem 0 0;">
-                    A massive static `@BeforeAll` setup shared across 200 tests. If Test 14 mutates a singleton or database record, Test 15 fails unpredictably.
-                  </p>
-                  <span style="font-size:0.78rem;color:#10b981;font-weight:700;">Remedy: Fresh Fixture per test method (`@BeforeEach`) and transactional rollback.</span>
-                </div>
-                <div style="background:var(--bg-raised);padding:1rem;border-left:4px solid #eab308;border-radius:0 4px 4px 0;">
-                  <strong style="color:#eab308;">4. Test Logic in Production</strong>
-                  <p style="font-size:0.85rem;color:var(--text-muted);margin:0.4rem 0 0;">
-                    Adding flags like `if (isTestEnvironment)` inside production business logic classes.
-                  </p>
-                  <span style="font-size:0.78rem;color:#10b981;font-weight:700;">Remedy: Polymorphic DI: inject different implementations at the composition root.</span>
-                </div>
-              </div>
-            </div>
-          </article>
-
-          <!-- Pillar 7 -->
-          <article class="pillar-panel" id="pillar-7" data-pillar="7">
-            <div class="pillar-header">
-              <span class="pillar-tag">PILLAR 07 · PRODUCTION CODE STANDARD</span>
-              <h3 class="pillar-title">Modern JUnit 5 &amp; Mockito 5 Enterprise Implementation</h3>
-            </div>
-            <div class="pillar-body">
-              <div class="code-window">
-                <div class="code-window-bar">
-                  <div class="code-dots">
-                    <span class="dot red"></span>
-                    <span class="dot yellow"></span>
-                    <span class="dot green"></span>
-                  </div>
-                  <span class="code-file">OrderServiceTest.java · JUnit 5 + Mockito 5</span>
-                  <button class="code-copy-btn" onclick="copySnippet('codePillar7')">Copy Code</button>
-                </div>
-                <pre class="code-pre" id="codePillar7"><code><span class="k">package</span> de.frankfurt.uas.posa.testing;
-
-<span class="k">import</span> org.junit.jupiter.api.*;
-<span class="k">import</span> org.junit.jupiter.api.extension.ExtendWith;
-<span class="k">import</span> org.mockito.*;
-<span class="k">import</span> org.mockito.junit.jupiter.MockitoExtension;
-<span class="k">import static</span> org.junit.jupiter.api.Assertions.*;
-<span class="k">import static</span> org.mockito.Mockito.*;
-
-<span class="nd">@ExtendWith</span>(MockitoExtension.<span class="k">class</span>)
-<span class="k">class</span> <span class="nc">OrderServiceTest</span> {
-
-    <span class="nd">@Mock</span>
-    <span class="k">private</span> <span class="nc">PaymentGateway</span> mockGateway;   <span class="c">// Behavior verification</span>
-
-    <span class="nd">@Spy</span>
-    <span class="k">private</span> <span class="nc">AuditLogger</span> spyLogger;         <span class="c">// Telemetry verification</span>
-
-    <span class="nd">@InjectMocks</span>
-    <span class="k">private</span> <span class="nc">OrderService</span> sut;             <span class="c">// System Under Test</span>
-
-    <span class="nd">@Test</span>
-    <span class="nd">@DisplayName</span>(<span class="s">"Given valid payment, order completes and logs audit event"</span>)
-    <span class="k">void</span> <span class="nf">shouldCompleteOrderSuccessfully</span>() {
-        <span class="c">// 1. Arrange (Stubbing Canned Answers on Mock)</span>
-        <span class="nc">Order</span> order = <span class="k">new</span> <span class="nc">Order</span>(<span class="s">"ORD-991"</span>, <span class="nc">Money</span>.of(<span class="m">150.00</span>, <span class="s">"EUR"</span>));
-        when(mockGateway.process(any(<span class="nc">Money</span>.<span class="k">class</span>))).thenReturn(<span class="k">true</span>);
-
-        <span class="c">// 2. Act (Exercise SUT)</span>
-        <span class="nc">Receipt</span> receipt = sut.processOrder(order);
-
-        <span class="c">// 3. Assert (State Verification)</span>
-        assertNotNull(receipt);
-        assertEquals(<span class="nc">OrderStatus</span>.CONFIRMED, receipt.status());
-
-        <span class="c">// 4. Verify (Behavior Verification - Mock &amp; Spy)</span>
-        verify(mockGateway, times(<span class="m">1</span>)).process(order.total());
-        verify(spyLogger).recordTransaction(eq(<span class="s">"ORD-991"</span>), eq(<span class="nc">TxStatus</span>.SUCCESS));
-    }
-}</code></pre>
-              </div>
-            </div>
-          </article>
-
-          <!-- Pillar 8 -->
-          <article class="pillar-panel" id="pillar-8" data-pillar="8">
-            <div class="pillar-header">
-              <span class="pillar-tag">PILLAR 08 · EXAM TRAPS &amp; DEFENSE</span>
-              <h3 class="pillar-title">Frankfurt UAS Examination Pitfalls (Prof. Dr. Jörg Schäfer)</h3>
-            </div>
-            <div class="pillar-body">
-              <div class="pillar-grid-2col">
-                <div style="background:rgba(239,68,68,0.06);border:1px solid rgba(239,68,68,0.3);border-radius:var(--radius-sm);padding:1rem;">
-                  <strong style="color:#ef4444;">Exam Trap 1: "Is Mock just a synonym for any Test Double?"</strong>
-                  <p style="font-size:0.86rem;color:var(--text-muted);margin-top:0.4rem;">
-                    <strong>Schäfer's Trap:</strong> Students often answer "Yes, we use Mockito so everything is a mock."<br>
-                    <strong>Correct UAS Defense:</strong> False! Gerard Meszaros explicitly formalized <strong>Test Double</strong> as the overarching generic term. A Mock is a very specific type of double that performs behavioral protocol verification. Calling a Fake or a Stub a "Mock" costs points.
-                  </p>
-                </div>
-                <div style="background:rgba(239,68,68,0.06);border:1px solid rgba(239,68,68,0.3);border-radius:var(--radius-sm);padding:1rem;">
-                  <strong style="color:#ef4444;">Exam Trap 2: Stub vs. Mock Assertion Placement</strong>
-                  <p style="font-size:0.86rem;color:var(--text-muted);margin-top:0.4rem;">
-                    <strong>Schäfer's Trap:</strong> "Where are expectations defined in classical stubbing vs mockist testing?"<br>
-                    <strong>Correct UAS Defense:</strong> In pure mockist testing (e.g. jMock / early Mockito), expectations are established <em>before</em> the SUT method is executed. In state verification with stubs, assertions are executed <em>after</em> the method runs.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <!-- Symmetrical Demarcation 2 -->
-    <div class="section-divider-wrapper" style="margin: 3.5rem 0 1.5rem;">
-      <div class="section-divider-line"></div>
-      <div class="section-divider-tag">
-        <span class="section-divider-dot"></span>
-        <span>PART 2 · HANDS-ON CURRICULUM</span>
-      </div>
-      <div class="section-divider-line"></div>
-    </div>
-
-    <!-- Curriculum Super-Header -->
-    <header class="curriculum-header" id="curriculumHeader">
-      <div class="curriculum-meta-chip">
-        <span>⏱️ 40 Min Curriculum</span>
-        <span class="dot-sep">·</span>
-        <span>🎯 Exam Target: Gerard Meszaros Doubles</span>
-        <span class="dot-sep">·</span>
-        <span>🏛️ Prof. Dr. Jörg Schäfer</span>
-      </div>
-      <h2 class="curriculum-title">5-Stage Masterclass: Automated Verification &amp; Test Doubles</h2>
-      <p class="curriculum-desc">
-        Transition from naive unit testing to production-grade xUnit patterns. Explore the five doubles, avoid brittle mock-heavy architectures, and experiment live in the interactive verifier.
-      </p>
-
-      <!-- Stage Navigation Bar -->
-      <nav class="masterclass-stage-nav" aria-label="Curriculum Stages">
-        <a class="stage-nav-pill active" href="#stage-1" data-stage="1">
-          <span class="pill-number">01</span>
-          <span class="pill-label">Taxonomy</span>
-        </a>
-        <a class="stage-nav-pill" href="#stage-2" data-stage="2">
-          <span class="pill-number">02</span>
-          <span class="pill-label">State vs Behavior</span>
-        </a>
-        <a class="stage-nav-pill" href="#stage-3" data-stage="3">
-          <span class="pill-number">03</span>
-          <span class="pill-label">Interactive Lab</span>
-        </a>
-        <a class="stage-nav-pill" href="#stage-4" data-stage="4">
-          <span class="pill-number">04</span>
-          <span class="pill-label">Double Implementations</span>
-        </a>
-        <a class="stage-nav-pill" href="#stage-5" data-stage="5">
-          <span class="pill-number">05</span>
-          <span class="pill-label">Exam Drills</span>
-        </a>
-      </nav>
     </header>
 
-    <!-- Stage 1 -->
-    <section class="masterclass-stage" id="stage-1" data-stage="1">
-      <div class="stage-header-top">
+    <!-- ============================================================== -->
+    <!-- 1. MESZAROS' 5 TEST DOUBLES TAXONOMY                           -->
+    <!-- ============================================================== -->
+    <section class="chapter" id="sec-taxonomy">
+      <div class="chapter-head">
+        <span class="chapter-num">1</span>
         <div>
-          <span class="stage-eyebrow-pill">STAGE 01 OF 05 · FOUNDATIONS</span>
-          <h3 class="stage-title">The Meszaros Taxonomy: 5 Distinct Test Doubles</h3>
-        </div>
-        <button class="stage-mastery-btn" type="button" onclick="markStageComplete(1)">Mark Stage 1 Complete</button>
-      </div>
-
-      <div class="stage-takeaways-box">
-        <div class="stage-takeaways-title">
-          <span>⚡</span>
-          <span>Core Takeaways for Frankfurt UAS Students</span>
-        </div>
-        <div class="takeaway-grid">
-          <div class="takeaway-item">
-            <strong>1. Generic vs Specific</strong>
-            <p>Every mock is a test double, but NOT every test double is a mock. Never use the terms interchangeably.</p>
-          </div>
-          <div class="takeaway-item">
-            <strong>2. Fakes Have Working Code</strong>
-            <p>Fakes (like an in-memory repository) implement actual business algorithms or data structures, but cut production corners.</p>
-          </div>
-          <div class="takeaway-item">
-            <strong>3. Dummies Never Execute</strong>
-            <p>Dummies satisfy strict non-null method parameter requirements. If a dummy's method is called, an exception should fire.</p>
-          </div>
+          <h2>The 5 Gerard Meszaros Test Doubles</h2>
+          <span style="font-size:0.85rem; color:var(--text-muted); font-weight:600;">xUnit Test Patterns Standard</span>
         </div>
       </div>
 
-      <p>Gerard Meszaros identified that untangling test double types is the single most important prerequisite to preventing brittle unit test suites:</p>
-      
-      <div class="blueprint-table-wrapper" style="margin: 1.5rem 0; overflow-x: auto;">
-        <table class="blueprint-table" style="width:100%; border-collapse: collapse; font-size: 0.9rem;">
-          <thead>
-            <tr style="border-bottom: 2px solid var(--border); text-align: left;">
-              <th style="padding: 0.75rem;">Double Name</th>
-              <th style="padding: 0.75rem;">Execution Behavior</th>
-              <th style="padding: 0.75rem;">Verification Mechanism</th>
-              <th style="padding: 0.75rem;">Canonical Example</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr style="border-bottom: 1px solid var(--border);">
-              <td style="padding: 0.75rem; font-weight:700; color:#64748b;">1. Dummy</td>
-              <td style="padding: 0.75rem;">Throws exception or does nothing</td>
-              <td style="padding: 0.75rem;">None (never executed)</td>
-              <td style="padding: 0.75rem;"><code>new Customer("Alex", new DummyAddress())</code></td>
-            </tr>
-            <tr style="border-bottom: 1px solid var(--border);">
-              <td style="padding: 0.75rem; font-weight:700; color:#0284c7;">2. Stub</td>
-              <td style="padding: 0.75rem;">Returns hardcoded canned values</td>
-              <td style="padding: 0.75rem;">State verification on SUT</td>
-              <td style="padding: 0.75rem;"><code>when(rates.getRate("USD")).thenReturn(1.08)</code></td>
-            </tr>
-            <tr style="border-bottom: 1px solid var(--border);">
-              <td style="padding: 0.75rem; font-weight:700; color:#8b5cf6;">3. Spy</td>
-              <td style="padding: 0.75rem;">Pass-through or stub + records telemetry</td>
-              <td style="padding: 0.75rem;">Assert on recorded invocation log</td>
-              <td style="padding: 0.75rem;"><code>spyNotifier.assertNotificationSentTo("admin")</code></td>
-            </tr>
-            <tr style="border-bottom: 1px solid var(--border);">
-              <td style="padding: 0.75rem; font-weight:700; color:#ec4899;">4. Mock</td>
-              <td style="padding: 0.75rem;">Enforces expected protocol calls</td>
-              <td style="padding: 0.75rem;">Behavior verification (Mockito <code>verify()</code>)</td>
-              <td style="padding: 0.75rem;"><code>verify(dispatcher, times(1)).dispatch(event)</code></td>
-            </tr>
-            <tr>
-              <td style="padding: 0.75rem; font-weight:700; color:#10b981;">5. Fake</td>
-              <td style="padding: 0.75rem;">Simulated working implementation</td>
-              <td style="padding: 0.75rem;">State verification against Fake state</td>
-              <td style="padding: 0.75rem;"><code>new InMemoryUserRepository()</code></td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-      <div class="stage-next-card">
-        <div class="stage-next-body">
-          <span class="stage-next-eyebrow">UP NEXT · STAGE 02</span>
-          <h4 class="stage-next-title">State Verification vs. Behavior Verification (Detroit vs London)</h4>
-          <p class="stage-next-desc">Examine Martin Fowler's classic comparison and why over-mocking creates brittle test suites.</p>
+      <div class="pattern-spec-box">
+        <div class="spec-grid">
+          <div class="spec-row">
+            <span class="spec-label">1. Dummy:</span>
+            <span class="spec-val">Objects passed around but never actually used. Primarily used to satisfy mandatory method signatures (e.g. non-null parameter).</span>
+          </div>
+          <div class="spec-row">
+            <span class="spec-label">2. Stub:</span>
+            <span class="spec-val">Provides canned answers to calls made during test execution, responding only to specific test inputs. Does not record calls or verify behavior.</span>
+          </div>
+          <div class="spec-row">
+            <span class="spec-label">3. Spy:</span>
+            <span class="spec-val">A Stub that also records information about how it was called (e.g. invocation count, recorded arguments) so test code can assert on them afterwards.</span>
+          </div>
+          <div class="spec-row">
+            <span class="spec-label">4. Mock:</span>
+            <span class="spec-val">Objects pre-programmed with explicit expectations before execution. During or after the test, the mock verifies that expected method calls occurred with exact parameters.</span>
+          </div>
+          <div class="spec-row">
+            <span class="spec-label">5. Fake:</span>
+            <span class="spec-val">Has a real, working implementation of the collaborator, but takes shortcuts that make it unsuitable for production (e.g. in-memory H2 database instead of PostgreSQL).</span>
+          </div>
         </div>
-        <a class="stage-next-btn" href="#stage-2">Proceed to Stage 2 →</a>
       </div>
     </section>
 
-    <!-- Stage 2 -->
-    <section class="masterclass-stage" id="stage-2" data-stage="2">
-      <div class="stage-header-top">
+    <!-- ============================================================== -->
+    <!-- 2. STATE VS BEHAVIOR VERIFICATION                             -->
+    <!-- ============================================================== -->
+    <section class="chapter" id="sec-verification">
+      <div class="chapter-head">
+        <span class="chapter-num">2</span>
         <div>
-          <span class="stage-eyebrow-pill">STAGE 02 OF 05 · ARCHITECTURAL DEBATE</span>
-          <h3 class="stage-title">State Verification vs. Behavior Verification</h3>
-        </div>
-        <button class="stage-mastery-btn" type="button" onclick="markStageComplete(2)">Mark Stage 2 Complete</button>
-      </div>
-
-      <p>In Martin Fowler’s seminal essay <em>Mocks Aren't Stubs</em>, he formalized the deep architectural division between two testing philosophies:</p>
-
-      <div class="pillar-grid-2col" style="margin: 2rem 0;">
-        <div style="background:var(--bg-raised);border:1px solid var(--border);border-radius:var(--radius-md);padding:1.5rem;">
-          <h4 style="color:#0284c7;margin-top:0;">Classical TDD (Detroit / Chicago School)</h4>
-          <p style="font-size:0.88rem;color:var(--text-muted);line-height:1.6;">
-            Championed by Kent Beck. Focuses on <strong>State Verification</strong>. Whenever possible, tests use real collaborators or simple Stubs/Fakes. The test validates the outcome by querying public state:
-          </p>
-          <div class="code-window" style="margin:1rem 0 0;">
-            <pre class="code-pre"><code><span class="c">// State Verification</span>
-warehouse.addInventory(<span class="s">"MacBook"</span>, <span class="m">50</span>);
-order.fill(warehouse);
-assertTrue(order.isFilled());
-assertEquals(<span class="m">49</span>, warehouse.getInventory(<span class="s">"MacBook"</span>));</code></pre>
-          </div>
-          <p style="font-size:0.82rem;color:#10b981;margin-top:0.75rem;"><strong>Result:</strong> Tests are completely immune to changes in how internal methods communicate. You can refactor aggressively without breaking tests.</p>
-        </div>
-
-        <div style="background:var(--bg-raised);border:1px solid var(--border);border-radius:var(--radius-md);padding:1.5rem;">
-          <h4 style="color:#ec4899;margin-top:0;">Mockist TDD (London School)</h4>
-          <p style="font-size:0.88rem;color:var(--text-muted);line-height:1.6;">
-            Championed by Steve Freeman and Nat Pryce (<em>Growing Object-Oriented Software, Guided by Tests</em>). Focuses on <strong>Behavior Verification</strong>. Every collaborator is isolated as a Mock. Tests verify the choreography of method invocations:
-          </p>
-          <div class="code-window" style="margin:1rem 0 0;">
-            <pre class="code-pre"><code><span class="c">// Behavior Verification</span>
-order.fill(mockWarehouse);
-verify(mockWarehouse, times(<span class="m">1</span>))
-    .removeInventory(<span class="s">"MacBook"</span>, <span class="m">1</span>);</code></pre>
-          </div>
-          <p style="font-size:0.82rem;color:#ef4444;margin-top:0.75rem;"><strong>Risk:</strong> Coupling tests to implementation details. If you change <code>removeInventory</code> to <code>decrementStock</code>, the test fails even though application logic remains identical.</p>
+          <h2>State vs. Behavior Verification</h2>
+          <span style="font-size:0.85rem; color:var(--text-muted); font-weight:600;">Detroit (Classical) vs. London (Mockist) Schools</span>
         </div>
       </div>
 
-      <div class="stage-next-card">
-        <div class="stage-next-body">
-          <span class="stage-next-eyebrow">UP NEXT · STAGE 03</span>
-          <h4 class="stage-next-title">Interactive Laboratory: The Test Double &amp; Verification Simulator</h4>
-          <p class="stage-next-desc">Trigger test runs with different doubles, simulate refactorings, and witness brittle tests breaking live.</p>
-        </div>
-        <a class="stage-next-btn" href="#stage-3">Proceed to Stage 3 →</a>
-      </div>
-    </section>
-
-    <!-- Stage 3 -->
-    <section class="masterclass-stage" id="stage-3" data-stage="3">
-      <div class="stage-header-top">
-        <div>
-          <span class="stage-eyebrow-pill">STAGE 03 OF 05 · HANDS-ON LAB</span>
-          <h3 class="stage-title">Interactive Test Double Laboratory &amp; Behavior Verifier</h3>
-        </div>
-        <button class="stage-mastery-btn" type="button" onclick="markStageComplete(3)">Mark Stage 3 Complete</button>
-      </div>
-
-      <div class="double-sim-card">
-        <h4 style="margin:0;color:var(--text);">Gerard Meszaros Double Execution Simulator</h4>
-        <p style="font-size:0.85rem;color:var(--text-muted);margin:0.25rem 0 1rem;">
-          Select a Test Double type, toggle internal code refactoring, and execute the SUT test run to inspect assertion behavior:
-        </p>
-
-        <div style="font-size:0.85rem;font-weight:700;color:var(--text-muted);margin-bottom:0.5rem;">Select Active Collaborator Double:</div>
-        <div class="sim-controls">
-          <button class="sim-btn active" id="btnDoubleDummy" onclick="setSimDouble('dummy')">1. Dummy</button>
-          <button class="sim-btn" id="btnDoubleStub" onclick="setSimDouble('stub')">2. Stub (State)</button>
-          <button class="sim-btn" id="btnDoubleSpy" onclick="setSimDouble('spy')">3. Spy (Telemetry)</button>
-          <button class="sim-btn" id="btnDoubleMock" onclick="setSimDouble('mock')">4. Mock (Behavior)</button>
-          <button class="sim-btn" id="btnDoubleFake" onclick="setSimDouble('fake')">5. Fake (In-Memory)</button>
+      <div class="guide-card">
+        <div class="guide-card-header">
+          <span class="rule-badge">TDD SCHOOLS</span>
+          <span>Detroit (Classicist) vs. London (Mockist)</span>
         </div>
 
-        <div style="display:flex;gap:1rem;align-items:center;margin:1.25rem 0;flex-wrap:wrap;">
-          <label style="font-size:0.85rem;color:var(--text);display:flex;align-items:center;gap:0.4rem;cursor:pointer;">
-            <input type="checkbox" id="checkRefactor" onchange="updateSimOutput()">
-            <span><strong>Simulate Internal Refactoring</strong> (Rename internal method call <code>charge()</code> → <code>authorizeAndCapture()</code>)</span>
-          </label>
-          <button class="sim-btn" style="background:#059669;color:#fff;border-color:#059669;" onclick="runSimTest()">▶ Run SUT Test Suite</button>
-        </div>
-
-        <div class="sim-terminal" id="simOutput">Select a test double and click "Run SUT Test Suite" to observe execution.</div>
-      </div>
-
-      <div class="stage-next-card">
-        <div class="stage-next-body">
-          <span class="stage-next-eyebrow">UP NEXT · STAGE 04</span>
-          <h4 class="stage-next-title">Production Implementations: Handcrafted Doubles vs Mockito 5</h4>
-          <p class="stage-next-desc">Inspect pure Java 17 implementations of each double without third-party frameworks, followed by Mockito best practices.</p>
-        </div>
-        <a class="stage-next-btn" href="#stage-4">Proceed to Stage 4 →</a>
-      </div>
-    </section>
-
-    <!-- Stage 4 -->
-    <section class="masterclass-stage" id="stage-4" data-stage="4">
-      <div class="stage-header-top">
-        <div>
-          <span class="stage-eyebrow-pill">STAGE 04 OF 05 · PRODUCTION ARCHITECTURE</span>
-          <h3 class="stage-title">Handcrafted Test Doubles vs. Mockito 5 Standard</h3>
-        </div>
-        <button class="stage-mastery-btn" type="button" onclick="markStageComplete(4)">Mark Stage 4 Complete</button>
-      </div>
-
-      <p>Exam questions at Frankfurt UAS often demand writing a double by hand in pure Java to demonstrate mastery of the underlying pattern:</p>
-
-      <div class="code-window" style="margin: 1.5rem 0;">
-        <div class="code-window-bar">
-          <div class="code-dots">
-            <span class="dot red"></span>
-            <span class="dot yellow"></span>
-            <span class="dot green"></span>
-          </div>
-          <span class="code-file">HandcraftedDoubles.java · Pure Core Java 17</span>
-          <button class="code-copy-btn" onclick="copySnippet('codeStage4')">Copy Code</button>
-        </div>
-        <pre class="code-pre" id="codeStage4"><code><span class="k">package</span> de.frankfurt.uas.posa.doubles;
-
-<span class="k">import</span> java.util.*;
-
-<span class="c">// 1. DUMMY: Fills parameter lists; throws if unexpectedly called</span>
-<span class="k">public class</span> <span class="nc">DummyPaymentGateway</span> <span class="k">implements</span> <span class="nc">PaymentGateway</span> {
-    <span class="nd">@Override</span>
-    <span class="k">public boolean</span> <span class="nf">processPayment</span>(<span class="nc">String</span> customerId, <span class="k">double</span> amount) {
-        <span class="k">throw new</span> <span class="nc">UnsupportedOperationException</span>(<span class="s">"Dummy must never be called!"</span>);
-    }
-}
-
-<span class="c">// 2. STUB: Returns canned, pre-programmed data</span>
-<span class="k">public class</span> <span class="nc">StubPaymentGateway</span> <span class="k">implements</span> <span class="nc">PaymentGateway</span> {
-    <span class="k">private final boolean</span> cannedResult;
-    <span class="k">public</span> <span class="nf">StubPaymentGateway</span>(<span class="k">boolean</span> cannedResult) {
-        <span class="k">this</span>.cannedResult = cannedResult;
-    }
-    <span class="nd">@Override</span>
-    <span class="k">public boolean</span> <span class="nf">processPayment</span>(<span class="nc">String</span> customerId, <span class="k">double</span> amount) {
-        <span class="k">return this</span>.cannedResult;
-    }
-}
-
-<span class="c">// 3. SPY: Records execution telemetry for post-run assertion</span>
-<span class="k">public class</span> <span class="nc">SpyPaymentGateway</span> <span class="k">implements</span> <span class="nc">PaymentGateway</span> {
-    <span class="k">public int</span> invocationCount = <span class="m">0</span>;
-    <span class="k">public</span> <span class="nc">List</span>&lt;<span class="nc">Double</span>&gt; chargedAmounts = <span class="k">new</span> <span class="nc">ArrayList</span>&lt;&gt;();
-
-    <span class="nd">@Override</span>
-    <span class="k">public boolean</span> <span class="nf">processPayment</span>(<span class="nc">String</span> customerId, <span class="k">double</span> amount) {
-        invocationCount++;
-        chargedAmounts.add(amount);
-        <span class="k">return true</span>;
-    }
-}
-
-<span class="c">// 4. FAKE: Real in-memory working simulator (reusable)</span>
-<span class="k">public class</span> <span class="nc">FakePaymentGateway</span> <span class="k">implements</span> <span class="nc">PaymentGateway</span> {
-    <span class="k">private final</span> <span class="nc">Map</span>&lt;<span class="nc">String</span>, <span class="nc">Double</span>&gt; customerBalances = <span class="k">new</span> <span class="nc">HashMap</span>&lt;&gt;();
-
-    <span class="k">public void</span> <span class="nf">deposit</span>(<span class="nc">String</span> id, <span class="k">double</span> amount) {
-        customerBalances.put(id, customerBalances.getOrDefault(id, <span class="m">0.0</span>) + amount);
-    }
-
-    <span class="nd">@Override</span>
-    <span class="k">public boolean</span> <span class="nf">processPayment</span>(<span class="nc">String</span> customerId, <span class="k">double</span> amount) {
-        <span class="k">double</span> bal = customerBalances.getOrDefault(customerId, <span class="m">0.0</span>);
-        <span class="k">if</span> (bal &gt;= amount) {
-            customerBalances.put(customerId, bal - amount);
-            <span class="k">return true</span>;
-        }
-        <span class="k">return false</span>;
-    }
-}</code></pre>
-      </div>
-
-      <div class="stage-next-card">
-        <div class="stage-next-body">
-          <span class="stage-next-eyebrow">UP NEXT · STAGE 05</span>
-          <h4 class="stage-next-title">Frankfurt UAS Exam Drills &amp; Self-Study Traps</h4>
-          <p class="stage-next-desc">Interactive accordion drills covering Prof. Dr. Jörg Schäfer's official test double exam questions.</p>
-        </div>
-        <a class="stage-next-btn" href="#stage-5">Proceed to Stage 5 →</a>
-      </div>
-    </section>
-
-    <!-- Stage 5 -->
-    <section class="masterclass-stage" id="stage-5" data-stage="5">
-      <div class="stage-header-top">
-        <div>
-          <span class="stage-eyebrow-pill">STAGE 05 OF 05 · ACADEMIC VERIFICATION</span>
-          <h3 class="stage-title">Frankfurt UAS Examination Drills (Prof. Dr. Jörg Schäfer)</h3>
-        </div>
-        <button class="stage-mastery-btn" type="button" onclick="markStageComplete(5)">Mark Stage 5 Complete</button>
-      </div>
-
-      <div class="drill-list">
-        <details class="drill-item" open>
-          <summary>
-            <span class="drill-tag">Exam Drill 1 · Taxonomy</span>
-            <span class="drill-q">What is the precise distinction between a Mock and a Stub in Gerard Meszaros's taxonomy?</span>
-            <span class="drill-reveal-hint"></span>
-          </summary>
-          <div class="drill-a">
-            <p><strong>Official Model Answer:</strong></p>
-            <ul>
-              <li>A <strong>Stub</strong> provides canned responses to queries made by the System Under Test during execution. It does not verify how or why it was called; verification is done by checking the final state of the SUT (State Verification).</li>
-              <li>A <strong>Mock</strong> is configured with expectations about the exact interactions it anticipates (call order, arguments, frequency). During or after execution, it verifies that the SUT behaved strictly according to the expected protocol (Behavior Verification).</li>
-            </ul>
-          </div>
-        </details>
-
-        <details class="drill-item">
-          <summary>
-            <span class="drill-tag">Exam Drill 2 · Architecture</span>
-            <span class="drill-q">Why does Martin Fowler warn against excessive use of Mocks in large enterprise test suites?</span>
-            <span class="drill-reveal-hint"></span>
-          </summary>
-          <div class="drill-a">
-            <p><strong>Official Model Answer:</strong></p>
-            <p>
-              Excessive mock usage creates <strong>Brittle Tests</strong>. Because mocks enforce specific method invocation choreography, refactoring private collaborations or extracting helper classes breaks tests even though the external business behavior remains completely correct. This destroys the primary value of unit tests as refactoring safety nets.
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:1.25rem;">
+          <div style="background:var(--bg); border:1px solid var(--border); border-radius:6px; padding:1.2rem;">
+            <strong style="color:var(--accent);">State Verification (Detroit / Chicago)</strong>
+            <p style="font-size:0.85rem; color:var(--text-muted); line-height:1.5; margin:0.4rem 0;">
+              Executes the SUT (System Under Test) and asserts on the resulting final state: <code>assertEquals(150.0, account.getBalance());</code>. More resilient to internal refactoring because tests do not care about private collaborator interactions.
             </p>
           </div>
-        </details>
 
-        <details class="drill-item">
-          <summary>
-            <span class="drill-tag">Exam Drill 3 · Implementation</span>
-            <span class="drill-q">When is a Fake superior to a Mock in automated integration testing?</span>
-            <span class="drill-reveal-hint"></span>
-          </summary>
-          <div class="drill-a">
-            <p><strong>Official Model Answer:</strong></p>
-            <p>
-              A <strong>Fake</strong> provides a real working in-memory implementation (e.g. an in-memory SQL database like H2 or a concurrent map repository). It is superior when multiple tests require consistent state persistence and complex query querying across multiple steps. Mocking a multi-stage database query requires brittle chains of <code>when(...).thenReturn(...)</code>, whereas a Fake naturally behaves like the real subsystem without network latency.
+          <div style="background:var(--bg); border:1px solid var(--border); border-radius:6px; padding:1.2rem;">
+            <strong style="color:#10b981;">Behavior Verification (London / Mockist)</strong>
+            <p style="font-size:0.85rem; color:var(--text-muted); line-height:1.5; margin:0.4rem 0;">
+              Asserts on interactions: <code>verify(paymentGateway).charge(150.0);</code>. Ensures that the SUT collaborates with dependencies exactly as specified. Can lead to brittle tests if private collaboration details change.
             </p>
           </div>
-        </details>
+        </div>
       </div>
     </section>
 
-    <!-- Footer Navigation -->
-    <footer class="page-footer" style="margin-top: 4rem; padding-top: 2rem; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
-      <a class="nav-prev" href="unit-13-analysis.html" style="font-weight: 700; color: var(--accent); text-decoration: none;">← Previous: Unit 13 · Analysis Patterns</a>
-      <a class="nav-next" href="unit-15-criticism.html" style="font-weight: 700; color: var(--accent); text-decoration: none;">Next: Unit 15 · Pattern Criticism →</a>
-    </footer>
+    <!-- ============================================================== -->
+    <!-- 3. CORE EXAM PRACTICE & DIRECT MODEL ANSWERS                   -->
+    <!-- ============================================================== -->
+    <section class="chapter" id="sec-drills">
+      <div class="chapter-head">
+        <span class="chapter-num">3</span>
+        <div>
+          <h2>Core Exam Practice &amp; Model Solutions</h2>
+          <span style="font-size:0.85rem; color:var(--text-muted); font-weight:600;">Direct Question &rarr; Answer Format</span>
+        </div>
+      </div>
+
+      <!-- QA 1: Test Double Differences -->
+      <div class="qa-block">
+        <div class="qa-q">
+          Question 1: Distinguish Between a Stub, a Spy, and a Mock
+          <span class="pts-badge">5 Points</span>
+          <p style="font-size:0.92rem; font-weight:400; color:var(--text-muted); margin-top:0.5rem;">
+            Distinguish between a Stub, a Spy, and a Mock in Gerard Meszaros' test double taxonomy!
+          </p>
+        </div>
+        <div class="qa-a">
+          <span class="ans-label">Model Answer:</span>
+          <ul>
+            <li><strong>Stub:</strong> Supplies canned answers to calls from the SUT to drive test execution, but does not record interactions or verify call counts.</li>
+            <li><strong>Spy:</strong> Extends a stub by recording runtime telemetry (e.g., number of invocations, arguments passed) for subsequent assertion by the test method.</li>
+            <li><strong>Mock:</strong> Configured with strict expectations upfront (expected invocations, exact arguments, order). It verifies the interactions automatically as part of the test verification.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
   </main>
-</div>
-
-<script src="assets/site.js?v=2026.15" defer></script>
-<script>
-// Reading progress bar
-window.addEventListener('scroll', function() {
-  var h = document.documentElement, b = document.body;
-  var st = 'scrollTop', sh = 'scrollHeight';
-  var percent = (h[st]||b[st]) / ((h[sh]||b[sh]) - h.clientHeight) * 100;
-  var bar = document.getElementById('readingProgressBar');
-  if (bar) bar.style.width = percent + '%';
-});
-
-// Blueprint Pillar & Layout Controls
-var _blueprintCollapsed = false;
-var _lastInlineCollapseTime = 0;
-
-function selectPillar(num) {
-  var tabs = document.querySelectorAll('.blueprint-tab');
-  var panels = document.querySelectorAll('.pillar-panel');
-  tabs.forEach(function(t) {
-    var match = t.getAttribute('data-pillar') == num;
-    t.classList.toggle('active', match);
-    t.setAttribute('aria-selected', match ? 'true' : 'false');
-  });
-  panels.forEach(function(p) {
-    p.classList.toggle('active', p.getAttribute('data-pillar') == num);
-  });
-}
-
-function setBlueprintView(mode) {
-  var suite = document.getElementById('blueprintSuite');
-  var btnExplorer = document.getElementById('btnViewExplorer');
-  var btnMatrix = document.getElementById('btnViewMatrix');
-  if (!suite) return;
-
-  if (mode === 'matrix') {
-    suite.classList.add('view-matrix');
-    if (btnMatrix) btnMatrix.classList.add('active');
-    if (btnExplorer) btnExplorer.classList.remove('active');
-    document.querySelectorAll('.pillar-panel').forEach(function(p) { p.classList.add('active'); });
-  } else {
-    suite.classList.remove('view-matrix');
-    if (btnExplorer) btnExplorer.classList.add('active');
-    if (btnMatrix) btnMatrix.classList.remove('active');
-    var activeTab = document.querySelector('.blueprint-tab.active');
-    var pNum = activeTab ? activeTab.getAttribute('data-pillar') : 1;
-    selectPillar(pNum);
-  }
-}
-
-function toggleBlueprintCollapse() {
-  var now = Date.now();
-  if (now - _lastInlineCollapseTime < 250) return;
-  _lastInlineCollapseTime = now;
-
-  _blueprintCollapsed = !_blueprintCollapsed;
-  var body = document.getElementById('blueprintSuiteBody');
-  var hint = document.getElementById('blueprintCollapsedHint');
-  var label = document.getElementById('collapseLabel');
-
-  if (_blueprintCollapsed) {
-    if (body) body.style.display = 'none';
-    if (hint) hint.style.display = 'flex';
-    if (label) label.textContent = '▼ Expand Rubric';
-  } else {
-    if (body) body.style.display = '';
-    if (hint) hint.style.display = 'none';
-    if (label) label.textContent = '▲ Collapse Rubric';
-  }
-}
-
-function copyBlueprintRubric() {
-  var md = `# Unit 14: Testing Patterns & Test Doubles - 8-Pillar Architecture Rubric
-## Instructor: Prof. Dr. Jörg Schäfer · Frankfurt University of Applied Sciences
-
-### Pillar 1: Intent & Problem Framing
-- Gerard Meszaros Test Doubles decouple the System Under Test (SUT) from volatile collaborators.
-- Prevents test flakiness, shared-state leakage, and slow CI runs.
-
-### Pillar 2: Structural Topology
-- Test Double is the root abstraction.
-- Subtypes: Dummy, Stub, Spy, Mock, Fake all implement the collaborator interface.
-
-### Pillar 3: Dynamic Interaction
-- State Verification (Classical/Detroit): Assert on final state/output of SUT or collaborator.
-- Behavior Verification (Mockist/London): Verify sequence and count of method invocations.
-
-### Pillar 4: Enterprise Trade-offs
-- Over-mocking causes Brittle Tests that fail upon harmless internal refactoring.
-- Fakes provide reusable in-memory simulations at higher implementation cost.
-
-### Pillar 5: Cross-Pattern Map
-- Doubles are Concrete Strategies injected via Dependency Injection.
-- Dummies act as Null Objects; Spies act as Decorator/Proxy wrappers.
-
-### Pillar 6: Test Smells
-- Brittle Tests, Mystery Guest, Fragile Fixtures, Conditional Test Logic, and Test Logic in Production.
-
-### Pillar 7: Production Standard
-- Modern JUnit 5 + Mockito 5 (@Mock, @Spy, @InjectMocks).
-
-### Pillar 8: Frankfurt UAS Exam Traps
-- Mock is NOT a synonym for Test Double.
-- Stubs are verified post-execution via state assertions; Mocks verify protocol choreography.
-`;
-
-  function updateLabelSuccess() {
-    var btn = document.querySelector('.blueprint-suite-actions button[onclick="copyBlueprintRubric()"]');
-    if (btn) {
-      var orig = btn.innerHTML;
-      btn.innerHTML = 'Copied to Clipboard! ✓';
-      setTimeout(function() { btn.innerHTML = orig; }, 2000);
-    }
-  }
-
-  if (navigator.clipboard && navigator.clipboard.writeText) {
-    navigator.clipboard.writeText(md).then(updateLabelSuccess);
-  } else {
-    var ta = document.createElement('textarea');
-    ta.value = md;
-    document.body.appendChild(ta);
-    ta.select();
-    try {
-      document.execCommand('copy');
-      updateLabelSuccess();
-    } catch (e) {
-      alert("Please press Ctrl+C to copy rubric");
-    }
-    document.body.removeChild(ta);
-  }
-}
-
-function copySnippet(elementId) {
-  var el = document.getElementById(elementId);
-  if (!el) return;
-  var text = el.innerText || el.textContent;
-  if (navigator.clipboard && navigator.clipboard.writeText) {
-    navigator.clipboard.writeText(text).then(function() {
-      if (typeof window.showToast === "function") window.showToast("Code snippet copied to clipboard!");
-    });
-  }
-}
-
-function markStageComplete(stageNum) {
-  var btn = event.target;
-  if (btn) {
-    btn.textContent = "Completed ✓";
-    btn.style.background = "#059669";
-    btn.style.color = "#fff";
-  }
-  var pill = document.querySelector('.stage-nav-pill[data-stage="' + stageNum + '"]');
-  if (pill) {
-    pill.style.borderColor = "#059669";
-  }
-  if (typeof window.showToast === "function") window.showToast("Stage " + stageNum + " marked complete! Great progress.");
-}
-
-// Interactive Double Simulator Engine
-var _currentDouble = 'dummy';
-
-function setSimDouble(type) {
-  _currentDouble = type;
-  document.querySelectorAll('.sim-controls .sim-btn').forEach(function(b) {
-    b.classList.remove('active');
-  });
-  var activeBtn = document.getElementById('btnDouble' + type.charAt(0).toUpperCase() + type.slice(1));
-  if (activeBtn) activeBtn.classList.add('active');
-  updateSimOutput();
-}
-
-function updateSimOutput() {
-  var out = document.getElementById('simOutput');
-  var isRefactored = document.getElementById('checkRefactor').checked;
-  var desc = "";
-  if (_currentDouble === 'dummy') {
-    desc = "Double: DummyGateway\nStrategy: Satisfies parameter list. Has no implementation.\nExpected: If called by SUT, will throw UnsupportedOperationException.";
-  } else if (_currentDouble === 'stub') {
-    desc = "Double: StubGateway\nStrategy: Returns canned response `true`.\nRefactoring active: " + (isRefactored ? "YES" : "NO") + "\nExpected: State verification `assertEquals(PAID, order.status)` will PASS regardless of internal call method name.";
-  } else if (_currentDouble === 'spy') {
-    desc = "Double: SpyGateway\nStrategy: Records telemetry (`invocationCount`, `lastAmount`).\nExpected: Verifies call count without imposing strict protocol constraints.";
-  } else if (_currentDouble === 'mock') {
-    desc = "Double: MockGateway\nStrategy: Expects `gateway.charge(150.0)`.\nRefactoring active: " + (isRefactored ? "YES (calls authorizeAndCapture())" : "NO (calls charge())") + "\nExpected: " + (isRefactored ? "FAIL! (Brittle Test: method invocation changed!)" : "PASS (exact expected method invoked)");
-  } else if (_currentDouble === 'fake') {
-    desc = "Double: FakeGateway\nStrategy: In-memory hash map ledger.\nExpected: Executes real transaction logic in memory without network I/O. 100% resilient.";
-  }
-  out.textContent = desc;
-}
-
-function runSimTest() {
-  var out = document.getElementById('simOutput');
-  var isRefactored = document.getElementById('checkRefactor').checked;
-  var log = ">> Initializing Test Execution: OrderServiceTest.testPlaceOrder()...\n";
-
-  if (_currentDouble === 'dummy') {
-    log += ">> SUT invokes gateway.processPayment('cust-1', 150.0)...\n";
-    log += "[TEST FAILED with EXCEPTION]: java.lang.UnsupportedOperationException: Dummy must never be called!\n";
-    log += "💡 Analysis: Dummies are ONLY for unexercised parameters. SUT exercised this collaborator, so a Dummy is invalid here!";
-  } else if (_currentDouble === 'stub') {
-    log += ">> SUT calls payment gateway (canned answer: TRUE)...\n";
-    log += ">> Asserting state: assertEquals(OrderStatus.CONFIRMED, order.getStatus())...\n";
-    log += "[TEST PASSED ✓]: State verification succeeded! Immune to internal method name refactoring.";
-  } else if (_currentDouble === 'spy') {
-    log += ">> SUT executes payment...\n";
-    log += ">> Spy records telemetry: invocationCount = 1, amount = 150.00 EUR\n";
-    log += ">> Asserting: assertEquals(1, spy.invocationCount)...\n";
-    log += "[TEST PASSED ✓]: Spy telemetry confirmed invocation occurred.";
-  } else if (_currentDouble === 'mock') {
-    if (isRefactored) {
-      log += ">> Mock expects: verify(gateway, times(1)).charge(150.0)...\n";
-      log += ">> SUT actually executed: gateway.authorizeAndCapture(150.0)...\n";
-      log += "[TEST FAILED ✖]: Wanted but not invoked: gateway.charge(150.0)\n";
-      log += "⚠️ BRITTLE TEST ALERT: The business logic is 100% correct, but over-mocking broke your test suite during refactoring!";
-    } else {
-      log += ">> Mock expects: verify(gateway, times(1)).charge(150.0)...\n";
-      log += ">> SUT executed: gateway.charge(150.0)...\n";
-      log += "[TEST PASSED ✓]: Behavioral protocol strictly verified.";
-    }
-  } else if (_currentDouble === 'fake') {
-    log += ">> FakeGateway: In-memory customer balance deducted: 500.00 -> 350.00 EUR.\n";
-    log += ">> Asserting state: assertTrue(order.isPaid()) && assertEquals(350.0, fake.getBalance('cust-1'))...\n";
-    log += "[TEST PASSED ✓]: Full functional flow verified in-memory in 2 milliseconds!";
-  }
-
-  out.textContent = log;
-}
-
-window.selectPillar = selectPillar;
-window.setBlueprintView = setBlueprintView;
-window.toggleBlueprintCollapse = toggleBlueprintCollapse;
-window.copyBlueprintRubric = copyBlueprintRubric;
-window.copySnippet = copySnippet;
-window.markStageComplete = markStageComplete;
-window.setSimDouble = setSimDouble;
-window.updateSimOutput = updateSimOutput;
-window.runSimTest = runSimTest;
-</script>
 </body>
 </html>
