@@ -1,1211 +1,403 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html lang="en" data-theme="dark" data-mode="concept">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Unit 9: Flexibility Patterns (Decorator &amp; Adapter) | POSA 2026 Masterclass</title>
-<meta name="description" content="Master Decorator (Starbuzz coffee, java.io streams, skin vs guts) and Adapter (Object vs Class, interface translation) patterns with Prof. Dr. Jörg Schäfer.">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23d97706'/%3E%3Cpath d='M8 10h16M8 16h16M8 22h10' stroke='%23fff' stroke-width='2.2' stroke-linecap='round'/%3E%3C/svg%3E">
-<link rel="preconnect" href="https://fonts.googleapis.com">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Unit 9 · Flexibility Patterns (Decorator, Adapter, Facade) · POSA Masterclass 2026</title>
+<meta name="description" content="Master structural flexibility patterns: Decorator vs Inheritance subclass explosion, Object vs Class Adapter, Facade subsystem simplification, and java.io streams.">
+<link rel="stylesheet" href="assets/style.css?v=2026.18">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/style.css?v=2026.16">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,600;0,700;1,400&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,600;1,700&display=swap" rel="stylesheet">
+<script>
+  window.MathJax = {
+    tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
+    svg: { fontCache: 'global' }
+  };
+</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<script>(function(){try{var t=localStorage.getItem('posa-theme')||localStorage.getItem('dm2026-theme')||'dark';document.documentElement.setAttribute('data-theme',t);var m=localStorage.getItem('posa-mode')||'concept';document.documentElement.setAttribute('data-mode',m);}catch(e){}})();</script>
 <style>
-  .reading-progress-bar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    height: 3px;
-    background: linear-gradient(90deg, #d97706 0%, #f59e0b 50%, #fbbf24 100%);
-    width: 0%;
-    z-index: 9999;
-    transition: width 0.1s ease-out;
-  }
-  .stage-takeaways-box {
-    background: rgba(217, 119, 6, 0.05);
-    border: 1px solid rgba(217, 119, 6, 0.2);
+  .guide-card {
+    background: var(--bg-raised);
+    border: 1px solid var(--border);
     border-radius: var(--radius-md);
     padding: 1.5rem;
-    margin: 2rem 0;
+    margin-bottom: 2rem;
   }
-  [data-theme="light"] .stage-takeaways-box {
-    background: #fffbeb;
-    border-color: #fde68a;
-  }
-  .stage-takeaways-title {
-    font-weight: 800;
-    color: #d97706;
+  .guide-card-header {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--text);
     margin-bottom: 0.75rem;
-    display: flex;
+  }
+  .rule-badge {
+    display: inline-flex;
     align-items: center;
-    gap: 0.5rem;
-    font-size: 1.05rem;
-  }
-  .takeaway-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: 1rem;
-    margin-top: 1rem;
-  }
-  .takeaway-item {
-    background: var(--bg-raised);
-    padding: 1rem;
-    border-radius: var(--radius-sm);
-    border: 1px solid var(--border);
-  }
-  .takeaway-item strong {
-    color: var(--text);
-    display: block;
-    margin-bottom: 0.35rem;
-    font-size: 0.92rem;
-  }
-  .takeaway-item p {
-    margin: 0;
-    font-size: 0.85rem;
-    color: var(--text-muted);
-    line-height: 1.5;
-  }
-  /* Interactive Beverage Lab */
-  .beverage-lab-card {
-    background: var(--bg-raised);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-md);
-    padding: 1.5rem;
-    margin: 2rem 0;
-  }
-  .condiment-picker {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.75rem;
-    margin: 1.25rem 0;
-  }
-  .condiment-chip {
-    padding: 0.45rem 0.9rem;
-    border-radius: 20px;
-    border: 1px solid var(--border);
-    background: var(--bg);
-    color: var(--text);
-    font-size: 0.85rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    display: flex;
-    align-items: center;
-    gap: 0.4rem;
-  }
-  .condiment-chip.selected {
-    background: #d97706;
-    color: #fff;
-    border-color: #d97706;
-  }
-  .beverage-onion-visual {
-    background: #090d16;
-    color: #fbbf24;
+    gap: 0.35rem;
+    padding: 0.2rem 0.55rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 800;
     font-family: var(--font-mono);
-    padding: 1.25rem;
-    border-radius: var(--radius-sm);
-    font-size: 0.88rem;
-    min-height: 100px;
-    border: 1px solid #1e293b;
-    margin-top: 1rem;
-    line-height: 1.6;
-    white-space: pre-wrap;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    background: rgba(99, 102, 241, 0.12);
+    color: #6366f1;
+    border: 1px solid rgba(99, 102, 241, 0.25);
   }
+  .headfirst-card {
+    background: var(--bg-raised);
+    border: 1px solid var(--border);
+    border-left: 4px solid #6366f1;
+    border-radius: var(--radius-md);
+    margin-bottom: 2rem;
+    overflow: hidden;
+  }
+  .headfirst-summary {
+    list-style: none;
+    cursor: pointer;
+    user-select: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.15rem 1.4rem;
+    background: var(--bg-subtle);
+    border-bottom: 1px solid transparent;
+  }
+  .headfirst-summary:hover { background: var(--code-bg); }
+  .headfirst-summary::-webkit-details-marker { display: none; }
+  .headfirst-card[open] .headfirst-summary { border-bottom: 1px solid var(--border); }
+  .headfirst-title { display: flex; align-items: center; gap: 0.65rem; font-size: 1.05rem; font-weight: 700; color: var(--text); }
+  .headfirst-badge { font-size: 0.72rem; font-weight: 800; padding: 0.15rem 0.5rem; border-radius: 4px; background: rgba(99, 102, 241, 0.15); color: var(--accent); border: 1px solid rgba(99, 102, 241, 0.25); }
+  .headfirst-body { padding: 1.5rem; }
+  .pattern-spec-box { background: var(--bg-raised); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 1.25rem 1.5rem; margin-bottom: 1.5rem; }
+  .spec-grid { display: grid; grid-template-columns: 1fr; gap: 0.75rem; }
+  .spec-row { display: flex; flex-direction: column; gap: 0.25rem; padding-bottom: 0.75rem; border-bottom: 1px solid var(--border); }
+  .spec-row:last-child { border-bottom: none; padding-bottom: 0; }
+  .spec-label { font-size: 0.8rem; font-family: var(--font-mono); text-transform: uppercase; color: var(--accent); font-weight: 700; }
+  .spec-val { font-size: 0.95rem; color: var(--text); line-height: 1.55; }
+  .qa-block { margin: 1.5rem 0; padding: 1.5rem; background: var(--bg-raised); border: 1px solid var(--border); border-radius: var(--radius-md); }
+  .qa-q { font-size: 1.05rem; font-weight: 700; color: var(--text); margin-bottom: 1rem; line-height: 1.45; }
+  .qa-q .pts-badge { display: inline-block; padding: 0.2rem 0.6rem; background: var(--accent-soft); color: var(--accent); border-radius: 999px; font-size: 0.78rem; font-family: var(--font-mono); font-weight: 700; margin-left: 0.5rem; }
+  .qa-a { padding: 1.25rem 1.5rem; background: var(--bg); border-left: 4px solid var(--accent); border-radius: 0 var(--radius-sm) var(--radius-sm) 0; font-size: 0.95rem; line-height: 1.65; color: var(--text); }
+  .qa-a .ans-label { display: block; font-size: 0.8rem; text-transform: uppercase; font-weight: 800; font-family: var(--font-mono); color: var(--accent); margin-bottom: 0.75rem; letter-spacing: 0.05em; }
 </style>
-<script>(function(){try{var t=localStorage.getItem('posa-theme')||'dark';document.documentElement.setAttribute('data-theme',t);var m=localStorage.getItem('posa-mode')||'concept';document.documentElement.setAttribute('data-mode',m);}catch(e){}})();</script>
 </head>
-<body class="mode-stage-focused">
+<body>
+  <nav class="sitenav" aria-label="Main Navigation">
+    <div class="sitenav-inner">
+      <a href="index.html" class="sitenav-brand">
+        <span class="brand-badge">POSA 2026</span>
+        <span class="brand-title">Pattern Architecture</span>
+      </a>
+      <div class="sitenav-links">
+        <a href="index.html">Overview</a>
+        <a href="unit-3-composite.html">Unit 3A: Composite</a>
+        <a href="unit-3-iterator.html">Unit 3B: Iterator</a>
+        <a href="unit-6-solid.html">Unit 6: SOLID</a>
+        <a href="unit-8-creational.html">Unit 8: Creational</a>
+        <a href="unit-9-flexibility.html" class="active">Unit 9: Flexibility</a>
+        <a href="mock-1.html">🎓 Mock Exam 1</a>
+        <a href="mock-2.html">📝 Mock Exam 2</a>
+        <a href="past-papers.html">Practice Hub</a>
+      </div>
+      <button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle theme">
+        <span class="theme-icon light-icon">☀️</span>
+        <span class="theme-icon dark-icon">🌙</span>
+      </button>
+    </div>
+  </nav>
 
-<div class="reading-progress-bar" id="readingProgressBar"></div>
+  <aside class="sidebar">
+    <div class="sidebar-block">
+      <span class="sidebar-label">Unit Navigation</span>
+      <a href="#sec-profile" class="active"><span class="toc-num">1</span>Decorator &amp; Adapter Profile</a>
+      <a href="#sec-decorator"><span class="toc-num">2</span>The Starbuzz Onion Code</a>
+      <a href="#sec-comparisons"><span class="toc-num">3</span>Wrapper Disambiguation</a>
+      <a href="#sec-drills"><span class="toc-num">4</span>Core Exam Drills</a>
+    </div>
 
-<nav class="sitenav">
-  <div class="sitenav-inner">
-    <a class="sitenav-home" href="index.html">
-      <span style="background:linear-gradient(135deg, #d97706 0%, #f59e0b 100%);color:#fff;padding:0.2rem 0.55rem;border-radius:6px;font-size:0.82rem;font-weight:800;letter-spacing:0.04em;">POSA</span>
-      <span style="font-weight:800;letter-spacing:-0.02em;">2026</span>
-    </a>
-                <div class="sitenav-links">
-      <a href="index.html">Overview</a>
-      <a href="index.html#curriculum-roadmap">16 Units</a>
-      <a href="mock-1.html">🎓 Mock Exam 1</a>
-      <a href="mock-2.html">📝 Mock Exam 2</a>
+    <div class="sidebar-block">
+      <span class="sidebar-label">Related Modules</span>
+      <a href="unit-1-strategy.html">Unit 1 · Strategy Pattern</a>
+      <a href="unit-3-composite.html">Unit 3A · Composite Pattern</a>
+      <a href="unit-3-iterator.html">Unit 3B · Iterator Pattern</a>
+      <a href="mock-1.html">🎓 Mock Exam 1 (Q6 &amp; Ex 2)</a>
     </div>
-    <button class="nav-toggle" id="navToggle" type="button" aria-expanded="false" aria-controls="navPanel">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
-      Menu
-    </button>
-    <button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle color theme">
-      <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path></svg>
-      <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
-    </button>
-    <button class="mode-toggle" id="modeToggle" type="button" aria-label="Toggle technical mode" style="font-size: 1.1rem; line-height: 1;">🎓</button>
-  </div>
-  <div class="nav-panel" id="navPanel">
-    <div class="nav-panel-section">
-      <span class="nav-panel-label">Course Navigation</span>
-      <a href="index.html">Course Overview</a>
-      <a href="unit-8-creational.html">Unit 8 · Creational Patterns</a>
-      <a href="unit-9-flexibility.html" class="active">Unit 9 · Flexibility Patterns</a>
-      <a href="unit-10-decoupling.html">Unit 10 · Decoupling Patterns</a>
-      <a href="unit-11-mvc.html">Unit 11 · MVC Architecture</a>
-      <a href="mock-1.html">📝 Mock Exam 1</a>
-    </div>
-  </div>
-</nav>
 
-<div class="page-shell">
-  <aside class="sidebar-toc">
     <div class="sidebar-block">
-      <span class="sidebar-label">PART 1 · RUBRIC</span>
-      <a href="#pillar-1"><span class="toc-num">P1</span>Intent &amp; Problems</a>
-      <a href="#pillar-2"><span class="toc-num">P2</span>Structural Topology</a>
-      <a href="#pillar-3"><span class="toc-num">P3</span>Dynamic Delegation</a>
-      <a href="#pillar-4"><span class="toc-num">P4</span>Trade-Offs &amp; Risks</a>
-      <a href="#pillar-5"><span class="toc-num">P5</span>Structural Ecosystem</a>
-      <a href="#pillar-6"><span class="toc-num">P6</span>Smells &amp; Class Explosion</a>
-      <a href="#pillar-7"><span class="toc-num">P7</span>Production Code</a>
-      <a href="#pillar-8"><span class="toc-num">P8</span>Frankfurt UAS Exam Traps</a>
-    </div>
-    <div class="sidebar-block">
-      <span class="sidebar-label">PART 2 · CURRICULUM</span>
-      <a href="#stage-1"><span class="toc-num">1</span>Starbuzz Explosion</a>
-      <a href="#stage-2"><span class="toc-num">2</span>Adapter Topology</a>
-      <a href="#stage-3"><span class="toc-num">3</span>Interactive Lab</a>
-      <a href="#stage-4"><span class="toc-num">4</span>Production java.io</a>
-      <a href="#stage-5"><span class="toc-num">5</span>Exam Drills</a>
-    </div>
-    <div class="sidebar-block">
-      <span class="sidebar-label">Academic Profile</span>
-      <p style="font-size: 0.85rem; color: var(--text-muted); margin: 0; line-height: 1.4;">
-        <strong>Prof. Dr. Jörg Schäfer</strong><br>
-        Frankfurt University of Applied Sciences<br>
-        <span style="display:inline-block;margin-top:0.35rem;padding:0.15rem 0.4rem;background:rgba(217,119,6,0.15);border-radius:4px;color:#d97706;font-weight:700;font-size:0.75rem;">Structural Patterns</span>
-      </p>
+      <span class="sidebar-label">Exam Profile</span>
+      <div style="font-size:0.75rem; font-weight:700; color:#38bdf8; background:rgba(56,189,248,0.12); border:1px solid rgba(56,189,248,0.25); padding:0.25rem 0.5rem; border-radius:4px; display:inline-block;">
+        ⏱️ 10–12 Mins · 15 Exam Pts
+      </div>
     </div>
   </aside>
 
   <main class="page">
-    <div class="masthead">
-      <div class="eyebrow">Unit 9 · Structural &amp; Behavioral Flexibility</div>
-      <h1 class="title">Decorator &amp; Adapter Patterns</h1>
+    <header class="masthead">
+      <div>
+        <div class="eyebrow">Unit 9 · Structural Design Patterns · Wrappers</div>
+        <h1 class="title">Flexibility Patterns: Decorator, Adapter &amp; Facade</h1>
+      </div>
       <p class="dek">
-        Master runtime behavior augmentation without subclass explosion (Decorator) and interface reconciliation between incompatible architectural boundaries (Adapter) with Prof. Dr. Jörg Schäfer.
+        Master runtime responsibility augmentation (Decorator), interface translation (Adapter), and subsystem simplification (Facade). Solve the subclass explosion dilemma and eliminate rigid inheritance hierarchies.
       </p>
-    </div>
-
-    <!-- Symmetrical Demarcation 1 -->
-    <div class="section-divider-wrapper" style="margin: 2.5rem 0 1.5rem;">
-      <div class="section-divider-line"></div>
-      <div class="section-divider-tag">
-        <span class="section-divider-dot"></span>
-        <span>PART 1 · ARCHITECTURAL RUBRIC</span>
-      </div>
-      <div class="section-divider-line"></div>
-    </div>
-
-    <section class="blueprint-suite" id="blueprintSuite" aria-label="8-Pillar Architecture Rubric">
-      <div class="blueprint-suite-top">
-        <div>
-          <div class="blueprint-suite-badge">
-            <span class="section-badge-pill">SECTION 1 OF 2</span>
-            <span class="badge-sep">·</span>
-            <span>8-PILLAR ARCHITECTURAL RUBRIC</span>
-          </div>
-          <h2 class="blueprint-suite-heading">The Structural Flexibility Blueprint (Decorator &amp; Adapter)</h2>
-          <p class="blueprint-suite-sub">
-            The canonical architectural specification for wrapping objects dynamically and bridging incompatible enterprise APIs.
-          </p>
-        </div>
-        <div class="blueprint-suite-actions">
-          <div class="blueprint-view-toggle" role="group" aria-label="Blueprint Layout">
-            <button class="blueprint-toggle-btn active" id="btnViewExplorer" type="button" onclick="setBlueprintView('explorer')">Explorer View</button>
-            <button class="blueprint-toggle-btn" id="btnViewMatrix" type="button" onclick="setBlueprintView('matrix')">Full Matrix</button>
-          </div>
-          <button class="rubric-action-btn" type="button" onclick="copyBlueprintRubric()">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-            Export Rubric (MD)
-          </button>
-          <button class="rubric-action-btn rubric-collapse-btn" id="btnCollapseRubric" type="button" onclick="toggleBlueprintCollapse()">
-            <span id="collapseLabel">▲ Collapse Rubric</span>
-          </button>
-        </div>
-      </div>
-
-      <div class="blueprint-collapsed-hint" id="blueprintCollapsedHint" style="display:none;">
-        <span class="hint-icon">💡</span>
-        <span>The 8-Pillar Rubric is currently collapsed. Click <strong>Expand Rubric</strong> above to inspect details.</span>
-      </div>
-
-      <div class="blueprint-suite-body" id="blueprintSuiteBody">
-        <div class="blueprint-tabs" role="tablist" aria-label="8 Pillars">
-          <button class="blueprint-tab active" role="tab" aria-selected="true" data-pillar="1" onclick="selectPillar(1)">
-            <span class="blueprint-tab-num">01</span>
-            <span class="blueprint-tab-title">Intent &amp; Problems</span>
-          </button>
-          <button class="blueprint-tab" role="tab" aria-selected="false" data-pillar="2" onclick="selectPillar(2)">
-            <span class="blueprint-tab-num">02</span>
-            <span class="blueprint-tab-title">Structural Topology</span>
-          </button>
-          <button class="blueprint-tab" role="tab" aria-selected="false" data-pillar="3" onclick="selectPillar(3)">
-            <span class="blueprint-tab-num">03</span>
-            <span class="blueprint-tab-title">Dynamic Delegation</span>
-          </button>
-          <button class="blueprint-tab" role="tab" aria-selected="false" data-pillar="4" onclick="selectPillar(4)">
-            <span class="blueprint-tab-num">04</span>
-            <span class="blueprint-tab-title">Trade-Offs &amp; Risks</span>
-          </button>
-          <button class="blueprint-tab" role="tab" aria-selected="false" data-pillar="5" onclick="selectPillar(5)">
-            <span class="blueprint-tab-num">05</span>
-            <span class="blueprint-tab-title">Structural Ecosystem</span>
-          </button>
-          <button class="blueprint-tab" role="tab" aria-selected="false" data-pillar="6" onclick="selectPillar(6)">
-            <span class="blueprint-tab-num">06</span>
-            <span class="blueprint-tab-title">Smells &amp; Class Explosion</span>
-          </button>
-          <button class="blueprint-tab" role="tab" aria-selected="false" data-pillar="7" onclick="selectPillar(7)">
-            <span class="blueprint-tab-num">07</span>
-            <span class="blueprint-tab-title">Production Code</span>
-          </button>
-          <button class="blueprint-tab" role="tab" aria-selected="false" data-pillar="8" onclick="selectPillar(8)">
-            <span class="blueprint-tab-num">08</span>
-            <span class="blueprint-tab-title">Exam Traps (Schäfer)</span>
-          </button>
-        </div>
-
-        <div class="blueprint-content-area" id="blueprintContentArea">
-          <!-- Pillar 1 -->
-          <article class="pillar-panel active" id="pillar-1" data-pillar="1">
-            <div class="pillar-header">
-              <span class="pillar-tag">PILLAR 01 · FOUNDATIONAL INTENT</span>
-              <h3 class="pillar-title">Intent &amp; Architectural Forces</h3>
-            </div>
-            <div class="pillar-body">
-              <div class="pillar-grid-2col">
-                <div>
-                  <h4 style="color:#d97706;margin-top:0;">Decorator Pattern (GoF Wrapper)</h4>
-                  <p><strong>Intent:</strong> Attach additional responsibilities to an object dynamically at runtime. Decorators provide a flexible, composable alternative to subclassing for extending functionality.</p>
-                  <p><strong>The Core Dilemma:</strong> Subclass explosion. In the famous Starbuzz Coffee example, combining 4 beverages with 5 condiments statically requires $4 \times 2^5 = 128$ subclasses! Decorator eliminates this by turning condiments into transparent wrapping layers.</p>
-                </div>
-                <div>
-                  <h4 style="color:#2563eb;margin-top:0;">Adapter Pattern (GoF Wrapper / Translator)</h4>
-                  <p><strong>Intent:</strong> Convert the interface of a class into another interface clients expect. Adapter lets classes work together that couldn't otherwise because of incompatible interfaces.</p>
-                  <p><strong>The Core Dilemma:</strong> Legacy integration drift. An enterprise billing system expects a modern <code>PaymentProcessor</code> interface, but a legacy mainframe vendor provides an obsolete <code>OldCobolGateway</code> with mismatched method names and argument types.</p>
-                </div>
-              </div>
-            </div>
-          </article>
-
-          <!-- Pillar 2 -->
-          <article class="pillar-panel" id="pillar-2" data-pillar="2">
-            <div class="pillar-header">
-              <span class="pillar-tag">PILLAR 02 · STRUCTURAL TOPOLOGY</span>
-              <h3 class="pillar-title">UML 2.5 Architecture &amp; Topologies (Vector SVG)</h3>
-            </div>
-            <div class="pillar-body">
-              <p>Topological comparison between Decorator (same interface, recursive wrapping) and Object Adapter (translating Target to Adaptee):</p>
-
-              <div style="background:var(--bg-raised);border:1px solid var(--border);border-radius:var(--radius-md);padding:1.5rem;margin:1.5rem 0;">
-                <svg viewBox="0 0 900 360" style="width:100%;height:auto;display:block;" xmlns="http://www.w3.org/2000/svg">
-                  <defs>
-                    <marker id="uml-tri-9" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
-                      <polygon points="0 0, 10 6, 0 12" fill="#fff" stroke="#d97706" stroke-width="1.8"/>
-                    </marker>
-                    <marker id="uml-tri-blue-9" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
-                      <polygon points="0 0, 10 6, 0 12" fill="#fff" stroke="#2563eb" stroke-width="1.8"/>
-                    </marker>
-                    <marker id="uml-arrow-9" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
-                      <polygon points="0 2, 8 5, 0 8" fill="#d97706"/>
-                    </marker>
-                    <marker id="uml-arrow-blue-9" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
-                      <polygon points="0 2, 8 5, 0 8" fill="#2563eb"/>
-                    </marker>
-                  </defs>
-
-                  <!-- DECORATOR TOPOLOGY (LEFT) -->
-                  <text x="220" y="25" font-family="var(--font-display)" font-size="14" font-weight="800" fill="#d97706" text-anchor="middle">DECORATOR TOPOLOGY (Skin Enhancement)</text>
-
-                  <!-- Component -->
-                  <g transform="translate(120, 45)">
-                    <rect width="200" height="75" rx="6" fill="var(--bg)" stroke="#d97706" stroke-width="2"/>
-                    <text x="100" y="22" font-family="var(--font-mono)" font-size="10" fill="#d97706" text-anchor="middle">&laquo;abstract&raquo;</text>
-                    <text x="100" y="40" font-family="var(--font-display)" font-size="13" font-weight="800" fill="#d97706" text-anchor="middle">Beverage</text>
-                    <line x1="0" y1="50" x2="200" y2="50" stroke="var(--border)" stroke-width="1"/>
-                    <text x="10" y="66" font-family="var(--font-mono)" font-size="10.5" fill="var(--text-muted)">+ cost(): double</text>
-                  </g>
-
-                  <!-- ConcreteComponent -->
-                  <g transform="translate(20, 180)">
-                    <rect width="180" height="85" rx="6" fill="var(--bg)" stroke="var(--border)" stroke-width="1.5"/>
-                    <text x="90" y="26" font-family="var(--font-display)" font-size="13" font-weight="700" fill="var(--text)" text-anchor="middle">Espresso</text>
-                    <line x1="0" y1="38" x2="180" y2="38" stroke="var(--border)" stroke-width="1"/>
-                    <text x="10" y="58" font-family="var(--font-mono)" font-size="10" fill="var(--text-muted)">+ cost(): 1.99</text>
-                  </g>
-
-                  <!-- CondimentDecorator -->
-                  <g transform="translate(240, 180)">
-                    <rect width="190" height="85" rx="6" fill="var(--bg)" stroke="#d97706" stroke-width="1.8"/>
-                    <text x="95" y="22" font-family="var(--font-mono)" font-size="10" fill="#d97706" text-anchor="middle">&laquo;abstract&raquo;</text>
-                    <text x="95" y="40" font-family="var(--font-display)" font-size="13" font-weight="800" fill="#d97706" text-anchor="middle">CondimentDecorator</text>
-                    <line x1="0" y1="50" x2="190" y2="50" stroke="var(--border)" stroke-width="1"/>
-                    <text x="10" y="68" font-family="var(--font-mono)" font-size="10" fill="var(--text-muted)"># beverage: Beverage</text>
-                  </g>
-
-                  <!-- Mocha ConcreteDecorator -->
-                  <g transform="translate(240, 290)">
-                    <rect width="190" height="60" rx="6" fill="var(--bg)" stroke="var(--border)" stroke-width="1.5"/>
-                    <text x="95" y="25" font-family="var(--font-display)" font-size="12" font-weight="700" fill="var(--text)" text-anchor="middle">MochaDecorator</text>
-                    <text x="10" y="48" font-family="var(--font-mono)" font-size="9.5" fill="var(--text-muted)">cost() = bev.cost() + 0.20</text>
-                  </g>
-
-                  <!-- Inheritance lines -->
-                  <line x1="110" y1="180" x2="180" y2="125" stroke="#d97706" stroke-width="1.5" marker-end="url(#uml-tri-9)"/>
-                  <line x1="330" y1="180" x2="260" y2="125" stroke="#d97706" stroke-width="1.5" marker-end="url(#uml-tri-9)"/>
-                  <line x1="335" y1="290" x2="335" y2="270" stroke="#d97706" stroke-width="1.5" marker-end="url(#uml-tri-9)"/>
-                  <!-- Recursive aggregation -->
-                  <path d="M 430 215 C 470 215, 470 85, 325 85" fill="none" stroke="#d97706" stroke-width="1.5" stroke-dasharray="3 3" marker-end="url(#uml-arrow-9)"/>
-
-                  <!-- VERTICAL DIVIDER -->
-                  <line x1="490" y1="20" x2="490" y2="350" stroke="var(--border)" stroke-width="1.5" stroke-dasharray="4 4"/>
-
-                  <!-- ADAPTER TOPOLOGY (RIGHT) -->
-                  <text x="690" y="25" font-family="var(--font-display)" font-size="14" font-weight="800" fill="#2563eb" text-anchor="middle">OBJECT ADAPTER TOPOLOGY (Interface Bridge)</text>
-
-                  <!-- Target Interface -->
-                  <g transform="translate(530, 80)">
-                    <rect width="160" height="75" rx="6" fill="var(--bg)" stroke="#2563eb" stroke-width="2" stroke-dasharray="4 3"/>
-                    <text x="80" y="22" font-family="var(--font-mono)" font-size="10" fill="#2563eb" text-anchor="middle">&laquo;interface&raquo;</text>
-                    <text x="80" y="40" font-family="var(--font-display)" font-size="13" font-weight="800" fill="#2563eb" text-anchor="middle">Target</text>
-                    <line x1="0" y1="50" x2="160" y2="50" stroke="var(--border)" stroke-width="1"/>
-                    <text x="10" y="66" font-family="var(--font-mono)" font-size="10.5" fill="var(--text-muted)">+ request()</text>
-                  </g>
-
-                  <!-- Adaptee (Existing Class) -->
-                  <g transform="translate(730, 80)">
-                    <rect width="150" height="75" rx="6" fill="var(--bg)" stroke="var(--border)" stroke-width="1.5"/>
-                    <text x="75" y="26" font-family="var(--font-display)" font-size="13" font-weight="700" fill="var(--text)" text-anchor="middle">Adaptee</text>
-                    <line x1="0" y1="40" x2="150" y2="40" stroke="var(--border)" stroke-width="1"/>
-                    <text x="10" y="60" font-family="var(--font-mono)" font-size="10.5" fill="var(--text-muted)">+ specificRequest()</text>
-                  </g>
-
-                  <!-- Adapter Class -->
-                  <g transform="translate(610, 210)">
-                    <rect width="200" height="90" rx="6" fill="var(--bg)" stroke="#2563eb" stroke-width="2"/>
-                    <text x="100" y="26" font-family="var(--font-display)" font-size="13" font-weight="800" fill="#2563eb" text-anchor="middle">Adapter</text>
-                    <line x1="0" y1="38" x2="200" y2="38" stroke="var(--border)" stroke-width="1"/>
-                    <text x="10" y="58" font-family="var(--font-mono)" font-size="10.5" fill="var(--text-muted)">- adaptee: Adaptee</text>
-                    <text x="10" y="76" font-family="var(--font-mono)" font-size="10.5" fill="var(--text-muted)">+ request() // delegates</text>
-                  </g>
-
-                  <!-- Adapter implements Target -->
-                  <line x1="660" y1="210" x2="620" y2="160" stroke="#2563eb" stroke-width="1.8" stroke-dasharray="4 4" marker-end="url(#uml-tri-blue-9)"/>
-                  <!-- Adapter delegates to Adaptee -->
-                  <line x1="750" y1="210" x2="790" y2="160" stroke="#2563eb" stroke-width="1.8" marker-end="url(#uml-arrow-blue-9)"/>
-                </svg>
-              </div>
-            </div>
-          </article>
-
-          <!-- Pillar 3 -->
-          <article class="pillar-panel" id="pillar-3" data-pillar="3">
-            <div class="pillar-header">
-              <span class="pillar-tag">PILLAR 03 · DYNAMIC DELEGATION</span>
-              <h3 class="pillar-title">Dynamic Call Onion &amp; Delegation Chains</h3>
-            </div>
-            <div class="pillar-body">
-              <div class="pillar-grid-2col">
-                <div>
-                  <h4 style="color:#d97706;margin-top:0;">The Decorator "Call Onion"</h4>
-                  <p>When the client invokes <code>beverage.cost()</code> on a beverage wrapped in multiple decorators:</p>
-                  <ol style="font-size:0.9rem;line-height:1.6;color:var(--text-muted);padding-left:1.2rem;">
-                    <li>Client calls outermost decorator: <code>Whip.cost()</code>.</li>
-                    <li><code>Whip</code> delegates to its inner wrapped reference: <code>Mocha.cost()</code>.</li>
-                    <li><code>Mocha</code> delegates to the core component: <code>DarkRoast.cost()</code> ($\$1.99$).</li>
-                    <li>Call returns back up the onion stack:
-                      <ul>
-                        <li><code>DarkRoast</code> returns $\$1.99$.</li>
-                        <li><code>Mocha</code> adds $\$0.20 \to \$2.19$.</li>
-                        <li><code>Whip</code> adds $\$0.10 \to \$2.29$ total!</li>
-                      </ul>
-                    </li>
-                  </ol>
-                </div>
-                <div>
-                  <h4 style="color:#2563eb;margin-top:0;">The Adapter Delegation Bridge</h4>
-                  <p>Adapter does not augment behavior; it performs translation:</p>
-                  <ol style="font-size:0.9rem;line-height:1.6;color:var(--text-muted);padding-left:1.2rem;">
-                    <li>Client calls target standard: <code>paymentGateway.pay(Money.euros(50))</code>.</li>
-                    <li><code>StripeAdapter</code> intercepts the call.</li>
-                    <li>Translates object domain types into legacy primitives: converts <code>Money.euros(50)</code> to <code>cents = 5000, currency = "eur"</code>.</li>
-                    <li>Invokes <code>adaptee.chargeStripeToken("tok_123", 5000, "eur")</code>.</li>
-                    <li>Maps response back into target domain response.</li>
-                  </ol>
-                </div>
-              </div>
-            </div>
-          </article>
-
-          <!-- Pillar 4 -->
-          <article class="pillar-panel" id="pillar-4" data-pillar="4">
-            <div class="pillar-header">
-              <span class="pillar-tag">PILLAR 04 · TRADE-OFFS &amp; RISKS</span>
-              <h3 class="pillar-title">Architectural Trade-Offs &amp; Liabilities</h3>
-            </div>
-            <div class="pillar-body">
-              <table class="blueprint-table" style="width:100%;border-collapse:collapse;margin-top:0.5rem;font-size:0.88rem;">
-                <thead>
-                  <tr style="border-bottom:2px solid var(--border);text-align:left;">
-                    <th style="padding:0.6rem;">Dimension</th>
-                    <th style="padding:0.6rem;">Decorator Pattern</th>
-                    <th style="padding:0.6rem;">Adapter Pattern</th>
-                    <th style="padding:0.6rem;">Subclassing / Inheritance</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr style="border-bottom:1px solid var(--border);">
-                    <td style="padding:0.6rem;font-weight:700;">Binding Time</td>
-                    <td style="padding:0.6rem;color:#10b981;">Dynamic (Runtime composition)</td>
-                    <td style="padding:0.6rem;color:#10b981;">Dynamic (Object Adapter)</td>
-                    <td style="padding:0.6rem;color:#ef4444;">Static (Compile-time)</td>
-                  </tr>
-                  <tr style="border-bottom:1px solid var(--border);">
-                    <td style="padding:0.6rem;font-weight:700;">Type Identity</td>
-                    <td style="padding:0.6rem;color:#ef4444;">Breaks `instanceof ConcreteComponent`</td>
-                    <td style="padding:0.6rem;color:#10b981;">Preserves Target interface</td>
-                    <td style="padding:0.6rem;color:#10b981;">Preserves full hierarchy</td>
-                  </tr>
-                  <tr style="border-bottom:1px solid var(--border);">
-                    <td style="padding:0.6rem;font-weight:700;">Object Proliferation</td>
-                    <td style="padding:0.6rem;color:#ef4444;">High (many tiny wrapper objects)</td>
-                    <td style="padding:0.6rem;color:#10b981;">Low (single adapter instance)</td>
-                    <td style="padding:0.6rem;color:#10b981;">Zero wrapper instances</td>
-                  </tr>
-                  <tr>
-                    <td style="padding:0.6rem;font-weight:700;">Debugging Complexity</td>
-                    <td style="padding:0.6rem;color:#eab308;">Nested stack frames</td>
-                    <td style="padding:0.6rem;color:#10b981;">Single forwarding hop</td>
-                    <td style="padding:0.6rem;color:#10b981;">Direct method dispatch</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </article>
-
-          <!-- Pillar 5 -->
-          <article class="pillar-panel" id="pillar-5" data-pillar="5">
-            <div class="pillar-header">
-              <span class="pillar-tag">PILLAR 05 · STRUCTURAL ECOSYSTEM</span>
-              <h3 class="pillar-title">Structural Pattern Distinctions: Decorator vs Adapter vs Proxy vs Strategy</h3>
-            </div>
-            <div class="pillar-body">
-              <div class="pillar-grid-2col">
-                <div class="takeaway-item">
-                  <strong>Decorator vs. Strategy ("Skin vs. Guts")</strong>
-                  <p>As Erich Gamma famously stated: <em>"Decorator changes the skin of an object; Strategy changes its guts."</em> Decorator wraps the outside transparently; Strategy swaps the internal algorithmic engine from within.</p>
-                </div>
-                <div class="takeaway-item">
-                  <strong>Decorator vs. Proxy</strong>
-                  <p>Both wrap an object and implement the exact same interface! The critical difference lies in <strong>Intent</strong>: Decorator adds new functional responsibilities; Proxy controls access, manages lazy instantiation lifecycle, or adds security without altering business capabilities.</p>
-                </div>
-                <div class="takeaway-item">
-                  <strong>Decorator vs. Adapter</strong>
-                  <p>Adapter changes the interface so the client can talk to an alien class. Decorator retains the identical interface so the client never knows the object was wrapped.</p>
-                </div>
-                <div class="takeaway-item">
-                  <strong>Decorator vs. Composite (Unit 3)</strong>
-                  <p>A Decorator can be viewed as a degenerate 1-child Composite: both share the component interface, but a Composite holds $N$ children to represent part-whole hierarchies, while a Decorator wraps exactly $1$ child to add behavior.</p>
-                </div>
-              </div>
-            </div>
-          </article>
-
-          <!-- Pillar 6 -->
-          <article class="pillar-panel" id="pillar-6" data-pillar="6">
-            <div class="pillar-header">
-              <span class="pillar-tag">PILLAR 06 · SMELLS &amp; CLASS EXPLOSION</span>
-              <h3 class="pillar-title">Architectural Smells &amp; Production Red Flags</h3>
-            </div>
-            <div class="pillar-body">
-              <div class="smell-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
-                <div style="background:var(--bg-raised);padding:1rem;border-left:4px solid #ef4444;border-radius:0 4px 4px 0;">
-                  <strong style="color:#ef4444;">1. Subclass Explosion (The Combinatorial Trap)</strong>
-                  <p style="font-size:0.85rem;color:var(--text-muted);margin:0.4rem 0 0;">
-                    Creating subclasses like `BufferedEncryptedCompressingOutputStream`. Each new orthogonal feature multiplies the class hierarchy exponentially.
-                  </p>
-                  <span style="font-size:0.78rem;color:#10b981;font-weight:700;">Remedy: Decorator Pattern wraps single-responsibility layers dynamically.</span>
-                </div>
-                <div style="background:var(--bg-raised);padding:1rem;border-left:4px solid #ef4444;border-radius:0 4px 4px 0;">
-                  <strong style="color:#ef4444;">2. Type-Checking Breakage (`instanceof` Trap)</strong>
-                  <p style="font-size:0.85rem;color:var(--text-muted);margin:0.4rem 0 0;">
-                    Client code executing `if (beverage instanceof DarkRoast)` fails silently when `DarkRoast` is wrapped inside `MochaDecorator`.
-                  </p>
-                  <span style="font-size:0.78rem;color:#10b981;font-weight:700;">Remedy: Program strictly to the interface, never to concrete types.</span>
-                </div>
-                <div style="background:var(--bg-raised);padding:1rem;border-left:4px solid #eab308;border-radius:0 4px 4px 0;">
-                  <strong style="color:#eab308;">3. Verbose Instantiation Boilerplate</strong>
-                  <p style="font-size:0.85rem;color:var(--text-muted);margin:0.4rem 0 0;">
-                    Constructing 7 nested decorators by hand in client controller code: `new A(new B(new C(new D())))`.
-                  </p>
-                  <span style="font-size:0.78rem;color:#10b981;font-weight:700;">Remedy: Encapsulate onion construction inside a Factory or Fluent Builder.</span>
-                </div>
-                <div style="background:var(--bg-raised);padding:1rem;border-left:4px solid #eab308;border-radius:0 4px 4px 0;">
-                  <strong style="color:#eab308;">4. Two-Way Interface Drift</strong>
-                  <p style="font-size:0.85rem;color:var(--text-muted);margin:0.4rem 0 0;">
-                    When both client and server update independently and the adapter becomes a tangled mess of bidirectional if/else type checks.
-                  </p>
-                  <span style="font-size:0.78rem;color:#10b981;font-weight:700;">Remedy: Explicit Two-Way Adapter or Anti-Corruption Layer (DDD).</span>
-                </div>
-              </div>
-            </div>
-          </article>
-
-          <!-- Pillar 7 -->
-          <article class="pillar-panel" id="pillar-7" data-pillar="7">
-            <div class="pillar-header">
-              <span class="pillar-tag">PILLAR 07 · PRODUCTION CODE STANDARD</span>
-              <h3 class="pillar-title">Modern Enterprise HTTP Client Decorator Pipeline</h3>
-            </div>
-            <div class="pillar-body">
-              <div class="code-window">
-                <div class="code-window-bar">
-                  <div class="code-dots"><span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span></div>
-                  <span class="code-file">HttpClientPipeline.java · Decorator Architecture</span>
-                  <button class="code-copy-btn" onclick="copySnippet('codeDecoratorProd')">Copy Code</button>
-                </div>
-                <pre class="code-pre" id="codeDecoratorProd"><code><span class="k">package</span> de.frankfurt.uas.posa.flexibility;
-
-<span class="k">public interface</span> <span class="nc">HttpClient</span> {
-    <span class="nc">HttpResponse</span> <span class="nf">execute</span>(<span class="nc">HttpRequest</span> request);
-}
-
-<span class="c">// Concrete Component: Pure network socket execution</span>
-<span class="k">public class</span> <span class="nc">CoreNetworkClient</span> <span class="k">implements</span> <span class="nc">HttpClient</span> {
-    <span class="nd">@Override</span>
-    <span class="k">public</span> <span class="nc">HttpResponse</span> <span class="nf">execute</span>(<span class="nc">HttpRequest</span> request) {
-        <span class="k">return</span> <span class="nc">SocketEngine</span>.dispatch(request);
-    }
-}
-
-<span class="c">// Abstract Decorator Base</span>
-<span class="k">public abstract class</span> <span class="nc">HttpClientDecorator</span> <span class="k">implements</span> <span class="nc">HttpClient</span> {
-    <span class="k">protected final</span> <span class="nc">HttpClient</span> inner;
-    <span class="k">protected</span> <span class="nf">HttpClientDecorator</span>(<span class="nc">HttpClient</span> inner) { <span class="k">this</span>.inner = inner; }
-    <span class="nd">@Override</span>
-    <span class="k">public</span> <span class="nc">HttpResponse</span> <span class="nf">execute</span>(<span class="nc">HttpRequest</span> request) {
-        <span class="k">return</span> inner.execute(request);
-    }
-}
-
-<span class="c">// Concrete Decorator: Automated Retry on 5xx Errors</span>
-<span class="k">public class</span> <span class="nc">RetryDecorator</span> <span class="k">extends</span> <span class="nc">HttpClientDecorator</span> {
-    <span class="k">private final int</span> maxRetries;
-    <span class="k">public</span> <span class="nf">RetryDecorator</span>(<span class="nc">HttpClient</span> inner, <span class="k">int</span> maxRetries) {
-        <span class="k">super</span>(inner); <span class="k">this</span>.maxRetries = maxRetries;
-    }
-    <span class="nd">@Override</span>
-    <span class="k">public</span> <span class="nc">HttpResponse</span> <span class="nf">execute</span>(<span class="nc">HttpRequest</span> request) {
-        <span class="k">for</span> (<span class="k">int</span> i = <span class="m">0</span>; i &lt; maxRetries; i++) {
-            <span class="nc">HttpResponse</span> res = <span class="k">super</span>.execute(request);
-            <span class="k">if</span> (res.statusCode() &lt; <span class="m">500</span>) <span class="k">return</span> res;
-        }
-        <span class="k">throw new</span> <span class="nc">ServiceUnavailableException</span>(<span class="s">"Retries exhausted"</span>);
-    }
-}</code></pre>
-              </div>
-            </div>
-          </article>
-
-          <!-- Pillar 8 -->
-          <article class="pillar-panel" id="pillar-8" data-pillar="8">
-            <div class="pillar-header">
-              <span class="pillar-tag">PILLAR 08 · EXAM TRAPS &amp; DEFENSE</span>
-              <h3 class="pillar-title">Frankfurt UAS Examination Pitfalls (Prof. Dr. Jörg Schäfer)</h3>
-            </div>
-            <div class="pillar-body">
-              <div class="pillar-grid-2col">
-                <div style="background:rgba(239,68,68,0.06);border:1px solid rgba(239,68,68,0.3);border-radius:var(--radius-sm);padding:1rem;">
-                  <strong style="color:#ef4444;">Exam Trap 1: "Why can't Java use Class Adapters?"</strong>
-                  <p style="font-size:0.86rem;color:var(--text-muted);margin-top:0.4rem;">
-                    <strong>Schäfer's Trap:</strong> "Implement a Class Adapter in Java by inheriting from both the Target class and the Adaptee class."<br>
-                    <strong>Correct UAS Defense:</strong> Java does not support multiple class inheritance! A class can extend only one superclass. Therefore, in Java, Class Adapters are only possible if <code>Target</code> is an <code>interface</code>, or you must use <strong>Object Adapter</strong> (composition), which also adheres to the core principle: <em>"Favor object composition over class inheritance."</em>
-                  </p>
-                </div>
-                <div style="background:rgba(239,68,68,0.06);border:1px solid rgba(239,68,68,0.3);border-radius:var(--radius-sm);padding:1rem;">
-                  <strong style="color:#ef4444;">Exam Trap 2: Decorator vs Proxy Distinction</strong>
-                  <p style="font-size:0.86rem;color:var(--text-muted);margin-top:0.4rem;">
-                    <strong>Schäfer's Trap:</strong> "Both Decorator and Proxy wrap an object and implement its interface. Are they identical?"<br>
-                    <strong>Correct UAS Defense:</strong> No! Patterns are defined by <strong>Intent</strong>, not class diagram topology. Decorator augments new dynamic responsibilities. Proxy manages access control, lazy initialization, or remote distribution without changing or augmenting the business behavior of the underlying component.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <!-- Symmetrical Demarcation 2 -->
-    <div class="section-divider-wrapper" style="margin: 3.5rem 0 1.5rem;">
-      <div class="section-divider-line"></div>
-      <div class="section-divider-tag">
-        <span class="section-divider-dot"></span>
-        <span>PART 2 · HANDS-ON CURRICULUM</span>
-      </div>
-      <div class="section-divider-line"></div>
-    </div>
-
-    <!-- Curriculum Super-Header -->
-    <header class="curriculum-header" id="curriculumHeader">
-      <div class="curriculum-meta-chip">
-        <span>⏱️ 40 Min Curriculum</span>
-        <span class="dot-sep">·</span>
-        <span>🎯 Exam Target: Decorator vs Adapter vs Proxy</span>
-        <span class="dot-sep">·</span>
-        <span>🏛️ Prof. Dr. Jörg Schäfer</span>
-      </div>
-      <h2 class="curriculum-title">5-Stage Masterclass: Structural &amp; Behavioral Flexibility</h2>
-      <p class="curriculum-desc">
-        Eliminate subclass explosion with recursive Decorator wrapping, bridge legacy API divides with Object Adapters, and experiment live in the interactive Starbuzz beverage laboratory.
-      </p>
-
-      <!-- Stage Navigation Bar -->
-      <nav class="masterclass-stage-nav" aria-label="Curriculum Stages">
-        <a class="stage-nav-pill active" href="#stage-1" data-stage="1">
-          <span class="pill-number">01</span>
-          <span class="pill-label">Starbuzz Explosion</span>
-        </a>
-        <a class="stage-nav-pill" href="#stage-2" data-stage="2">
-          <span class="pill-number">02</span>
-          <span class="pill-label">Adapter Topology</span>
-        </a>
-        <a class="stage-nav-pill" href="#stage-3" data-stage="3">
-          <span class="pill-number">03</span>
-          <span class="pill-label">Interactive Lab</span>
-        </a>
-        <a class="stage-nav-pill" href="#stage-4" data-stage="4">
-          <span class="pill-number">04</span>
-          <span class="pill-label">java.io Pipeline</span>
-        </a>
-        <a class="stage-nav-pill" href="#stage-5" data-stage="5">
-          <span class="pill-number">05</span>
-          <span class="pill-label">Exam Drills</span>
-        </a>
-      </nav>
     </header>
 
-    <!-- Stage 1 -->
-    <section class="masterclass-stage" id="stage-1" data-stage="1">
-      <div class="stage-header-top">
+    <!-- ============================================================== -->
+    <!-- 1. PATTERN SPECIFICATIONS & CANONICAL UML                      -->
+    <!-- ============================================================== -->
+    <section class="chapter" id="sec-profile">
+      <div class="chapter-head">
+        <span class="chapter-num">1</span>
         <div>
-          <span class="stage-eyebrow-pill">STAGE 01 OF 05 · FOUNDATIONS</span>
-          <h3 class="stage-title">The Starbuzz Subclass Explosion Dilemma</h3>
-        </div>
-        <button class="stage-mastery-btn" type="button" onclick="markStageComplete(1)">Mark Stage 1 Complete</button>
-      </div>
-
-      <div class="stage-takeaways-box">
-        <div class="stage-takeaways-title">
-          <span>⚡</span>
-          <span>Core Takeaways for Frankfurt UAS Students</span>
-        </div>
-        <div class="takeaway-grid">
-          <div class="takeaway-item">
-            <strong>1. Combinatorial Nightmare</strong>
-            <p>Static inheritance forces $B \times 2^C$ subclasses for $B$ beverages and $C$ condiments.</p>
-          </div>
-          <div class="takeaway-item">
-            <strong>2. Transparent Wrapping</strong>
-            <p>Decorators have the same supertype as the objects they wrap, allowing arbitrary nesting.</p>
-          </div>
-          <div class="takeaway-item">
-            <strong>3. Open-Closed Principle</strong>
-            <p>Add new condiments without modifying a single line of existing beverage code.</p>
-          </div>
+          <h2>Pattern Profiles &amp; Architectural Intent</h2>
+          <span style="font-size:0.85rem; color:var(--text-muted); font-weight:600;">The Wrapper Family</span>
         </div>
       </div>
 
-      <p>
-        In the canonical GoF and Head First example taught by Prof. Dr. Jörg Schäfer, a coffee shop starts with simple beverages: <code>Espresso</code>, <code>HouseBlend</code>, <code>DarkRoast</code>, and <code>Decaf</code>. Customers demand condiments: <code>Mocha</code>, <code>Whip</code>, <code>Soy</code>, and <code>Caramel</code>.
-      </p>
-      <p>
-        Attempting to model this through inheritance creates monstrosities like <code>DarkRoastWithMochaAndWhip</code>. Furthermore, when condiment prices change, dozens of class methods must be rewritten.
-      </p>
-
-      <div class="stage-next-card">
-        <div class="stage-next-body">
-          <span class="stage-next-eyebrow">UP NEXT · STAGE 02</span>
-          <h4 class="stage-next-title">Adapter Topology: Object vs. Class Adapter</h4>
-          <p class="stage-next-desc">Compare composition-based Object Adapters with multiple-inheritance Class Adapters.</p>
+      <div class="pattern-spec-box">
+        <div class="spec-grid">
+          <div class="spec-row">
+            <span class="spec-label">1. Decorator Pattern:</span>
+            <span class="spec-val">
+              <em>"Attach additional responsibilities to an object dynamically. Decorators provide a flexible alternative to subclassing for extending functionality."</em><br>
+              <strong>Key Trait:</strong> Decorator wraps an object having the <em>same supertype interface</em>, maintaining transparent compatibility while intercepting calls.
+            </span>
+          </div>
+          <div class="spec-row">
+            <span class="spec-label">2. Adapter Pattern:</span>
+            <span class="spec-val">
+              <em>"Convert the interface of a class into another interface clients expect. Adapter lets classes work together that couldn't otherwise because of incompatible interfaces."</em><br>
+              <strong>Key Trait:</strong> Adapter wraps an adaptee to change its interface into a target interface.
+            </span>
+          </div>
+          <div class="spec-row">
+            <span class="spec-label">3. Facade Pattern:</span>
+            <span class="spec-val">
+              <em>"Provide a unified interface to a set of interfaces in a subsystem. Facade defines a higher-level interface that makes the subsystem easier to use."</em><br>
+              <strong>Key Trait:</strong> Simplifies a complex subsystem for casual clients (Principle of Least Knowledge / Law of Demeter).
+            </span>
+          </div>
         </div>
-        <a class="stage-next-btn" href="#stage-2">Proceed to Stage 2 →</a>
+      </div>
+
+      <!-- Vector SVG: Canonical Decorator UML -->
+      <div class="guide-card">
+        <div class="guide-card-header">
+          <span>📐 Canonical Architecture: Figure 9.1 Decorator Pattern UML</span>
+        </div>
+        <div class="uml-diagram-box" style="text-align:center;">
+          <svg viewBox="0 0 680 270" style="max-width:100%; height:auto;" aria-label="Figure 9.1: Decorator UML">
+            <!-- Component Interface Box -->
+            <rect x="250" y="20" width="180" height="65" rx="3" fill="var(--bg-raised)" stroke="var(--border)" stroke-width="1.5"/>
+            <rect x="250" y="20" width="180" height="24" rx="3" fill="var(--bg-subtle)"/>
+            <text x="340" y="37" fill="var(--text)" font-family="var(--font-display)" font-size="12" font-style="italic" font-weight="700" text-anchor="middle">&lt;&lt;interface&gt;&gt; Component</text>
+            <line x1="250" y1="44" x2="430" y2="44" stroke="var(--border)" stroke-width="1.5"/>
+            <text x="260" y="65" fill="var(--text)" font-family="var(--font-mono)" font-size="11">+ operation()</text>
+
+            <!-- ConcreteComponent Box -->
+            <rect x="70" y="140" width="190" height="75" rx="3" fill="var(--bg-raised)" stroke="var(--border)" stroke-width="1.5"/>
+            <rect x="70" y="140" width="190" height="24" rx="3" fill="var(--bg-subtle)"/>
+            <text x="165" y="157" fill="var(--text)" font-family="var(--font-display)" font-size="12" font-weight="700" text-anchor="middle">ConcreteComponent</text>
+            <line x1="70" y1="164" x2="260" y2="164" stroke="var(--border)" stroke-width="1.5"/>
+            <text x="80" y="190" fill="var(--text)" font-family="var(--font-mono)" font-size="11">+ operation()</text>
+
+            <!-- Decorator Abstract Class Box -->
+            <rect x="400" y="140" width="220" height="85" rx="3" fill="var(--bg-raised)" stroke="var(--border)" stroke-width="1.5"/>
+            <rect x="400" y="140" width="220" height="24" rx="3" fill="var(--bg-subtle)"/>
+            <text x="510" y="157" fill="var(--text)" font-family="var(--font-display)" font-size="12" font-style="italic" font-weight="700" text-anchor="middle">&lt;&lt;abstract&gt;&gt; Decorator</text>
+            <line x1="400" y1="164" x2="620" y2="164" stroke="var(--border)" stroke-width="1.5"/>
+            <text x="410" y="182" fill="var(--text-muted)" font-family="var(--font-mono)" font-size="10">- wrapped: Component</text>
+            <text x="410" y="205" fill="var(--text)" font-family="var(--font-mono)" font-size="11">+ operation()</text>
+
+            <!-- Realization Lines -->
+            <line x1="340" y1="85" x2="340" y2="115" stroke="var(--border)" stroke-width="1.5" stroke-dasharray="4,4"/>
+            <polygon points="340,85 333,98 347,98" fill="var(--bg-raised)" stroke="var(--border)" stroke-width="1.5"/>
+            <line x1="165" y1="115" x2="510" y2="115" stroke="var(--border)" stroke-width="1.5"/>
+            <line x1="165" y1="115" x2="165" y2="140" stroke="var(--border)" stroke-width="1.5"/>
+            <line x1="510" y1="115" x2="510" y2="140" stroke="var(--border)" stroke-width="1.5"/>
+
+            <!-- Aggregation Loop: Decorator HAS-A Component -->
+            <path d="M 620 170 L 660 170 L 660 50 L 430 50" fill="none" stroke="var(--border)" stroke-width="1.5"/>
+            <polygon points="620,170 628,165 636,170 628,175" fill="var(--bg-raised)" stroke="var(--border)" stroke-width="1.5"/>
+            <polygon points="430,50 440,45 440,55" fill="var(--border)"/>
+            <text x="610" y="42" fill="var(--accent)" font-family="var(--font-mono)" font-size="10" font-weight="700">wrapped 1</text>
+          </svg>
+        </div>
       </div>
     </section>
 
-    <!-- Stage 2 -->
-    <section class="masterclass-stage" id="stage-2" data-stage="2">
-      <div class="stage-header-top">
+    <!-- ============================================================== -->
+    <!-- 2. MINIMAL CODE: THE STARBUZZ ONION                            -->
+    <!-- ============================================================== -->
+    <section class="chapter" id="sec-decorator">
+      <div class="chapter-head">
+        <span class="chapter-num">2</span>
         <div>
-          <span class="stage-eyebrow-pill">STAGE 02 OF 05 · STRUCTURAL TOPOLOGY</span>
-          <h3 class="stage-title">Adapter Topology: Object vs. Class Adapter</h3>
+          <h2>Minimal Architecture &amp; Clean Code</h2>
+          <span style="font-size:0.85rem; color:var(--text-muted); font-weight:600;">The Starbuzz Coffee Onion in &lt; 30 Lines</span>
         </div>
-        <button class="stage-mastery-btn" type="button" onclick="markStageComplete(2)">Mark Stage 2 Complete</button>
       </div>
 
-      <p>The Adapter pattern bridges the gap between what an enterprise client needs and what an existing component provides:</p>
+      <details class="headfirst-card" open>
+        <summary class="headfirst-summary">
+          <div class="headfirst-title">
+            <span>☕ Clean Decorator Implementation</span>
+          </div>
+          <span class="headfirst-badge">Head First Starbuzz</span>
+        </summary>
+        <div class="headfirst-body">
+          <pre style="background:var(--code-bg); padding:1rem; border-radius:6px; font-family:var(--font-mono); font-size:0.85rem; line-height:1.5; overflow-x:auto;"><code>// 1. Component
+public abstract class Beverage {
+    public abstract String getDescription();
+    public abstract double cost();
+}
 
-      <div class="pillar-grid-2col" style="margin: 1.5rem 0;">
-        <div style="background:var(--bg-raised);border:1px solid var(--border);border-radius:var(--radius-md);padding:1.5rem;">
-          <h4 style="color:#2563eb;margin-top:0;">1. Object Adapter (Composition)</h4>
-          <p style="font-size:0.88rem;color:var(--text-muted);line-height:1.6;">
-            Implements the Target interface and references the Adaptee via an instance field.
+// 2. Concrete Component
+public class Espresso extends Beverage {
+    public String getDescription() { return "Espresso"; }
+    public double cost() { return 1.99; }
+}
+
+// 3. Decorator Base (is-a Beverage and has-a Beverage!)
+public abstract class CondimentDecorator extends Beverage {
+    protected final Beverage beverage;
+    public CondimentDecorator(Beverage beverage) { this.beverage = beverage; }
+}
+
+// 4. Concrete Decorators
+public class Mocha extends CondimentDecorator {
+    public Mocha(Beverage beverage) { super(beverage); }
+    public String getDescription() { return beverage.getDescription() + ", Mocha"; }
+    public double cost() { return beverage.cost() + 0.20; } // Delegation chain!
+}
+
+public class Whip extends CondimentDecorator {
+    public Whip(Beverage beverage) { super(beverage); }
+    public String getDescription() { return beverage.getDescription() + ", Whip"; }
+    public double cost() { return beverage.cost() + 0.10; }
+}
+
+// 5. Client Assembly: The "Call Onion"
+// Cost: 1.99 (Espresso) + 0.20 (Mocha) + 0.10 (Whip) = $2.29
+Beverage order = new Whip(new Mocha(new Espresso()));</code></pre>
+        </div>
+      </details>
+    </section>
+
+    <!-- ============================================================== -->
+    <!-- 3. WRAPPER DISAMBIGUATION & COMPARISON MATRIX                  -->
+    <!-- ============================================================== -->
+    <section class="chapter" id="sec-comparisons">
+      <div class="chapter-head">
+        <span class="chapter-num">3</span>
+        <div>
+          <h2>Wrapper Disambiguation Matrix</h2>
+          <span style="font-size:0.85rem; color:var(--text-muted); font-weight:600;">Decorator vs. Adapter vs. Facade vs. Proxy</span>
+        </div>
+      </div>
+
+      <div class="guide-card">
+        <div class="guide-card-header">
+          <span class="rule-badge">EXAM DISAMBIGUATION</span>
+          <span>Comparing the 4 Structural Wrappers</span>
+        </div>
+
+        <div style="overflow-x:auto;">
+          <table style="width:100%; border-collapse:collapse; font-size:0.88rem;">
+            <thead>
+              <tr style="border-bottom:2px solid var(--border); text-align:left;">
+                <th style="padding:0.6rem;">Pattern</th>
+                <th style="padding:0.6rem;">Core Intent</th>
+                <th style="padding:0.6rem;">Interface Treatment</th>
+                <th style="padding:0.6rem;">Relationship to Wrapped Object</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr style="border-bottom:1px solid var(--border);">
+                <td style="padding:0.6rem;"><strong>Decorator</strong></td>
+                <td style="padding:0.6rem;">Augment responsibilities dynamically without inheritance subclass explosion</td>
+                <td style="padding:0.6rem;"><strong>Unchanged:</strong> Must implement the <em>exact same interface</em> as the wrapped object</td>
+                <td style="padding:0.6rem;">Transparent wrapper (1:1 or N:1 recursive onion)</td>
+              </tr>
+              <tr style="border-bottom:1px solid var(--border);">
+                <td style="padding:0.6rem;"><strong>Adapter</strong></td>
+                <td style="padding:0.6rem;">Convert incompatible interface into target interface expected by client</td>
+                <td style="padding:0.6rem;"><strong>Changed:</strong> Converts adaptee interface to client target interface</td>
+                <td style="padding:0.6rem;">Translator bridge between mismatched interfaces</td>
+              </tr>
+              <tr style="border-bottom:1px solid var(--border);">
+                <td style="padding:0.6rem;"><strong>Facade</strong></td>
+                <td style="padding:0.6rem;">Provide a simple unified entry point to a complex subsystem</td>
+                <td style="padding:0.6rem;"><strong>Simplified:</strong> Creates a brand new, higher-level interface</td>
+                <td style="padding:0.6rem;">Shields client from complex subsystem of multiple objects (1:N)</td>
+              </tr>
+              <tr>
+                <td style="padding:0.6rem;"><strong>Proxy</strong></td>
+                <td style="padding:0.6rem;">Control and manage access to another object (remote, lazy, protection, virtual)</td>
+                <td style="padding:0.6rem;"><strong>Unchanged:</strong> Implements the exact same interface as the real subject</td>
+                <td style="padding:0.6rem;">Access controller / gatekeeper (1:1 placeholder)</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================== -->
+    <!-- 4. CORE EXAM PRACTICE & DIRECT MODEL ANSWERS                   -->
+    <!-- ============================================================== -->
+    <section class="chapter" id="sec-drills">
+      <div class="chapter-head">
+        <span class="chapter-num">4</span>
+        <div>
+          <h2>Core Exam Practice &amp; Model Solutions</h2>
+          <span style="font-size:0.85rem; color:var(--text-muted); font-weight:600;">Direct Question &rarr; Answer Format</span>
+        </div>
+      </div>
+
+      <!-- QA 1: Decorator vs Inheritance -->
+      <div class="qa-block">
+        <div class="qa-q">
+          Question 1: Why Prefer Decorator Over Class Inheritance?
+          <span class="pts-badge">3 Points</span>
+          <p style="font-size:0.92rem; font-weight:400; color:var(--text-muted); margin-top:0.5rem;">
+            Why does object composition via the Decorator pattern provide superior flexibility compared to class inheritance when augmenting behavior?
           </p>
-          <ul style="font-size:0.85rem;color:var(--text-muted);line-height:1.6;">
-            <li><strong>Advantage:</strong> Can adapt an Adaptee and any of its subclasses polymorphically.</li>
-            <li><strong>Advantage:</strong> 100% compliant with single-inheritance languages like Java and C#.</li>
+        </div>
+        <div class="qa-a">
+          <span class="ans-label">Model Answer:</span>
+          <ol>
+            <li><strong>Prevents Subclass Explosion:</strong> With inheritance, every combination of optional features requires a dedicated subclass ($2^N$ combinatorial classes, e.g. <code>EspressoWithMochaAndWhip</code>). Decorator requires only $N$ decorator classes composed dynamically at runtime.</li>
+            <li><strong>Dynamic Runtime Mutability:</strong> Inheritance binds behavior statically at compile-time. Decorators can be attached, combined in arbitrary orders, and removed dynamically during execution.</li>
+            <li><strong>Single Responsibility &amp; OCP:</strong> Concrete components focus purely on their core functionality without being bloated with optional features; new decorators can be added without altering existing components (Open-Closed Principle).</li>
+          </ol>
+        </div>
+      </div>
+
+      <!-- QA 2: Object vs Class Adapter -->
+      <div class="qa-block">
+        <div class="qa-q">
+          Question 2: Object Adapter vs. Class Adapter
+          <span class="pts-badge">4 Points</span>
+          <p style="font-size:0.92rem; font-weight:400; color:var(--text-muted); margin-top:0.5rem;">
+            Contrast an Object Adapter with a Class Adapter. Which is preferred in Java and why?
+          </p>
+        </div>
+        <div class="qa-a">
+          <span class="ans-label">Model Answer:</span>
+          <ul>
+            <li><strong>Object Adapter (Composition):</strong> The adapter implements the target interface and holds a reference to the adaptee (<em>has-a</em>). It delegates requests to the adaptee object. Preferred because it adheres to <em>"favor composition over inheritance"</em> and can adapt not only the adaptee class, but any of its subclasses.</li>
+            <li><strong>Class Adapter (Multiple Inheritance):</strong> The adapter inherits from both the target interface and the adaptee class (<em>is-a</em>). Requires multiple implementation inheritance, which is <strong>unsupported in Java</strong> (Java only permits single class inheritance).</li>
           </ul>
         </div>
-
-        <div style="background:var(--bg-raised);border:1px solid var(--border);border-radius:var(--radius-md);padding:1.5rem;">
-          <h4 style="color:#8b5cf6;margin-top:0;">2. Class Adapter (Multiple Inheritance)</h4>
-          <p style="font-size:0.88rem;color:var(--text-muted);line-height:1.6;">
-            Inherits publicly from Target and privately/publicly from Adaptee.
-          </p>
-          <ul style="font-size:0.85rem;color:var(--text-muted);line-height:1.6;">
-            <li><strong>Advantage:</strong> Can override Adaptee behavior directly without forwarding calls.</li>
-            <li><strong>Disadvantage:</strong> Impossible in Java/C# unless Target is a pure interface; commits statically to one concrete Adaptee class.</li>
-          </ul>
-        </div>
-      </div>
-
-      <div class="stage-next-card">
-        <div class="stage-next-body">
-          <span class="stage-next-eyebrow">UP NEXT · STAGE 03</span>
-          <h4 class="stage-next-title">Interactive Laboratory: Starbuzz Coffee Onion Builder</h4>
-          <p class="stage-next-desc">Construct customized beverages, layer decorators dynamically, and inspect recursive cost calculations.</p>
-        </div>
-        <a class="stage-next-btn" href="#stage-3">Proceed to Stage 3 →</a>
       </div>
     </section>
 
-    <!-- Stage 3 -->
-    <section class="masterclass-stage" id="stage-3" data-stage="3">
-      <div class="stage-header-top">
-        <div>
-          <span class="stage-eyebrow-pill">STAGE 03 OF 05 · HANDS-ON LAB</span>
-          <h3 class="stage-title">Interactive Starbuzz Beverage Decorator Lab</h3>
-        </div>
-        <button class="stage-mastery-btn" type="button" onclick="markStageComplete(3)">Mark Stage 3 Complete</button>
-      </div>
-
-      <div class="beverage-lab-card">
-        <h4 style="margin:0;color:var(--text);">Dynamic Decorator Onion Assembler</h4>
-        <p style="font-size:0.85rem;color:var(--text-muted);margin:0.25rem 0 1rem;">
-          Select a base beverage and click condiments to wrap layers dynamically around the core component:
-        </p>
-
-        <div style="font-size:0.85rem;font-weight:700;color:var(--text-muted);margin-bottom:0.5rem;">1. Choose Base Component:</div>
-        <div style="display:flex;gap:0.75rem;flex-wrap:wrap;margin-bottom:1.25rem;">
-          <button class="stage-mastery-btn" id="btnBaseEspresso" style="background:#d97706;" onclick="setBaseBeverage('Espresso', 1.99)">Espresso (€1.99)</button>
-          <button class="stage-mastery-btn" id="btnBaseDarkRoast" style="background:var(--bg);color:var(--text);border:1px solid var(--border);" onclick="setBaseBeverage('DarkRoast', 2.49)">Dark Roast (€2.49)</button>
-          <button class="stage-mastery-btn" id="btnBaseHouseBlend" style="background:var(--bg);color:var(--text);border:1px solid var(--border);" onclick="setBaseBeverage('HouseBlend', 1.89)">House Blend (€1.89)</button>
-        </div>
-
-        <div style="font-size:0.85rem;font-weight:700;color:var(--text-muted);margin-bottom:0.5rem;">2. Wrap with Condiment Decorators (Click to add multiple layers!):</div>
-        <div class="condiment-picker">
-          <button class="condiment-chip" onclick="addCondiment('Mocha', 0.20)">+ Mocha (€0.20)</button>
-          <button class="condiment-chip" onclick="addCondiment('Whip', 0.15)">+ Whip (€0.15)</button>
-          <button class="condiment-chip" onclick="addCondiment('SoyMilk', 0.30)">+ Soy Milk (€0.30)</button>
-          <button class="condiment-chip" onclick="addCondiment('Caramel', 0.25)">+ Caramel (€0.25)</button>
-          <button class="condiment-chip" style="background:var(--bg);color:#ef4444;border-color:#ef4444;" onclick="resetBeverage()">↺ Reset to Base</button>
-        </div>
-
-        <div class="beverage-onion-visual" id="beverageOutput">
-Select a base and add condiments to observe the decorator onion stack...
-        </div>
-      </div>
-
-      <div class="stage-next-card">
-        <div class="stage-next-body">
-          <span class="stage-next-eyebrow">UP NEXT · STAGE 04</span>
-          <h4 class="stage-next-title">Real-World Case Study: java.io Stream Decorators</h4>
-          <p class="stage-next-desc">Deconstruct the JDK's classic stream architecture and learn how to write custom FilterInputStreams.</p>
-        </div>
-        <a class="stage-next-btn" href="#stage-4">Proceed to Stage 4 →</a>
-      </div>
-    </section>
-
-    <!-- Stage 4 -->
-    <section class="masterclass-stage" id="stage-4" data-stage="4">
-      <div class="stage-header-top">
-        <div>
-          <span class="stage-eyebrow-pill">STAGE 04 OF 05 · PRODUCTION ARCHITECTURE</span>
-          <h3 class="stage-title">Real-World Case Study: java.io Stream Pipeline</h3>
-        </div>
-        <button class="stage-mastery-btn" type="button" onclick="markStageComplete(4)">Mark Stage 4 Complete</button>
-      </div>
-
-      <p>The Java standard library’s <code>java.io</code> package is the most prominent decorator architecture in software engineering history:</p>
-
-      <div class="code-window" style="margin: 1.5rem 0;">
-        <div class="code-window-bar">
-          <div class="code-dots"><span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span></div>
-          <span class="code-file">LowerCaseInputStream.java · Custom java.io Decorator</span>
-          <button class="code-copy-btn" onclick="copySnippet('codeCustomStream')">Copy Code</button>
-        </div>
-        <pre class="code-pre" id="codeCustomStream"><code><span class="k">package</span> de.frankfurt.uas.posa.streams;
-
-<span class="k">import</span> java.io.*;
-
-<span class="c">// Concrete Decorator extending FilterInputStream (Decorator Base)</span>
-<span class="k">public class</span> <span class="nc">LowerCaseInputStream</span> <span class="k">extends</span> <span class="nc">FilterInputStream</span> {
-
-    <span class="k">public</span> <span class="nf">LowerCaseInputStream</span>(<span class="nc">InputStream</span> in) {
-        <span class="k">super</span>(in); <span class="c">// wraps core component</span>
-    }
-
-    <span class="nd">@Override</span>
-    <span class="k">public int</span> <span class="nf">read</span>() <span class="k">throws</span> <span class="nc">IOException</span> {
-        <span class="k">int</span> c = <span class="k">super</span>.read();
-        <span class="k">return</span> (c == -<span class="m">1</span> ? c : <span class="nc">Character</span>.toLowerCase((<span class="k">char</span>) c));
-    }
-
-    <span class="nd">@Override</span>
-    <span class="k">public int</span> <span class="nf">read</span>(<span class="k">byte</span>[] b, <span class="k">int</span> offset, <span class="k">int</span> len) <span class="k">throws</span> <span class="nc">IOException</span> {
-        <span class="k">int</span> result = <span class="k">super</span>.read(b, offset, len);
-        <span class="k">for</span> (<span class="k">int</span> i = offset; i &lt; offset + result; i++) {
-            b[i] = (<span class="k">byte</span>) <span class="nc">Character</span>.toLowerCase((<span class="k">char</span>) b[i]);
-        }
-        <span class="k">return</span> result;
-    }
-}</code></pre>
-      </div>
-
-      <div class="stage-next-card">
-        <div class="stage-next-body">
-          <span class="stage-next-eyebrow">UP NEXT · STAGE 05</span>
-          <h4 class="stage-next-title">Frankfurt UAS Exam Drills &amp; Self-Study Traps</h4>
-          <p class="stage-next-desc">Master Prof. Dr. Jörg Schäfer's official exam drills on Decorator and Adapter.</p>
-        </div>
-        <a class="stage-next-btn" href="#stage-5">Proceed to Stage 5 →</a>
-      </div>
-    </section>
-
-    <!-- Stage 5 -->
-    <section class="masterclass-stage" id="stage-5" data-stage="5">
-      <div class="stage-header-top">
-        <div>
-          <span class="stage-eyebrow-pill">STAGE 05 OF 05 · ACADEMIC VERIFICATION</span>
-          <h3 class="stage-title">Frankfurt UAS Examination Drills (Prof. Dr. Jörg Schäfer)</h3>
-        </div>
-        <button class="stage-mastery-btn" type="button" onclick="markStageComplete(5)">Mark Stage 5 Complete</button>
-      </div>
-
-      <div class="drill-list">
-        <details class="drill-item" open>
-          <summary>
-            <span class="drill-tag" style="background:var(--accent); color:#fff;">Authentic Exam Paper · Question 6 [4 Pts]</span>
-            <span class="drill-q">Which of the OOP principles does Decorator primarily follow: Inheritance or Composition, and briefly explain why?</span>
-            <span class="drill-reveal-hint"></span>
-          </summary>
-          <div class="drill-a">
-            <p><strong>Official Model Answer &amp; Grading Rubric (Prof. Dr. Jörg Schäfer):</strong></p>
-            <p>
-              The Decorator pattern primarily follows <strong>Composition</strong> (delegation), <em>not</em> inheritance.
-            </p>
-            <ol>
-              <li><strong>Dynamic Behavioral Delegation (Composition):</strong> The decorator maintains a private reference to a wrapped <code>Component</code> instance and augments behavior before or after forwarding calls at runtime. This avoids the combinatorial explosion of subclasses required by pure inheritance.</li>
-              <li><strong>Type Conformance Only (Subtyping):</strong> Inheritance from the abstract Component type is employed strictly for <strong>interface conformance and type substitutability</strong> (so decorators can substitute transparently for components), NOT for behavioral code reuse.</li>
-            </ol>
-          </div>
-        </details>
-
-        <details class="drill-item">
-          <summary>
-            <span class="drill-tag">Exam Drill 2 · Architectural Comparison</span>
-            <span class="drill-q">Explain the famous quote: "Decorator changes the skin of an object; Strategy changes its guts."</span>
-            <span class="drill-reveal-hint"></span>
-          </summary>
-          <div class="drill-a">
-            <p><strong>Official Model Answer:</strong></p>
-            <p>
-              A <strong>Decorator</strong> wraps an object from the <em>outside</em>. Both the decorator and the component share the identical supertype, and client requests pass through the decorator before reaching the component (changing the "skin").
-            </p>
-            <p>
-              A <strong>Strategy</strong> modifies an object from the <em>inside</em>. The Context holds a reference to a Strategy interface and delegates algorithmic computations to it internally (changing the "guts").
-            </p>
-          </div>
-        </details>
-
-        <details class="drill-item">
-          <summary>
-            <span class="drill-tag">Exam Drill 2 · Liabilities</span>
-            <span class="drill-q">Name two critical disadvantages of the Decorator pattern.</span>
-            <span class="drill-reveal-hint"></span>
-          </summary>
-          <div class="drill-a">
-            <p><strong>Official Model Answer:</strong></p>
-            <ol>
-              <li><strong>Loss of Type Identity:</strong> Code relying on concrete types (e.g. <code>beverage instanceof DarkRoast</code>) will fail once wrapped by a decorator because the outermost reference is now of type <code>MochaDecorator</code>.</li>
-              <li><strong>Proliferation of Tiny Objects:</strong> As demonstrated in <code>java.io</code>, simple operations require instantiating numerous small wrapper objects, complicating initialization and producing long debugging stack traces.</li>
-            </ol>
-          </div>
-        </details>
-
-        <details class="drill-item">
-          <summary>
-            <span class="drill-tag">Exam Drill 3 · Adapter Varieties</span>
-            <span class="drill-q">Why is an Object Adapter generally preferred over a Class Adapter in modern software engineering?</span>
-            <span class="drill-reveal-hint"></span>
-          </summary>
-          <div class="drill-a">
-            <p><strong>Official Model Answer:</strong></p>
-            <p>
-              An <strong>Object Adapter</strong> utilizes composition: it references an instance of <code>Adaptee</code>. This adheres to the fundamental principle: <em>"Favor object composition over class inheritance."</em> It enables adapting not only the specific Adaptee class, but any of its subclasses dynamically at runtime. A <strong>Class Adapter</strong> relies on multiple inheritance, binding statically to one concrete class and failing in single-inheritance languages like Java.
-            </p>
-          </div>
-        </details>
-      </div>
-    </section>
-
-    <!-- Footer Navigation -->
-    <footer class="page-footer" style="margin-top: 4rem; padding-top: 2rem; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
-      <a class="nav-prev" href="unit-8-creational.html" style="font-weight: 700; color: var(--accent); text-decoration: none;">← Previous: Unit 8 · Creational Patterns</a>
-      <a class="nav-next" href="unit-10-decoupling.html" style="font-weight: 700; color: var(--accent); text-decoration: none;">Next: Unit 10 · Decoupling Patterns →</a>
-    </footer>
   </main>
-</div>
-
-<script src="assets/site.js?v=2026.15" defer></script>
-<script>
-// Reading progress bar
-window.addEventListener('scroll', function() {
-  var h = document.documentElement, b = document.body;
-  var st = 'scrollTop', sh = 'scrollHeight';
-  var percent = (h[st]||b[st]) / ((h[sh]||b[sh]) - h.clientHeight) * 100;
-  var bar = document.getElementById('readingProgressBar');
-  if (bar) bar.style.width = percent + '%';
-});
-
-// Blueprint Pillar & Layout Controls
-var _blueprintCollapsed = false;
-var _lastInlineCollapseTime = 0;
-
-function selectPillar(num) {
-  var tabs = document.querySelectorAll('.blueprint-tab');
-  var panels = document.querySelectorAll('.pillar-panel');
-  tabs.forEach(function(t) {
-    var match = t.getAttribute('data-pillar') == num;
-    t.classList.toggle('active', match);
-    t.setAttribute('aria-selected', match ? 'true' : 'false');
-  });
-  panels.forEach(function(p) {
-    p.classList.toggle('active', p.getAttribute('data-pillar') == num);
-  });
-}
-
-function setBlueprintView(mode) {
-  var suite = document.getElementById('blueprintSuite');
-  var btnExplorer = document.getElementById('btnViewExplorer');
-  var btnMatrix = document.getElementById('btnViewMatrix');
-  if (!suite) return;
-
-  if (mode === 'matrix') {
-    suite.classList.add('view-matrix');
-    if (btnMatrix) btnMatrix.classList.add('active');
-    if (btnExplorer) btnExplorer.classList.remove('active');
-    document.querySelectorAll('.pillar-panel').forEach(function(p) { p.classList.add('active'); });
-  } else {
-    suite.classList.remove('view-matrix');
-    if (btnExplorer) btnExplorer.classList.add('active');
-    if (btnMatrix) btnMatrix.classList.remove('active');
-    var activeTab = document.querySelector('.blueprint-tab.active');
-    var pNum = activeTab ? activeTab.getAttribute('data-pillar') : 1;
-    selectPillar(pNum);
-  }
-}
-
-function toggleBlueprintCollapse() {
-  var now = Date.now();
-  if (now - _lastInlineCollapseTime < 250) return;
-  _lastInlineCollapseTime = now;
-
-  _blueprintCollapsed = !_blueprintCollapsed;
-  var body = document.getElementById('blueprintSuiteBody');
-  var hint = document.getElementById('blueprintCollapsedHint');
-  var label = document.getElementById('collapseLabel');
-
-  if (_blueprintCollapsed) {
-    if (body) body.style.display = 'none';
-    if (hint) hint.style.display = 'flex';
-    if (label) label.textContent = '▼ Expand Rubric';
-  } else {
-    if (body) body.style.display = '';
-    if (hint) hint.style.display = 'none';
-    if (label) label.textContent = '▲ Collapse Rubric';
-  }
-}
-
-function copyBlueprintRubric() {
-  var md = `# Unit 9: Flexibility Patterns (Decorator & Adapter) - 8-Pillar Architecture Rubric
-## Instructor: Prof. Dr. Jörg Schäfer · Frankfurt University of Applied Sciences
-
-### Pillar 1: Intent & Forces
-- Decorator: Attach dynamic responsibilities at runtime without subclass explosion.
-- Adapter: Convert an incompatible interface to match client expectations.
-
-### Pillar 2: Structural Topology
-- Decorator: Recursive wrapping sharing identical Component supertype.
-- Object Adapter: Composition bridge delegating Target to Adaptee.
-
-### Pillar 3: Dynamic Call Onion
-- Invocations cascade inward through decorators, augmenting state on the return hop.
-
-### Pillar 4: Trade-Offs & Risks
-- Decorator risks: loss of type identity (instanceof failure) and proliferation of tiny objects.
-- Adapter risks: two-way drift without clear boundary definitions.
-
-### Pillar 5: Structural Ecosystem
-- Decorator vs Strategy ("skin vs guts").
-- Decorator vs Proxy (Intent: behavior augmentation vs access control/lifecycle).
-- Decorator vs Adapter (same interface vs translated interface).
-
-### Pillar 6: Anti-Patterns
-- Subclass explosion (combinatorial nightmare) and manual nested instantiation boilerplate.
-
-### Pillar 7: Production Standard
-- Resilient HTTP client pipeline with retry and rate-limiting decorators.
-
-### Pillar 8: Frankfurt UAS Exam Traps
-- Java cannot implement Class Adapters with two classes (no multiple inheritance).
-- Decorator instanceof concrete component will fail.
-`;
-
-  function updateLabelSuccess() {
-    var btn = document.querySelector('.blueprint-suite-actions button[onclick="copyBlueprintRubric()"]');
-    if (btn) {
-      var orig = btn.innerHTML;
-      btn.innerHTML = 'Copied to Clipboard! ✓';
-      setTimeout(function() { btn.innerHTML = orig; }, 2000);
-    }
-  }
-
-  if (navigator.clipboard && navigator.clipboard.writeText) {
-    navigator.clipboard.writeText(md).then(updateLabelSuccess);
-  } else {
-    var ta = document.createElement('textarea');
-    ta.value = md;
-    document.body.appendChild(ta);
-    ta.select();
-    try {
-      document.execCommand('copy');
-      updateLabelSuccess();
-    } catch (e) {
-      alert("Please press Ctrl+C to copy rubric");
-    }
-    document.body.removeChild(ta);
-  }
-}
-
-function copySnippet(elementId) {
-  var el = document.getElementById(elementId);
-  if (!el) return;
-  var text = el.innerText || el.textContent;
-  if (navigator.clipboard && navigator.clipboard.writeText) {
-    navigator.clipboard.writeText(text).then(function() {
-      if (typeof window.showToast === "function") window.showToast("Code snippet copied to clipboard!");
-    });
-  }
-}
-
-function markStageComplete(stageNum) {
-  var btn = event.target;
-  if (btn) {
-    btn.textContent = "Completed ✓";
-    btn.style.background = "#d97706";
-    btn.style.color = "#fff";
-  }
-  var pill = document.querySelector('.stage-nav-pill[data-stage="' + stageNum + '"]');
-  if (pill) {
-    pill.style.borderColor = "#d97706";
-  }
-  if (typeof window.showToast === "function") window.showToast("Stage " + stageNum + " marked complete! Great progress.");
-}
-
-// Starbuzz Lab State
-var _baseName = 'Espresso';
-var _baseCost = 1.99;
-var _condiments = [];
-
-function setBaseBeverage(name, cost) {
-  _baseName = name;
-  _baseCost = cost;
-  var bBtns = ['btnBaseEspresso', 'btnBaseDarkRoast', 'btnBaseHouseBlend'];
-  bBtns.forEach(function(b) {
-    var el = document.getElementById(b);
-    if (el) {
-      el.style.background = 'var(--bg)';
-      el.style.color = 'var(--text)';
-      el.style.borderColor = 'var(--border)';
-    }
-  });
-  var activeBtn = document.getElementById('btnBase' + name);
-  if (activeBtn) {
-    activeBtn.style.background = '#d97706';
-    activeBtn.style.color = '#fff';
-  }
-  renderBeverage();
-}
-
-function addCondiment(name, cost) {
-  _condiments.push({ name: name, cost: cost });
-  renderBeverage();
-}
-
-function resetBeverage() {
-  _condiments = [];
-  renderBeverage();
-}
-
-function renderBeverage() {
-  var out = document.getElementById('beverageOutput');
-  if (!out) return;
-
-  var total = _baseCost;
-  var onion = "Beverage beverage = new " + _baseName + "(); // Base: €" + _baseCost.toFixed(2) + "\n";
-
-  for (var i = 0; i < _condiments.length; i++) {
-    var c = _condiments[i];
-    total += c.cost;
-    onion = "beverage = new " + c.name + "Decorator(beverage); // Layer " + (i + 1) + ": +€" + c.cost.toFixed(2) + "\n" + onion;
-  }
-
-  var desc = _baseName;
-  if (_condiments.length > 0) {
-    desc += " with " + _condiments.map(function(c) { return c.name; }).join(", ");
-  }
-
-  var res = ">> CONSTRUCTED DECORATOR ONION:\n" + onion;
-  res += "\n----------------------------------------\n";
-  res += ">> beverage.getDescription(): \"" + desc + "\"\n";
-  res += ">> beverage.cost(): €" + total.toFixed(2) + "\n";
-  res += ">> instanceof DarkRoast? " + (_baseName === 'DarkRoast' && _condiments.length === 0 ? "TRUE" : "FALSE (Type Identity Lost in Decorator Onion!)");
-
-  out.textContent = res;
-}
-
-// Initial render
-window.addEventListener('DOMContentLoaded', function() {
-  renderBeverage();
-});
-
-window.selectPillar = selectPillar;
-window.setBlueprintView = setBlueprintView;
-window.toggleBlueprintCollapse = toggleBlueprintCollapse;
-window.copyBlueprintRubric = copyBlueprintRubric;
-window.copySnippet = copySnippet;
-window.markStageComplete = markStageComplete;
-window.setBaseBeverage = setBaseBeverage;
-window.addCondiment = addCondiment;
-window.resetBeverage = resetBeverage;
-</script>
 </body>
 </html>
