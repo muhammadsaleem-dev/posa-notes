@@ -1,51 +1,212 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html lang="en" data-theme="dark" data-mode="concept">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Unit 1: The Strategy Pattern (Policy) | POSA 2026 Masterclass</title>
-<meta name="description" content="Unit 1 of Pattern-Oriented Software Architecture by Prof. Dr. Jörg Schäfer: Motivation, Gang of Four Strategy Pattern specification, UML architecture, dependencies, and official exam self-study drills.">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%236366f1'/%3E%3Cpath d='M8 10h16M8 16h16M8 22h10' stroke='%23fff' stroke-width='2.2' stroke-linecap='round'/%3E%3C/svg%3E">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Unit 1 · Strategy Pattern (Policy) · POSA Masterclass 2026</title>
+<meta name="description" content="Master the Strategy Pattern (Policy), dynamic runtime delegation, composition over inheritance, and functional comparators. Prof. Dr. Jörg Schäfer Klausur prep.">
+<link rel="stylesheet" href="assets/style.css?v=2026.16">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/style.css?v=2026.16">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,600;0,700;1,400&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,600;1,700&display=swap" rel="stylesheet">
+<script>
+  window.MathJax = {
+    tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
+    svg: { fontCache: 'global' }
+  };
+</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<script>(function(){try{var t=localStorage.getItem('posa-theme')||localStorage.getItem('dm2026-theme')||'dark';document.documentElement.setAttribute('data-theme',t);var m=localStorage.getItem('posa-mode')||'concept';document.documentElement.setAttribute('data-mode',m);}catch(e){}})();</script>
 <style>
-  .quote-card {
-    margin: 1.5rem 0 2rem;
-    padding: 1.25rem 1.5rem;
-    background: rgba(99, 102, 241, 0.08);
-    border-left: 4px solid var(--accent);
-    border-radius: 0 var(--radius-md) var(--radius-md) 0;
-    font-style: italic;
+  .guide-card {
+    background: var(--bg-raised);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+  }
+  .guide-card-header {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 0.75rem;
+  }
+  .rule-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.2rem 0.55rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 800;
+    font-family: var(--font-mono);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    background: rgba(99, 102, 241, 0.12);
+    color: #6366f1;
+    border: 1px solid rgba(99, 102, 241, 0.25);
+  }
+  .rule-badge.warn {
+    background: rgba(245, 158, 11, 0.12);
+    color: #f59e0b;
+    border-color: rgba(245, 158, 11, 0.25);
+  }
+  .rule-badge.danger {
+    background: rgba(239, 68, 68, 0.12);
+    color: #ef4444;
+    border-color: rgba(239, 68, 68, 0.25);
+  }
+  /* Collapsible Head First Module */
+  .headfirst-card {
+    background: var(--bg-raised);
+    border: 1px solid var(--border);
+    border-left: 4px solid #6366f1;
+    border-radius: var(--radius-md);
+    margin-bottom: 2rem;
+    overflow: hidden;
+  }
+  .headfirst-summary {
+    list-style: none;
+    cursor: pointer;
+    user-select: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.15rem 1.4rem;
+    background: var(--bg-subtle);
+    border-bottom: 1px solid transparent;
+    transition: background 0.15s ease;
+  }
+  .headfirst-summary:hover {
+    background: var(--code-bg);
+  }
+  .headfirst-summary::-webkit-details-marker {
+    display: none;
+  }
+  .headfirst-card[open] .headfirst-summary {
+    border-bottom: 1px solid var(--border);
+  }
+  .headfirst-title {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    font-size: 1.05rem;
+    font-weight: 700;
     color: var(--text);
   }
-  .quote-author {
-    display: block;
-    margin-top: 0.5rem;
-    font-style: normal;
+  .headfirst-badge {
+    font-size: 0.75rem;
     font-weight: 700;
-    font-size: 0.82rem;
+    color: #6366f1;
+    background: rgba(99, 102, 241, 0.12);
+    border: 1px solid rgba(99, 102, 241, 0.25);
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    font-family: var(--font-mono);
+  }
+  .headfirst-toggle {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    font-family: var(--font-mono);
+  }
+  .headfirst-chevron {
+    width: 16px;
+    height: 16px;
+    transition: transform 0.2s ease;
+    stroke: currentColor;
+  }
+  .headfirst-card[open] .headfirst-chevron {
+    transform: rotate(180deg);
+  }
+  .headfirst-card[open] .toggle-text-open {
+    display: inline;
+  }
+  .headfirst-card[open] .toggle-text-closed {
+    display: none;
+  }
+  .headfirst-card:not([open]) .toggle-text-open {
+    display: none;
+  }
+  .headfirst-card:not([open]) .toggle-text-closed {
+    display: inline;
+  }
+  .headfirst-body {
+    padding: 1.4rem;
+    background: var(--bg-raised);
+  }
+  .uml-diagram-box {
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 1.25rem;
+    margin: 1.25rem 0;
+    overflow-x: auto;
+  }
+  .pattern-spec-box {
+    background: var(--bg-raised);
+    border: 1px solid var(--border);
+    border-left: 4px solid #6366f1;
+    border-radius: var(--radius-sm);
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 1.75rem;
+  }
+  .spec-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+  }
+  .spec-row {
+    display: grid;
+    grid-template-columns: 95px 1fr;
+    gap: 1rem;
+    align-items: baseline;
+    font-size: 0.92rem;
+    line-height: 1.55;
+  }
+  @media (max-width: 600px) {
+    .spec-row {
+      grid-template-columns: 1fr;
+      gap: 0.25rem;
+    }
+  }
+  .spec-label {
+    font-family: var(--font-mono);
+    font-weight: 700;
+    font-size: 0.85rem;
     text-transform: uppercase;
     letter-spacing: 0.05em;
-    color: var(--accent-ink);
+    color: var(--accent);
+  }
+  .spec-val {
+    color: var(--text);
+  }
+  .figure-caption {
+    text-align: center;
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-top: 0.75rem;
+    letter-spacing: 0.02em;
   }
 </style>
-<script>(function(){try{var t=localStorage.getItem('posa-theme')||'dark';document.documentElement.setAttribute('data-theme',t);var m=localStorage.getItem('posa-mode')||'concept';document.documentElement.setAttribute('data-mode',m);}catch(e){}})();</script>
 </head>
-<body class="mode-stage-focused">
+<body>
 
-<!-- Enterprise Reading Progress Bar (Stripe / Vercel style) -->
-<div class="reading-progress-bar" id="readingProgressBar" aria-hidden="true"></div>
-
-<!-- Top Navigation Header -->
 <nav class="sitenav">
   <div class="sitenav-inner">
     <a class="sitenav-home" href="index.html">
       <span style="background:linear-gradient(135deg, #6366f1 0%, #38bdf8 100%);color:#fff;padding:0.2rem 0.55rem;border-radius:6px;font-size:0.82rem;font-weight:800;letter-spacing:0.04em;">POSA</span>
       <span style="font-weight:800;letter-spacing:-0.02em;">2026</span>
     </a>
-        <div class="sitenav-links">
+    <div class="sitenav-links">
       <a href="index.html">Overview</a>
       <a href="index.html#curriculum-roadmap">16 Units</a>
       <a href="past-papers.html">📝 Real Past Papers</a>
@@ -64,1887 +225,576 @@
   </div>
   <div class="nav-panel" id="navPanel">
     <div class="nav-panel-section">
-      <span class="nav-panel-label">Core Curriculum</span>
-      <a href="index.html">Curriculum Hub &amp; Roadmap</a>
-      <a href="unit-1-strategy.html" class="active">Unit 1 · The Strategy Pattern</a>
+      <span class="nav-panel-label">Course Navigation</span>
+      <a href="index.html">Course Overview</a>
+      <a href="past-papers.html">📝 Real Past Papers Archive</a>
+      <a href="mock-1.html">🎓 Official Mock Exam (60 pts)</a>
+      <a href="mock-2.html">Comprehensive Mock Exam 2 (95 pts)</a>
+      <a href="unit-1-strategy.html" class="active">Unit 1 · Strategy Pattern</a>
       <a href="unit-2-template.html">Unit 2A · Template Method Pattern</a>
       <a href="unit-2-command.html">Unit 2B · Command Pattern</a>
-      <a href="unit-3-structural.html">Unit 3 · Composite &amp; Iterator</a>
-      <a href="unit-6-solid.html">Unit 6 · SOLID Principles &amp; Formal LSP</a>
-      <a href="unit-7-packaging.html">Unit 7 · Packaging Principles &amp; Metrics</a>
-      <a href="past-papers.html">Past Papers Analysis Hub</a>
-      <a href="mock-1.html">Mock Exam 1 (75 pts)</a>
-      <a href="mock-2.html">Mock Exam 2 (95 pts)</a>
+      <a href="unit-3-structural.html">Unit 3 · Structural Patterns (Composite &amp; Iterator)</a>
+      <a href="unit-6-solid.html">Unit 6 · SOLID Principles</a>
+      <a href="unit-11-mvc.html">Unit 11 · Case Study MVC</a>
     </div>
   </div>
 </nav>
 
-<!-- Mobile Native Bottom Dock (iOS App Bar) -->
+<!-- Mobile Native Bottom Dock -->
 <nav class="mobile-bottom-dock" aria-label="Mobile Navigation Dock">
-  <a href="#stage-1-mental-model" class="dock-item jump-stage-btn active" data-target-stage="stage-1-mental-model">
-    <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
-    <span>Story</span>
-  </a>
-  <a href="#stage-2-architecture" class="dock-item jump-stage-btn" data-target-stage="stage-2-architecture">
+  <a href="#sec-profile" class="dock-item active">
     <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line><line x1="9" y1="21" x2="9" y2="9"></line></svg>
-    <span>UML</span>
+    <span>Profile</span>
   </a>
-  <a href="#stage-3-refactoring" class="dock-item jump-stage-btn" data-target-stage="stage-3-refactoring">
-    <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
-    <span>Code</span>
+  <a href="#headfirst-strategy" class="dock-item">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+    <span>Head First</span>
   </a>
-  <a href="#stage-4-decision" class="dock-item jump-stage-btn" data-target-stage="stage-4-decision">
-    <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 14 14"></polyline></svg>
-    <span>Wizard</span>
+  <a href="#sec-rules" class="dock-item">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+    <span>Rules</span>
   </a>
-  <a href="#stage-5-exam" class="dock-item jump-stage-btn" data-target-stage="stage-5-exam">
-    <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
-    <span>Exam</span>
+  <a href="#sec-tradeoff" class="dock-item">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+    <span>Functional</span>
+  </a>
+  <a href="#sec-drills" class="dock-item">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
+    <span>Drills</span>
   </a>
 </nav>
 
 <div class="page-shell">
+  <!-- Desktop Sticky Sidebar TOC -->
   <aside class="sidebar-toc">
     <div class="sidebar-block">
-      <span class="sidebar-label">Part 1 · Architectural Rubric</span>
-      <a href="#blueprintSuite" class="sidebar-blueprint-trigger" id="sidebarBlueprintBtn">
-        <span class="toc-num" style="background:#6366f1; color:#fff;">★</span>
-        <span>8-Pillar Pattern Blueprint</span>
-      </a>
-
-      <span class="sidebar-label" style="margin-top:1.25rem;">Part 2 · 5-Stage Curriculum</span>
-      <a href="#stage-1-mental-model" class="jump-stage-btn active" data-target-stage="stage-1-mental-model"><span class="toc-num">1</span>Mental Model (Visual Story)</a>
-      <a href="#stage-2-architecture" class="jump-stage-btn" data-target-stage="stage-2-architecture"><span class="toc-num">2</span>Architecture &amp; Vector UML</a>
-      <a href="#stage-3-refactoring" class="jump-stage-btn" data-target-stage="stage-3-refactoring"><span class="toc-num">3</span>Before &amp; After Code Lab</a>
-      <a href="#stage-4-decision" class="jump-stage-btn" data-target-stage="stage-4-decision"><span class="toc-num">4</span>Trade-offs &amp; Decision Wizard</a>
-      <a href="#stage-5-exam" class="jump-stage-btn" data-target-stage="stage-5-exam"><span class="toc-num">5</span>Prof. Schäfer Exam Drills</a>
+      <span class="sidebar-label">Navigation</span>
+      <a href="index.html">← Course Overview</a>
+      <a href="unit-2-template.html">Unit 2A · Template Method →</a>
+      <a href="past-papers.html">📝 Past Papers Hub</a>
     </div>
+
     <div class="sidebar-block">
-      <span class="sidebar-label">Curriculum Origin</span>
-      <p style="font-size: 0.85rem; color: var(--text-muted); margin: 0 0 0.5rem; line-height: 1.5;">
+      <span class="sidebar-label">Strategy Pattern Pillars</span>
+      <a href="#sec-profile"><span class="toc-num">1</span>Pattern Profile &amp; UML</a>
+      <a href="#headfirst-strategy"><span class="toc-num">2</span>Head First Duck Simulator</a>
+      <a href="#sec-rules"><span class="toc-num">3</span>Prof. Schäfer's 5 Key Axioms</a>
+      <a href="#sec-tradeoff"><span class="toc-num">4</span>Functional Strategy &amp; qsort</a>
+      <a href="#sec-drills"><span class="toc-num">5</span>Official Klausur Drills</a>
+    </div>
+
+    <div class="sidebar-block">
+      <span class="sidebar-label">Academic Profile</span>
+      <p style="font-size: 0.82rem; color: var(--text-muted); line-height: 1.5; margin: 0 0 0.5rem;">
         <strong>Prof. Dr. Jörg Schäfer</strong><br>
         Frankfurt University of Applied Sciences<br>
         Fachbereich 2: Informatik
       </p>
-      <div style="font-size:0.75rem; font-weight:700; color:#38bdf8; background:rgba(56,189,248,0.12); border:1px solid rgba(56,189,248,0.25); padding:0.25rem 0.5rem; border-radius:4px; display:inline-block; margin-top:0.4rem;">
-        ⏱️ 45 Min · 15 Exam Pts
+      <div style="font-size:0.75rem; font-weight:700; color:#38bdf8; background:rgba(56,189,248,0.12); border:1px solid rgba(56,189,248,0.25); padding:0.25rem 0.5rem; border-radius:4px; display:inline-block;">
+        ⏱️ 6–7 Mins · 10 Exam Pts
       </div>
     </div>
   </aside>
 
-  <div class="page">
+  <main class="page">
     
-    <!-- Hero Masthead -->
+    <!-- Masthead -->
     <header class="masthead">
       <div>
-        <div class="eyebrow">
-          <span>Behavioral Architecture Masterclass · GoF Pattern 1 of 23</span>
-        </div>
-        <h1 class="title">Unit 1: The Strategy Pattern (Policy)</h1>
-        <p class="dek" style="font-size:1.05rem; line-height:1.65; max-width:68ch; color:var(--text-muted);">
-          How to isolate volatile algorithms from stable client contexts, eliminate brittle inheritance hierarchies, and achieve dynamic runtime object composition.
-        </p>
-
-        <!-- Course Meta Metric Chips -->
-        <div class="masthead-metrics-grid">
-          <div class="metric-chip">
-            <div class="metric-chip-label">⏱️ Study Time</div>
-            <div class="metric-chip-val" style="color:#38bdf8;">45 Minutes</div>
-          </div>
-          <div class="metric-chip">
-            <div class="metric-chip-label">🎯 Exam Target</div>
-            <div class="metric-chip-val" style="color:#10b981;">15 Pts (Grade 1.0)</div>
-          </div>
-          <div class="metric-chip">
-            <div class="metric-chip-label">🏛️ GoF Category</div>
-            <div class="metric-chip-val" style="color:#a5b4fc;">Behavioral / Object</div>
-          </div>
-          <div class="metric-chip">
-            <div class="metric-chip-label">⚙️ Refactoring Lab</div>
-            <div class="metric-chip-val" style="color:#f59e0b;">Sorter Pipeline</div>
-          </div>
-        </div>
-
+        <div class="eyebrow">Unit 1 · Behavioral Design Patterns · GoF Pattern 1 of 23</div>
+        <h1 class="title">Strategy Pattern (Policy)</h1>
       </div>
+      <p class="dek">
+        Master dynamic runtime algorithm selection, delegation over inheritance (has-a over is-a), request delegation, and functional comparators. Directly synthesized from Prof. Dr. Jörg Schäfer's lecture notes and authentic exam sheets.
+      </p>
     </header>
 
-    <!-- ====================================================================
-         SECTION 1: 8-PILLAR ARCHITECTURAL BLUEPRINT (UNIVERSAL RUBRIC)
-         ==================================================================== -->
-    <!-- Prominent Section Divider for Part 1 -->
-    <div class="masterclass-section-divider" style="margin: 2.5rem 0 1.5rem;">
-      <div class="section-divider-line"></div>
-      <div class="section-divider-chip">
-        <span>PART 1 · ARCHITECTURAL RUBRIC</span>
-      </div>
-      <div class="section-divider-line"></div>
-    </div>
-
-    <section class="blueprint-suite" id="blueprintSuite" aria-label="8-Pillar Architecture Rubric">
-      <div class="blueprint-suite-top">
+    <!-- ============================================================== -->
+    <!-- 1. PATTERN PROFILE & UML                                       -->
+    <!-- ============================================================== -->
+    <section class="chapter" id="sec-profile">
+      <div class="chapter-head">
+        <span class="chapter-num">1</span>
         <div>
-          <div class="blueprint-suite-badge">
-            <span class="section-badge-pill">SECTION 1 OF 2</span>
-            <span class="badge-sep">·</span>
-            <span>📐 Universal Pattern Rubric</span>
-            <span class="badge-sep">·</span>
-            <span>Exam &amp; Production Standard</span>
-          </div>
-          <h3 class="blueprint-suite-title">The 8 Pillars of Software Pattern Mastery</h3>
-          <p class="blueprint-suite-desc">
-            When analyzing or being examined on any design pattern (Prof. Schäfer's POSA curriculum or enterprise architectural reviews), you must master these 8 dimensions. Switch between the <strong>Interactive Explorer</strong> and the <strong>Full 8-Pillar Matrix</strong>.
-          </p>
-        </div>
-        <div class="blueprint-suite-actions">
-          <div class="blueprint-view-toggles" style="display:inline-flex; gap:0.4rem;">
-            <button type="button" class="btn-suite-toggle active" id="btnViewExplorer" onclick="setBlueprintView('explorer')" title="Explore one pillar at a time with interactive details">
-              <span>⚡ Interactive Explorer</span>
-            </button>
-            <button type="button" class="btn-suite-toggle" id="btnViewMatrix" onclick="setBlueprintView('matrix')" title="View all 8 pillars simultaneously in an executive grid">
-              <span>📊 Full Matrix</span>
-            </button>
-          </div>
-          <button type="button" class="btn-copy-rubric" id="btnCopyRubricSuite" onclick="copyBlueprintRubric()" title="Copy entire 8-pillar markdown study rubric to clipboard">
-            <span>📋</span>
-            <span id="copyRubricSuiteLabel">Copy Rubric</span>
-          </button>
-          <button type="button" class="btn-section-collapse" id="btnCollapseBlueprint" onclick="toggleBlueprintCollapse()" aria-expanded="true" title="Collapse or expand the 8-Pillar section">
-            <span class="collapse-icon">▲</span>
-            <span class="collapse-label">Collapse Rubric</span>
-          </button>
+          <h2>Pattern Profile &amp; Canonical UML Architecture</h2>
+          <span style="font-size:0.85rem; color:var(--text-muted); font-weight:600;">Core GoF Specification</span>
         </div>
       </div>
 
-      <!-- Subtle Collapsed Hint Bar (Visible when section is collapsed) -->
-      <div class="blueprint-collapsed-hint" id="blueprintCollapsedHint" style="display:none; padding:0.85rem 1.75rem; background:var(--bg-subtle); border-top:1px dashed var(--border); font-size:0.85rem; color:var(--text-muted); align-items:center; justify-content:space-between; flex-wrap:wrap; gap:0.5rem;">
-        <div style="display:flex; align-items:center; gap:0.5rem;">
-          <span>📐</span>
-          <span><strong>8 Architectural Pillars Collapsed</strong> (Click "Expand Rubric" anytime to inspect)</span>
-        </div>
-        <button type="button" class="btn-suite-toggle" onclick="toggleBlueprintCollapse(false)" style="padding:0.25rem 0.65rem; font-size:0.78rem;">
-          <span>▼ Expand</span>
-        </button>
-      </div>
-
-      <!-- Collapsible Body Wrapper for Section 1 -->
-      <div class="blueprint-collapsible-body" id="blueprintCollapsibleBody">
-        <!-- TAB STRIP FOR INTERACTIVE EXPLORER -->
-        <div class="blueprint-pills-bar" id="blueprintPillsBar" role="tablist">
-          <button type="button" class="pillar-tab-btn active" data-pillar="p1" role="tab" aria-selected="true" onclick="selectPillar('p1')">
-            <span>🎯 01 · Intent &amp; Motivation</span>
-          </button>
-          <button type="button" class="pillar-tab-btn" data-pillar="p2" role="tab" aria-selected="false" onclick="selectPillar('p2')">
-            <span>🧩 02 · Structural Roles</span>
-          </button>
-          <button type="button" class="pillar-tab-btn" data-pillar="p3" role="tab" aria-selected="false" onclick="selectPillar('p3')">
-            <span>📐 03 · UML Anatomy</span>
-          </button>
-          <button type="button" class="pillar-tab-btn" data-pillar="p4" role="tab" aria-selected="false" onclick="selectPillar('p4')">
-            <span>🛡️ 04 · SOLID Principles</span>
-          </button>
-          <button type="button" class="pillar-tab-btn" data-pillar="p5" role="tab" aria-selected="false" onclick="selectPillar('p5')">
-            <span>⚡ 05 · Runtime Hot-Swap</span>
-          </button>
-          <button type="button" class="pillar-tab-btn" data-pillar="p6" role="tab" aria-selected="false" onclick="selectPillar('p6')">
-            <span>⚖️ 06 · Trade-offs &amp; Cost</span>
-          </button>
-          <button type="button" class="pillar-tab-btn" data-pillar="p7" role="tab" aria-selected="false" onclick="selectPillar('p7')">
-            <span>🧭 07 · Rival Matrix</span>
-          </button>
-          <button type="button" class="pillar-tab-btn" data-pillar="p8" role="tab" aria-selected="false" onclick="selectPillar('p8')">
-            <span>🔍 08 · Exam Gotchas</span>
-          </button>
-        </div>
-
-        <div class="blueprint-content-area" id="blueprintContentArea">
-          <!-- PANE 1: INTENT -->
-          <div class="pillar-pane active" id="pane-p1" role="tabpanel">
-            <div class="pillar-hero-box">
-              <div class="pillar-rule-card">
-                <div class="pillar-rule-header">
-                  <span class="pillar-rule-tag">Universal Architectural Standard</span>
-                  <span style="font-family:var(--font-mono); font-size:0.75rem; color:var(--text-muted);">Pillar 01</span>
-                </div>
-                <h4 class="pillar-rule-title">Intent &amp; Motivation Invariants</h4>
-                <p class="pillar-rule-desc">
-                  Every design pattern originates from a recurring production architectural failure. To master a pattern, you must define:
-                </p>
-                <ul class="pillar-criteria-list">
-                  <li><span class="check">✓</span> <span><strong>The GoF Intent Statement:</strong> Concise, memorizable specification of what behavior is abstracted.</span></li>
-                  <li><span class="check">✓</span> <span><strong>The Failure Mode Eliminated:</strong> Identifies whether it kills inheritance bloat, state switchboards, or coupling.</span></li>
-                  <li><span class="cross">✕</span> <span><strong>Fatal Exam Error:</strong> Describing "what the code does" rather than "why the architectural problem exists".</span></li>
-                </ul>
+      <!-- Official Pattern Profile: Name, Type, Problem, Solution -->
+      <div class="pattern-spec-box">
+        <div class="spec-grid">
+          <div class="spec-row">
+            <span class="spec-label">Name:</span>
+            <span class="spec-val"><strong>Strategy</strong> (also known as <em>Policy Pattern</em>)</span>
+          </div>
+          <div class="spec-row">
+            <span class="spec-label">Type:</span>
+            <span class="spec-val"><strong>Behavioral pattern</strong> which focuses on how objects interact and communicate with each other. It specifically enables selecting an algorithm at runtime by encapsulating each algorithm within a separate class, allowing them to be interchangeable.</span>
+          </div>
+          <div class="spec-row">
+            <span class="spec-label">Policy:</span>
+            <span class="spec-val"><em>Define a family of algorithms, encapsulate each one, and make them interchangeable. Strategy lets the algorithm vary independently from clients that use it.</em></span>
+          </div>
+          <div class="spec-row">
+            <span class="spec-label">Problem:</span>
+            <span class="spec-val">You want to be able to vary the behavior (algorithms) of objects &mdash; even at runtime! You must cope with anticipated and unanticipated changes to algorithms and new algorithms while avoiding changing code and/or breaking existing client code.</span>
+          </div>
+          <div class="spec-row">
+            <span class="spec-label">Solution:</span>
+            <span class="spec-val">
+              <strong>Use delegation instead of inheritance.</strong>
+              <div style="margin-top:0.6rem; font-size:0.9rem; color:var(--text); line-height:1.6;">
+                • <strong>Inheritance:</strong> Creates an rigid <em>"is-a"</em> relationship. In deep hierarchies, extending base class behavior causes tight coupling and code duplication.<br>
+                • <strong>Delegation:</strong> Creates a flexible <em>"has-a"</em> relationship. An object handles a request by passing it to another object (the delegate) that knows how to perform the task.
               </div>
-              <div class="pillar-app-card">
-                <span class="pillar-app-tag">Unit 1: Strategy Pattern Focus</span>
-                <h4 class="pillar-app-title">GoF Intent &amp; The Duck Simulator Failure</h4>
-                <p style="font-size:0.88rem; line-height:1.6; color:var(--text); margin:0 0 0.5rem;">
-                  <em>"Define a family of algorithms, encapsulate each one, and make them interchangeable. Strategy lets the algorithm vary independently from clients that use it."</em>
-                </p>
-                
-                <!-- IDE Window replacing raw text snippet -->
-                <div class="ide-window" style="margin: 0.5rem 0 0.85rem;">
-                  <div class="ide-header">
-                    <div class="ide-dots">
-                      <span class="ide-dot ide-dot-red"></span>
-                      <span class="ide-dot ide-dot-yellow"></span>
-                      <span class="ide-dot ide-dot-green"></span>
-                    </div>
-                    <span class="ide-title">DuckInheritanceFailure.java · Failure Mode vs. Solution</span>
-                    <button type="button" class="ide-copy-btn" onclick="copySnippet(this)" aria-label="Copy code">
-                      <span class="copy-icon">📋</span> Copy
-                    </button>
-                  </div>
-                  <pre class="ide-code"><code class="language-java">// PROBLEM: Base class inheritance locks all subclasses into default behaviors
-abstract class Duck {
-    void fly() { System.out.println("Flying!"); } // RubberDuck &amp; DecoyDuck break!
-}
-
-// STRATEGY FIX: Encapsulate volatile algorithms into interchangeable contracts
-interface FlyBehavior { void fly(); }
-class FlyWithWings implements FlyBehavior { public void fly() { /* Flapping wings */ } }
-class FlyNoWay implements FlyBehavior { public void fly() { /* Do nothing */ } }</code></pre>
-                </div>
-
-                <div class="pillar-exam-tip">
-                  🎯 <strong>Prof. Schäfer Exam Criteria:</strong> You will be asked <em>"Why can't we simply use class inheritance?"</em> Answer: Inheritance creates compile-time locks, causes subclass explosion ($2^N$ combinations), and forces inappropriate default implementations onto subclasses.
-                </div>
+              <div style="margin-top:0.6rem; font-size:0.85rem; color:var(--text-muted);">
+                <em>Real-World Examples from Notes:</em> Hardware drivers, TV decoder cards, getting to the airport (car, public transport, taxi), cooking recipes, and C UNIX <code>qsort()</code> function pointers.
               </div>
-            </div>
-          </div>
-
-          <!-- PANE 2: ROLES -->
-          <div class="pillar-pane" id="pane-p2" role="tabpanel">
-            <div class="pillar-hero-box">
-              <div class="pillar-rule-card">
-                <div class="pillar-rule-header">
-                  <span class="pillar-rule-tag">Universal Architectural Standard</span>
-                  <span style="font-family:var(--font-mono); font-size:0.75rem; color:var(--text-muted);">Pillar 02</span>
-                </div>
-                <h4 class="pillar-rule-title">Structural Participants &amp; Single Responsibility</h4>
-                <p class="pillar-rule-desc">
-                  Patterns divide responsibilities across distinct structural roles. You must isolate who holds state, who delegates, and who executes:
-                </p>
-                <ul class="pillar-criteria-list">
-                  <li><span class="check">✓</span> <span><strong>Context:</strong> Maintains the domain chassis and holds a reference to the abstract strategy interface.</span></li>
-                  <li><span class="check">✓</span> <span><strong>Strategy Interface:</strong> Declares the pure signature contract common to all algorithmic variants.</span></li>
-                  <li><span class="check">✓</span> <span><strong>Concrete Strategies:</strong> Implements the concrete algorithm variant without leaking details to Context.</span></li>
-                  <li><span class="check">✓</span> <span><strong>Client:</strong> Selects and passes the desired Strategy instance into the Context.</span></li>
-                </ul>
-              </div>
-              <div class="pillar-app-card">
-                <span class="pillar-app-tag">Unit 1: Strategy Pattern Focus</span>
-                <h4 class="pillar-app-title">Duck Simulator Participants</h4>
-                <ul class="pillar-criteria-list" style="margin-top:0.5rem;">
-                  <li><span class="check">✓</span> <span><strong>Context:</strong> <code>Duck</code> (abstract base chassis holding <code>flyBehavior</code> and <code>quackBehavior</code>).</span></li>
-                  <li><span class="check">✓</span> <span><strong>Strategy Interface:</strong> <code>FlyBehavior</code> (declares <code>void fly()</code>).</span></li>
-                  <li><span class="check">✓</span> <span><strong>Concrete Strategies:</strong> <code>FlyWithWings</code>, <code>FlyNoWay</code>, <code>FlyRocketPowered</code>.</span></li>
-                  <li><span class="check">✓</span> <span><strong>Client:</strong> <code>MiniDuckSimulator</code> (wires initial strategy into Duck chassis).</span></li>
-                </ul>
-                <div class="pillar-exam-tip">
-                  🎯 <strong>Exam Trap:</strong> Never let a ConcreteStrategy inherit from the Context! The relationship is strictly composition: Context <em>HAS-A</em> Strategy.
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- PANE 3: UML -->
-          <div class="pillar-pane" id="pane-p3" role="tabpanel">
-            <div class="pillar-hero-box">
-              <div class="pillar-rule-card">
-                <div class="pillar-rule-header">
-                  <span class="pillar-rule-tag">Universal Architectural Standard</span>
-                  <span style="font-family:var(--font-mono); font-size:0.75rem; color:var(--text-muted);">Pillar 03</span>
-                </div>
-                <h4 class="pillar-rule-title">Formal UML 2.5 Diagram Syntax</h4>
-                <p class="pillar-rule-desc">
-                  Drawing diagrams accurately is where students routinely drop 5 to 10 points on the exam. UML connectors carry rigorous legal semantic meaning:
-                </p>
-                <ul class="pillar-criteria-list">
-                  <li><span class="check">✓</span> <span><strong>Directed Association / Aggregation (──&gt;):</strong> Points from Context to Strategy interface with multiplicity <code>1</code>.</span></li>
-                  <li><span class="check">✓</span> <span><strong>Realization / Implementation (···▷):</strong> Dashed line with open hollow triangular head pointing to <code>&lt;&lt;interface&gt;&gt; Strategy</code>.</span></li>
-                  <li><span class="cross">✕</span> <span><strong>Fatal Exam Error:</strong> Using a solid inheritance triangle (──▷) for an interface! This is an immediate point deduction.</span></li>
-                </ul>
-              </div>
-              <div class="pillar-app-card">
-                <span class="pillar-app-tag">Unit 1: Strategy Pattern Focus</span>
-                <h4 class="pillar-app-title">Strategy UML Architecture (Vector Specification)</h4>
-                
-                <!-- Pure Vector SVG Diagram - ZERO ASCII ART -->
-                <div class="pillar-svg-box">
-                  <svg viewBox="0 0 540 220" width="100%" height="auto" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Formal UML 2.5 Class Diagram for Strategy Pattern">
-                    <defs>
-                      <!-- Directed Association Arrow Marker -->
-                      <marker id="pillarAssocArrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-                        <path d="M 0 1.5 L 9 5 L 0 8.5" fill="none" stroke="#38BDF8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                      </marker>
-                      <!-- Realization Triangle Marker (Hollow closed triangle pointing UP) -->
-                      <marker id="pillarRealizeTriangle" viewBox="0 0 12 12" refX="1" refY="6" markerWidth="9" markerHeight="9" orient="auto">
-                        <polygon points="12,1 1,6 12,11" fill="var(--bg-raised)" stroke="#10B981" stroke-width="2"/>
-                      </marker>
-                    </defs>
-
-                    <!-- Context Node -->
-                    <g class="uml-node-context">
-                      <rect x="15" y="25" width="160" height="95" rx="6" fill="var(--bg-subtle)" stroke="var(--border-strong)" stroke-width="1.5"/>
-                      <rect x="15" y="25" width="160" height="28" rx="6" fill="var(--bg-raised)"/>
-                      <text x="95" y="44" text-anchor="middle" font-family="var(--font-display)" font-size="12" font-weight="700" fill="var(--text)">Context (Duck)</text>
-                      <line x1="15" y1="53" x2="175" y2="53" stroke="var(--border)" stroke-width="1"/>
-                      <text x="25" y="73" font-family="var(--font-mono)" font-size="10" fill="var(--text-muted)">- flyBehavior: FlyBehavior</text>
-                      <line x1="15" y1="83" x2="175" y2="83" stroke="var(--border)" stroke-width="1"/>
-                      <text x="25" y="103" font-family="var(--font-mono)" font-size="10" fill="var(--accent-ink)">+ performFly(): void</text>
-                    </g>
-
-                    <!-- Directed Association Line: Context -> Strategy Interface -->
-                    <path d="M 175 62 L 315 62" stroke="#38BDF8" stroke-width="2" marker-end="url(#pillarAssocArrow)"/>
-                    <text x="245" y="54" text-anchor="middle" font-family="var(--font-mono)" font-size="10" font-weight="700" fill="#38BDF8">-flyBehavior</text>
-                    <text x="305" y="77" text-anchor="end" font-family="var(--font-mono)" font-size="10" font-weight="800" fill="var(--text-muted)">1</text>
-
-                    <!-- Strategy Interface Node -->
-                    <g class="uml-node-strategy">
-                      <rect x="325" y="15" width="195" height="95" rx="6" fill="var(--bg-subtle)" stroke="#6366F1" stroke-width="1.8"/>
-                      <rect x="325" y="15" width="195" height="38" rx="6" fill="var(--bg-raised)"/>
-                      <text x="422" y="32" text-anchor="middle" font-family="var(--font-mono)" font-size="10" font-weight="700" fill="#A5B4FC">&lt;&lt;interface&gt;&gt;</text>
-                      <text x="422" y="47" text-anchor="middle" font-family="var(--font-display)" font-size="12" font-weight="800" fill="var(--text)">FlyBehavior</text>
-                      <line x1="325" y1="53" x2="520" y2="53" stroke="var(--border)" stroke-width="1"/>
-                      <text x="337" y="74" font-family="var(--font-mono)" font-size="10" font-style="italic" fill="var(--text-muted)">/* Pure contract */</text>
-                      <line x1="325" y1="83" x2="520" y2="83" stroke="var(--border)" stroke-width="1"/>
-                      <text x="337" y="101" font-family="var(--font-mono)" font-size="10" font-weight="700" fill="#6366F1">+ fly(): void</text>
-                    </g>
-
-                    <!-- Realization Connectors: ConcreteStrategies -> FlyBehavior -->
-                    <path d="M 422 110 L 422 140" stroke="#10B981" stroke-width="1.8" stroke-dasharray="5,4" marker-start="url(#pillarRealizeTriangle)"/>
-                    <path d="M 350 140 L 495 140" stroke="#10B981" stroke-width="1.8" stroke-dasharray="5,4"/>
-                    <path d="M 350 140 L 350 155" stroke="#10B981" stroke-width="1.8" stroke-dasharray="5,4"/>
-                    <path d="M 495 140 L 495 155" stroke="#10B981" stroke-width="1.8" stroke-dasharray="5,4"/>
-
-                    <!-- Concrete Strategy A Node -->
-                    <g class="uml-node-concretestrat-a">
-                      <rect x="285" y="155" width="130" height="55" rx="6" fill="var(--bg-subtle)" stroke="var(--border-strong)" stroke-width="1.5"/>
-                      <text x="350" y="174" text-anchor="middle" font-family="var(--font-display)" font-size="11" font-weight="700" fill="var(--text)">FlyWithWings</text>
-                      <line x1="285" y1="182" x2="415" y2="182" stroke="var(--border)" stroke-width="1"/>
-                      <text x="295" y="199" font-family="var(--font-mono)" font-size="9" fill="#10B981">+ fly(): void</text>
-                    </g>
-
-                    <!-- Concrete Strategy B Node -->
-                    <g class="uml-node-concretestrat-b">
-                      <rect x="430" y="155" width="130" height="55" rx="6" fill="var(--bg-subtle)" stroke="var(--border-strong)" stroke-width="1.5"/>
-                      <text x="495" y="174" text-anchor="middle" font-family="var(--font-display)" font-size="11" font-weight="700" fill="var(--text)">FlyNoWay</text>
-                      <line x1="430" y1="182" x2="560" y2="182" stroke="var(--border)" stroke-width="1"/>
-                      <text x="440" y="199" font-family="var(--font-mono)" font-size="9" fill="#10B981">+ fly(): void</text>
-                    </g>
-                  </svg>
-                </div>
-
-                <div class="pillar-exam-tip">
-                  🎯 <strong>Prof. Schäfer Checklist:</strong> Check the multiplicity! Always label the association end with <code>1</code> or <code>-flyBehavior: FlyBehavior</code>.
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- PANE 4: SOLID -->
-          <div class="pillar-pane" id="pane-p4" role="tabpanel">
-            <div class="pillar-hero-box">
-              <div class="pillar-rule-card">
-                <div class="pillar-rule-header">
-                  <span class="pillar-rule-tag">Universal Architectural Standard</span>
-                  <span style="font-family:var(--font-mono); font-size:0.75rem; color:var(--text-muted);">Pillar 04</span>
-                </div>
-                <h4 class="pillar-rule-title">Core Principles Enforced</h4>
-                <p class="pillar-rule-desc">
-                  Patterns are concrete expressions of foundational software engineering axioms:
-                </p>
-                <ul class="pillar-criteria-list">
-                  <li><span class="check">✓</span> <span><strong>Open/Closed Principle (OCP):</strong> The Context class is closed for modification when new algorithms are invented, but open for extension.</span></li>
-                  <li><span class="check">✓</span> <span><strong>Dependency Inversion Principle (DIP):</strong> High-level domain logic does not depend on low-level detail; both depend on abstractions.</span></li>
-                  <li><span class="check">✓</span> <span><strong>Favor Composition over Inheritance:</strong> Dynamic aggregation yields greater flexibility and less fragility than static class derivation.</span></li>
-                </ul>
-              </div>
-              <div class="pillar-app-card">
-                <span class="pillar-app-tag">Unit 1: Strategy Pattern Focus</span>
-                <h4 class="pillar-app-title">OCP &amp; DIP in Action</h4>
-                <p style="font-size:0.88rem; line-height:1.6; color:var(--text); margin:0 0 0.5rem;">
-                  When we need to introduce a brand new flight algorithm (e.g., <code>FlyRocketPowered</code>), we do <strong>not touch Duck.java at all</strong>. We write a single new class implementing <code>FlyBehavior</code>.
-                </p>
-                <div class="pillar-exam-tip">
-                  🎯 <strong>Exam Question:</strong> <em>"Which SOLID principles are directly realized by the Strategy Pattern?"</em> Always cite <strong>OCP</strong>, <strong>DIP</strong>, and <strong>SRP</strong>, accompanied by the Head First axiom <em>"Encapsulate what varies."</em>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- PANE 5: HOT-SWAP -->
-          <div class="pillar-pane" id="pane-p5" role="tabpanel">
-            <div class="pillar-hero-box">
-              <div class="pillar-rule-card">
-                <div class="pillar-rule-header">
-                  <span class="pillar-rule-tag">Universal Architectural Standard</span>
-                  <span style="font-family:var(--font-mono); font-size:0.75rem; color:var(--text-muted);">Pillar 05</span>
-                </div>
-                <h4 class="pillar-rule-title">Implementation Mechanics &amp; Hot-Swapping</h4>
-                <p class="pillar-rule-desc">
-                  Code wiring must support dynamic mutation without re-instantiating the entire context:
-                </p>
-                <ul class="pillar-criteria-list">
-                  <li><span class="check">✓</span> <span><strong>Interface Reference:</strong> Field declared as the interface type, never concrete class.</span></li>
-                  <li><span class="check">✓</span> <span><strong>Runtime Setter:</strong> <code>setStrategy(Strategy s)</code> allows swapping algorithms on live objects.</span></li>
-                  <li><span class="check">✓</span> <span><strong>Pure Delegation:</strong> Context method simply forwards the request to <code>this.strategy.algorithm()</code>.</span></li>
-                </ul>
-              </div>
-              <div class="pillar-app-card">
-                <span class="pillar-app-tag">Unit 1: Strategy Pattern Focus</span>
-                <h4 class="pillar-app-title">Duck Dynamic Hot-Swapping</h4>
-                
-                <!-- IDE Window for Hot Swap -->
-                <div class="ide-window" style="margin: 0.5rem 0 0.85rem;">
-                  <div class="ide-header">
-                    <div class="ide-dots">
-                      <span class="ide-dot ide-dot-red"></span>
-                      <span class="ide-dot ide-dot-yellow"></span>
-                      <span class="ide-dot ide-dot-green"></span>
-                    </div>
-                    <span class="ide-title">DuckHotSwap.java · Dynamic Mutation</span>
-                    <button type="button" class="ide-copy-btn" onclick="copySnippet(this)" aria-label="Copy code">
-                      <span class="copy-icon">📋</span> Copy
-                    </button>
-                  </div>
-                  <pre class="ide-code"><code class="language-java">// 1. Context instantiated with initial baseline strategy
-Duck modelDuck = new ModelDuck();
-modelDuck.performFly(); // Output: &lt;&lt; Silence &gt;&gt; (FlyNoWay)
-
-// 2. Dynamic runtime hot-swap without re-instantiating the Context
-modelDuck.setFlyBehavior(new FlyRocketPowered());
-modelDuck.performFly(); // Output: "Screaming through the sky at Mach 3!"</code></pre>
-                </div>
-
-                <div class="pillar-exam-tip">
-                  🎯 <strong>Exam Trap:</strong> If your Context class does not provide a setter for the strategy, you lose runtime dynamicity, reducing the pattern to basic constructor dependency injection.
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- PANE 6: TRADE-OFFS -->
-          <div class="pillar-pane" id="pane-p6" role="tabpanel">
-            <div class="pillar-hero-box">
-              <div class="pillar-rule-card">
-                <div class="pillar-rule-header">
-                  <span class="pillar-rule-tag">Universal Architectural Standard</span>
-                  <span style="font-family:var(--font-mono); font-size:0.75rem; color:var(--text-muted);">Pillar 06</span>
-                </div>
-                <h4 class="pillar-rule-title">Architectural Costs &amp; Trade-offs</h4>
-                <p class="pillar-rule-desc">
-                  Senior software architects never declare a pattern "always good". Every abstraction introduces trade-offs:
-                </p>
-                <ul class="pillar-criteria-list">
-                  <li><span class="check">✓</span> <span><strong>Benefits:</strong> Eliminates conditional statements, isolates algorithmic bugs, enables independent mock testing.</span></li>
-                  <li><span class="cross">✕</span> <span><strong>Costs:</strong> Class Explosion (many small classes), Heap allocation overhead, increased mental indirection.</span></li>
-                  <li><span class="cross">✕</span> <span><strong>Client Awareness:</strong> The client application must understand the differences between strategies to select the right one.</span></li>
-                </ul>
-              </div>
-              <div class="pillar-app-card">
-                <span class="pillar-app-tag">Unit 1: Strategy Pattern Focus</span>
-                <h4 class="pillar-app-title">Mitigating Strategy Costs in Java</h4>
-                <p style="font-size:0.88rem; line-height:1.6; color:var(--text); margin:0 0 0.5rem;">
-                  In modern Java 8+, class explosion and heap allocation can be mitigated:
-                </p>
-                
-                <!-- IDE Window for Lambdas and Flyweights -->
-                <div class="ide-window" style="margin: 0.5rem 0 0.85rem;">
-                  <div class="ide-header">
-                    <div class="ide-dots">
-                      <span class="ide-dot ide-dot-red"></span>
-                      <span class="ide-dot ide-dot-yellow"></span>
-                      <span class="ide-dot ide-dot-green"></span>
-                    </div>
-                    <span class="ide-title">StrategyOptimization.java · Lambdas &amp; Flyweights</span>
-                    <button type="button" class="ide-copy-btn" onclick="copySnippet(this)" aria-label="Copy code">
-                      <span class="copy-icon">📋</span> Copy
-                    </button>
-                  </div>
-                  <pre class="ide-code"><code class="language-java">// Java 8+ Functional Interface: Pass lambda directly (zero new class files!)
-duck.setFlyBehavior(() -&gt; System.out.println("Jetpack gliding!"));
-
-// High-throughput systems: Share stateless Flyweight singletons
-duck.setFlyBehavior(FlyBehaviors.NO_WAY); // Reuses 1 shared instance, 0 GC allocations</code></pre>
-                </div>
-
-                <div class="pillar-exam-tip">
-                  🎯 <strong>Trade-off Summary:</strong> Strategy trading compile-time simplicity for runtime flexibility and clean OCP compliance.
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- PANE 7: RIVALS -->
-          <div class="pillar-pane" id="pane-p7" role="tabpanel">
-            <div class="pillar-hero-box">
-              <div class="pillar-rule-card">
-                <div class="pillar-rule-header">
-                  <span class="pillar-rule-tag">Universal Architectural Standard</span>
-                  <span style="font-family:var(--font-mono); font-size:0.75rem; color:var(--text-muted);">Pillar 07</span>
-                </div>
-                <h4 class="pillar-rule-title">Rival Pattern Decision Matrix</h4>
-                <p class="pillar-rule-desc">
-                  In architecture reviews and exams, the most critical skill is choosing between rival patterns that look identical on UML diagrams:
-                </p>
-                <ul class="pillar-criteria-list">
-                  <li><span class="check">✓</span> <span><strong>Strategy vs. State:</strong> Identical UML structure! In Strategy, the client selects an algorithm. In State, state changes autonomously inside the object.</span></li>
-                  <li><span class="check">✓</span> <span><strong>Strategy vs. Template Method:</strong> Strategy uses composition (whole algorithm). Template Method uses inheritance (skeleton base class, subclass overrides steps).</span></li>
-                  <li><span class="check">✓</span> <span><strong>Strategy vs. Command:</strong> Strategy encapsulates an <em>algorithm</em>; Command encapsulates a <em>request / action</em> with undo capability.</span></li>
-                </ul>
-              </div>
-              <div class="pillar-app-card">
-                <span class="pillar-app-tag">Unit 1: Strategy Pattern Focus</span>
-                <h4 class="pillar-app-title">Rival Pattern Comparison Matrix</h4>
-                
-                <!-- Semantic Responsive Table replacing raw monospace text -->
-                <div style="overflow-x:auto; -webkit-overflow-scrolling:touch; margin:0.5rem 0 0.85rem;">
-                  <table class="pillar-matrix-table">
-                    <thead>
-                      <tr>
-                        <th>Architectural Need</th>
-                        <th>Pattern</th>
-                        <th>Mechanism</th>
-                        <th>Key Distinguisher</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td>Swap entire algorithms at runtime</td>
-                        <td><span class="badge-pattern strategy">Strategy</span></td>
-                        <td>Composition (<code>HAS-A</code>)</td>
-                        <td>Client actively configures algorithm</td>
-                      </tr>
-                      <tr>
-                        <td>Fixed invariant skeleton, vary steps</td>
-                        <td><span class="badge-pattern template">Template Method</span></td>
-                        <td>Inheritance (<code>IS-A</code>)</td>
-                        <td>Compile-time subclassing</td>
-                      </tr>
-                      <tr>
-                        <td>Behavior changes with internal state</td>
-                        <td><span class="badge-pattern state">State</span></td>
-                        <td>Composition (FSM)</td>
-                        <td>Transitions autonomously</td>
-                      </tr>
-                      <tr>
-                        <td>Undo/redo, request queueing, macros</td>
-                        <td><span class="badge-pattern command">Command</span></td>
-                        <td>Request Object</td>
-                        <td>Encapsulates action + receiver</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-
-                <div class="pillar-exam-tip">
-                  🎯 <strong>Prof. Schäfer Classic Question:</strong> <em>"Compare the UML diagrams of State and Strategy. Why are they identical, yet their intent is diametrically opposed?"</em>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- PANE 8: EXAM DRILLS -->
-          <div class="pillar-pane" id="pane-p8" role="tabpanel">
-            <div class="pillar-hero-box">
-              <div class="pillar-rule-card">
-                <div class="pillar-rule-header">
-                  <span class="pillar-rule-tag">Universal Architectural Standard</span>
-                  <span style="font-family:var(--font-mono); font-size:0.75rem; color:var(--text-muted);">Pillar 08</span>
-                </div>
-                <h4 class="pillar-rule-title">Real-World Enterprise Reference &amp; Exam Traps</h4>
-                <p class="pillar-rule-desc">
-                  Real-world enterprise systems rely on Strategy everywhere. Knowing standard JDK citations proves deep industry mastery:
-                </p>
-                <ul class="pillar-criteria-list">
-                  <li><span class="check">✓</span> <span><strong><code>java.util.Comparator</code>:</strong> Swapped inside <code>Collections.sort(list, comparator)</code>.</span></li>
-                  <li><span class="check">✓</span> <span><strong><code>java.awt.LayoutManager</code>:</strong> Components delegate layout to <code>BorderLayout</code>, <code>FlowLayout</code>.</span></li>
-                  <li><span class="check">✓</span> <span><strong>Spring <code>ResourceLoader</code>:</strong> Swapping file system, classpath, or cloud S3 loading strategies.</span></li>
-                </ul>
-              </div>
-              <div class="pillar-app-card">
-                <span class="pillar-app-tag">Unit 1: Strategy Pattern Focus</span>
-                <h4 class="pillar-app-title">Top 3 Exam Traps to Avoid</h4>
-                <ul class="pillar-criteria-list" style="margin-top:0.5rem;">
-                  <li><span class="cross">✕</span> <span><strong>Trap 1: Circular Context Passing.</strong> Passing Context to Strategy creates tight two-way coupling. Only pass raw data parameters!</span></li>
-                  <li><span class="cross">✕</span> <span><strong>Trap 2: Missing Setter.</strong> Forgetting <code>setFlyBehavior()</code> prevents runtime behavior changes.</span></li>
-                  <li><span class="cross">✕</span> <span><strong>Trap 3: LSP Violation.</strong> Throwing <code>UnsupportedOperationException</code> inside a ConcreteStrategy violates Liskov Substitution.</span></li>
-                </ul>
-                <div class="pillar-exam-tip">
-                  🎯 <strong>Exam Target:</strong> Scoring 15/15 points requires demonstrating awareness of all 3 traps.
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- FULL MATRIX MODE GRID (ALL 8 AT ONCE) -->
-        <div class="blueprint-content-area" id="blueprintMatrixArea" style="display:none; padding-top:0;">
-          <div class="blueprint-matrix-grid active">
-            <div class="matrix-card">
-              <div class="matrix-card-header"><span class="matrix-card-num">Pillar 01</span><span>🎯</span></div>
-              <h4 class="matrix-card-title">Intent &amp; Motivation</h4>
-              <p class="matrix-card-desc">Define a family of algorithms, encapsulate each one, and make them interchangeable at runtime.</p>
-              <div class="matrix-card-example">Eliminates brittle inheritance trees and cascading switch statements.</div>
-            </div>
-            <div class="matrix-card">
-              <div class="matrix-card-header"><span class="matrix-card-num">Pillar 02</span><span>🧩</span></div>
-              <h4 class="matrix-card-title">Structural Roles</h4>
-              <p class="matrix-card-desc">Context (chassis), Strategy (interface contract), ConcreteStrategies (variants), Client.</p>
-              <div class="matrix-card-example">Context has single responsibility; delegates algorithm execution.</div>
-            </div>
-            <div class="matrix-card">
-              <div class="matrix-card-header"><span class="matrix-card-num">Pillar 03</span><span>📐</span></div>
-              <h4 class="matrix-card-title">UML 2.5 Anatomy</h4>
-              <p class="matrix-card-desc">Context has Directed Association (──&gt;) to Strategy interface; ConcreteStrategies have Realization (···▷).</p>
-              <div class="matrix-card-example">Never use solid inheritance arrow (──▷) for interfaces! Multiplicity: 1.</div>
-            </div>
-            <div class="matrix-card">
-              <div class="matrix-card-header"><span class="matrix-card-num">Pillar 04</span><span>🛡️</span></div>
-              <h4 class="matrix-card-title">SOLID Principles</h4>
-              <p class="matrix-card-desc">Enforces Open/Closed Principle (OCP), Dependency Inversion (DIP), and Favor Composition.</p>
-              <div class="matrix-card-example">Context closed for editing, open for new strategy extensions.</div>
-            </div>
-            <div class="matrix-card">
-              <div class="matrix-card-header"><span class="matrix-card-num">Pillar 05</span><span>⚡</span></div>
-              <h4 class="matrix-card-title">Runtime Hot-Swapping</h4>
-              <p class="matrix-card-desc">Context holds interface field; setter method `setStrategy()` enables dynamic behavior mutation.</p>
-              <div class="matrix-card-example">Supports Java 8+ lambdas and method references.</div>
-            </div>
-            <div class="matrix-card">
-              <div class="matrix-card-header"><span class="matrix-card-num">Pillar 06</span><span>⚖️</span></div>
-              <h4 class="matrix-card-title">Trade-offs &amp; Cost</h4>
-              <p class="matrix-card-desc">High flexibility and clean unit testing vs. class explosion and client awareness overhead.</p>
-              <div class="matrix-card-example">Mitigate class explosion via Flyweight singletons or lambdas.</div>
-            </div>
-            <div class="matrix-card">
-              <div class="matrix-card-header"><span class="matrix-card-num">Pillar 07</span><span>🧭</span></div>
-              <h4 class="matrix-card-title">Rival Matrix</h4>
-              <p class="matrix-card-desc">Strategy (client chooses algorithm) vs. State (internal FSM) vs. Template Method (inheritance).</p>
-              <div class="matrix-card-example">Identical UML with State; intent is completely distinct.</div>
-            </div>
-            <div class="matrix-card">
-              <div class="matrix-card-header"><span class="matrix-card-num">Pillar 08</span><span>🔍</span></div>
-              <h4 class="matrix-card-title">Real-World &amp; Traps</h4>
-              <p class="matrix-card-desc">JDK `Comparator`, `LayoutManager`. Traps: Circular coupling, missing setter, LSP violation.</p>
-              <div class="matrix-card-example">Never pass Context back to Strategy causing cyclical coupling!</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ====================================================================
-         SECTION 2: 5-STAGE HANDS-ON MASTERCLASS CURRICULUM
-         ==================================================================== -->
-    <section class="masterclass-curriculum-container" id="curriculumContainer" aria-label="Masterclass Learning Stages">
-      
-      <!-- Prominent Section Divider -->
-      <div class="masterclass-section-divider">
-        <div class="section-divider-line"></div>
-        <div class="section-divider-chip">
-          <span>PART 2 · HANDS-ON CURRICULUM</span>
-        </div>
-        <div class="section-divider-line"></div>
-      </div>
-
-      <!-- Enterprise Curriculum Super Header -->
-      <header class="curriculum-super-header" id="curriculumHeader">
-        <div class="curriculum-eyebrow">
-          <span class="section-badge-pill accent">SECTION 2 OF 2</span>
-          <span class="badge-sep">·</span>
-          <span>🎓 STEP-BY-STEP LEARNING TRACK</span>
-          <span class="badge-sep">·</span>
-          <span>5 INTERACTIVE STAGES</span>
-        </div>
-        <h2 class="curriculum-main-title">Hands-On Strategy Masterclass: 5 Learning Stages</h2>
-        <p class="curriculum-main-desc">
-          Step through the complete architectural journey from initial design intuition to production-grade refactoring and exam-tested edge cases. Follow each stage sequentially or jump directly to any topic below:
-        </p>
-
-        <!-- Course Meta Badges (Context without repeating the stage navigation pills) -->
-        <div class="curriculum-meta-row" style="display:flex; align-items:center; gap:0.65rem; flex-wrap:wrap; margin-top:0.75rem;">
-          <div style="display:inline-flex; align-items:center; gap:0.35rem; font-family:var(--font-mono); font-size:0.74rem; color:var(--text-muted); background:var(--bg-subtle); padding:0.25rem 0.65rem; border-radius:4px; border:1px solid var(--border);">
-            <span>⏱️ 45 Min Total</span>
-          </div>
-          <div style="display:inline-flex; align-items:center; gap:0.35rem; font-family:var(--font-mono); font-size:0.74rem; color:#10B981; background:rgba(16,185,129,0.1); padding:0.25rem 0.65rem; border-radius:4px; border:1px solid rgba(16,185,129,0.25);">
-            <span>🎯 15 Exam Points Target</span>
-          </div>
-          <div style="display:inline-flex; align-items:center; gap:0.35rem; font-family:var(--font-mono); font-size:0.74rem; color:#38BDF8; background:rgba(56,189,248,0.1); padding:0.25rem 0.65rem; border-radius:4px; border:1px solid rgba(56,189,248,0.25);">
-            <span>🏛️ Prof. Dr. Jörg Schäfer (Frankfurt UAS)</span>
-          </div>
-        </div>
-      </header>
-
-      <!-- Masterclass Stage Bar (Interactive Stage Switcher) -->
-      <nav class="masterclass-stage-nav" aria-label="Learning Stages">
-        <div class="stage-nav-inner">
-          <div class="stage-pills-wrap">
-            <button type="button" class="stage-pill active" data-stage="stage-1-mental-model">
-              <span>🎯 1. Mental Model</span>
-            </button>
-            <button type="button" class="stage-pill" data-stage="stage-2-architecture">
-              <span>📐 2. Architecture (UML)</span>
-            </button>
-            <button type="button" class="stage-pill" data-stage="stage-3-refactoring">
-              <span>⚡ 3. Code Refactoring</span>
-            </button>
-            <button type="button" class="stage-pill" data-stage="stage-4-decision">
-              <span>⚖️ 4. Decision Wizard</span>
-            </button>
-            <button type="button" class="stage-pill" data-stage="stage-5-exam">
-              <span>🎓 5. Exam Drills</span>
-            </button>
-          </div>
-          <button type="button" class="stage-mode-btn" id="stageModeToggle" title="Toggle between Step-by-Step focus and Full document scroll">
-            📑 Focused Stage Mode
-          </button>
-        </div>
-      </nav>
-
-    <!-- ====================================================================
-         STAGE 1: THE INTUITIVE MENTAL MODEL (90-SECOND INTERACTIVE STORY)
-         ==================================================================== -->
-    <div class="stage-view active" id="stage-1-mental-model">
-      
-      <div class="stage-header-top">
-        <div class="stage-eyebrow-pill">
-          <span class="stage-eyebrow-dot"></span>
-          <span class="stage-eyebrow-num">Stage 01</span>
-          <span class="stage-eyebrow-sep">·</span>
-          <span class="stage-eyebrow-topic">Intuitive Mental Model</span>
-        </div>
-        <button type="button" class="stage-mastery-btn" data-stage="stage-1-mental-model">
-          <span class="mastery-check">○</span>
-          <span class="mastery-label">Mark Mastered</span>
-        </button>
-      </div>
-      <h2 class="stage-title">The Mental Model: The 5-Step Story of Why Strategy Exists</h2>
-      <p class="chapter-dek">
-        Follow the interactive timeline below to witness how textbook object-oriented inheritance broke in production, and how composition solved it.
-      </p>
-
-      <!-- Interactive 5-Step Story Stepper -->
-      <div class="story-stepper-box">
-        
-        <!-- Scrubber Progress Bar -->
-        <div class="stepper-progress-bar">
-          <div class="stepper-step-node active" data-step="1">
-            <div class="stepper-dot">1</div>
-            <span class="stepper-label">Clean Start</span>
-          </div>
-          <div class="stepper-step-node" data-step="2">
-            <div class="stepper-dot">2</div>
-            <span class="stepper-label">Feature Request</span>
-          </div>
-          <div class="stepper-step-node" data-step="3">
-            <div class="stepper-dot">3</div>
-            <span class="stepper-label">Production Bug</span>
-          </div>
-          <div class="stepper-step-node" data-step="4">
-            <div class="stepper-dot">4</div>
-            <span class="stepper-label">Bad Patch</span>
-          </div>
-          <div class="stepper-step-node" data-step="5">
-            <div class="stepper-dot">5</div>
-            <span class="stepper-label">Strategy Pattern</span>
-          </div>
-        </div>
-
-        <!-- Slide 1 -->
-        <div class="stepper-slide active" data-step="1">
-          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem; margin-bottom:1rem;">
-            <h3 style="margin:0; font-size:1.25rem; color:var(--text);">Step 1: The Clean Starting Model (Textbook Inheritance)</h3>
-            <span class="bb-phase-badge">Stable Baseline</span>
-          </div>
-          <p style="font-size:0.95rem; color:var(--text-muted); line-height:1.6; margin-bottom:1.25rem;">
-            We start with an abstract base class <code>Duck</code> providing shared behaviors like <code>quack()</code> and <code>swim()</code>. Subclasses like <code>MallardDuck</code> and <code>RedheadDuck</code> inherit these methods and provide their own display logic.
-          </p>
-
-          <!-- ByteByteGo-Style Responsive Starting Model Card Flow -->
-          <div class="arch-card-flow">
-            <!-- Parent Class Node -->
-            <div class="arch-flow-node">
-              <div class="arch-flow-header">
-                <span class="arch-badge">&laquo;abstract&gt;&gt;</span>
-                <span class="arch-title">Duck</span>
-              </div>
-              <div class="arch-flow-methods">
-                <div class="arch-method-line"><code>+ quack()</code> <span class="arch-note-comment">// Shared sound</span></div>
-                <div class="arch-method-line"><code>+ swim()</code> <span class="arch-note-comment">// Shared buoyancy</span></div>
-                <div class="arch-method-line"><code>+ display()*</code> <span class="arch-note-comment">// Abstract hook</span></div>
-              </div>
-            </div>
-
-            <!-- Connector -->
-            <div class="arch-flow-connector">
-              <div class="arch-connector-line"></div>
-              <span class="arch-connector-label">Inherited by subclasses (is-a)</span>
-              <div class="arch-connector-arrow">▼</div>
-            </div>
-
-            <!-- Subclasses Grid -->
-            <div class="arch-flow-subclasses">
-              <div class="arch-flow-node">
-                <div class="arch-flow-header child-header">
-                  <span class="arch-badge">Subclass</span>
-                  <span class="arch-title">MallardDuck</span>
-                </div>
-                <div class="arch-flow-methods">
-                  <div class="arch-method-line"><code>+ display()</code> <span class="arch-note-comment">// Green head visual</span></div>
-                </div>
-              </div>
-              <div class="arch-flow-node">
-                <div class="arch-flow-header child-header">
-                  <span class="arch-badge">Subclass</span>
-                  <span class="arch-title">RedheadDuck</span>
-                </div>
-                <div class="arch-flow-methods">
-                  <div class="arch-method-line"><code>+ display()</code> <span class="arch-note-comment">// Red head visual</span></div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div style="background:rgba(99,102,241,0.08); border-left:3px solid var(--accent); padding:0.75rem 1rem; border-radius:0 6px 6px 0; margin-top:1rem; font-size:0.88rem; color:var(--text);">
-            💡 <strong>Why it worked:</strong> Every duck in the system behaved identically. There was zero variance in flight or sound.
-          </div>
-        </div>
-
-        <!-- Slide 2 -->
-        <div class="stepper-slide" data-step="2">
-          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem; margin-bottom:1rem;">
-            <h3 style="margin:0; font-size:1.25rem; color:#F59E0B;">Step 2: The Innocent Feature Request (The Inheritance Trap)</h3>
-            <span class="bb-phase-badge warning">Naive Engineering Move</span>
-          </div>
-          <p style="font-size:0.95rem; color:var(--text-muted); line-height:1.6; margin-bottom:1rem;">
-            <strong>The Requirement:</strong> Management demands that ducks in the simulator must fly.
-            <br>
-            <strong>The Junior Trap:</strong> <em>"We have an inheritance hierarchy! Let's just add <code>public void fly()</code> to the base <code>Duck</code> class so all subclasses inherit it for free!"</em>
-          </p>
-          <div class="ide-window">
-            <div class="ide-header">
-              <div class="ide-controls">
-                <span class="ide-dot ide-dot-red"></span>
-                <span class="ide-dot ide-dot-yellow"></span>
-                <span class="ide-dot ide-dot-green"></span>
-              </div>
-              <div class="ide-tab">
-                <svg class="ide-file-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path><polyline points="13 2 13 9 20 9"></polyline></svg>
-                <span>Duck.java — Naive Superclass Mutation</span>
-              </div>
-              <span style="font-family:var(--font-mono); font-size:0.72rem; color:#F59E0B; font-weight:700;">git diff</span>
-            </div>
-            <div class="bb-diff-box" style="margin:0; border:none; border-radius:0;">
-              <span class="diff-line-ctx"> public abstract class Duck {</span>
-              <span class="diff-line-ctx">     public void quack() { System.out.println("Quack"); }</span>
-              <span class="diff-line-add">+    public void fly() { System.out.println("Flying with wings!"); } // MISTAKE: FORCED ON ALL SUBCLASSES</span>
-              <span class="diff-line-ctx">     public abstract void display();</span>
-              <span class="diff-line-ctx"> }</span>
-            </div>
-          </div>
-          <div style="background:rgba(245,158,11,0.1); border-left:3px solid #F59E0B; padding:0.75rem 1rem; border-radius:0 6px 6px 0; font-size:0.88rem; color:var(--text);">
-            ⚠️ <strong>The Hidden Flaw:</strong> In class inheritance, modifying a superclass automatically mutates the behavior of <em>every single subclass</em>, even those that should never have that capability.
-          </div>
-        </div>
-
-        <!-- Slide 3 -->
-        <div class="stepper-slide" data-step="3">
-          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem; margin-bottom:1rem;">
-            <h3 style="margin:0; font-size:1.25rem; color:#F43F5E;">Step 3: The Production Bug (Rubber Ducks Flying!)</h3>
-            <span class="bb-phase-badge danger">CRITICAL REGRESSION BUG</span>
-          </div>
-          <p style="font-size:0.95rem; color:var(--text); line-height:1.6; margin-bottom:1rem;">
-            During the release demo, disaster strikes: Bath toy <code>RubberDuck</code> instances suddenly sprout wings and fly across the display! Inanimate wooden <code>DecoyDuck</code> instances also fly!
-          </p>
-          <div style="background:rgba(244,63,94,0.08); border:1px solid rgba(244,63,94,0.3); border-radius:var(--radius-md); padding:1.25rem; margin-bottom:1rem;">
-            <div style="font-weight:700; color:#F43F5E; font-size:1rem; margin-bottom:0.35rem;">💥 The Architectural Root Cause: Fragile Base Class</div>
-            <p style="font-size:0.88rem; color:var(--text-muted); line-height:1.6; margin:0;">
-              What was intended to be an isolated feature addition inadvertently broke subclasses across the entire system. In enterprise systems, this is how security privileges or tax calculation bugs silently leak across unrelated microservices.
-            </p>
-          </div>
-        </div>
-
-        <!-- Slide 4 -->
-        <div class="stepper-slide" data-step="4">
-          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem; margin-bottom:1rem;">
-            <h3 style="margin:0; font-size:1.25rem; color:var(--text);">Step 4: The Flawed Band-Aid (No-op Overrides &amp; LSP Violation)</h3>
-            <span class="bb-phase-badge danger">Antipattern: Empty Overrides</span>
-          </div>
-          <p style="font-size:0.95rem; color:var(--text-muted); line-height:1.6; margin-bottom:1rem;">
-            The developers attempt a quick hack: <em>"We'll just override <code>fly()</code> in RubberDuck and DecoyDuck with an empty body to do nothing:"</em>
-          </p>
-          <div class="ide-window">
-            <div class="ide-header">
-              <div class="ide-controls">
-                <span class="ide-dot ide-dot-red"></span>
-                <span class="ide-dot ide-dot-yellow"></span>
-                <span class="ide-dot ide-dot-green"></span>
-              </div>
-              <div class="ide-tab">
-                <svg class="ide-file-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path><polyline points="13 2 13 9 20 9"></polyline></svg>
-                <span>RubberDuck.java — LSP Violation</span>
-              </div>
-              <span style="font-family:var(--font-mono); font-size:0.72rem; color:#F43F5E; font-weight:700;">empty override</span>
-            </div>
-            <div class="bb-diff-box" style="margin:0; border:none; border-radius:0;">
-              <span class="diff-line-ctx"> public class RubberDuck extends Duck {</span>
-              <span class="diff-line-add">+    @Override public void fly() { /* Do nothing - rubber ducks cannot fly! */ }</span>
-              <span class="diff-line-ctx"> }</span>
-            </div>
-          </div>
-          <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:0.85rem; margin-top:1rem;">
-            <div style="background:var(--bg); border:1px solid var(--border); padding:0.85rem; border-radius:6px;">
-              <strong style="color:#F43F5E; font-size:0.85rem;">Maintenance Explosion:</strong>
-              <p style="font-size:0.8rem; color:var(--text-muted); margin:0.25rem 0 0;">When 50 duck types exist, developers must manually remember to override dozens of irrelevant methods.</p>
-            </div>
-            <div style="background:var(--bg); border:1px solid var(--border); padding:0.85rem; border-radius:6px;">
-              <strong style="color:#F43F5E; font-size:0.85rem;">LSP Violation (Unit 6):</strong>
-              <p style="font-size:0.8rem; color:var(--text-muted); margin:0.25rem 0 0;">Subclasses advertise an API contract they cannot fulfill, violating behavioral subtyping.</p>
-            </div>
-          </div>
-        </div>
-
-        <!-- Slide 5 -->
-        <div class="stepper-slide" data-step="5">
-          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem; margin-bottom:1rem;">
-            <h3 style="margin:0; font-size:1.25rem; color:#10B981;">Step 5: The Architectural Epiphany (The Strategy Pattern)</h3>
-            <span class="bb-phase-badge success">The Masterclass Solution</span>
-          </div>
-          <p style="font-size:0.95rem; color:var(--text); line-height:1.6; margin-bottom:1.25rem;">
-            <strong>The Solution:</strong> <em>Take what varies and pull it completely out of Duck!</em> Encapsulate flying inside a <code>FlyBehavior</code> interface. The <code>Duck</code> class holds an interface reference and <strong>delegates</strong> at runtime.
-          </p>
-          <!-- ByteByteGo-Style Responsive Solution Flow -->
-          <div class="arch-solution-flow">
-            <div class="arch-solution-grid">
-              <!-- Context Card -->
-              <div class="arch-flow-node">
-                <div class="arch-flow-header context-header">
-                  <span class="arch-badge">Context Chassis</span>
-                  <span class="arch-title">Duck</span>
-                </div>
-                <div class="arch-flow-methods">
-                  <div class="arch-method-line"><code>- flyBehavior: FlyBehavior</code></div>
-                  <div class="arch-method-line"><code>- quackBehavior: QuackBehavior</code></div>
-                  <div class="arch-method-line">
-                    <code>+ performFly()</code>
-                    <span class="arch-note-delegate">fb.fly(); // Delegates!</span>
-                  </div>
-                  <div class="arch-method-line"><code>+ setFlyBehavior(fb)</code></div>
-                </div>
-              </div>
-
-              <!-- Delegation Bridge -->
-              <div class="arch-bridge">
-                <div class="arch-bridge-badge">Composition (HAS-A)</div>
-                <div class="arch-bridge-arrow">
-                  <span class="arch-bridge-symbol">──►</span>
-                  <span class="arch-bridge-text">delegates to</span>
-                </div>
-              </div>
-
-              <!-- Strategy Family Column -->
-              <div class="arch-strategy-column">
-                <!-- Strategy Interface -->
-                <div class="arch-flow-node" style="max-width:100%;">
-                  <div class="arch-flow-header interface-header">
-                    <span class="arch-badge">&laquo;interface&gt;&gt;</span>
-                    <span class="arch-title">FlyBehavior</span>
-                  </div>
-                  <div class="arch-flow-methods">
-                    <div class="arch-method-line"><code>+ fly(): void</code> <span class="arch-note-comment">// Algorithm Contract</span></div>
-                  </div>
-                </div>
-
-                <!-- Realizations Subclasses -->
-                <div class="arch-flow-subclasses">
-                  <div class="arch-flow-node">
-                    <div class="arch-flow-header concrete-header">
-                      <span class="arch-badge">Implementation</span>
-                      <span class="arch-title">FlyWithWings</span>
-                    </div>
-                    <div class="arch-flow-methods">
-                      <div class="arch-method-line"><code>+ fly()</code> <span class="arch-note-comment">// Real flaps</span></div>
-                    </div>
-                  </div>
-                  <div class="arch-flow-node">
-                    <div class="arch-flow-header concrete-header">
-                      <span class="arch-badge">Implementation</span>
-                      <span class="arch-title">FlyNoWay</span>
-                    </div>
-                    <div class="arch-flow-methods">
-                      <div class="arch-method-line"><code>+ fly()</code> <span class="arch-note-comment">// No-op safe</span></div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div style="background:rgba(16,185,129,0.08); border-left:3px solid #10B981; padding:0.75rem 1rem; border-radius:0 6px 6px 0; margin-top:1rem; font-size:0.88rem; color:var(--text);">
-            🎉 <strong>The Triumph:</strong> New flight algorithms can be created without changing a single line of Duck! Behavior can be swapped dynamically at runtime via <code>setFlyBehavior()</code>!
-          </div>
-        </div>
-
-        <!-- Stepper Navigation Controls -->
-        <div class="stepper-nav-controls">
-          <button type="button" class="btn-stepper btn-stepper-prev" style="visibility:hidden;">
-            ← Previous Step
-          </button>
-          <button type="button" class="btn-stepper btn-stepper-next">
-            Next: Step 2 →
-          </button>
-        </div>
-
-      </div>
-
-      <!-- Stage 1 Key Takeaways / Executive Synthesis -->
-      <section class="stage-takeaways-box" aria-label="Stage 1 Key Architectural Principles">
-        <div class="takeaways-header">
-          <div class="takeaways-eyebrow">
-            <span class="takeaways-dot"></span>
-            <span>STAGE 1 KEY TAKEAWAYS</span>
-            <span style="opacity:0.4;">·</span>
-            <span>FOUNDATIONAL DESIGN PRINCIPLES</span>
-          </div>
-          <h3 class="takeaways-title">The 3 Architectural Axioms Derived from This Story</h3>
-          <p class="takeaways-desc">
-            The failure of inheritance and the emergence of the Strategy pattern establish three universal object-oriented design principles. Memorize these for Prof. Schäfer's POSA exam:
-          </p>
-        </div>
-
-        <div class="golden-rules-grid">
-          <div class="golden-rule-card rule-blue">
-            <div class="golden-rule-header-row">
-              <span class="golden-rule-tag">Principle 1 · OCP</span>
-              <div class="golden-rule-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
-                  <polyline points="2 17 12 22 22 17"></polyline>
-                  <polyline points="2 12 12 17 22 12"></polyline>
-                </svg>
-              </div>
-            </div>
-            <h4 class="golden-rule-title">Encapsulate What Varies</h4>
-            <p class="golden-rule-desc">Isolate volatile business algorithms into dedicated interfaces so they never contaminate or break stable client domains.</p>
-          </div>
-
-          <div class="golden-rule-card rule-emerald">
-            <div class="golden-rule-header-row">
-              <span class="golden-rule-tag">Principle 2 · GoF #1</span>
-              <div class="golden-rule-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <circle cx="12" cy="12" r="10"></circle>
-                  <path d="M12 8v8M8 12h8"></path>
-                </svg>
-              </div>
-            </div>
-            <h4 class="golden-rule-title">Composition Over Inheritance</h4>
-            <p class="golden-rule-desc">A flexible "HAS-A" relationship enables dynamic runtime behavior changes without touching rigid class inheritance trees.</p>
-          </div>
-
-          <div class="golden-rule-card rule-purple">
-            <div class="golden-rule-header-row">
-              <span class="golden-rule-tag">Principle 3 · DIP</span>
-              <div class="golden-rule-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
-                </svg>
-              </div>
-            </div>
-            <h4 class="golden-rule-title">Program to Interfaces</h4>
-            <p class="golden-rule-desc">High-level modules must depend strictly on abstract contracts, completely decoupling callers from concrete implementations.</p>
-          </div>
-        </div>
-      </section>
-
-      <!-- Up Next Card to Advance to Stage 2 -->
-      <div class="stage-next-card">
-        <div class="stage-next-left">
-          <span class="stage-next-tag">UP NEXT · STAGE 2 OF 5</span>
-          <h4 class="stage-next-title">Architecture Blueprint: Vector UML &amp; Component Inspector</h4>
-          <p class="stage-next-desc">
-            Explore the formal GoF structural diagram with interactive node inspection, connector multiplicity, and DIP verification.
-          </p>
-        </div>
-        <button type="button" class="btn-stage-advance jump-stage-btn" data-target-stage="stage-2-architecture">
-          Proceed to Stage 2 →
-        </button>
-      </div>
-
-    </div>
-
-    <!-- ====================================================================
-         STAGE 2: ARCHITECTURE BLUEPRINT (CLICK-TO-INSPECT VECTOR UML)
-         ==================================================================== -->
-    <div class="stage-view" id="stage-2-architecture">
-      
-      <div class="stage-header-top">
-        <div class="stage-eyebrow-pill">
-          <span class="stage-eyebrow-dot"></span>
-          <span class="stage-eyebrow-num">Stage 02</span>
-          <span class="stage-eyebrow-sep">·</span>
-          <span class="stage-eyebrow-topic">Vector UML &amp; Specification</span>
-        </div>
-        <button type="button" class="stage-mastery-btn" data-stage="stage-2-architecture">
-          <span class="mastery-check">○</span>
-          <span class="mastery-label">Mark Mastered</span>
-        </button>
-      </div>
-      <h2 class="stage-title">Architecture Blueprint: Click-to-Inspect GoF Specification</h2>
-      <p class="chapter-dek">
-        The formal Gang of Four blueprint. Click on any box in the diagram below to inspect its operational role, design principles, and code snippet.
-      </p>
-
-      <div class="uml-visual-card">
-        <div class="uml-header">
-          <div class="uml-title">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line><line x1="9" y1="21" x2="9" y2="9"></line></svg>
-            Interactive UML Architecture Inspector (Click any class)
-          </div>
-          <div style="display:flex; align-items:center; gap:0.5rem;">
-            <span class="uml-scroll-hint" style="font-family:var(--font-mono); font-size:0.74rem; color:var(--accent-ink);">↔ Swipe diagram on mobile</span>
-            <span style="font-family:var(--font-mono); font-size:0.75rem; color:#38bdf8; background:rgba(56,189,248,0.12); padding:0.2rem 0.55rem; border-radius:4px;">
-              Interactive
             </span>
           </div>
         </div>
+      </div>
 
-        <div class="uml-svg-container">
-          <svg viewBox="0 0 820 330" width="100%" height="auto" xmlns="http://www.w3.org/2000/svg" style="font-family:'JetBrains Mono', monospace; font-size:13px;">
-            <defs>
-              <marker id="u-arr" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-                <path d="M 0 1 L 10 5 L 0 9 z" fill="#6366f1"/>
-              </marker>
-              <marker id="u-tri" viewBox="0 0 12 12" refX="12" refY="6" markerWidth="10" markerHeight="10" orient="auto-start-reverse">
-                <polygon points="0,0 12,6 0,12" fill="#0f172a" stroke="#6366f1" stroke-width="2"/>
-              </marker>
-            </defs>
+      <!-- Vector Architecture UML matching Figure 1.1 -->
+      <div class="guide-card">
+        <div class="guide-card-header">
+          <span>📐 Canonical Architecture: Figure 1.1</span>
+        </div>
+        <div class="uml-diagram-box" style="text-align:center;">
+          <svg viewBox="0 0 660 260" style="max-width:100%; height:auto;" aria-label="Figure 1.1: Strategy Pattern">
+            <!-- Context Box -->
+            <rect x="30" y="30" width="190" height="95" rx="3" fill="var(--bg-raised)" stroke="var(--border)" stroke-width="1.5"/>
+            <rect x="30" y="30" width="190" height="26" rx="3" fill="var(--bg-subtle)"/>
+            <text x="125" y="48" fill="var(--text)" font-family="var(--font-display)" font-size="13" font-weight="700" text-anchor="middle">Context</text>
+            <line x1="30" y1="56" x2="220" y2="56" stroke="var(--border)" stroke-width="1.5"/>
+            <text x="42" y="72" fill="var(--text-muted)" font-family="var(--font-mono)" font-size="11">- strategy: Strategy</text>
+            <line x1="30" y1="80" x2="220" y2="80" stroke="var(--border)" stroke-width="1.5"/>
+            <text x="42" y="96" fill="var(--text)" font-family="var(--font-mono)" font-size="11">+ setStrategy(s: Strategy)</text>
+            <text x="42" y="112" fill="var(--text)" font-family="var(--font-mono)" font-size="11">+ executeStrategy()</text>
 
-            <!-- Context Node -->
-            <g class="uml-interactive-node inspect-active" data-component="context" id="nodeContext">
-              <rect x="30" y="30" width="260" height="130" rx="8" fill="#0f172a" stroke="#6366f1" stroke-width="2"/>
-              <rect x="30" y="30" width="260" height="36" rx="8" fill="linear-gradient(135deg, #4f46e5 0%, #6366f1 100%)"/>
-              <text x="160" y="53" fill="#ffffff" font-weight="700" text-anchor="middle" font-size="14">Context (Duck)</text>
-              <text x="45" y="86" fill="#f8fafc" font-size="12">- strategy: Strategy</text>
-              <line x1="30" y1="96" x2="290" y2="96" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
-              <text x="45" y="118" fill="#f8fafc" font-size="12">+ contextInterface()</text>
-              <text x="45" y="140" fill="#38bdf8" font-size="11.5">+ setStrategy(s: Strategy)</text>
-            </g>
+            <!-- Aggregation / Association Arrow from Context to Strategy -->
+            <line x1="220" y1="70" x2="350" y2="70" stroke="var(--border)" stroke-width="1.5"/>
+            <!-- Diamond on Context side -->
+            <polygon points="220,70 228,65 236,70 228,75" fill="var(--bg-subtle)" stroke="var(--border)" stroke-width="1.5"/>
+            <!-- Arrowhead on Strategy side -->
+            <polygon points="350,70 340,65 340,75" fill="var(--border)"/>
 
-            <!-- Association Line -->
-            <line x1="290" y1="80" x2="480" y2="80" stroke="#6366f1" stroke-width="2" marker-end="url(#u-arr)"/>
-            <text x="385" y="72" fill="#a5b4fc" font-size="11" font-weight="700" text-anchor="middle">delegates work</text>
+            <!-- Strategy Interface Box -->
+            <rect x="350" y="35" width="230" height="70" rx="3" fill="var(--bg-raised)" stroke="var(--border)" stroke-width="1.5"/>
+            <rect x="350" y="35" width="230" height="26" rx="3" fill="var(--bg-subtle)"/>
+            <text x="465" y="52" fill="var(--text)" font-family="var(--font-display)" font-size="12" font-style="italic" font-weight="700" text-anchor="middle">&lt;&lt;interface&gt;&gt; Strategy</text>
+            <line x1="350" y1="61" x2="580" y2="61" stroke="var(--border)" stroke-width="1.5"/>
+            <text x="365" y="82" fill="var(--text)" font-family="var(--font-mono)" font-size="11" font-weight="700">+ executeAlgorithm()</text>
 
-            <!-- Strategy Interface Node -->
-            <g class="uml-interactive-node" data-component="strategy" id="nodeStrategy">
-              <rect x="490" y="30" width="280" height="100" rx="8" fill="#0f172a" stroke="#10b981" stroke-width="2"/>
-              <rect x="490" y="30" width="280" height="36" rx="8" fill="linear-gradient(135deg, #059669 0%, #10b981 100%)"/>
-              <text x="630" y="53" fill="#ffffff" font-weight="700" text-anchor="middle" font-size="14">&lt;&lt;interface&gt;&gt; Strategy</text>
-              <text x="505" y="88" fill="#f8fafc" font-size="12">+ algorithmInterface()</text>
-              <text x="505" y="112" fill="#94a3b8" font-size="11">// Swappable contract</text>
-            </g>
+            <!-- Dashed Line to Note on Context -->
+            <line x1="125" y1="125" x2="125" y2="165" stroke="var(--text-muted)" stroke-width="1.5" stroke-dasharray="4,4"/>
+            <!-- Dog-eared Note Box -->
+            <path d="M 40 165 L 210 165 L 225 180 L 225 210 L 40 210 Z" fill="var(--bg-subtle)" stroke="var(--border)" stroke-width="1.5"/>
+            <path d="M 210 165 L 210 180 L 225 180 Z" fill="var(--bg-raised)" stroke="var(--border)" stroke-width="1.5"/>
+            <text x="52" y="190" fill="var(--text)" font-family="var(--font-mono)" font-size="10" font-weight="600">strategy.executeAlgorithm();</text>
 
-            <!-- Implementation Lines -->
-            <line x1="630" y1="130" x2="630" y2="185" stroke="#6366f1" stroke-width="1.8" stroke-dasharray="4,4" marker-start="url(#u-tri)"/>
-            <line x1="430" y1="185" x2="730" y2="185" stroke="#6366f1" stroke-width="1.8" stroke-dasharray="4,4"/>
-            <line x1="430" y1="185" x2="430" y2="215" stroke="#6366f1" stroke-width="1.8" stroke-dasharray="4,4"/>
-            <line x1="730" y1="185" x2="730" y2="215" stroke="#6366f1" stroke-width="1.8" stroke-dasharray="4,4"/>
+            <!-- Realization Vertical Lines & Hollow Triangles to ConcreteStrategies -->
+            <!-- Main realization tree -->
+            <line x1="465" y1="105" x2="465" y2="140" stroke="var(--border)" stroke-width="1.5" stroke-dasharray="4,4"/>
+            <polygon points="465,105 457,120 473,120" fill="var(--bg-raised)" stroke="var(--border)" stroke-width="1.5"/>
 
-            <!-- Concrete Strategy A -->
-            <g class="uml-interactive-node" data-component="concreteA" id="nodeConcreteA">
-              <rect x="330" y="215" width="200" height="85" rx="6" fill="#0f172a" stroke="#38bdf8" stroke-width="1.8"/>
-              <rect x="330" y="215" width="200" height="28" rx="6" fill="#0284c7"/>
-              <text x="430" y="234" fill="#ffffff" font-weight="700" text-anchor="middle" font-size="12">ConcreteStrategyA</text>
-              <text x="345" y="265" fill="#f8fafc" font-size="11">+ algorithmInterface()</text>
-              <text x="345" y="285" fill="#94a3b8" font-size="10">e.g. FlyWithWings</text>
-            </g>
+            <line x1="310" y1="140" x2="610" y2="140" stroke="var(--border)" stroke-width="1.5"/>
+            <line x1="310" y1="140" x2="310" y2="170" stroke="var(--border)" stroke-width="1.5"/>
+            <line x1="465" y1="140" x2="465" y2="170" stroke="var(--border)" stroke-width="1.5"/>
+            <line x1="610" y1="140" x2="610" y2="170" stroke="var(--border)" stroke-width="1.5"/>
 
-            <!-- Concrete Strategy B -->
-            <g class="uml-interactive-node" data-component="concreteB" id="nodeConcreteB">
-              <rect x="630" y="215" width="200" height="85" rx="6" fill="#0f172a" stroke="#38bdf8" stroke-width="1.8"/>
-              <rect x="630" y="215" width="200" height="28" rx="6" fill="#0284c7"/>
-              <text x="730" y="234" fill="#ffffff" font-weight="700" text-anchor="middle" font-size="12">ConcreteStrategyB</text>
-              <text x="645" y="265" fill="#f8fafc" font-size="11">+ algorithmInterface()</text>
-              <text x="645" y="285" fill="#94a3b8" font-size="10">e.g. FlyNoWay</text>
-            </g>
+            <!-- ConcreteStrategyA -->
+            <rect x="235" y="170" width="150" height="55" rx="3" fill="var(--bg-raised)" stroke="var(--border)" stroke-width="1.5"/>
+            <rect x="235" y="170" width="150" height="22" rx="3" fill="var(--bg-subtle)"/>
+            <text x="310" y="186" fill="var(--text)" font-family="var(--font-display)" font-size="11" font-weight="700" text-anchor="middle">ConcreteStrategyA</text>
+            <line x1="235" y1="192" x2="385" y2="192" stroke="var(--border)" stroke-width="1.5"/>
+            <text x="245" y="208" fill="var(--text)" font-family="var(--font-mono)" font-size="10">+ executeAlgorithm()</text>
+
+            <!-- ConcreteStrategyB -->
+            <rect x="395" y="170" width="140" height="55" rx="3" fill="var(--bg-raised)" stroke="var(--border)" stroke-width="1.5"/>
+            <rect x="395" y="170" width="140" height="22" rx="3" fill="var(--bg-subtle)"/>
+            <text x="465" y="186" fill="var(--text)" font-family="var(--font-display)" font-size="11" font-weight="700" text-anchor="middle">ConcreteStrategyB</text>
+            <line x1="395" y1="192" x2="535" y2="192" stroke="var(--border)" stroke-width="1.5"/>
+            <text x="405" y="208" fill="var(--text)" font-family="var(--font-mono)" font-size="10">+ executeAlgorithm()</text>
+
+            <!-- ConcreteStrategyC -->
+            <rect x="545" y="170" width="140" height="55" rx="3" fill="var(--bg-raised)" stroke="var(--border)" stroke-width="1.5"/>
+            <rect x="545" y="170" width="140" height="22" rx="3" fill="var(--bg-subtle)"/>
+            <text x="615" y="186" fill="var(--text)" font-family="var(--font-display)" font-size="11" font-weight="700" text-anchor="middle">ConcreteStrategyC</text>
+            <line x1="545" y1="192" x2="685" y2="192" stroke="var(--border)" stroke-width="1.5"/>
+            <text x="555" y="208" fill="var(--text)" font-family="var(--font-mono)" font-size="10">+ executeAlgorithm()</text>
           </svg>
+          <div class="figure-caption">Figure 1.1: Strategy Pattern (GoF Architecture)</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================== -->
+    <!-- 2. HEAD FIRST DUCK SIMULATOR WALKTHROUGH                       -->
+    <!-- ============================================================== -->
+    <section class="chapter" id="headfirst-strategy">
+      <div class="chapter-head">
+        <span class="chapter-num">2</span>
+        <div>
+          <h2>Head First: The SimUDuck Evolution</h2>
+          <span style="font-size:0.85rem; color:var(--text-muted); font-weight:600;">Textbook Problem &amp; Annotated Code</span>
         </div>
       </div>
 
-      <!-- Dynamic Component Inspector Card -->
-      <div class="uml-inspector-card" id="umlInspectorCard">
-        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem; margin-bottom:0.75rem;">
-          <h4 style="margin:0; font-size:1.15rem; color:#38BDF8; font-family:var(--font-display);">Context (The Stable Domain Chassis)</h4>
-          <span style="font-family:var(--font-mono); font-size:0.72rem; font-weight:700; background:rgba(56,189,248,0.14); color:#38BDF8; padding:0.2rem 0.6rem; border-radius:999px;">Maintains Interface Pointer</span>
-        </div>
-        <p style="font-size:0.92rem; color:var(--text); line-height:1.6; margin-bottom:0.75rem;">
-          Represents the primary domain class (e.g. Duck, PaymentGateway, DatasetSorter). Holds a reference to a Strategy interface. Completely closed for modification when new algorithms are invented.
-        </p>
-        <div style="font-size:0.84rem; color:var(--accent-ink); font-weight:600; margin-bottom:1rem;">🏛️ Architectural Principle: Open-Closed Principle (OCP) &amp; Dependency Inversion Principle (DIP).</div>
-        <div class="ide-window" style="margin:0;">
-          <div class="ide-header">
-            <div class="ide-controls">
-              <span class="ide-dot ide-dot-red"></span>
-              <span class="ide-dot ide-dot-yellow"></span>
-              <span class="ide-dot ide-dot-green"></span>
-            </div>
-            <div class="ide-tab">
-              <svg class="ide-file-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path><polyline points="13 2 13 9 20 9"></polyline></svg>
-              <span>Duck.java</span>
-            </div>
-            <button type="button" class="ide-copy-btn">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-              <span class="copy-text">Copy</span>
-            </button>
+      <!-- Head First Section (Collapsible) -->
+      <details class="headfirst-card" open>
+        <summary class="headfirst-summary">
+          <div class="headfirst-title">
+            <span>📖 Head First: Duck Simulator (Strategy Pattern)</span>
+            <span class="headfirst-badge">Head First Chapter 1</span>
           </div>
-          <pre class="ide-code"><code class="language-java">public abstract class Duck {
-    protected FlyBehavior flyBehavior; // Interface pointer!
-    public void performFly() { flyBehavior.fly(); } // Delegates!
-    public void setFlyBehavior(FlyBehavior fb) { this.flyBehavior = fb; }
-}</code></pre>
-        </div>
-      </div>
-
-      <!-- Up Next Card to Advance to Stage 3 -->
-      <div class="stage-next-card">
-        <div class="stage-next-left">
-          <span class="stage-next-tag">UP NEXT · STAGE 3 OF 5</span>
-          <h4 class="stage-next-title">Before &amp; After Code Lab: Live Sorter Pipeline</h4>
-          <p class="stage-next-desc">
-            Witness the before-and-after refactoring diff and run the interactive sort algorithm pipeline in real-time.
-          </p>
-        </div>
-        <button type="button" class="btn-stage-advance jump-stage-btn" data-target-stage="stage-3-refactoring">
-          Proceed to Stage 3 →
-        </button>
-      </div>
-
-    </div>
-
-    <!-- ====================================================================
-         STAGE 3: BEFORE & AFTER REFACTORING (LIVE CODE & SORTER LAB)
-         ==================================================================== -->
-    <div class="stage-view" id="stage-3-refactoring">
-      
-      <div class="stage-header-top">
-        <div class="stage-eyebrow-pill">
-          <span class="stage-eyebrow-dot"></span>
-          <span class="stage-eyebrow-num">Stage 03</span>
-          <span class="stage-eyebrow-sep">·</span>
-          <span class="stage-eyebrow-topic">Live Code &amp; Sorter Lab</span>
-        </div>
-        <button type="button" class="stage-mastery-btn" data-stage="stage-3-refactoring">
-          <span class="mastery-check">○</span>
-          <span class="mastery-label">Mark Mastered</span>
-        </button>
-      </div>
-      <h2 class="stage-title">Before &amp; After Refactoring: The Code Transformation</h2>
-      <p class="chapter-dek">
-        Compare the brittle inheritance antipattern against the clean Strategy pattern implementation side-by-side.
-      </p>
-
-      <!-- Before / After Segmented Switcher -->
-      <div class="before-after-segmented">
-        <button type="button" class="ba-seg-btn active bad" data-view="ba-panel-before">
-          ❌ Before: Brittle Inheritance
-        </button>
-        <button type="button" class="ba-seg-btn good" data-view="ba-panel-after">
-          ✅ After: Strategy Pattern
-        </button>
-      </div>
-
-      <!-- Panel: Before (Brittle Inheritance) -->
-      <div class="ba-panel active" id="ba-panel-before">
-        <div class="ide-window">
-          <div class="ide-header">
-            <div class="ide-controls">
-              <span class="ide-dot ide-dot-red"></span>
-              <span class="ide-dot ide-dot-yellow"></span>
-              <span class="ide-dot ide-dot-green"></span>
-            </div>
-            <div class="ide-tab">
-              <svg class="ide-file-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path><polyline points="13 2 13 9 20 9"></polyline></svg>
-              <span>Duck.java &amp; Subclasses (Antipattern)</span>
-            </div>
-            <button type="button" class="ide-copy-btn">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-              <span class="copy-text">Copy</span>
-            </button>
+          <div class="headfirst-toggle">
+            <span class="toggle-text-open">Collapse</span>
+            <span class="toggle-text-closed">Expand</span>
+            <svg class="headfirst-chevron" viewBox="0 0 24 24" fill="none" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
           </div>
-          <pre class="ide-code"><code class="language-java">// ❌ PROBLEM: Adding methods to base class forces inappropriate behavior
-public abstract class Duck {
-    public void quack() { System.out.println("Quack"); }
-    public void swim() { System.out.println("Swimming"); }
-    public void fly() { System.out.println("Flying high!"); } // INHERITED BY ALL
-    public abstract void display();
+        </summary>
+
+        <div class="headfirst-body">
+          <!-- The 5-Step Story Narrative -->
+          <div style="margin-bottom:1.5rem;">
+            <p style="margin:0 0 1rem; font-size:0.92rem; color:var(--text); line-height:1.6;">
+              In <em>&ldquo;Head First Design Patterns,&rdquo;</em> Chapter 1 introduces the <strong>Strategy Pattern</strong> through the famous <strong>SimUDuck</strong> simulation game. The evolution illustrates why inheritance fails when behaviors vary across subtypes:
+            </p>
+            <div style="background:var(--bg-subtle); padding:1rem 1.25rem; border-radius:var(--radius-sm); border-left:3px solid var(--accent); margin-bottom:1rem;">
+              <strong style="color:var(--text); font-size:0.92rem; display:block; margin-bottom:0.5rem; text-transform:uppercase; letter-spacing:0.04em;">The 5-Step Architectural Dilemma</strong>
+              <ol style="margin:0; padding-left:1.35rem; font-size:0.9rem; color:var(--text); line-height:1.65;">
+                <li><strong>The Innocent Superclass:</strong> The standard <code>Duck</code> superclass defined <code>quack()</code>, <code>swim()</code>, and an abstract <code>display()</code>.</li>
+                <li><strong>The Feature Request:</strong> Management requested that ducks should also fly. Adding <code>fly()</code> to the <code>Duck</code> superclass immediately gave flight to <em>all</em> ducks.</li>
+                <li><strong>The Production Bug:</strong> In production, <em>Rubber Ducks</em> and <em>Decoy Ducks</em> started flying across the screen!</li>
+                <li><strong>The Failed Band-Aid (No-op Overrides):</strong> Overriding <code>fly()</code> in <code>RubberDuck</code> to do nothing ({}) violated the <strong>Liskov Substitution Principle (LSP)</strong>, duplicated code across every non-flying duck, and made runtime changes impossible.</li>
+                <li><strong>The Strategy Solution:</strong> Pull flying and quacking completely out of the Duck class! Encapsulate them into families of interchangeable behavior interfaces (<code>FlyBehavior</code> and <code>QuackBehavior</code>) and delegate to them.</li>
+              </ol>
+            </div>
+            <p style="margin:0; font-size:0.92rem; color:var(--text-muted); line-height:1.6;">
+              By delegating to interfaces, introducing new flying behaviors (such as a rocket-powered duck: <code>FlyRocketPowered</code>) requires <strong>zero changes</strong> to the existing Duck hierarchy!
+            </p>
+          </div>
+
+          <!-- Verbatim Java Code: Minimal Clean Notes Implementation -->
+          <div style="margin-bottom:1.75rem;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem;">
+              <span style="font-weight:700; font-size:0.9rem; color:var(--text);">💻 1. Minimal Strategy Implementation (from Prof. Schäfer's Notes)</span>
+              <span style="font-size:0.75rem; color:var(--text-muted); font-family:var(--font-mono);">StrategyPatternDemo.java</span>
+            </div>
+            <pre><code class="language-java">// 1. The Strategy Interface: declares common contract for all algorithms
+interface Strategy {
+    void executeAlgorithm();
 }
 
-// ❌ RubberDuck must override with an empty body (LSP Violation!)
-public class RubberDuck extends Duck {
+// 2. Concrete Strategies: encapsulate specific algorithm variants
+class ConcreteStrategyA implements Strategy {
     @Override
-    public void fly() {
-        // Do nothing... bath toys cannot fly!
-        // PROBLEM: Callers still see fly() on RubberDuck and expect real flight!
+    public void executeAlgorithm() {
+        System.out.println("Executing Algorithm A");
+    }
+}
+
+class ConcreteStrategyB implements Strategy {
+    @Override
+    public void executeAlgorithm() {
+        System.out.println("Executing Algorithm B");
+    }
+}
+
+class ConcreteStrategyC implements Strategy {
+    @Override
+    public void executeAlgorithm() {
+        System.out.println("Executing Algorithm C");
+    }
+}
+
+// 3. The Context: maintains a reference to Strategy and delegates work to it
+class Context {
+    private Strategy strategy; // Delegation: has-a relationship
+
+    public Context(Strategy strategy) {
+        this.strategy = strategy;
+    }
+
+    // Dynamic runtime algorithm switching via setter injection!
+    public void setStrategy(Strategy strategy) {
+        this.strategy = strategy;
+    }
+
+    public void executeStrategy() {
+        strategy.executeAlgorithm(); // Invokes delegated strategy
+    }
+}
+
+// 4. Client Demo: demonstrates swapping algorithms dynamically at runtime
+public class StrategyPatternDemo {
+    public static void main(String[] args) {
+        Context context = new Context(new ConcreteStrategyA());
+        context.executeStrategy(); // Output: Executing Algorithm A
+
+        // Change strategy to ConcreteStrategyB dynamically at runtime!
+        context.setStrategy(new ConcreteStrategyB());
+        context.executeStrategy(); // Output: Executing Algorithm B
+
+        // Change strategy to ConcreteStrategyC
+        context.setStrategy(new ConcreteStrategyC());
+        context.executeStrategy(); // Output: Executing Algorithm C
     }
 }</code></pre>
-        </div>
-      </div>
-
-      <!-- Panel: After (Clean Strategy) -->
-      <div class="ba-panel" id="ba-panel-after">
-        <div class="ide-window">
-          <div class="ide-header">
-            <div class="ide-controls">
-              <span class="ide-dot ide-dot-red"></span>
-              <span class="ide-dot ide-dot-yellow"></span>
-              <span class="ide-dot ide-dot-green"></span>
-            </div>
-            <div class="ide-tab">
-              <svg class="ide-file-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path><polyline points="13 2 13 9 20 9"></polyline></svg>
-              <span>StrategyPattern.java (Clean Design)</span>
-            </div>
-            <button type="button" class="ide-copy-btn">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-              <span class="copy-text">Copy</span>
-            </button>
           </div>
-          <pre class="ide-code"><code class="language-java">// ✅ SOLUTION: Encapsulate flying into an interface
-@FunctionalInterface
+
+          <!-- Head First Duck Implementation -->
+          <div>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem;">
+              <span style="font-weight:700; font-size:0.9rem; color:var(--text);">🦆 2. Head First SimUDuck Code (Encapsulated Behavior Interfaces)</span>
+              <span style="font-size:0.75rem; color:var(--text-muted); font-family:var(--font-mono);">DuckSimulator.java</span>
+            </div>
+            <pre><code class="language-java">// Behavior Interfaces encapsulate varying actions
 public interface FlyBehavior {
     void fly();
 }
+public interface QuackBehavior {
+    void quack();
+}
 
+// Concrete Fly Behaviors
 public class FlyWithWings implements FlyBehavior {
-    public void fly() { System.out.println("Flying with biological wings!"); }
+    public void fly() { System.out.println("I'm flying with wings!"); }
 }
-
 public class FlyNoWay implements FlyBehavior {
-    public void fly() { System.out.println("<< Silence >> Grounded peacefully."); }
+    public void fly() { System.out.println("I can't fly."); }
+}
+public class FlyRocketPowered implements FlyBehavior { // Added later with ZERO modification to Duck!
+    public void fly() { System.out.println("I'm flying with a rocket!"); }
 }
 
-// ✅ Context delegates to the interface and can hot-swap at runtime!
+// Concrete Quack Behaviors
+public class Quack implements QuackBehavior {
+    public void quack() { System.out.println("Quack!"); }
+}
+public class Squeak implements QuackBehavior {
+    public void quack() { System.out.println("Squeak!"); }
+}
+
+// Abstract Duck Client uses delegation
 public abstract class Duck {
-    protected FlyBehavior flyBehavior;
+    protected FlyBehavior flyBehavior;     // Delegated strategy
+    protected QuackBehavior quackBehavior; // Delegated strategy
 
     public void performFly() {
-        flyBehavior.fly(); // Dynamic delegation!
+        flyBehavior.fly(); // Delegate to strategy object
     }
-
+    public void performQuack() {
+        quackBehavior.quack(); // Delegate to strategy object
+    }
+    // Dynamic runtime behavior swapping:
     public void setFlyBehavior(FlyBehavior fb) {
-        this.flyBehavior = Objects.requireNonNull(fb); // Runtime swap!
+        this.flyBehavior = fb;
     }
+    public void swim() {
+        System.out.println("All ducks float, even decoys!");
+    }
+    public abstract void display();
+}
+
+// Concrete Duck: ModelDuck starts unable to fly, then gets rocket powered at runtime
+public class ModelDuck extends Duck {
+    public ModelDuck() {
+        flyBehavior = new FlyNoWay();
+        quackBehavior = new Quack();
+    }
+    public void display() { System.out.println("I'm a model duck"); }
 }</code></pre>
-        </div>
-      </div>
-
-      <!-- Live Sorter Pipeline Interactive Playground -->
-      <h3 style="font-family:var(--font-display); margin-top:2.5rem;">Prof. Schäfer's Official Lab: Flexible Dataset Sorter</h3>
-      <p style="font-size:0.95rem; color:var(--text-muted); line-height:1.6;">
-        Test runtime algorithm hot-swapping live. Click a sorting algorithm to re-bind the Context pointer and benchmark execution:
-      </p>
-
-      <div class="strategy-playground-widget" id="strategyPlayground">
-        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem; margin-bottom:1rem;">
-          <div>
-            <h4 style="margin:0 0 0.25rem; font-size:1.15rem; color:var(--text);">Live Strategy Dispatcher (50,000 Records)</h4>
-            <p style="margin:0; font-size:0.85rem; color:var(--text-muted);">Context Chassis: <code>DatasetSorter&lt;T&gt;</code></p>
-          </div>
-          <button type="button" id="stratExecBtn" style="background:linear-gradient(135deg, #10b981 0%, #059669 100%); color:#fff; border:none; padding:0.6rem 1.25rem; border-radius:var(--radius-sm); font-weight:700; cursor:pointer; font-family:var(--font-body); display:inline-flex; align-items:center; gap:0.4rem;">
-            ▶ Execute Sort Run
-          </button>
-        </div>
-
-        <div class="strategy-selector-bar">
-          <button type="button" class="strategy-pill-btn active" data-strat="QuickSort">QuickSort Strategy</button>
-          <button type="button" class="strategy-pill-btn" data-strat="MergeSort">MergeSort Strategy</button>
-          <button type="button" class="strategy-pill-btn" data-strat="TimSort">TimSort Strategy</button>
-          <button type="button" class="strategy-pill-btn" data-strat="HeapSort">HeapSort Strategy</button>
-        </div>
-
-        <div class="strat-metric-grid">
-          <div class="strat-metric-pill">
-            <div class="strat-metric-val" id="stratTimeMeter">O(N log N)</div>
-            <div class="strat-metric-lbl">Time Complexity</div>
-          </div>
-          <div class="strat-metric-pill">
-            <div class="strat-metric-val" id="stratSpaceMeter">O(log N)</div>
-            <div class="strat-metric-lbl">Aux Space</div>
-          </div>
-          <div class="strat-metric-pill">
-            <div class="strat-metric-val" id="stratStabilityMeter">Unstable</div>
-            <div class="strat-metric-lbl">Stability</div>
           </div>
         </div>
-
-        <div class="ide-window" style="margin-top:1.25rem;">
-          <div class="ide-header">
-            <div class="ide-controls">
-              <span class="ide-dot ide-dot-red"></span>
-              <span class="ide-dot ide-dot-yellow"></span>
-              <span class="ide-dot ide-dot-green"></span>
-            </div>
-            <div class="ide-tab">
-              <svg class="ide-file-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <polyline points="4 17 10 11 4 5"></polyline>
-                <line x1="12" y1="19" x2="20" y2="19"></line>
-              </svg>
-              <span>terminal — sorting-benchmark.sh</span>
-            </div>
-            <span style="font-family:var(--font-mono); font-size:0.72rem; color:#10B981; font-weight:700;">● Live Execution</span>
-          </div>
-          <pre id="stratConsole" class="ide-code" style="color:#A5B4FC !important;">>> Context Instantiated: DatasetSorter&lt;T&gt;
->> Active Strategy: QuickSortStrategy::sort(List&lt;T&gt;)
->> Time Complexity: O(N log N) in-place
->> Status: 0 Subclass coupling. Open for extension.</pre>
-        </div>
-      </div>
-
-      <!-- Up Next Card to Advance to Stage 4 -->
-      <div class="stage-next-card">
-        <div class="stage-next-left">
-          <span class="stage-next-tag">UP NEXT · STAGE 4 OF 5</span>
-          <h4 class="stage-next-title">Trade-offs &amp; Pattern Decision Wizard</h4>
-          <p class="stage-next-desc">
-            Navigate the trade-off matrix and use the interactive decision wizard to determine when to pick Strategy vs State vs Template Method.
-          </p>
-        </div>
-        <button type="button" class="btn-stage-advance jump-stage-btn" data-target-stage="stage-4-decision">
-          Proceed to Stage 4 →
-        </button>
-      </div>
-
-    </div>
-
-    <!-- ====================================================================
-         STAGE 4: DECISION WIZARD & TRADE-OFFS
-         ==================================================================== -->
-    <div class="stage-view" id="stage-4-decision">
-      
-      <div class="stage-header-top">
-        <div class="stage-eyebrow-pill">
-          <span class="stage-eyebrow-dot"></span>
-          <span class="stage-eyebrow-num">Stage 04</span>
-          <span class="stage-eyebrow-sep">·</span>
-          <span class="stage-eyebrow-topic">Decision Wizard &amp; Trade-offs</span>
-        </div>
-        <button type="button" class="stage-mastery-btn" data-stage="stage-4-decision">
-          <span class="mastery-check">○</span>
-          <span class="mastery-label">Mark Mastered</span>
-        </button>
-      </div>
-      <h2 class="stage-title">Architectural Trade-offs &amp; Pattern Decision Wizard</h2>
-      <p class="chapter-dek">
-        When should you reach for Strategy versus Template Method or State? Use the interactive wizard and trade-off matrix below.
-      </p>
-
-      <!-- Pattern Comparison Table -->
-      <div style="background:var(--bg-raised); border:1px solid var(--border); border-radius:var(--radius-lg); overflow:hidden; margin-bottom:2rem;">
-        <table style="width:100%; border-collapse:collapse; font-size:0.9rem;">
-          <thead>
-            <tr style="background:rgba(255,255,255,0.03); border-bottom:1px solid var(--border); text-align:left;">
-              <th style="padding:1rem; color:var(--text);">Pattern</th>
-              <th style="padding:1rem; color:var(--text);">Core Mechanism</th>
-              <th style="padding:1rem; color:var(--text);">Runtime Flexibility</th>
-              <th style="padding:1rem; color:var(--text);">Coupling</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr style="border-bottom:1px solid var(--border);">
-              <td style="padding:1rem; font-weight:700; color:#38bdf8;">Strategy (Policy)</td>
-              <td style="padding:1rem; color:var(--text-muted);">Object Composition (Delegation)</td>
-              <td style="padding:1rem; color:#10b981; font-weight:700;">High (Dynamic setter)</td>
-              <td style="padding:1rem; color:var(--text-muted);">Loose (Interface dependency)</td>
-            </tr>
-            <tr style="border-bottom:1px solid var(--border);">
-              <td style="padding:1rem; font-weight:700; color:#a5b4fc;">Template Method (Unit 2)</td>
-              <td style="padding:1rem; color:var(--text-muted);">Class Inheritance (Subclass hooks)</td>
-              <td style="padding:1rem; color:#f59e0b; font-weight:700;">Low (Fixed at compile-time)</td>
-              <td style="padding:1rem; color:var(--text-muted);">Tight (Parent-child coupling)</td>
-            </tr>
-            <tr style="border-bottom:1px solid var(--border);">
-              <td style="padding:1rem; font-weight:700; color:#10b981;">State Pattern</td>
-              <td style="padding:1rem; color:var(--text-muted);">Object Composition (State transitions)</td>
-              <td style="padding:1rem; color:#10b981; font-weight:700;">High (Internal transitions)</td>
-              <td style="padding:1rem; color:var(--text-muted);">Medium (States know next states)</td>
-            </tr>
-            <tr>
-              <td style="padding:1rem; font-weight:700; color:#f43f5e;">Command Pattern (Unit 2)</td>
-              <td style="padding:1rem; color:var(--text-muted);">Object Encapsulation of Actions</td>
-              <td style="padding:1rem; color:#10b981; font-weight:700;">High (Undo/redo queues)</td>
-              <td style="padding:1rem; color:var(--text-muted);">Loose (Invoker decoupled from Receiver)</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-      <!-- Interactive Decision Wizard Widget -->
-      <div class="decision-wizard" id="patternWizard">
-        <div class="wizard-q-title">Architectural Pattern Decision Wizard</div>
-        <div class="wizard-q-subtitle">Select your system's exact constraints to compute the optimal GoF pattern:</div>
-        
-        <div class="wizard-options-grid">
-          <div class="wizard-opt-card" data-group="scope" data-val="algorithm">
-            <div class="wizard-opt-name">🎯 Vary Entire Algorithm</div>
-            <div class="wizard-opt-desc">You need to swap the whole process (e.g. Quicksort vs Mergesort).</div>
-          </div>
-          <div class="wizard-opt-card" data-group="scope" data-val="step">
-            <div class="wizard-opt-name">🦴 Invariant Skeleton</div>
-            <div class="wizard-opt-desc">The algorithm outline is fixed; subclasses only override 1 or 2 steps.</div>
-          </div>
-          <div class="wizard-opt-card" data-group="scope" data-val="state">
-            <div class="wizard-opt-name">🔄 State Transitions</div>
-            <div class="wizard-opt-desc">Object behavior changes dynamically based on internal lifecycle state.</div>
-          </div>
-          <div class="wizard-opt-card" data-group="scope" data-val="command">
-            <div class="wizard-opt-name">📦 Action &amp; Undo Queue</div>
-            <div class="wizard-opt-desc">Treat requests as first-class objects to support undo, redo, and macro scheduling.</div>
-          </div>
-        </div>
-
-        <div style="font-weight:700; margin:1.5rem 0 0.5rem; color:var(--text);">Dynamic Runtime Switching:</div>
-        <div class="wizard-options-grid">
-          <div class="wizard-opt-card" data-group="runtime" data-val="yes">
-            <div class="wizard-opt-name">⚡ Dynamic at Runtime</div>
-            <div class="wizard-opt-desc">Algorithm must change on-the-fly without restarting or reallocating the object.</div>
-          </div>
-          <div class="wizard-opt-card" data-group="runtime" data-val="no">
-            <div class="wizard-opt-name">🔒 Static at Compile-Time</div>
-            <div class="wizard-opt-desc">Algorithm variation can be statically bound when the subclass is compiled.</div>
-          </div>
-        </div>
-
-        <div class="wizard-result-box" id="wizardResult"></div>
-      </div>
-
-      <!-- Up Next Card to Advance to Stage 5 -->
-      <div class="stage-next-card">
-        <div class="stage-next-left">
-          <span class="stage-next-tag">UP NEXT · STAGE 5 OF 5</span>
-          <h4 class="stage-next-title">Prof. Schäfer Exam Drills &amp; Gotcha Defense</h4>
-          <p class="stage-next-desc">
-            Tackle Frankfurt University exam questions, debug subtle architectural gotchas, and verify your 15-point mastery.
-          </p>
-        </div>
-        <button type="button" class="btn-stage-advance jump-stage-btn" data-target-stage="stage-5-exam">
-          Proceed to Stage 5 →
-        </button>
-      </div>
-
-    </div>
-
-    <!-- ====================================================================
-         STAGE 5: PROF. SCHÄFER EXAM MASTERY & GOTCHAS
-         ==================================================================== -->
-    <div class="stage-view" id="stage-5-exam">
-      
-      <div class="stage-header-top">
-        <div class="stage-eyebrow-pill">
-          <span class="stage-eyebrow-dot"></span>
-          <span class="stage-eyebrow-num">Stage 05</span>
-          <span class="stage-eyebrow-sep">·</span>
-          <span class="stage-eyebrow-topic">Frankfurt UAS Exam Drills</span>
-        </div>
-        <button type="button" class="stage-mastery-btn" data-stage="stage-5-exam">
-          <span class="mastery-check">○</span>
-          <span class="mastery-label">Mark Mastered</span>
-        </button>
-      </div>
-      <h2 class="stage-title">Prof. Dr. Jörg Schäfer Exam Mastery &amp; Self-Study</h2>
-      <p class="chapter-dek">
-        Master the 2 classic exam gotchas assigned by Prof. Schäfer, followed by verified Frankfurt UAS exam questions.
-      </p>
-
-      <!-- Gotcha 1: Strategy Object Explosion -->
-      <div class="prof-gotcha" style="margin-bottom:1.5rem;">
-        <div class="prof-gotcha-title">
-          <span>🎯 Official Exam Gotcha 1: Strategy Object Explosion</span>
-        </div>
-        <p style="margin:0 0 0.75rem; font-size:0.95rem; font-weight:700; color:var(--text);">
-          "What happens when a system has an explosion of Strategy objects? How do we manage memory?"
-        </p>
-        <div style="background:var(--bg-raised); border:1px solid var(--border); padding:1.25rem; border-radius:var(--radius-sm); font-size:0.9rem; line-height:1.65; color:var(--text);">
-          <p><strong>The Problem:</strong> Allocating individual Strategy instances for 1,000,000 Context objects wastes heap memory and triggers heavy Garbage Collection pauses.</p>
-          <p><strong>The 3 Exam-Grade Solutions:</strong></p>
-          <ol style="margin:0; padding-left:1.3rem;">
-            <li><strong>Stateless Flyweight Strategies (Unit 5 &amp; GoF):</strong> If strategies maintain no mutable internal state, share a single singleton Strategy instance across all Contexts.</li>
-            <li><strong>First-Class Functions / Lambdas (Modern Java 8+):</strong> Pass pure method references (e.g. <code>Integer::compareTo</code>), eliminating heavy class metadata.</li>
-            <li><strong>Strategy Factory (Unit 8):</strong> Pool pre-allocated strategy instances.</li>
-          </ol>
-        </div>
-      </div>
-
-      <!-- Gotcha 2: Context Data Access Dilemma -->
-      <div class="prof-gotcha" style="margin-bottom:2rem;">
-        <div class="prof-gotcha-title">
-          <span>🎯 Official Exam Gotcha 2: Context Private Data Access Dilemma</span>
-        </div>
-        <p style="margin:0 0 0.75rem; font-size:0.95rem; font-weight:700; color:var(--text);">
-          "If a Strategy needs private data from Context, how do we pass it without breaking encapsulation?"
-        </p>
-        <div style="background:var(--bg-raised); border:1px solid var(--border); padding:1.25rem; border-radius:var(--radius-sm); font-size:0.9rem; line-height:1.65; color:var(--text);">
-          <ol style="margin:0; padding-left:1.3rem;">
-            <li><strong>Segregated Read-Only Interface (ISP · Unit 6):</strong> Context implements a narrow interface exposing only necessary getters, and passes that interface to Strategy.</li>
-            <li><strong>Data Transfer Object (DTO):</strong> Context creates an immutable snapshot record and passes it as a method parameter: <code>strategy.sort(context.toSnapshot())</code>.</li>
-            <li><strong>Package-Private Visibility:</strong> In Java, keep Context and concrete strategies in the same package with default access.</li>
-          </ol>
-        </div>
-      </div>
-
-      <!-- Exam Certification Drill -->
-      <h3 style="font-family:var(--font-display); margin-top:2.5rem;">Frankfurt UAS Certified Exam Drill (15 Pts)</h3>
-
-      <div class="cert-quiz-card">
-        <div class="cert-quiz-badge">Question 1 · Core Architectural Intent · 5 Pts</div>
-        <div class="cert-quiz-question">Which design principle is the PRIMARY motivator behind the Strategy pattern?</div>
-        <div class="cert-quiz-options">
-          <button type="button" class="cert-opt" data-correct="false" data-reason="The Singleton pattern ensures single-instance access, not swappable algorithm isolation.">
-            <span class="cert-opt-letter">A</span>
-            <span>Ensure a class has only one instance and provide a global point of access.</span>
-          </button>
-          <button type="button" class="cert-opt" data-correct="true" data-reason="Canonical Gang of Four intent: Encapsulate what varies and favor object composition over class inheritance.">
-            <span class="cert-opt-letter">B</span>
-            <span>Encapsulate what varies and favor object composition over class inheritance.</span>
-          </button>
-          <button type="button" class="cert-opt" data-correct="false" data-reason="Deep inheritance trees create rigid compile-time coupling, which Strategy actively eliminates.">
-            <span class="cert-opt-letter">C</span>
-            <span>Maximize code reuse through deep subclassing trees and protected methods.</span>
-          </button>
-        </div>
-        <div class="cert-feedback"></div>
-      </div>
-
-      <div class="cert-quiz-card">
-        <div class="cert-quiz-badge">Question 2 · Runtime Mutability vs. Compile-Time · 5 Pts</div>
-        <div class="cert-quiz-question">How does Strategy achieve runtime behavioral modification compared to Template Method?</div>
-        <div class="cert-quiz-options">
-          <button type="button" class="cert-opt" data-correct="false" data-reason="Template Method relies on subclass inheritance, which binds behavior rigidly at compile time.">
-            <span class="cert-opt-letter">A</span>
-            <span>Template Method allows runtime swapping by overriding private methods dynamically.</span>
-          </button>
-          <button type="button" class="cert-opt" data-correct="true" data-reason="Strategy uses composition: Context holds an interface pointer that can be reassigned at any moment via a setter. Template Method binds behavior at compile-time via class inheritance.">
-            <span class="cert-opt-letter">B</span>
-            <span>Strategy uses composition with swappable interface pointers; Template Method binds behavior at compile-time via class inheritance.</span>
-          </button>
-          <button type="button" class="cert-opt" data-correct="false" data-reason="Strategy does not require JVM bytecode manipulation for standard polymorphic dispatch.">
-            <span class="cert-opt-letter">C</span>
-            <span>Strategy requires dynamic JVM bytecode manipulation, whereas Template Method uses static memory tables.</span>
-          </button>
-        </div>
-        <div class="cert-feedback"></div>
-      </div>
-
-      <div class="cert-quiz-card">
-        <div class="cert-quiz-badge">Question 3 · Liskov Substitution Violation · 5 Pts</div>
-        <div class="cert-quiz-question">Why does overriding a superclass method with an empty no-op body (e.g. RubberDuck overriding fly() to do nothing) violate professional software architecture?</div>
-        <div class="cert-quiz-options">
-          <button type="button" class="cert-opt" data-correct="false" data-reason="Java compilers happily compile empty methods without error.">
-            <span class="cert-opt-letter">A</span>
-            <span>Because Java compilers refuse to compile classes that contain empty methods.</span>
-          </button>
-          <button type="button" class="cert-opt" data-correct="true" data-reason="Subclasses advertise an API contract that they cannot genuinely fulfill, violating LSP and forcing clients to perform fragile type checks.">
-            <span class="cert-opt-letter">B</span>
-            <span>It violates the Liskov Substitution Principle (LSP) by advertising a behavior it cannot fulfill, creating fragile APIs.</span>
-          </button>
-          <button type="button" class="cert-opt" data-correct="false" data-reason="Empty methods consume minimal CPU cycles. The issue is behavioral contract validity.">
-            <span class="cert-opt-letter">C</span>
-            <span>Because empty methods consume excessive CPU cycles during JVM execution.</span>
-          </button>
-        </div>
-        <div class="cert-feedback"></div>
-      </div>
-
-      <!-- Unit Completion Celebration Card -->
-      <div style="background:linear-gradient(135deg, rgba(99,102,241,0.15) 0%, rgba(56,189,248,0.15) 100%); border:1px solid var(--accent); border-radius:var(--radius-lg); padding:2rem; margin:2.5rem 0; text-align:center;">
-        <div style="font-size:2.5rem; margin-bottom:0.5rem;">🎉</div>
-        <h3 style="margin:0 0 0.5rem; font-size:1.4rem; color:var(--text); font-family:var(--font-display);">Unit 1 Mastered!</h3>
-        <p style="font-size:0.95rem; color:var(--text-muted); max-width:55ch; margin:0 auto 1.5rem; line-height:1.6;">
-          You have mastered the foundational Gang of Four behavioral pattern, runtime dynamic delegation, and Prof. Schäfer's official exam questions.
-        </p>
-        <div style="display:inline-flex; align-items:center; gap:0.5rem; font-family:var(--font-mono); font-size:0.85rem; font-weight:800; color:#10B981; background:rgba(16,185,129,0.15); padding:0.4rem 1rem; border-radius:999px; border:1px solid rgba(16,185,129,0.3); margin-bottom:1.5rem;">
-          ✓ 15 / 15 Exam Points Credited
-        </div>
-        <br>
-        <a href="unit-2-template.html" style="display:inline-flex; align-items:center; gap:0.5rem; background:linear-gradient(135deg, #6366F1 0%, #38BDF8 100%); color:#fff; text-decoration:none; padding:0.8rem 1.75rem; border-radius:var(--radius-sm); font-weight:700; font-size:0.95rem; box-shadow:0 4px 15px rgba(99,102,241,0.4);">
-          Continue to Unit 2A: Template Method Pattern →
-        </a>
-      </div>
-
-    </div>
+      </details>
     </section>
 
-    <!-- Navigation Footer -->
+    <!-- ============================================================== -->
+    <!-- 3. PROF. SCHÄFER'S 5 KEY AXIOMS                                -->
+    <!-- ============================================================== -->
+    <section class="chapter" id="sec-rules">
+      <div class="chapter-head">
+        <span class="chapter-num">3</span>
+        <div>
+          <h2>Prof. Dr. Jörg Schäfer's 5 Key Architectural Axioms</h2>
+          <span style="font-size:0.85rem; color:var(--text-muted); font-weight:600;">Directly from POS-exams-notes.pdf</span>
+        </div>
+      </div>
+
+      <div class="guide-card">
+        <div style="display:flex; flex-direction:column; gap:1rem;">
+          <div style="background:var(--bg-subtle); padding:1rem; border-radius:var(--radius-sm); border-left:3px solid #6366f1;">
+            <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:0.35rem;">
+              <span class="rule-badge">Axiom 1</span>
+              <strong style="color:var(--text);">Recognize the Need for Strategy: Encapsulate What Varies</strong>
+            </div>
+            <p style="margin:0; font-size:0.88rem; color:var(--text-muted); line-height:1.5;">
+              Identify the aspects of your application that vary and separate them from what stays the same. Hardcoding varying behaviors directly into subclasses causes rigid coupling and code duplication.
+            </p>
+          </div>
+
+          <div style="background:var(--bg-subtle); padding:1rem; border-radius:var(--radius-sm); border-left:3px solid #38bdf8;">
+            <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:0.35rem;">
+              <span class="rule-badge">Axiom 2</span>
+              <strong style="color:var(--text);">Recognize the Pattern in Existing Code: Eliminate Conditionals</strong>
+            </div>
+            <p style="margin:0; font-size:0.88rem; color:var(--text-muted); line-height:1.5;">
+              Look for messy <code>if-else</code> or <code>switch</code> blocks that select between different algorithm behaviors. Refactor these conditionals into polymorphic Strategy objects implementing a common interface.
+            </p>
+          </div>
+
+          <div style="background:var(--bg-subtle); padding:1rem; border-radius:var(--radius-sm); border-left:3px solid #10b981;">
+            <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:0.35rem;">
+              <span class="rule-badge">Axiom 3</span>
+              <strong style="color:var(--text);">Understand Change as the Driving Force (OCP Compliance)</strong>
+            </div>
+            <p style="margin:0; font-size:0.88rem; color:var(--text-muted); line-height:1.5;">
+              When new behaviors are introduced (e.g., <code>FlyRocketPowered</code>), you should not modify the existing <code>Duck</code> class or its subclasses. Simply create a new class implementing the interface &mdash; the <strong>Open-Closed Principle (OCP)</strong> in action.
+            </p>
+          </div>
+
+          <div style="background:var(--bg-subtle); padding:1rem; border-radius:var(--radius-sm); border-left:3px solid #f59e0b;">
+            <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:0.35rem;">
+              <span class="rule-badge warn">Axiom 4</span>
+              <strong style="color:var(--text);">Delegation as an Alternative to Inheritance (Composition over Inheritance)</strong>
+            </div>
+            <p style="margin:0; font-size:0.88rem; color:var(--text-muted); line-height:1.5;">
+              Inheritance creates rigid, compile-time bound <em>"is-a"</em> hierarchies. Delegation creates dynamic <em>"has-a"</em> relationships that allow behavior to be swapped on the fly at runtime.
+            </p>
+          </div>
+
+          <div style="background:var(--bg-subtle); padding:1rem; border-radius:var(--radius-sm); border-left:3px solid #ec4899;">
+            <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:0.35rem;">
+              <span class="rule-badge" style="background:rgba(236,72,153,0.12); color:#ec4899; border-color:rgba(236,72,153,0.25);">Axiom 5</span>
+              <strong style="color:var(--text);">Not Only "Things" but Behavior Can Be Encapsulated in Classes</strong>
+            </div>
+            <p style="margin:0; font-size:0.88rem; color:var(--text-muted); line-height:1.5;">
+              In classic OOP, novice programmers only model physical nouns (Car, Account) as classes. Strategy elevates <strong>verbs and algorithms</strong> (Flying, Quacking, Sorting) into first-class citizens in your architecture.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================== -->
+    <!-- 4. FUNCTIONAL STRATEGY & QSORT                                -->
+    <!-- ============================================================== -->
+    <section class="chapter" id="sec-tradeoff">
+      <div class="chapter-head">
+        <span class="chapter-num">4</span>
+        <div>
+          <h2>Functional Strategy: UNIX qsort() &amp; Python map()</h2>
+          <span style="font-size:0.85rem; color:var(--text-muted); font-weight:600;">Exercise 01 from POS-exams-notes.pdf</span>
+        </div>
+      </div>
+
+      <div class="guide-card">
+        <p style="margin:0 0 0.75rem; font-size:0.9rem; color:var(--text); line-height:1.6;">
+          <strong>Prof. Schäfer's Exam Question (Exercise 01):</strong><br>
+          <em>&ldquo;How does the C function pointer <code>compar</code> in <code>qsort()</code> or Python's <code>map()</code> function represent the Strategy Pattern?&rdquo;</em>
+        </p>
+
+        <div style="background:var(--bg-subtle); padding:1.15rem; border-radius:var(--radius-sm); border-left:3px solid #6366f1; margin:1rem 0;">
+          <strong style="color:var(--text); font-size:0.92rem; display:block; margin-bottom:0.5rem;">The Functional Equivalence:</strong>
+          <ul style="margin:0; padding-left:1.25rem; font-size:0.88rem; color:var(--text-muted); line-height:1.6;">
+            <li><strong>C UNIX <code>qsort(void *base, size_t nel, size_t width, int (*compar)(const void *, const void *))</code>:</strong><br>
+              The sorting algorithm itself (heapsort or quicksort) is completely decoupled from the comparison logic. Instead of hardcoding ordering rules, the algorithm accepts a function pointer (<code>compar</code>), allowing comparison behavior to be customized at runtime without modifying the sorting algorithm.
+            </li>
+            <li><strong>Python <code>map(function, iterable)</code>:</strong><br>
+              The <code>map()</code> function represents the Context. It allows dynamic selection of an algorithmic transformation function (<code>f</code> or <code>g</code>) to be applied to a list of values without modifying the <code>map()</code> engine itself.
+            </li>
+            <li><strong>Pattern Criticism Note from Notes (p. 2006):</strong><br>
+              In languages with first-class functions and closures (C++, Python, modern Java lambdas), full Strategy class hierarchies are often replaced directly by function pointers or lambda expressions (`(d1, d2) -> Integer.compare(...)`), eliminating boilerplate class definitions.
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================== -->
+    <!-- 5. AUTHENTIC FRANKFURT UAS KLAUSUR DRILLS                     -->
+    <!-- ============================================================== -->
+    <section class="chapter" id="sec-drills">
+      <div class="chapter-head">
+        <span class="chapter-num">5</span>
+        <div>
+          <h2>Prof. Dr. Jörg Schäfer Official Klausur Drills</h2>
+          <span style="font-size:0.85rem; color:var(--text-muted); font-weight:600;">Verified Examination Tasks</span>
+        </div>
+      </div>
+
+      <p style="font-size:0.95rem; color:var(--text-muted); margin-bottom:1.5rem; line-height:1.6;">
+        Every question below is an authentic examination task from Prof. Schäfer's written exam sheets (<code style="color:var(--accent);">exam-questions.pdf</code>) and lecture notes (<code style="color:var(--accent);">POS-exams-notes.pdf</code>). Test yourself before clicking to reveal the model solution.
+      </p>
+
+      <div class="drill-list">
+        <!-- Drill 1: Strategy vs Template Method (From exam-questions.pdf Q8) -->
+        <details class="drill-item" open>
+          <summary>
+            <span class="drill-tag" style="background:#ef4444; color:#fff; font-weight:800;">Authentic Exam Sheet · Question 8 [5 Pts]</span>
+            <span class="drill-q">How does the Strategy Pattern differ from the Template Method Pattern?</span>
+            <span class="drill-reveal-hint"></span>
+          </summary>
+          <div class="drill-a">
+            <p><strong>Official Model Answer &amp; Grading Rubric (Prof. Dr. Jörg Schäfer Standard):</strong></p>
+            <p>The difference centers around <strong>coupling mechanism, runtime mutability, and algorithm granularity</strong>:</p>
+            <ol>
+              <li><strong>Coupling Mechanism:</strong>
+                <ul>
+                  <li><strong>Strategy:</strong> Utilizes <em>object composition and delegation</em>. Context holds an interface reference to a Strategy object (has-a relationship).</li>
+                  <li><strong>Template Method:</strong> Utilizes <em>class inheritance</em>. Subclasses extend an abstract base class (is-a relationship).</li>
+                </ul>
+              </li>
+              <li><strong>Runtime Mutability:</strong>
+                <ul>
+                  <li><strong>Strategy:</strong> Entire algorithms can be swapped <em>dynamically at runtime</em> via setter injection (e.g. <code>duck.setFlyBehavior(new FlyRocketPowered())</code>).</li>
+                  <li><strong>Template Method:</strong> Algorithm variants are bound statically at <em>compile-time</em> via inheritance; changing behavior requires re-instantiating a different subclass.</li>
+                </ul>
+              </li>
+              <li><strong>Algorithm Granularity:</strong>
+                <ul>
+                  <li><strong>Strategy:</strong> Encapsulates and swaps the <em>entire algorithm as an atomic unit</em>.</li>
+                  <li><strong>Template Method:</strong> Freezes the invariant algorithm skeleton in the superclass and allows subclasses to vary only <em>individual steps</em>.</li>
+                </ul>
+              </li>
+            </ol>
+          </div>
+        </details>
+
+        <!-- Drill 2: C Function Pointer & Functional Strategy -->
+        <details class="drill-item">
+          <summary>
+            <span class="drill-tag" style="background:#6366f1; color:#fff; font-weight:800;">Exam Notes · Exercise 01 [5 Pts]</span>
+            <span class="drill-q">Why does the UNIX qsort() function pointer or Python's map() constitute an implementation of the Strategy Pattern?</span>
+            <span class="drill-reveal-hint"></span>
+          </summary>
+          <div class="drill-a">
+            <p><strong>Official Model Answer:</strong></p>
+            <p>
+              In <code>qsort()</code>, the overarching sorting algorithm (Context) is strictly decoupled from the element ordering criteria (Strategy).
+            </p>
+            <ul>
+              <li><strong>Algorithmic Decoupling:</strong> The comparison logic is passed as a function pointer parameter (<code>int (*compar)(const void *, const void *)</code>) rather than being hardcoded into the sorting engine.</li>
+              <li><strong>Runtime Interchangeability:</strong> Callers can switch sorting from ascending to descending, or compare completely different struct payloads, simply by supplying a different function pointer at runtime without recompiling or altering the <code>qsort()</code> implementation.</li>
+              <li><strong>Open-Closed Principle:</strong> The sorting engine is closed for modification but open for extension.</li>
+            </ul>
+          </div>
+        </details>
+      </div>
+    </section>
+
+    <!-- Footer Navigation -->
     <footer class="page-footer" style="margin-top: 4rem; padding-top: 2rem; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
-      <a href="index.html" class="btn-studio-hot-swap" style="text-decoration:none; padding:0.6rem 1.25rem;">
-        ← Back to Course Hub
-      </a>
-      <a href="unit-2-template.html" class="btn-studio-run" style="text-decoration:none; padding:0.6rem 1.25rem;">
-        Next: Unit 2A · Template Method Pattern →
-      </a>
+      <a class="nav-prev" href="index.html" style="font-weight: 700; color: var(--accent); text-decoration: none;">← Back to Course Overview</a>
+      <a class="nav-next" href="unit-2-template.html" style="font-weight: 700; color: var(--accent); text-decoration: none;">Next: Unit 2A · Template Method Pattern →</a>
     </footer>
 
-  </div>
+  </main>
 </div>
 
-<script>
-// 8-Pillar Architecture Blueprint Command Center Controller
-function selectPillar(pillarId) {
-  var btns = document.querySelectorAll(".pillar-tab-btn");
-  var panes = document.querySelectorAll(".pillar-pane");
-  
-  btns.forEach(function (b) {
-    var match = b.getAttribute("data-pillar") === pillarId;
-    b.classList.toggle("active", match);
-    b.setAttribute("aria-selected", match ? "true" : "false");
-  });
-
-  panes.forEach(function (p) {
-    p.classList.toggle("active", p.getAttribute("id") === "pane-" + pillarId);
-  });
-}
-
-function setBlueprintView(view) {
-  var explorerBtn = document.getElementById("btnViewExplorer");
-  var matrixBtn = document.getElementById("btnViewMatrix");
-  var pillsBar = document.getElementById("blueprintPillsBar");
-  var contentArea = document.getElementById("blueprintContentArea");
-  var matrixArea = document.getElementById("blueprintMatrixArea");
-
-  if (view === "matrix") {
-    if (explorerBtn) explorerBtn.classList.remove("active");
-    if (matrixBtn) matrixBtn.classList.add("active");
-    if (pillsBar) pillsBar.style.display = "none";
-    if (contentArea) contentArea.style.display = "none";
-    if (matrixArea) matrixArea.style.display = "block";
-  } else {
-    if (explorerBtn) explorerBtn.classList.add("active");
-    if (matrixBtn) matrixBtn.classList.remove("active");
-    if (pillsBar) pillsBar.style.display = "flex";
-    if (contentArea) contentArea.style.display = "block";
-    if (matrixArea) matrixArea.style.display = "none";
-  }
-}
-
-var _lastInlineCollapseTime = 0;
-function toggleBlueprintCollapse(forceState) {
-  var now = Date.now();
-  if (typeof forceState !== "boolean" && now - _lastInlineCollapseTime < 250) {
-    return; // Debounce guard against double execution
-  }
-  _lastInlineCollapseTime = now;
-
-  var suite = document.getElementById("blueprintSuite");
-  var collapseBtn = document.getElementById("btnCollapseBlueprint");
-  var body = document.getElementById("blueprintCollapsibleBody");
-  var hint = document.getElementById("blueprintCollapsedHint");
-  if (!suite) return;
-
-  var isCurrentlyCollapsed = suite.classList.contains("is-collapsed");
-  var willCollapse = (typeof forceState === "boolean") ? forceState : !isCurrentlyCollapsed;
-
-  if (willCollapse) {
-    suite.classList.add("is-collapsed");
-    if (body) body.style.display = "none";
-    if (hint) hint.style.display = "flex";
-  } else {
-    suite.classList.remove("is-collapsed");
-    if (body) body.style.display = "block";
-    if (hint) hint.style.display = "none";
-  }
-
-  if (collapseBtn) {
-    var icon = collapseBtn.querySelector(".collapse-icon");
-    var label = collapseBtn.querySelector(".collapse-label");
-    if (willCollapse) {
-      if (icon) icon.textContent = "▼";
-      if (label) label.textContent = "Expand Rubric";
-      collapseBtn.setAttribute("aria-expanded", "false");
-      collapseBtn.title = "Expand the 8-Pillar Architecture Rubric";
-    } else {
-      if (icon) icon.textContent = "▲";
-      if (label) label.textContent = "Collapse Rubric";
-      collapseBtn.setAttribute("aria-expanded", "true");
-      collapseBtn.title = "Collapse the 8-Pillar Architecture Rubric";
-    }
-  }
-}
-
-function copyBlueprintRubric() {
-  var copyLabel = document.getElementById("copyRubricSuiteLabel");
-  var rubricMarkdown = 
-    "# Software Pattern Mastery: The 8-Pillar Architectural Rubric\n" +
-    "*(Standard for POSA Exams & Technical Architecture Reviews)*\n\n" +
-    "## Pattern Name: Strategy Pattern (Policy)\n\n" +
-    "### 1. Intent & Architectural Motivation\n" +
-    "- **GoF Intent**: Define a family of algorithms, encapsulate each one, and make them interchangeable.\n" +
-    "- **Problem Solved**: Eliminates brittle inheritance hierarchies, prevents combinatorial subclass explosion, and removes complex switch/if-else logic.\n\n" +
-    "### 2. Structural Roles & Participants\n" +
-    "- **Context**: Maintains a reference to a Strategy object and delegates requests to it.\n" +
-    "- **Strategy Interface**: Declares a common interface for all supported algorithms.\n" +
-    "- **Concrete Strategies**: Encapsulates specific algorithmic implementations.\n" +
-    "- **Client**: Configures the Context with a chosen ConcreteStrategy at runtime.\n\n" +
-    "### 3. Formal UML Anatomy & Relationships\n" +
-    "- **Context -> Strategy**: Directed Association / Aggregation (`──>`), Multiplicity `1`.\n" +
-    "- **Strategy**: Interface stereotype `<<interface>>`.\n" +
-    "- **ConcreteStrategy -> Strategy**: Realization / Implementation (`···▷`), dashed line with hollow triangle.\n\n" +
-    "### 4. Core Design Principles Enforced\n" +
-    "- **Open/Closed Principle (OCP)**: Context is closed for modification, open for new strategy extensions.\n" +
-    "- **Dependency Inversion Principle (DIP)**: High-level Context depends on Strategy abstraction, not concrete implementations.\n" +
-    "- **Favor Composition over Inheritance**: Object composition (HAS-A) preferred over rigid subclassing (IS-A).\n\n" +
-    "### 5. Implementation Mechanics & Hot-Swapping\n" +
-    "- Context holds `private Strategy strategy;`.\n" +
-    "- Setter method `public void setStrategy(Strategy s)` enables dynamic runtime mutation.\n" +
-    "- Context delegates execution via `strategy.execute()`.\n" +
-    "- Modern Java: Functional interfaces allow lambdas and method references.\n\n" +
-    "### 6. Architectural Costs & Trade-offs\n" +
-    "- **Pros**: Clean testability with mock strategies, dynamic runtime reconfigurability, eliminates conditional branches.\n" +
-    "- **Cons**: Increases total class/object count; Client must understand algorithmic differences; minor heap indirection overhead.\n\n" +
-    "### 7. Rival Pattern Decision Matrix\n" +
-    "- **Strategy vs. State**: Identical UML. State transitions dynamically and autonomously based on internal state without client awareness. Strategy is chosen explicitly by client.\n" +
-    "- **Strategy vs. Template Method**: Template Method uses inheritance to fix an algorithm skeleton at compile time. Strategy uses composition to swap entire algorithms at runtime.\n\n" +
-    "### 8. Real-World JDK Reference & Exam Traps\n" +
-    "- **JDK Standard**: `java.util.Comparator`, `java.awt.LayoutManager`, `javax.servlet.Filter`.\n" +
-    "- **Exam Traps**: Forgetting the runtime setter in Context; circular references between Context and Strategy; creating unnecessary instances when stateless lambdas or Flyweights suffice.\n";
-
-  function updateLabelSuccess() {
-    if (copyLabel) copyLabel.textContent = "Copied to Clipboard!";
-    if (typeof window.showToast === "function") window.showToast("8-Pillar Study Rubric copied to clipboard!");
-    setTimeout(function () {
-      if (copyLabel) copyLabel.textContent = "Copy Rubric (Markdown)";
-    }, 2500);
-  }
-
-  if (navigator.clipboard && navigator.clipboard.writeText) {
-    navigator.clipboard.writeText(rubricMarkdown).then(updateLabelSuccess).catch(function () {
-      fallbackCopy(rubricMarkdown);
-    });
-  } else {
-    fallbackCopy(rubricMarkdown);
-  }
-
-  function fallbackCopy(text) {
-    var ta = document.createElement("textarea");
-    ta.value = text;
-    ta.style.position = "fixed";
-    ta.style.opacity = "0";
-    document.body.appendChild(ta);
-    ta.select();
-    try {
-      document.execCommand("copy");
-      updateLabelSuccess();
-    } catch (e) {
-      alert("Please press Ctrl+C to copy rubric");
-    }
-    document.body.removeChild(ta);
-  }
-}
-
-window.selectPillar = selectPillar;
-window.setBlueprintView = setBlueprintView;
-window.toggleBlueprintCollapse = toggleBlueprintCollapse;
-window.copyBlueprintRubric = copyBlueprintRubric;
-</script>
-
-<script src="assets/site.js?v=2026.15" defer></script>
+<script src="assets/site.js?v=2026.16" defer></script>
 </body>
 </html>
