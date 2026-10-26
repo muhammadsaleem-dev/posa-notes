@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Mock Exam 1 · Core Practice Paper (107 Points) | POSA 2026</title>
-<meta name="description" content="Mock Exam 1: Comprehensive practice examination covering 8 core exercises across design patterns, OCP adherence, refactoring, and software architecture (107 Points). Direct Question and Answer format.">
+<title>Mock Exam 1 · Core Practice Paper (103 Points) | POSA 2026</title>
+<meta name="description" content="Mock Exam 1: Comprehensive practice examination covering 8 core exercises across design patterns, OCP adherence, refactoring, and software architecture (103 Points total). Direct Question and Answer layout.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%236366f1'/%3E%3Cpath d='M8 10h16M8 16h16M8 22h10' stroke='%23fff' stroke-width='2.2' stroke-linecap='round'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -27,7 +27,7 @@
     box-shadow: var(--shadow-sm);
   }
   .qa-q {
-    font-size: 1.12rem;
+    font-size: 1.08rem;
     font-weight: 700;
     color: var(--text);
     margin-bottom: 1rem;
@@ -85,7 +85,7 @@
   .ex-title {
     margin: 0;
     font-family: var(--font-display);
-    font-size: 1.45rem;
+    font-size: 1.4rem;
     color: var(--text);
   }
   .gotcha-alert {
@@ -109,10 +109,10 @@
       <span style="background:linear-gradient(135deg, #6366f1 0%, #38bdf8 100%);color:#fff;padding:0.2rem 0.55rem;border-radius:6px;font-size:0.82rem;font-weight:800;letter-spacing:0.04em;">POSA</span>
       <span style="font-weight:800;letter-spacing:-0.02em;">2026</span>
     </a>
-        <div class="sitenav-links">
+    <div class="sitenav-links">
       <a href="index.html">Overview</a>
       <a href="index.html#curriculum-roadmap">16 Units</a>
-      <a href="mock-1.html">🎓 Mock Exam 1</a>
+      <a href="mock-1.html" class="active">🎓 Mock Exam 1</a>
       <a href="mock-2.html">📝 Mock Exam 2</a>
     </div>
     <button class="nav-toggle" id="navToggle" type="button" aria-expanded="false" aria-controls="navPanel">
@@ -131,14 +131,14 @@
       <a href="index.html">Course Overview</a>
       <a href="mock-1.html" class="active">🎓 Mock Exam 1</a>
       <a href="mock-2.html">📝 Mock Exam 2</a>
-      <a href="#part-1">Questions 6–8 (15 pts)</a>
-      <a href="#ex-2">Exercise 2 · Adapter &amp; Iterator (16 pts)</a>
-      <a href="#ex-3">Exercise 3 · Strategy &amp; OCP (16 pts)</a>
-      <a href="#ex-4">Exercise 4 · Template Refactoring (14 pts)</a>
-      <a href="#ex-5">Exercise 5 · Composite Tree (14 pts)</a>
-      <a href="#ex-6">Exercise 6 · Singleton &amp; SOLID (12 pts)</a>
-      <a href="#ex-7">Exercise 7 · Criticism &amp; Python (12 pts)</a>
-      <a href="#ex-8">Exercise 8 · Banking Architecture (18 pts)</a>
+      <a href="#part-1">Questions 5–8 (12 pts)</a>
+      <a href="#ex-2">Ex 2 · Adapter &amp; Iterator (15 pts)</a>
+      <a href="#ex-3">Ex 3 · Strategy &amp; OCP (16 pts)</a>
+      <a href="#ex-4">Ex 4 · Template Refactoring (14 pts)</a>
+      <a href="#ex-5">Ex 5 · Composite Tree (14 pts)</a>
+      <a href="#ex-6">Ex 6 · Singleton &amp; SOLID (12 pts)</a>
+      <a href="#ex-7">Ex 7 · Criticism &amp; Python (12 pts)</a>
+      <a href="#ex-8">Ex 8 · Banking Architecture (18 pts)</a>
     </div>
   </div>
 </nav>
@@ -148,8 +148,8 @@
     <div class="sidebar-block">
       <span class="sidebar-label">Mock 1 Exercises</span>
       <a href="index.html">← Course Overview</a>
-      <a href="#part-1">Questions 6–8 (15 pts)</a>
-      <a href="#ex-2">Ex 2 · Adapter &amp; Iterator (16 pts)</a>
+      <a href="#part-1">Questions 5–8 (12 pts)</a>
+      <a href="#ex-2">Ex 2 · Adapter &amp; Iterator (15 pts)</a>
       <a href="#ex-3">Ex 3 · Strategy &amp; OCP (16 pts)</a>
       <a href="#ex-4">Ex 4 · Template Refactoring (14 pts)</a>
       <a href="#ex-5">Ex 5 · Composite Tree (14 pts)</a>
@@ -165,30 +165,51 @@
       <div class="eyebrow" style="color:var(--accent); font-weight:800;">PATTERN-ORIENTED SOFTWARE ARCHITECTURE · MOCK EXAM 1</div>
       <h1 class="page-title">Mock Exam 1 · Core Practice Paper</h1>
       <p class="page-subtitle">
-        Comprehensive practice examination covering 8 core exercises across design patterns, OCP adherence, refactoring, and software architecture (107 Points total). Direct Question and Answer layout.
+        Comprehensive practice examination covering 8 core exercises across design patterns, OCP adherence, refactoring, and software architecture (103 Points total · 90 min recommended pace). Direct Question and Answer layout.
       </p>
     </header>
 
     <!-- ================================================================= -->
-    <!-- PART 1: CORE QUESTIONS 6, 7, 8 (15 PTS)                           -->
+    <!-- PART 1: CORE QUESTIONS 5, 6, 7, 8 (12 PTS)                        -->
     <!-- ================================================================= -->
     <section id="part-1">
       <div class="ex-header">
         <h2 class="ex-title">Part 1 · Core Design Pattern Principles</h2>
-        <span style="font-weight:700; color:var(--accent); font-family:var(--font-mono);">15 Points Total</span>
+        <span style="font-weight:700; color:var(--accent); font-family:var(--font-mono);">12 Points Total</span>
+      </div>
+
+      <!-- Question 5 -->
+      <div class="qa-block" id="q5">
+        <div class="qa-q">
+          5. Explain the Acyclic Dependencies Principle (ADP)
+          <span class="pts-badge">3 Points</span>
+        </div>
+        <div class="qa-a">
+          <span class="ans-label">Model Answer</span>
+          <p><strong>Definition:</strong> The dependency structure between packages (or deployable components) must be a <strong>Directed Acyclic Graph (DAG)</strong>—there must be <em>no cycles</em> in the package dependency diagram.</p>
+          <ol style="padding-left:1.25rem; margin:0.5rem 0 1rem; line-height:1.65;">
+            <li><strong>Why cycles are harmful ("Morning-After Syndrome"):</strong> If package $A$ depends on $B$, $B$ depends on $C$, and $C$ depends back on $A$, any change to $A$ can break $B$ and $C$, which cycles back to break $A$. The packages become tightly tangled into one massive, unmanageable monolith that cannot be built, tested, versioned, or released independently.</li>
+            <li><strong>Two techniques to break cycles:</strong>
+              <ul style="margin-top:0.25rem;">
+                <li><strong>Apply Dependency Inversion Principle (DIP):</strong> Define an interface in package $A$ that package $C$ implements, reversing the dependency arrow so $C$ points to $A$ instead of $A$ pointing to $C$.</li>
+                <li><strong>Extract a Common Package:</strong> Create a new package $D$ containing the shared entities/interfaces, making both $A$ and $C$ depend downward on $D$.</li>
+              </ul>
+            </li>
+          </ol>
+        </div>
       </div>
 
       <!-- Question 6 -->
       <div class="qa-block" id="q6">
         <div class="qa-q">
-          Question 6: Which of the OOP principles does decorator primarily follow: Inheritance or composition and briefly explain why?
-          <span class="pts-badge">5 Points</span>
+          6. Which of the OOP principle does decorator primarily follow: Inheritance or composition and briefly explain why?
+          <span class="pts-badge">3 Points</span>
         </div>
         <div class="qa-a">
           <span class="ans-label">Model Answer</span>
           <p><strong>Primary Principle: Composition (Object Composition over Class Inheritance)</strong></p>
           <ol style="padding-left:1.25rem; margin:0.5rem 0 1rem; line-height:1.65;">
-            <li><strong>Composition Provides Dynamic Extension:</strong> The Decorator pattern dynamically attaches behavior at runtime by holding a reference to the wrapped component instance (<code>protected Component component;</code>) and delegating method invocations to it.</li>
+            <li><strong>Composition Provides Dynamic Extension:</strong> The Decorator pattern dynamically attaches new responsibilities at runtime by wrapping a component instance (<code>protected Component component;</code>) and delegating operations to it.</li>
             <li><strong>Inheritance is Purely for Type Conformance:</strong> Subclassing the <code>Component</code> class is done <em>solely for interface matching / subtyping</em>—so the decorator can substitute wherever a <code>Component</code> is expected. It does NOT inherit behavior from the superclass.</li>
             <li><strong>Prevents Subclass Explosion:</strong> Avoids the $2^N$ static subclass combinations created by naive inheritance (e.g., Starbuzz coffee).</li>
           </ol>
@@ -201,8 +222,8 @@
       <!-- Question 7 -->
       <div class="qa-block" id="q7">
         <div class="qa-q">
-          Question 7: What is the main task/role of the model in MVC?
-          <span class="pts-badge">5 Points</span>
+          7. What is the main task/role of the model in MVC?
+          <span class="pts-badge">3 Points</span>
         </div>
         <div class="qa-a">
           <span class="ans-label">Model Answer</span>
@@ -220,8 +241,8 @@
       <!-- Question 8 -->
       <div class="qa-block" id="q8">
         <div class="qa-q">
-          Question 8: How does the Strategy Pattern differ from the Template Method Pattern?
-          <span class="pts-badge">5 Points</span>
+          8. How does the Strategy Pattern differ from the Template Method Pattern?
+          <span class="pts-badge">3 Points</span>
         </div>
         <div class="qa-a">
           <span class="ans-label">Model Answer</span>
@@ -264,25 +285,47 @@
     </section>
 
     <!-- ================================================================= -->
-    <!-- EXERCISE 2: ADAPTER & ITERATOR (16 PTS)                           -->
+    <!-- EXERCISE 2: ADAPTER & ITERATOR (15 PTS)                           -->
     <!-- ================================================================= -->
     <section id="ex-2">
       <div class="ex-header">
         <h2 class="ex-title">Exercise 2 · Legacy Integration with Adapter &amp; Iterator</h2>
-        <span style="font-weight:700; color:var(--accent); font-family:var(--font-mono);">16 Points (2 + 4 + 6 + 4)</span>
+        <span style="font-weight:700; color:var(--accent); font-family:var(--font-mono);">[2+4+6+3 Points]</span>
       </div>
 
       <div class="context-box">
-        <strong>Scenario:</strong> You want to use a legacy Quicksort library that takes <code>Vector</code> as part of its API:
+        <strong>Problem Description:</strong> You want to use a library using an implementation of quicksort algorithm that uses the legacy class <code>Vector</code> as part of its API:
         <pre style="margin:0.5rem 0; font-family:var(--font-mono); font-size:0.85rem;">Vector quicksort(Vector vector)</pre>
-        However, in your code you want to use a <code>List</code> implementation by calling:
+        However, in your code you want to use a <code>List</code> (or <code>ArrayList</code>) implementation by calling:
         <pre style="margin:0.5rem 0; font-family:var(--font-mono); font-size:0.85rem;">List quicksort(List list)</pre>
-        to sort a list and after sorting you want to print all elements of the list.<br><br>
-        <strong>API Provided:</strong>
-        <pre style="margin:0.5rem 0; font-family:var(--font-mono); font-size:0.85rem;">
-Vector: public Vector(Collection c), Enumeration elements()
-Enumeration: boolean hasMoreElements(), Object nextElement()
-Iterator: boolean hasNext(), Object next()</pre>
+        to sort a list and after sorting you want to print all elements of the list. Below, you find useful parts of the source code:
+        <pre style="margin:0.5rem 0; font-family:var(--font-mono); font-size:0.85rem; line-height:1.45;">
+public class Vector {
+    /** Constructs a vector containing the elements of the specified
+        collection, in the order they are returned by the collection's
+        iterator. */
+    public Vector(Collection c) { ... }
+
+    /** Returns an enumeration of the components of this vector. */
+    Enumeration elements() { ... }
+}
+
+public abstract interface Enumeration {
+    /** Tests if this enumeration contains more elements. */
+    boolean hasMoreElements();
+
+    /** Returns the next element of this enumeration if this enumeration
+        object has at least one more element to provide */
+    Object nextElement();
+}
+
+public abstract interface Iterator {
+    /* Returns true if the iteration has more elements. */
+    boolean hasNext();
+
+    /* Returns the next element in the interation. */
+    Object next();
+}</pre>
       </div>
 
       <!-- Exercise 2 - Question 1 -->
@@ -294,8 +337,8 @@ Iterator: boolean hasNext(), Object next()</pre>
         <div class="qa-a">
           <span class="ans-label">Model Answer</span>
           <ol style="padding-left:1.25rem; margin:0; line-height:1.65;">
-            <li><strong>Adapter Pattern:</strong> To adapt the legacy <code>Vector</code> / <code>Enumeration</code> interfaces into the modern <code>List</code> / <code>Iterator</code> interfaces without modifying the legacy library code.</li>
-            <li><strong>Iterator Pattern:</strong> To sequentially traverse and print all elements of the sorted list uniformly.</li>
+            <li><strong>Adapter Pattern:</strong> To adapt the legacy <code>Vector</code> / <code>Enumeration</code> interfaces into the modern <code>List</code> / <code>Iterator</code> interfaces without modifying the legacy library source code.</li>
+            <li><strong>Iterator Pattern:</strong> To sequentially traverse and print all elements of the sorted collection uniformly.</li>
           </ol>
         </div>
       </div>
@@ -312,18 +355,18 @@ Iterator: boolean hasNext(), Object next()</pre>
 [Client] ----> <<interface>> Iterator&lt;Object&gt;
                      ^
                      | (implements)
-      EnumerationIteratorAdapter ----> <<interface>> Enumeration (Adaptee)
-      - enumeration: Enumeration       + hasMoreElements(): boolean
-      + hasNext(): boolean             + nextElement(): Object
+      EnumerationIteratorAdapter o----> <<interface>> Enumeration (Adaptee)
+      - enumeration: Enumeration        + hasMoreElements(): boolean
+      + hasNext(): boolean              + nextElement(): Object
       + next(): Object</pre>
         </div>
       </div>
 
-      <!-- Exercise 2 - Question 3 -->
+      <!-- Exercise 2 - Question 3 & 4 -->
       <div class="qa-block" id="ex2-q3">
         <div class="qa-q">
-          3. Please write down the source code of your implementation of: <code>List quicksort(List list)</code>. Do not forget to print all elements of the list!
-          <span class="pts-badge">10 Points (6 + 4)</span>
+          3. Please write down the source code of your implementation of List quicksort(List list)! Do not forget to print all elements of the list!
+          <span class="pts-badge">9 Points (6 + 3)</span>
         </div>
         <div class="qa-a">
           <span class="ans-label">Model Answer</span>
@@ -345,14 +388,14 @@ public class EnumerationIteratorAdapter implements Iterator&lt;Object&gt; {
     }
 }
 
-// 2. Client implementation
+// 2. Client implementation: List quicksort(List list)
 public List quicksort(List list) {
     if (list == null) return null;
 
-    // Adapt modern List into legacy Vector using Vector(Collection c)
+    // Adapt modern List into legacy Vector using Vector(Collection c) constructor
     Vector legacyVector = new Vector(list);
 
-    // Call the legacy sorting library
+    // Call the legacy quicksort library
     Vector sortedVector = LegacyLibrary.quicksort(legacyVector);
 
     // Adapt sorted Vector back to modern List using EnumerationIteratorAdapter
@@ -364,7 +407,7 @@ public List quicksort(List list) {
         resultList.add(it.next());
     }
 
-    // Print all elements of the sorted list (as explicitly instructed!)
+    // Explicit requirement: Print all elements of the list [3 Points]
     Iterator printIt = resultList.iterator();
     System.out.print("Sorted Elements: ");
     while (printIt.hasNext()) {
@@ -375,7 +418,7 @@ public List quicksort(List list) {
     return resultList;
 }</pre>
           <div class="gotcha-alert">
-            ⚠️ <strong>Exam Pitfall:</strong> Forgetting to print all elements in the final loop results in an automatic <strong>4-point deduction</strong>! The prompt explicitly states: <em>"Do not forget to print all elements of the list!"</em>
+            ⚠️ <strong>Exam Pitfall:</strong> Forgetting to print all elements in the final loop results in an automatic <strong>3-point deduction</strong>! The prompt explicitly warns: <em>"Do not forget to print all elements of the list!"</em>
           </div>
         </div>
       </div>
@@ -387,13 +430,13 @@ public List quicksort(List list) {
     <section id="ex-3">
       <div class="ex-header">
         <h2 class="ex-title">Exercise 3 · Strategy Pattern &amp; Open-Closed Principle (OCP)</h2>
-        <span style="font-weight:700; color:var(--accent); font-family:var(--font-mono);">16 Points (8 + 4 + 4)</span>
+        <span style="font-weight:700; color:var(--accent); font-family:var(--font-mono);">[8+4+4 Points]</span>
       </div>
 
       <div class="context-box">
         <strong>Scenario:</strong> You have to implement a flexible way to sort Collections using different algorithms such as QuickSort or MergeSort.<br>
-        You can assume that the List contains a list of numbers and that you can call:<br>
-        • <code>Vector quicksort(Vector vector)</code><br>
+        You can assume that the List contains a list of numbers and that you can call a function:<br>
+        • <code>Vector quicksort(Vector vector)</code> (see previous exercise)<br>
         • <code>List mergesort(List list)</code>
       </div>
 
@@ -411,19 +454,26 @@ public interface Sorter {
 }
 
 public class QuickSorter implements Sorter {
+    // => Gap 1: Implementation of sort method
     public List sort(List list) {
+        // => Gap 2: Convert List to Vector
         Vector v = new Vector(list);
+        // => Gap 3: Call legacy quicksort
         Vector sorted = LegacyLibrary.quicksort(v);
+        // => Gap 4: Convert Vector back to List
         return new ArrayList(sorted);
     }
 }
 
 public class MergeSorter implements Sorter {
+    // => Gap 1: Implementation of sort method
     public List sort(List list) {
+        // => Gap 2: Direct call to mergesort library
         return MergeSortLib.mergesort(list);
     }
 }
 
+// Client Context for Strategy:
 public class SortContext {
     private Sorter sorter;
     public SortContext(Sorter sorter) { this.sorter = sorter; }
@@ -436,7 +486,7 @@ public class SortContext {
       <!-- Exercise 3 - Question 2 -->
       <div class="qa-block" id="ex3-q2">
         <div class="qa-q">
-          2. Draw the UML diagram and identify the design pattern used.
+          2. Draw the UML diagram and identify the design pattern used!
           <span class="pts-badge">4 Points</span>
         </div>
         <div class="qa-a">
@@ -448,25 +498,25 @@ public class SortContext {
                             ^
               +-------------+-------------+
               |                           |
-       [QuickSorter]               [MergeSorter]
-       + sort(List): List          + sort(List): List</pre>
+        [QuickSorter]               [MergeSorter]
+        + sort(List): List          + sort(List): List</pre>
         </div>
       </div>
 
       <!-- Exercise 3 - Question 3 -->
       <div class="qa-block" id="ex3-q3">
         <div class="qa-q">
-          3. Does the pattern (fully?!) adhere to the OCP (Open Closed Principle)? (Please provide explanation!)
+          3. Does the pattern (fully?!) adhere to the OCP (please provide explanation!)?
           <span class="pts-badge">4 Points</span>
         </div>
         <div class="qa-a">
           <span class="ans-label">Model Answer</span>
           <ul>
-            <li><strong>Why it adheres to OCP:</strong> The system is <em>open for extension</em> because new sorting algorithms (e.g., <code>HeapSorter</code>, <code>TimSorter</code>) can be introduced simply by implementing <code>Sorter</code> without modifying existing code. It is <em>closed for modification</em> because existing sorter classes remain untouched.</li>
+            <li><strong>Why it adheres to OCP:</strong> The architecture is <em>open for extension</em> because new sorting algorithms (e.g. <code>HeapSorter</code>, <code>TimSorter</code>) can be introduced at any time simply by creating a new class implementing <code>Sorter</code>. It is <em>closed for modification</em> because the existing <code>SortContext</code> and sorter classes remain untouched.</li>
             <li><strong>Does it FULLY adhere?</strong> <strong>NO, not unconditionally.</strong>
               <ul>
-                <li>It only <em>fully</em> adheres if the client uses <strong>Dependency Injection</strong> or an abstract factory to inject the sorter.</li>
-                <li>If the client code uses a hardcoded <code>if-else</code> or <code>switch(algoType)</code> statement to instantiate concrete sorters (e.g. <code>if (type.equals("quick")) return new QuickSorter()</code>), then adding a new sorter requires modifying that selection code, partially violating OCP!</li>
+                <li>It only <em>fully</em> adheres if the client uses <strong>Dependency Injection</strong> or an Abstract Factory to inject the concrete sorter.</li>
+                <li>If the client code uses a hardcoded conditional selection like <code>if (type.equals("quick")) return new QuickSorter()</code>, then adding a new algorithm requires modifying that client selection code, partially violating OCP!</li>
               </ul>
             </li>
           </ul>
@@ -480,19 +530,25 @@ public class SortContext {
     <section id="ex-4">
       <div class="ex-header">
         <h2 class="ex-title">Exercise 4 · Template Method Pattern Refactoring</h2>
-        <span style="font-weight:700; color:var(--accent); font-family:var(--font-mono);">14 Points (3 + 6 + 2 + 3)</span>
+        <span style="font-weight:700; color:var(--accent); font-family:var(--font-mono);">[3+6+2+3 Points]</span>
       </div>
 
       <div class="context-box">
-        <strong>Scenario:</strong> You want to refactor the code of a quicksort library so that it supports flexible sorting of student objects based on a configurable criteria (e.g., age or name). Assume the source code looks as follows:
-        <pre style="margin:0.5rem 0; font-family:var(--font-mono); font-size:0.85rem;">
+        <strong>Problem Description:</strong> You want to refactor the Code of a quicksort library so that it supports flexible sorting of elements (objects) based on a configurable criteria. For example, assume your List contains student objects and suppose you want to sort using the age or name in a flexible manner. Assume that the source code looks as follows:
+        <pre style="margin:0.5rem 0; font-family:var(--font-mono); font-size:0.85rem; line-height:1.45;">
 public List sort(List list) {
-    // ... long list of quicksort logic ...
-    if (arr[j] &lt; pivot) {  // Crucial hardcoded comparison
-        // ...
+    // Below a long list of complicated code
+    ...
+    /** Crucial part that compares each element against pivot
+    using hardcoded comparison "&lt;" operator */
+    if (arr[j] &lt; pivot) {
+        ...
     }
 }</pre>
-        A developer wants to use the Template Method pattern for this task.
+        A developer wants to use the template pattern for this task:
+        <div style="font-family:var(--font-mono); font-size:0.82rem; margin-top:0.5rem; background:var(--bg); padding:0.5rem; border-radius:4px;">
+          [AbstractClass: TemplateMethod() calls PrimitiveOperation1(), PrimitiveOperation2()]
+        </div>
       </div>
 
       <!-- Exercise 4 - Question 1 -->
@@ -504,33 +560,33 @@ public List sort(List list) {
         <div class="qa-a">
           <span class="ans-label">Model Answer</span>
           <p>The choice of Template Method is <strong>sub-optimal and rigid</strong>:</p>
-          <ul>
-            <li>Template Method relies on <em>class inheritance</em>. To sort students by age, name, or GPA, developers must create concrete subclasses: <code>AgeQuickSorter</code>, <code>NameQuickSorter</code>, <code>GpaQuickSorter</code>.</li>
-            <li>This causes <strong>subclass explosion</strong> and ties the sorting criteria statically to the class hierarchy at compile-time.</li>
-            <li>The <strong>Strategy Pattern</strong> (like Java's <code>Comparator&lt;Student&gt;</code>) is far superior: it parameterizes the comparison via object composition dynamically at runtime without subclassing.</li>
-          </ul>
+          <ol style="padding-left:1.25rem; margin:0; line-height:1.65;">
+            <li><strong>Class Inheritance Limitation:</strong> Template Method relies on subclassing. To sort students by age, name, or GPA, developers must create dedicated subclasses: <code>AgeQuickSorter</code>, <code>NameQuickSorter</code>, <code>GpaQuickSorter</code>.</li>
+            <li><strong>Subclass Explosion &amp; Static Binding:</strong> This causes subclass explosion and fixes sorting criteria at compile time. You cannot switch sorting criteria dynamically on an existing sorter instance at runtime.</li>
+            <li><strong>Superior Alternative: Strategy Pattern (or Java <code>Comparator&lt;T&gt;</code>):</strong> Passing a comparison strategy (or lambda) via composition decouples the algorithm from the class hierarchy and allows dynamic runtime sorting.</li>
+          </ol>
         </div>
       </div>
 
       <!-- Exercise 4 - Question 2 -->
       <div class="qa-block" id="ex4-q2">
         <div class="qa-q">
-          2. Document your refactoring: (a) How many primitiveOperations do you need? (b) Provide reasonable names for the primitiveOperation(s) and TemplateMethod. (c) Describe which parts of the source code go where.
-          <span class="pts-badge">11 Points (6 + 2 + 3)</span>
+          2. Document your refactoring, in particular:
+          <span class="pts-badge">11 Points (2 + 3 + 6)</span>
         </div>
         <div class="qa-a">
           <span class="ans-label">Model Answer</span>
           <ol style="padding-left:1.25rem; margin:0; line-height:1.65;">
-            <li><strong>(a) How many primitiveOperations do you need? (6 Points)</strong><br>
-              Exactly <strong>1 primitiveOperation</strong> is needed: a comparison hook to compare two elements against each other (e.g. <code>boolean isLessThan(T a, T b)</code> or <code>int compare(T a, T b)</code>).
+            <li><strong>(a) How many primitiveOperations do you need? [2 Points]</strong><br>
+              Exactly <strong>1 primitiveOperation</strong> is needed: a comparison hook to compare two elements against each other (e.g. <code>isLessThan(Object a, Object b)</code> or <code>compare(T a, T b)</code>).
             </li>
-            <li><strong>(b) Reasonable names for the methods: (2 Points)</strong><br>
-              • <code>TemplateMethod</code>: <code>public final List sort(List list)</code> (declared <code>final</code> so subclasses cannot alter the invariant skeletal algorithm).<br>
-              • <code>primitiveOperation</code>: <code>protected abstract boolean isLessThan(Object a, Object b)</code>.
+            <li><strong>(b) Provide reasonable names for the primitiveOperation(s) and the TemplateMethod [3 Points]</strong><br>
+              • <strong>TemplateMethod:</strong> <code>public final List sort(List list)</code> (declared <code>final</code> to protect the invariant algorithm skeleton).<br>
+              • <strong>primitiveOperation:</strong> <code>protected abstract boolean isLessThan(Object a, Object b)</code>.
             </li>
-            <li><strong>(c) Which parts of the source code go where? (3 Points)</strong><br>
-              • <strong>TemplateMethod:</strong> Contains all invariant divide-and-conquer logic: pivot selection, partitioning loop, recursion boundaries (`p`, `r`, `q`), and array swapping.<br>
-              • <strong>primitiveOperation:</strong> Strictly contains the variant comparison statement replacing <code>if (arr[j] &lt; pivot)</code> with <code>if (isLessThan(arr[j], pivot))</code>.
+            <li><strong>(c) Describe which parts of the source code go to the TemplateMethod and which parts to the primitiveOperation(s) [6 Points]</strong><br>
+              • <strong>TemplateMethod:</strong> Contains all invariant quicksort logic—pivot selection, partition loop, recursion boundaries (`p`, `r`, `q`), and element swapping.<br>
+              • <strong>primitiveOperation:</strong> Strictly encapsulates the variant comparison logic, replacing <code>if (arr[j] &lt; pivot)</code> with <code>if (isLessThan(arr[j], pivot))</code>.
             </li>
           </ol>
         </div>
@@ -543,13 +599,13 @@ public List sort(List list) {
     <section id="ex-5">
       <div class="ex-header">
         <h2 class="ex-title">Exercise 5 · Composite Pattern &amp; Arithmetic Expression Trees</h2>
-        <span style="font-weight:700; color:var(--accent); font-family:var(--font-mono);">14 Points (4 + 4 + 6)</span>
+        <span style="font-weight:700; color:var(--accent); font-family:var(--font-mono);">[4+4+6 Points]</span>
       </div>
 
       <div class="context-box">
         <strong>Expression:</strong>
-        <p style="font-size:1.2rem; font-weight:700; font-family:var(--font-mono); margin:0.5rem 0; color:var(--accent);">
-          3 + 4 * (5 - 6 * 2 / (x + y))
+        <p style="font-size:1.25rem; font-weight:700; font-family:var(--font-mono); margin:0.5rem 0; color:var(--accent);">
+          $$3 + 4 * (5 - 6 * z / (x + y))$$
         </p>
       </div>
 
@@ -572,11 +628,11 @@ public List sort(List list) {
                           /   \
                         (*)   (+)
                        /   \  /  \
-                     (6)  (2)(x) (y)</pre>
-          <p style="margin:0.5rem 0 0;">
-            • <strong>Composite Nodes:</strong> Operators (<code>+</code>, <code>-</code>, <code>*</code>, <code>/</code>) holding sub-expression children.<br>
-            • <strong>Leaf Nodes:</strong> Operands (<code>3</code>, <code>4</code>, <code>5</code>, <code>6</code>, <code>2</code>, <code>x</code>, <code>y</code>) holding numeric literals or variables.
-          </p>
+                     (6)  (z)(x) (y)</pre>
+          <ul style="margin:0.5rem 0 0;">
+            <li><strong>Composite Nodes (Internal Operations):</strong> Operators <code>+</code>, <code>*</code>, <code>-</code>, <code>/</code> which hold child sub-expressions.</li>
+            <li><strong>Leaf Nodes (Operands):</strong> Numeric literals and variables: <code>3</code>, <code>4</code>, <code>5</code>, <code>6</code>, <code>z</code>, <code>x</code>, <code>y</code>.</li>
+          </ul>
         </div>
       </div>
 
@@ -589,21 +645,27 @@ public List sort(List list) {
         <div class="qa-a">
           <span class="ans-label">Model Answer</span>
           <pre style="background:var(--bg-raised); padding:1rem; border-radius:var(--radius-sm); font-family:var(--font-mono); font-size:0.85rem; line-height:1.45; overflow-x:auto;">
-<<interface>> Component
-+ evaluate(): double
-       ^
-       | (generalization / inheritance)
-+------+---------------------------+
-|                                  |
-Leaf (Number/Variable)      Composite (Operator)
-- value: double             - left: Component
-+ evaluate(): double        - right: Component
-                            + evaluate(): double
-                            + add(c: Component)
-                            + remove(c: Component)
-                            + getChild(i: int): Component
-                                   |
-                                   +-----> points back to Component (aggregation 1..*)</pre>
+                  [Client] ----> <<interface>> Component
+                                 + Operation(): double
+                                 + Add(c: Component)
+                                 + Remove(c: Component)
+                                 + GetChild(i: int): Component
+                                        ^
+                                        | (generalization / inheritance)
+                         +--------------+--------------+
+                         |                             |
+                       Leaf                        Composite
+                 + Operation()               + Operation()
+                                             + Add(c: Component)
+                                             + Remove(c: Component)
+                                             + GetChild(i: int)
+                                                   |
+                                                   +-----> Component (aggregation 1..*)</pre>
+          <ol style="padding-left:1.25rem; margin:0.5rem 0 0; line-height:1.65;">
+            <li><strong>Client Arrow:</strong> Directed association arrow from <code>Client</code> to <code>Component</code>.</li>
+            <li><strong>Generalization Arrows:</strong> Hollow triangle arrows from <code>Leaf</code> to <code>Component</code> and from <code>Composite</code> to <code>Component</code>.</li>
+            <li><strong>Aggregation Loop:</strong> Aggregation diamond and arrow pointing from <code>Composite</code> back up to <code>Component</code> (representing recursive child composition).</li>
+          </ol>
         </div>
       </div>
 
@@ -616,10 +678,10 @@ Leaf (Number/Variable)      Composite (Operator)
         <div class="qa-a">
           <span class="ans-label">Model Answer</span>
           <ol style="padding-left:1.25rem; margin:0; line-height:1.65;">
-            <li><strong>Uniform Evaluation:</strong> Clients invoke <code>root.evaluate()</code> on the top-level <code>Component</code> without querying whether it is a leaf or a composite node.</li>
-            <li><strong>Recursive Evaluation:</strong> When <code>evaluate()</code> is called on an operator (Composite), it recursively calls <code>left.evaluate()</code> and <code>right.evaluate()</code>, applying its arithmetic operator (e.g. $+$ or $*$) to the returned scalar values.</li>
-            <li><strong>Terminal Base Case:</strong> When <code>evaluate()</code> reaches a <code>Leaf</code>, it immediately returns its literal number or looks up the variable's value.</li>
-            <li><strong>Consolidation of Conditionals:</strong> Zero conditional branches (no <code>if (node instanceof ...)</code> or <code>switch</code>) are needed across client code.</li>
+            <li><strong>Uniform Client Invocation:</strong> The client triggers evaluation by calling <code>root.Operation()</code> (or <code>evaluate()</code>) on the top-level <code>Component</code> interface. The client does not know or care whether a node is a leaf or a composite.</li>
+            <li><strong>Recursive Composite Evaluation:</strong> When <code>Operation()</code> is invoked on an operator (<code>Composite</code> node), it recursively invokes <code>Operation()</code> on its child components (left and right sub-trees) and combines the results according to its operator (e.g. adding, subtracting, multiplying, or dividing).</li>
+            <li><strong>Terminal Leaf Base Cases:</strong> When <code>Operation()</code> reaches a <code>Leaf</code>, recursion terminates. The leaf returns its stored numeric literal (e.g. <code>3</code>, <code>4</code>, <code>5</code>, <code>6</code>) or retrieves the value of variable (<code>z</code>, <code>x</code>, <code>y</code>).</li>
+            <li><strong>Zero Conditionals:</strong> Polymorphism completely replaces conditional <code>if/else</code> type checks, making the expression evaluation completely extensible to new operators.</li>
           </ol>
         </div>
       </div>
@@ -631,32 +693,36 @@ Leaf (Number/Variable)      Composite (Operator)
     <section id="ex-6">
       <div class="ex-header">
         <h2 class="ex-title">Exercise 6 · Singleton Implementation &amp; SOLID Violations</h2>
-        <span style="font-weight:700; color:var(--accent); font-family:var(--font-mono);">12 Points (6 + 4 + 2)</span>
+        <span style="font-weight:700; color:var(--accent); font-family:var(--font-mono);">[6+4+2 Points]</span>
       </div>
 
       <!-- Exercise 6 - Question 1 -->
       <div class="qa-block" id="ex6-q1">
         <div class="qa-q">
-          1. Fill the gaps indicated by the symbol -&gt; in the following code to implement a Singleton instance of a class with reflection protection.
+          1. Fill the gaps indicated by the symbol -&gt; in the following code to implement Singleton instance of a class:
           <span class="pts-badge">6 Points</span>
         </div>
         <div class="qa-a">
           <span class="ans-label">Model Answer</span>
           <pre style="background:var(--bg-raised); padding:1rem; border-radius:var(--radius-sm); font-family:var(--font-mono); font-size:0.85rem; line-height:1.5; overflow-x:auto;">
 public class Singleton {
-    // -> Gap 1: Private static instance variable
+    // Singleton instance;
+    // -> Gap 1:
     private static Singleton instance;
 
-    // -> Gap 2: Private constructor with reflection defense
+    // -> Gap 2:
     private Singleton() {
         if (instance != null) {
-            throw new RuntimeException("Singleton instance already exists! Reflection forbidden.");
+            throw new IllegalStateException("Instance already created!");
         }
     }
 
-    // -> Gap 3: Public static synchronized access method
+    // method to provide access to the instance
+    // -> Gap 3:
     public static synchronized Singleton getInstance() {
+        // -> Gap 4:
         if (instance == null) {
+            // -> Gap 5:
             instance = new Singleton();
         }
         return instance;
@@ -673,25 +739,25 @@ public class Singleton {
         </div>
         <div class="qa-a">
           <span class="ans-label">Model Answer</span>
-          <ul>
-            <li><strong>Single Responsibility Principle (SRP):</strong> Singleton has two distinct responsibilities: (1) its domain business responsibility, and (2) managing its own global lifecycle and enforcing instance uniqueness.</li>
-            <li><strong>Dependency Inversion Principle (DIP):</strong> Clients call the concrete static <code>Singleton.getInstance()</code> directly, tightly coupling caller code to a concrete class rather than an abstraction/interface. This makes automated mocking and unit testing nearly impossible.</li>
-          </ul>
+          <ol style="padding-left:1.25rem; margin:0; line-height:1.65;">
+            <li><strong>Single Responsibility Principle (SRP):</strong> A class should have only one reason to change. Singleton couples two distinct responsibilities into one class: (1) its domain business functionality, and (2) managing its own global lifecycle and instance uniqueness.</li>
+            <li><strong>Dependency Inversion Principle (DIP):</strong> High-level modules should depend on abstractions, not concretions. Singleton forces caller classes to invoke the static concrete method <code>Singleton.getInstance()</code> directly, creating hardcoded global dependencies that prevent automated mocking and unit testing.</li>
+          </ol>
         </div>
       </div>
 
       <!-- Exercise 6 - Question 3 -->
       <div class="qa-block" id="ex6-q3">
         <div class="qa-q">
-          3. Can you give an example where we can use Singleton pattern in an application?
+          3. Can you give an example where we can use Singleton pattern in an application.
           <span class="pts-badge">2 Points</span>
         </div>
         <div class="qa-a">
           <span class="ans-label">Model Answer</span>
           <ul>
-            <li>Application configuration registry / properties loader.</li>
-            <li>Database connection pool or thread pool manager.</li>
-            <li>Centralized system logger (e.g. <code>Logger.getInstance()</code>).</li>
+            <li><strong>Centralized Logging Service:</strong> A logging engine that manages writing logs to a shared disk file without race conditions.</li>
+            <li><strong>Application Configuration Manager:</strong> Loading configuration files (e.g. <code>application.properties</code>) once into memory and providing read-only access globally.</li>
+            <li><strong>Hardware / Resource Driver:</strong> A print spooler or hardware serial port interface that represents a singular physical device.</li>
           </ul>
         </div>
       </div>
@@ -703,20 +769,20 @@ public class Singleton {
     <section id="ex-7">
       <div class="ex-header">
         <h2 class="ex-title">Exercise 7 · Pattern Criticism &amp; Functional Python Idioms</h2>
-        <span style="font-weight:700; color:var(--accent); font-family:var(--font-mono);">12 Points (4 + 8)</span>
+        <span style="font-weight:700; color:var(--accent); font-family:var(--font-mono);">[4+8 Points]</span>
       </div>
 
       <!-- Exercise 7 - Question 1 -->
       <div class="qa-block" id="ex7-q1">
         <div class="qa-q">
-          1. "Patterns are signs of weakness in programming languages." (Mark Dominus) — provide at least two of his arguments!
+          1. “Patterns are signs of weakness in programming languages.” (Mark Dominus) — provide at least two of his arguments!
           <span class="pts-badge">4 Points</span>
         </div>
         <div class="qa-a">
           <span class="ans-label">Model Answer</span>
           <ol style="padding-left:1.25rem; margin:0; line-height:1.65;">
-            <li><strong>Workarounds for Missing Language Features:</strong> Design patterns often arise as manual boilerplate workarounds for limitations in static early OOP languages (like C++ and Java 1.0) that lacked first-class functions, closures, dynamic dispatch, or macros.</li>
-            <li><strong>Patterns Evaporate into Syntax:</strong> When a programming language introduces modern features, the pattern ceases to be an architectural design structure and becomes basic language syntax (e.g. Strategy becomes a lambda argument, Iterator becomes <code>yield</code>, Visitor becomes multi-methods).</li>
+            <li><strong>Patterns Compensate for Language Deficiencies:</strong> Design patterns frequently emerge as verbose workarounds for limitations in early, rigid object-oriented languages (like C++ and Java 1.0) that lacked features such as first-class functions, closures, dynamic typing, and macros.</li>
+            <li><strong>Patterns Evaporate into Syntax in Expressive Languages:</strong> When a programming language provides higher-level language primitives, the pattern disappears from architecture and becomes basic syntax (e.g. Strategy becomes a higher-order function or lambda; Iterator becomes Python's <code>yield</code>; Visitor becomes multi-methods).</li>
           </ol>
         </div>
       </div>
@@ -724,22 +790,52 @@ public class Singleton {
       <!-- Exercise 7 - Question 2 -->
       <div class="qa-block" id="ex7-q2">
         <div class="qa-q">
-          2. Python Quicksort with Lambdas: (a) Explain how comp1 and comp2 sort in ascending/descending order and provide a substitute for Template Method. (b) Why do we not need the Strategy object in this code?
+          2. Below please find a python code implementation of quicksort:
           <span class="pts-badge">8 Points (4 + 4)</span>
         </div>
         <div class="qa-a">
-          <span class="ans-label">Model Answer</span>
-          <div style="background:var(--bg-raised); padding:0.75rem 1rem; border-radius:var(--radius-sm); font-family:var(--font-mono); font-size:0.85rem; margin-bottom:0.75rem;">
-            comp1 = lambda a, b: a &lt;= b<br>
-            comp2 = lambda a, b: a &gt;= b<br>
-            print(qsort([1, 9, 0, 5, 6], comp1))  # Ascending: [0, 1, 5, 6, 9]<br>
-            print(qsort([1, 9, 0, 5, 6], comp2))  # Descending: [9, 6, 5, 1, 0]
+          <span class="ans-label">Python Source Code &amp; Analysis</span>
+          <pre style="background:var(--bg-raised); padding:1rem; border-radius:var(--radius-sm); font-family:var(--font-mono); font-size:0.85rem; line-height:1.45; overflow-x:auto;">
+def quicksort(a, p, r, comp):
+    if p &lt; r:
+        q = partition(a, p, r, comp)
+        quicksort(a, p, q-1, comp)
+        quicksort(a, q+1, r, comp)
+    return a
+
+def partition(a, p, r, comp):
+    x = a[r]  # pivot
+    i = p - 1
+    for j in range(p, r):
+        if comp(a[j], x):
+            i = i + 1
+            a[i], a[j] = a[j], a[i]
+    a[i+1], a[r] = a[r], a[i+1]
+    return i + 1
+
+def qsort(a, comp):
+    return quicksort(a, 0, len(a)-1, comp)
+
+comp1 = lambda a, b: a &lt;= b
+comp2 = lambda a, b: a &gt;= b
+
+print(qsort([1, 9, 0, 5, 6, 7, 8, 2, 4, 3], comp1))  # Ascending:  [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+print(qsort([1, 9, 0, 5, 6, 7, 8, 2, 4, 3], comp2))  # Descending: [9, 8, 7, 6, 5, 4, 3, 2, 1, 0]</pre>
+
+          <div style="margin-top:1.25rem;">
+            <strong>(a) Look at the definition of the comparison function comp, explain how this is used to sort in an ascending and descending manner depending on comp1 or comp2 and argue that this provides a good substitute for the Template Pattern! [4 Points]</strong>
+            <p style="margin:0.35rem 0 0.75rem;">
+              • <strong>Ascending vs Descending:</strong> In <code>partition()</code>, elements satisfying <code>comp(a[j], x)</code> are swapped into the left partition. With <code>comp1 = lambda a, b: a &lt;= b</code>, smaller elements are moved to the left, sorting in <strong>ascending order</strong>. With <code>comp2 = lambda a, b: a &gt;= b</code>, larger elements are moved to the left, sorting in <strong>descending order</strong>.<br>
+              • <strong>Substitute for Template Pattern:</strong> In Template Method, you must subclass an abstract class and override a protected method. Here, the invariant algorithmic skeleton (recursion and partitioning) stays untouched in <code>quicksort()</code>, while the variant comparison is passed directly as a lambda. This completely eliminates subclassing and avoids subclass explosion.
+            </p>
           </div>
-          <ul>
-            <li><strong>Ascending vs Descending Order:</strong> <code>comp1</code> moves elements smaller than or equal to pivot to the left partition, sorting ascending. <code>comp2</code> moves elements greater than or equal to pivot to the left partition, sorting descending.</li>
-            <li><strong>Substitute for Template Method:</strong> The invariant quicksort structure (recursion, partitioning) is kept intact in <code>quicksort()</code>, while the variant comparison is injected without any class inheritance or subclassing.</li>
-            <li><strong>Why do we not need the Strategy object?</strong> In Python, functions are <strong>first-class citizens</strong>. They can be passed directly as arguments, stored in variables, and invoked anonymously. There is zero need to wrap algorithms inside boilerplate Strategy interfaces and concrete classes!</li>
-          </ul>
+
+          <div style="margin-top:1rem;">
+            <strong>(b) Why do we not need the Strategy object in the code above? [4 Points]</strong>
+            <p style="margin:0.35rem 0 0;">
+              In Python, functions are <strong>first-class citizens</strong>. They can be stored in variables, passed directly as arguments to functions, and executed without wrapping them in an object. In traditional Java/C++, you must define a <code>Comparator</code> interface and instantiate concrete Strategy classes to pass behavior; in Python, the function/lambda <em>is</em> the strategy itself.
+            </p>
+          </div>
         </div>
       </div>
     </section>
@@ -750,31 +846,26 @@ public class Singleton {
     <section id="ex-8">
       <div class="ex-header">
         <h2 class="ex-title">Exercise 8 · System Architecture: Banking Application</h2>
-        <span style="font-weight:700; color:var(--accent); font-family:var(--font-mono);">18 Points (9 + 9)</span>
+        <span style="font-weight:700; color:var(--accent); font-family:var(--font-mono);">[18 Points]</span>
       </div>
 
       <div class="context-box">
-        <strong>Scenario:</strong> Imagine you are the lead engineer of a team implementing a banking application enabling:
-        <ul>
-          <li><strong>Account Management:</strong> Option to create different types of accounts (savings, current, business, etc.).</li>
-          <li><strong>Payment System &amp; Wire Transfers:</strong> Wire transfer of money between accounts, including external banks and third-party gateways (e.g. PayPal).</li>
-          <li><strong>Real-time Notifications:</strong> Alerts for account activities (transaction alerts, balance updates) when one of those activities is completed.</li>
-        </ul>
+        <strong>Problem Description:</strong> Imagine, you are the lead engineer of a team that has to implement a banking application enabling account management and wire transfer of money from one account to another, including external banks. In the account management system, there should be an option to create different types of accounts like saving, current and business etc. In the payment system, option should be available for integrating third party payment e.g. via PayPal. The application should have a real-time notifications for account activities (e.g., transaction alerts, balance updates) when one of those activities is completed.
       </div>
 
       <div class="qa-block" id="ex8-task">
         <div class="qa-q">
-          1. Provide a list of patterns you would use for your architecture! 2. Provide a short explanation why each pattern is helpful!
-          <span class="pts-badge">18 Points (9 + 9)</span>
+          1. Provide a list of patterns you would use for your architecture! 2. Provide a short! explanation why the pattern is helpful!
+          <span class="pts-badge">18 Points Total</span>
         </div>
         <div class="qa-a">
-          <span class="ans-label">Model Architecture Blueprint</span>
+          <span class="ans-label">Architectural Pattern Blueprint</span>
           <table class="blueprint-table" style="width:100%; border-collapse:collapse; font-size:0.88rem; margin:0.5rem 0 1rem;">
             <thead>
               <tr style="border-bottom:2px solid var(--border); text-align:left; background:var(--bg-raised);">
                 <th style="padding:0.6rem; width:25%;">Design Pattern</th>
                 <th style="padding:0.6rem; width:25%;">Subsystem Applied</th>
-                <th style="padding:0.6rem;">Why the Pattern is Helpful</th>
+                <th style="padding:0.6rem;">Why the Pattern is Helpful (Short Explanation)</th>
               </tr>
             </thead>
             <tbody>
@@ -786,17 +877,17 @@ public class Singleton {
               <tr style="border-bottom:1px solid var(--border);">
                 <td style="padding:0.6rem; font-weight:700; color:#0ea5e9;">Adapter Pattern</td>
                 <td style="padding:0.6rem;">Payment Integration</td>
-                <td style="padding:0.6rem;">Adapts incompatible external APIs (e.g., PayPal REST API, SWIFT wire protocols) to match the bank's standard internal <code>PaymentGateway</code> interface.</td>
+                <td style="padding:0.6rem;">Adapts incompatible external APIs (e.g. PayPal REST API, external bank wire protocols) to match the bank's standard internal <code>PaymentGateway</code> interface.</td>
               </tr>
               <tr style="border-bottom:1px solid var(--border);">
                 <td style="padding:0.6rem; font-weight:700; color:#10b981;">Observer Pattern</td>
                 <td style="padding:0.6rem;">Notification Alerts</td>
-                <td style="padding:0.6rem;">Decouples account business operations from notification channels. When a transaction completes or balance changes, the account broadcasts notifications to registered observers (SMS, Email, Push).</td>
+                <td style="padding:0.6rem;">Decouples account operations from notification delivery. When a transaction completes or balance changes, the account broadcasts notifications to registered observers (SMS, Email, Push).</td>
               </tr>
               <tr style="border-bottom:1px solid var(--border);">
                 <td style="padding:0.6rem; font-weight:700; color:#f59e0b;">Command Pattern</td>
                 <td style="padding:0.6rem;">Wire Transfer Engine</td>
-                <td style="padding:0.6rem;">Encapsulates each transaction as an executable object (<code>TransferCommand</code>), enabling transaction queues, audit logs, validation, and compensating rollback (undo).</td>
+                <td style="padding:0.6rem;">Encapsulates each transaction as an executable object (<code>TransferCommand</code>), enabling transaction queues, audit logging, validation, and compensating rollback (undo).</td>
               </tr>
               <tr style="border-bottom:1px solid var(--border);">
                 <td style="padding:0.6rem; font-weight:700; color:#8b5cf6;">Strategy Pattern</td>
@@ -820,7 +911,7 @@ public class Singleton {
   <div class="site-footer-inner">
     <p>Pattern-Oriented Software Architecture · Masterclass Practice Exams</p>
     <p style="font-size:0.82rem; color:var(--text-muted); margin-top:0.35rem;">
-      Mock Exam 1 · 8 Comprehensive Exercises (107 Points)
+      Mock Exam 1 · 8 Comprehensive Exercises (103 Points Total)
     </p>
   </div>
 </footer>
