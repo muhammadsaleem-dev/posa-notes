@@ -94,6 +94,53 @@
   .tradeoff-table td strong {
     color: var(--text);
   }
+  .pattern-spec-box {
+    background: var(--bg-raised);
+    border: 1px solid var(--border);
+    border-left: 4px solid #6366f1;
+    border-radius: var(--radius-sm);
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 1.75rem;
+  }
+  .spec-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+  }
+  .spec-row {
+    display: grid;
+    grid-template-columns: 95px 1fr;
+    gap: 1rem;
+    align-items: baseline;
+    font-size: 0.92rem;
+    line-height: 1.55;
+  }
+  @media (max-width: 600px) {
+    .spec-row {
+      grid-template-columns: 1fr;
+      gap: 0.25rem;
+    }
+  }
+  .spec-label {
+    font-family: var(--font-mono);
+    font-weight: 700;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--accent);
+  }
+  .spec-val {
+    color: var(--text);
+  }
+  .figure-caption {
+    text-align: center;
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-top: 0.75rem;
+    letter-spacing: 0.02em;
+  }
 </style>
 </head>
 <body>
@@ -212,59 +259,85 @@
         </div>
       </div>
 
-      <!-- Problem & Intuition -->
-      <div class="guide-card">
-        <div class="guide-card-header">
-          <span>☕ 1. The Core Problem: Algorithm Duplication vs. The Invariant Skeleton</span>
-        </div>
-        <p style="margin:0 0 1rem; line-height:1.6; color:var(--text-muted);">
-          Consider preparing coffee and tea. Both follow an identical 4-step sequence: boil water, brew, pour in cup, and add condiments. Naive object-oriented code creates two completely separate classes (<code>Coffee</code> and <code>Tea</code>), duplicating the boiling, pouring, and sequencing logic across both classes. Any modification to the preparation procedure forces duplicated maintenance effort across dozens of beverage classes.
-        </p>
-        <div class="gotcha-box" style="margin:0;">
-          <strong>🎯 The Pattern Intent (Gang of Four):</strong>
-          Define the skeleton of an algorithm in an operation, deferring some steps to subclasses. Template Method lets subclasses redefine certain steps of an algorithm without changing the algorithm's invariant structure.
+      <!-- Official Pattern Profile: Name, Type, Problem, Solution -->
+      <div class="pattern-spec-box">
+        <div class="spec-grid">
+          <div class="spec-row">
+            <span class="spec-label">Name:</span>
+            <span class="spec-val"><strong>Template</strong> (also known as Template Method)</span>
+          </div>
+          <div class="spec-row">
+            <span class="spec-label">Type:</span>
+            <span class="spec-val"><strong>Behavioral pattern</strong> because it focuses on how objects interact and communicate with each other.<br><span style="color:#ef4444; font-weight:700;">Important Note:</span> You are <em>extending</em> the base class, not implementing an interface.</span>
+          </div>
+          <div class="spec-row">
+            <span class="spec-label">Problem:</span>
+            <span class="spec-val">Two different components have significant implementation (and behavior) similarities, but demonstrate no reuse of a common interface or implementation. Any change requires a duplication of efforts.</span>
+          </div>
+          <div class="spec-row">
+            <span class="spec-label">Solution:</span>
+            <span class="spec-val">
+              Abstract our commonality into a common superclass and use the <strong>Hollywood Principle</strong> (<em>“Don't call us, we call you!”</em>) as the parent class calls the subclass (and not the other way around).
+              <div style="margin-top:0.6rem; font-weight:700; color:var(--text);">Use it to:</div>
+              <ul style="margin:0.25rem 0 0 1.25rem; padding:0; color:var(--text-muted); line-height:1.55;">
+                <li>Implement the <strong>invariant parts</strong> of an algorithm once and leave it to the subclasses to implement behavior that can vary.</li>
+                <li>Localize common behavior among subclasses and place it in a common class (superclass) to avoid code duplication &mdash; classic example of <strong>code refactoring</strong>.</li>
+                <li>Control how subclasses extend superclass operations. Define a template method calling <strong>hook</strong> operations at specific points, thereby permitting extensions at precisely that point &mdash; <strong>Open Closed Principle (OCP)</strong>.</li>
+              </ul>
+              <div style="margin-top:0.5rem; font-size:0.85rem; color:var(--warn);">
+                <em>⚠️ Note from Prof. Schäfer:</em> Beware the template method can appear in different states apart from the textbook implementation.
+              </div>
+            </span>
+          </div>
         </div>
       </div>
 
-      <!-- Vector Architecture UML -->
+      <!-- Vector Architecture UML matching Figure 2.1 -->
       <div class="guide-card">
         <div class="guide-card-header">
-          <span>📐 2. Minimal Architecture (UML Class Diagram)</span>
+          <span>📐 Canonical Architecture: Figure 2.1</span>
         </div>
         <div class="uml-diagram-box" style="text-align:center;">
-          <svg viewBox="0 0 680 240" style="max-width:100%; height:auto;" aria-label="Template Method UML Diagram">
-            <!-- Abstract Class -->
-            <rect x="200" y="10" width="280" height="110" rx="6" fill="var(--bg-raised)" stroke="#6366f1" stroke-width="2"/>
-            <rect x="200" y="10" width="280" height="28" rx="6" fill="#6366f1"/>
-            <text x="340" y="28" fill="#fff" font-family="var(--font-mono)" font-size="12" font-weight="bold" text-anchor="middle">&lt;&lt;abstract&gt;&gt; CaffeineBeverage</text>
-            <text x="215" y="55" fill="var(--text)" font-family="var(--font-mono)" font-size="11">+ final prepareRecipe(): void</text>
-            <text x="215" y="73" fill="var(--text-muted)" font-family="var(--font-mono)" font-size="11"># abstract brew(): void</text>
-            <text x="215" y="91" fill="var(--text-muted)" font-family="var(--font-mono)" font-size="11"># abstract addCondiments(): void</text>
-            <text x="215" y="109" fill="var(--text-muted)" font-family="var(--font-mono)" font-size="11"># customerWantsCondiments(): boolean (hook)</text>
+          <svg viewBox="0 0 540 280" style="max-width:100%; height:auto;" aria-label="Figure 2.1: Template Pattern">
+            <!-- AbstractClass Box -->
+            <rect x="30" y="20" width="200" height="96" rx="3" fill="var(--bg-raised)" stroke="var(--border)" stroke-width="1.5"/>
+            <rect x="30" y="20" width="200" height="26" rx="3" fill="var(--bg-subtle)"/>
+            <text x="130" y="38" fill="var(--text)" font-family="var(--font-display)" font-size="13" font-style="italic" font-weight="700" text-anchor="middle">AbstractClass</text>
+            <line x1="30" y1="46" x2="230" y2="46" stroke="var(--border)" stroke-width="1.5"/>
+            <!-- Method items with dark square bullets -->
+            <rect x="42" y="58" width="6" height="6" fill="var(--text-muted)"/>
+            <text x="56" y="65" fill="var(--text)" font-family="var(--font-mono)" font-size="11" font-weight="700">TemplateMethod()</text>
+            <rect x="42" y="76" width="6" height="6" fill="var(--text-muted)"/>
+            <text x="56" y="83" fill="var(--text)" font-family="var(--font-mono)" font-size="11">PrimitiveOperation1()</text>
+            <rect x="42" y="94" width="6" height="6" fill="var(--text-muted)"/>
+            <text x="56" y="101" fill="var(--text)" font-family="var(--font-mono)" font-size="11">PrimitiveOperation2()</text>
 
-            <!-- Generalization Arrows -->
-            <path d="M 170 170 L 170 145 L 340 145 L 340 120" fill="none" stroke="var(--border)" stroke-width="2"/>
-            <path d="M 510 170 L 510 145 L 340 145" fill="none" stroke="var(--border)" stroke-width="2"/>
-            <polygon points="340,120 334,132 346,132" fill="var(--bg-raised)" stroke="#6366f1" stroke-width="2"/>
+            <!-- Dashed Line to Note -->
+            <line x1="170" y1="62" x2="285" y2="62" stroke="var(--text-muted)" stroke-width="1.5" stroke-dasharray="4,4"/>
 
-            <!-- Concrete Class: Tea -->
-            <rect x="70" y="170" width="200" height="60" rx="6" fill="var(--bg-raised)" stroke="var(--border)" stroke-width="1.5"/>
-            <text x="170" y="188" fill="var(--text)" font-family="var(--font-mono)" font-size="12" font-weight="bold" text-anchor="middle">Tea</text>
-            <line x1="70" y1="196" x2="270" y2="196" stroke="var(--border)" stroke-width="1"/>
-            <text x="80" y="212" fill="var(--text-muted)" font-family="var(--font-mono)" font-size="11">+ brew()</text>
-            <text x="80" y="226" fill="var(--text-muted)" font-family="var(--font-mono)" font-size="11">+ addCondiments()</text>
+            <!-- Dog-eared Note Box -->
+            <path d="M 285 40 L 465 40 L 485 60 L 485 110 L 285 110 Z" fill="var(--bg-subtle)" stroke="var(--border)" stroke-width="1.5"/>
+            <path d="M 465 40 L 465 60 L 485 60 Z" fill="var(--bg-raised)" stroke="var(--border)" stroke-width="1.5"/>
+            <text x="300" y="64" fill="var(--text)" font-family="var(--font-mono)" font-size="11" font-weight="600">PrimitiveOperation1()</text>
+            <text x="300" y="80" fill="var(--text-muted)" font-family="var(--font-mono)" font-size="11">...</text>
+            <text x="300" y="96" fill="var(--text)" font-family="var(--font-mono)" font-size="11" font-weight="600">PrimitiveOperation2()</text>
 
-            <!-- Concrete Class: Coffee -->
-            <rect x="410" y="170" width="200" height="60" rx="6" fill="var(--bg-raised)" stroke="var(--border)" stroke-width="1.5"/>
-            <text x="510" y="188" fill="var(--text)" font-family="var(--font-mono)" font-size="12" font-weight="bold" text-anchor="middle">Coffee</text>
-            <line x1="410" y1="196" x2="610" y2="196" stroke="var(--border)" stroke-width="1"/>
-            <text x="420" y="212" fill="var(--text-muted)" font-family="var(--font-mono)" font-size="11">+ brew()</text>
-            <text x="420" y="226" fill="var(--text-muted)" font-family="var(--font-mono)" font-size="11">+ addCondiments()</text>
+            <!-- Inheritance Line & Hollow Triangle -->
+            <line x1="130" y1="185" x2="130" y2="132" stroke="var(--border)" stroke-width="1.5"/>
+            <polygon points="130,116 122,132 138,132" fill="var(--bg-raised)" stroke="var(--border)" stroke-width="1.5"/>
+
+            <!-- ConcreteClass Box -->
+            <rect x="30" y="185" width="200" height="74" rx="3" fill="var(--bg-raised)" stroke="var(--border)" stroke-width="1.5"/>
+            <rect x="30" y="185" width="200" height="26" rx="3" fill="var(--bg-subtle)"/>
+            <text x="130" y="203" fill="var(--text)" font-family="var(--font-display)" font-size="13" font-weight="700" text-anchor="middle">ConcreteClass</text>
+            <line x1="30" y1="211" x2="230" y2="211" stroke="var(--border)" stroke-width="1.5"/>
+            <rect x="42" y="223" width="6" height="6" fill="var(--text-muted)"/>
+            <text x="56" y="230" fill="var(--text)" font-family="var(--font-mono)" font-size="11">PrimitiveOperation1()</text>
+            <rect x="42" y="241" width="6" height="6" fill="var(--text-muted)"/>
+            <text x="56" y="248" fill="var(--text)" font-family="var(--font-mono)" font-size="11">PrimitiveOperation2()</text>
           </svg>
+          <div class="figure-caption">Figure 2.1: Template Pattern</div>
         </div>
-        <p style="margin:0; font-size:0.85rem; color:var(--text-muted); line-height:1.5;">
-          <strong>Core Architectural Mechanism:</strong> Notice that subclasses <em>extend</em> the base class; they do not implement an interface. The superclass controls algorithm dispatch.
-        </p>
       </div>
 
       <!-- Minimal Code Implementation -->
@@ -401,63 +474,90 @@ public class Tea extends CaffeineBeverage {
         </div>
       </div>
 
-      <!-- Problem & Intuition -->
-      <div class="guide-card">
-        <div class="guide-card-header">
-          <span>🎮 1. The Core Problem: The Tight UI Coupling Trap</span>
-        </div>
-        <p style="margin:0 0 1rem; line-height:1.6; color:var(--text-muted);">
-          Imagine designing a programmable Home Automation Remote Control with 7 slots. If the remote button class directly references <code>LivingRoomLight.on()</code> or <code>Stereo.setCD()</code>, the remote becomes tightly coupled to every vendor's concrete device classes. Whenever a new device is installed, the remote must be edited and recompiled.
-        </p>
-        <div class="gotcha-box" style="margin:0;">
-          <strong>🎯 The Pattern Intent (Gang of Four):</strong>
-          Encapsulate a request as an object, thereby letting you parameterize clients with different requests, queue or log requests, and support undoable operations.
+      <!-- Official Pattern Profile: Name, Type, Problem, Solution -->
+      <div class="pattern-spec-box">
+        <div class="spec-grid">
+          <div class="spec-row">
+            <span class="spec-label">Name:</span>
+            <span class="spec-val"><strong>Command</strong> (also known as <em>Action</em>)</span>
+          </div>
+          <div class="spec-row">
+            <span class="spec-label">Type:</span>
+            <span class="spec-val"><strong>Behavioral pattern</strong> because it decouples the object that invokes an operation from the object that actually knows how to perform it.</span>
+          </div>
+          <div class="spec-row">
+            <span class="spec-label">Problem:</span>
+            <span class="spec-val">An application needs to issue requests to objects without knowing anything about the operation being requested or the receiver of the request. Directly coupling UI triggers (like buttons or menus) to receiver classes creates tight coupling and prevents supporting undo/redo, request queues, or macro execution.</span>
+          </div>
+          <div class="spec-row">
+            <span class="spec-label">Solution:</span>
+            <span class="spec-val">
+              Encapsulate a request as an object (implementing a common <code>Command</code> interface with <code>execute()</code> and <code>undo()</code>). Bind the receiver and its required parameters inside the command object via <strong>Dependency Injection</strong>, completely decoupling the Invoker from the Receiver.
+            </span>
+          </div>
         </div>
       </div>
 
-      <!-- Vector Architecture UML -->
+      <!-- Vector Architecture UML matching Figure 2.2 -->
       <div class="guide-card">
         <div class="guide-card-header">
-          <span>📐 2. Minimal Architecture (UML Class Diagram)</span>
+          <span>📐 Canonical Architecture: Figure 2.2</span>
         </div>
         <div class="uml-diagram-box" style="text-align:center;">
-          <svg viewBox="0 0 680 200" style="max-width:100%; height:auto;" aria-label="Command Pattern UML Diagram">
-            <!-- Invoker: RemoteControl -->
-            <rect x="30" y="50" width="160" height="90" rx="6" fill="var(--bg-raised)" stroke="#6366f1" stroke-width="2"/>
-            <rect x="30" y="50" width="160" height="26" rx="6" fill="#6366f1"/>
-            <text x="110" y="68" fill="#fff" font-family="var(--font-mono)" font-size="12" font-weight="bold" text-anchor="middle">RemoteControl (Invoker)</text>
-            <text x="40" y="95" fill="var(--text)" font-family="var(--font-mono)" font-size="11">- onCommands: Command[]</text>
-            <text x="40" y="112" fill="var(--text)" font-family="var(--font-mono)" font-size="11">- undoCommand: Command</text>
-            <text x="40" y="128" fill="var(--text-muted)" font-family="var(--font-mono)" font-size="11">+ onButtonPushed(slot)</text>
+          <svg viewBox="0 0 650 240" style="max-width:100%; height:auto;" aria-label="Figure 2.2: Command Pattern">
+            <!-- Invoker -->
+            <rect x="25" y="40" width="130" height="65" rx="3" fill="var(--bg-raised)" stroke="var(--border)" stroke-width="1.5"/>
+            <rect x="25" y="40" width="130" height="24" rx="3" fill="var(--bg-subtle)"/>
+            <text x="90" y="56" fill="var(--text)" font-family="var(--font-display)" font-size="12" font-weight="700" text-anchor="middle">Invoker</text>
+            <line x1="25" y1="64" x2="155" y2="64" stroke="var(--border)" stroke-width="1.5"/>
 
-            <!-- Association to Command -->
-            <line x1="190" y1="95" x2="270" y2="95" stroke="var(--border)" stroke-width="2"/>
-            <polygon points="270,95 260,90 260,100" fill="var(--text-muted)"/>
-            <text x="230" y="88" fill="var(--text-muted)" font-family="var(--font-mono)" font-size="10">invokes</text>
+            <!-- Association Arrow to Command -->
+            <line x1="155" y1="72" x2="235" y2="72" stroke="var(--border)" stroke-width="1.5"/>
+            <polygon points="235,72 225,67 225,77" fill="var(--border)"/>
 
             <!-- Command Interface -->
-            <rect x="270" y="55" width="150" height="75" rx="6" fill="var(--bg-raised)" stroke="#38bdf8" stroke-width="2"/>
-            <rect x="270" y="55" width="150" height="24" rx="6" fill="#38bdf8"/>
-            <text x="345" y="72" fill="#fff" font-family="var(--font-mono)" font-size="11" font-weight="bold" text-anchor="middle">&lt;&lt;interface&gt;&gt; Command</text>
-            <text x="280" y="97" fill="var(--text)" font-family="var(--font-mono)" font-size="11">+ execute(): void</text>
-            <text x="280" y="115" fill="var(--text)" font-family="var(--font-mono)" font-size="11">+ undo(): void</text>
+            <rect x="240" y="40" width="150" height="65" rx="3" fill="var(--bg-raised)" stroke="var(--border)" stroke-width="1.5"/>
+            <rect x="240" y="40" width="150" height="24" rx="3" fill="var(--bg-subtle)"/>
+            <text x="315" y="56" fill="var(--text)" font-family="var(--font-display)" font-size="12" font-style="italic" font-weight="700" text-anchor="middle">&lt;&lt;interface&gt;&gt; Command</text>
+            <line x1="240" y1="64" x2="390" y2="64" stroke="var(--border)" stroke-width="1.5"/>
+            <text x="252" y="82" fill="var(--text)" font-family="var(--font-mono)" font-size="11">+ Execute()</text>
+            <text x="252" y="96" fill="var(--text)" font-family="var(--font-mono)" font-size="11">+ Undo()</text>
 
-            <!-- Realization to ConcreteCommand -->
-            <line x1="420" y1="95" x2="480" y2="95" stroke="var(--border)" stroke-dasharray="4,4" stroke-width="2"/>
-            <polygon points="430,90 420,95 430,100" fill="var(--bg-raised)" stroke="var(--border)" stroke-width="1.5"/>
+            <!-- Realization Arrow from ConcreteCommand -->
+            <line x1="315" y1="160" x2="315" y2="120" stroke="var(--border)" stroke-width="1.5" stroke-dasharray="4,4"/>
+            <polygon points="315,105 307,120 323,120" fill="var(--bg-raised)" stroke="var(--border)" stroke-width="1.5"/>
 
-            <!-- Concrete Command -->
-            <rect x="480" y="45" width="170" height="95" rx="6" fill="var(--bg-raised)" stroke="var(--border)" stroke-width="1.5"/>
-            <text x="565" y="66" fill="var(--text)" font-family="var(--font-mono)" font-size="12" font-weight="bold" text-anchor="middle">LightOnCommand</text>
-            <line x1="480" y1="74" x2="650" y2="74" stroke="var(--border)" stroke-width="1"/>
-            <text x="490" y="92" fill="var(--text-muted)" font-family="var(--font-mono)" font-size="11">- light: Light (Receiver)</text>
-            <text x="490" y="110" fill="var(--text)" font-family="var(--font-mono)" font-size="11">+ execute() -&gt; light.on()</text>
-            <text x="490" y="127" fill="var(--text)" font-family="var(--font-mono)" font-size="11">+ undo() -&gt; light.off()</text>
+            <!-- ConcreteCommand -->
+            <rect x="230" y="160" width="170" height="65" rx="3" fill="var(--bg-raised)" stroke="var(--border)" stroke-width="1.5"/>
+            <rect x="230" y="160" width="170" height="24" rx="3" fill="var(--bg-subtle)"/>
+            <text x="315" y="176" fill="var(--text)" font-family="var(--font-display)" font-size="12" font-weight="700" text-anchor="middle">ConcreteCommand</text>
+            <line x1="230" y1="184" x2="400" y2="184" stroke="var(--border)" stroke-width="1.5"/>
+            <text x="242" y="199" fill="var(--text-muted)" font-family="var(--font-mono)" font-size="10">- state</text>
+            <text x="242" y="214" fill="var(--text)" font-family="var(--font-mono)" font-size="11">+ Execute()</text>
+
+            <!-- Dashed line to Note -->
+            <line x1="330" y1="210" x2="440" y2="210" stroke="var(--text-muted)" stroke-width="1.5" stroke-dasharray="4,4"/>
+
+            <!-- Note Box -->
+            <path d="M 440 190 L 565 190 L 580 205 L 580 230 L 440 230 Z" fill="var(--bg-subtle)" stroke="var(--border)" stroke-width="1.5"/>
+            <path d="M 565 190 L 565 205 L 580 205 Z" fill="var(--bg-raised)" stroke="var(--border)" stroke-width="1.5"/>
+            <text x="452" y="214" fill="var(--text)" font-family="var(--font-mono)" font-size="11" font-weight="600">receiver.Action()</text>
+
+            <!-- Association from ConcreteCommand to Receiver -->
+            <line x1="400" y1="175" x2="505" y2="175" stroke="var(--border)" stroke-width="1.5"/>
+            <line x1="505" y1="175" x2="505" y2="105" stroke="var(--border)" stroke-width="1.5"/>
+            <polygon points="505,105 500,115 510,115" fill="var(--border)"/>
+            <text x="445" y="168" fill="var(--text-muted)" font-family="var(--font-mono)" font-size="10">receiver</text>
+
+            <!-- Receiver -->
+            <rect x="440" y="40" width="130" height="65" rx="3" fill="var(--bg-raised)" stroke="var(--border)" stroke-width="1.5"/>
+            <rect x="440" y="40" width="130" height="24" rx="3" fill="var(--bg-subtle)"/>
+            <text x="505" y="56" fill="var(--text)" font-family="var(--font-display)" font-size="12" font-weight="700" text-anchor="middle">Receiver</text>
+            <line x1="440" y1="64" x2="570" y2="64" stroke="var(--border)" stroke-width="1.5"/>
+            <text x="452" y="85" fill="var(--text)" font-family="var(--font-mono)" font-size="11">+ Action()</text>
           </svg>
+          <div class="figure-caption">Figure 2.2: Command Pattern</div>
         </div>
-        <p style="margin:0; font-size:0.85rem; color:var(--text-muted); line-height:1.5;">
-          <strong>Core Decoupling:</strong> The Invoker knows <em>nothing</em> about the Receiver (<code>Light</code>). It only invokes <code>execute()</code> on a generic <code>Command</code> interface pointer.
-        </p>
       </div>
 
       <!-- Minimal Code Implementation -->
