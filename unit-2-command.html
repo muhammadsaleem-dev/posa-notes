@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark" data-mode="concept">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Unit 2B · Command Pattern · POSA Masterclass 2026</title>
+<meta name="description" content="Master the Command Pattern, request encapsulation, the Null Object Pattern, stateful undo, and reversible LIFO macro execution. Prof. Dr. Jörg Schäfer Klausur prep.">
+<link rel="stylesheet" href="assets/style.css?v=2026.16">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,600;0,700;1,400&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,600;1,700&display=swap" rel="stylesheet">
+<script>
+  window.MathJax = {
+    tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
+    svg: { fontCache: 'global' }
+  };
+</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<script>(function(){try{var t=localStorage.getItem('posa-theme')||localStorage.getItem('dm2026-theme')||'dark';document.documentElement.setAttribute('data-theme',t);var m=localStorage.getItem('posa-mode')||'concept';document.documentElement.setAttribute('data-mode',m);}catch(e){}})();</script>
+<style>
+  .guide-card {
+    background: var(--bg-raised);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+  }
+  .guide-card-header {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 0.75rem;
+  }
+  .rule-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.2rem 0.55rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 800;
+    font-family: var(--font-mono);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    background: rgba(99, 102, 241, 0.12);
+    color: #6366f1;
+    border: 1px solid rgba(99, 102, 241, 0.25);
+  }
+  .rule-badge.warn {
+    background: rgba(245, 158, 11, 0.12);
+    color: #f59e0b;
+    border-color: rgba(245, 158, 11, 0.25);
+  }
+  .rule-badge.danger {
+    background: rgba(239, 68, 68, 0.12);
+    color: #ef4444;
+    border-color: rgba(239, 68, 68, 0.25);
+  }
+  /* Collapsible Head First Module */
+  .headfirst-card {
+    background: var(--bg-raised);
+    border: 1px solid var(--border);
+    border-left: 4px solid #6366f1;
+    border-radius: var(--radius-md);
+    margin-bottom: 2rem;
+    overflow: hidden;
+  }
+  .headfirst-summary {
+    list-style: none;
+    cursor: pointer;
+    user-select: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.15rem 1.4rem;
+    background: var(--bg-subtle);
+    border-bottom: 1px solid transparent;
+    transition: background 0.15s ease;
+  }
+  .headfirst-summary:hover {
+    background: var(--code-bg);
+  }
+  .headfirst-summary::-webkit-details-marker {
+    display: none;
+  }
+  .headfirst-card[open] .headfirst-summary {
+    border-bottom: 1px solid var(--border);
+  }
+  .headfirst-title {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--text);
+  }
+  .headfirst-badge {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #6366f1;
+    background: rgba(99, 102, 241, 0.12);
+    border: 1px solid rgba(99, 102, 241, 0.25);
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    font-family: var(--font-mono);
+  }
+  .headfirst-toggle {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    font-family: var(--font-mono);
+  }
+  .headfirst-chevron {
+    width: 16px;
+    height: 16px;
+    transition: transform 0.2s ease;
+    stroke: currentColor;
+  }
+  .headfirst-card[open] .headfirst-chevron {
+    transform: rotate(180deg);
+  }
+  .headfirst-card[open] .toggle-text-open {
+    display: inline;
+  }
+  .headfirst-card[open] .toggle-text-closed {
+    display: none;
+  }
+  .headfirst-card:not([open]) .toggle-text-open {
+    display: none;
+  }
+  .headfirst-card:not([open]) .toggle-text-closed {
+    display: inline;
+  }
+  .headfirst-body {
+    padding: 1.4rem;
+    background: var(--bg-raised);
+  }
+  .uml-diagram-box {
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 1.25rem;
+    margin: 1.25rem 0;
+    overflow-x: auto;
+  }
+  .pattern-spec-box {
+    background: var(--bg-raised);
+    border: 1px solid var(--border);
+    border-left: 4px solid #6366f1;
+    border-radius: var(--radius-sm);
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 1.75rem;
+  }
+  .spec-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+  }
+  .spec-row {
+    display: grid;
+    grid-template-columns: 95px 1fr;
+    gap: 1rem;
+    align-items: baseline;
+    font-size: 0.92rem;
+    line-height: 1.55;
+  }
+  @media (max-width: 600px) {
+    .spec-row {
+      grid-template-columns: 1fr;
+      gap: 0.25rem;
+    }
+  }
+  .spec-label {
+    font-family: var(--font-mono);
+    font-weight: 700;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--accent);
+  }
+  .spec-val {
+    color: var(--text);
+  }
+  .figure-caption {
+    text-align: center;
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-top: 0.75rem;
+    letter-spacing: 0.02em;
+  }
+</style>
+</head>
+<body>
+
+<nav class="sitenav">
+  <div class="sitenav-inner">
+    <a class="sitenav-home" href="index.html">
+      <span style="background:linear-gradient(135deg, #6366f1 0%, #38bdf8 100%);color:#fff;padding:0.2rem 0.55rem;border-radius:6px;font-size:0.82rem;font-weight:800;letter-spacing:0.04em;">POSA</span>
+      <span style="font-weight:800;letter-spacing:-0.02em;">2026</span>
+    </a>
+    <div class="sitenav-links">
+      <a href="index.html">Overview</a>
+      <a href="index.html#curriculum-roadmap">16 Units</a>
+      <a href="past-papers.html">📝 Real Past Papers</a>
+      <a href="mock-1.html" style="color:var(--accent); font-weight:700;">🎓 Official Mock (60 pts)</a>
+      <a href="mock-2.html">Mock 2 (95 pts)</a>
+    </div>
+    <button class="nav-toggle" id="navToggle" type="button" aria-expanded="false" aria-controls="navPanel">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+      Menu
+    </button>
+    <button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle color theme">
+      <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path></svg>
+      <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+    </button>
+    <button class="mode-toggle" id="modeToggle" type="button" aria-label="Toggle technical mode" style="font-size: 1.1rem; line-height: 1;">🎓</button>
+  </div>
+  <div class="nav-panel" id="navPanel">
+    <div class="nav-panel-section">
+      <span class="nav-panel-label">Course Navigation</span>
+      <a href="index.html">Course Overview</a>
+      <a href="past-papers.html">📝 Real Past Papers Archive</a>
+      <a href="mock-1.html">🎓 Official Mock Exam (60 pts)</a>
+      <a href="mock-2.html">Comprehensive Mock Exam 2 (95 pts)</a>
+      <a href="unit-1-strategy.html">Unit 1 · Strategy Pattern</a>
+      <a href="unit-2-template.html">Unit 2A · Template Method Pattern</a>
+      <a href="unit-2-command.html" class="active">Unit 2B · Command Pattern</a>
+      <a href="unit-3-structural.html">Unit 3 · Structural Patterns (Composite &amp; Iterator)</a>
+      <a href="unit-6-solid.html">Unit 6 · SOLID Principles</a>
+      <a href="unit-11-mvc.html">Unit 11 · Case Study MVC</a>
+    </div>
+  </div>
+</nav>
+
+<!-- Mobile Native Bottom Dock -->
+<nav class="mobile-bottom-dock" aria-label="Mobile Navigation Dock">
+  <a href="#sec-profile" class="dock-item active">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line><line x1="9" y1="21" x2="9" y2="9"></line></svg>
+    <span>Profile</span>
+  </a>
+  <a href="#headfirst-command" class="dock-item">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+    <span>Head First</span>
+  </a>
+  <a href="#sec-rules" class="dock-item">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+    <span>Rules</span>
+  </a>
+  <a href="#sec-decoupling" class="dock-item">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+    <span>Decoupling</span>
+  </a>
+  <a href="#sec-drills" class="dock-item">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
+    <span>Drills</span>
+  </a>
+</nav>
+
+<div class="page-shell">
+  <!-- Desktop Sticky Sidebar TOC -->
+  <aside class="sidebar-toc">
+    <div class="sidebar-block">
+      <span class="sidebar-label">Navigation</span>
+      <a href="index.html">← Course Overview</a>
+      <a href="unit-2-template.html">← Unit 2A · Template</a>
+      <a href="unit-3-structural.html">Unit 3 · Structural →</a>
+      <a href="past-papers.html">📝 Past Papers Hub</a>
+    </div>
+
+    <div class="sidebar-block">
+      <span class="sidebar-label">Command Pattern Pillars</span>
+      <a href="#sec-profile"><span class="toc-num">1</span>Pattern Profile &amp; UML</a>
+      <a href="#headfirst-command"><span class="toc-num">2</span>Head First Remote Control</a>
+      <a href="#sec-rules"><span class="toc-num">3</span>The 3 Architectural Rules</a>
+      <a href="#sec-decoupling"><span class="toc-num">4</span>Decoupling &amp; DI (p. 32)</a>
+      <a href="#sec-drills"><span class="toc-num">5</span>Official Klausur Drills</a>
+    </div>
+
+    <div class="sidebar-block">
+      <span class="sidebar-label">Academic Profile</span>
+      <p style="font-size: 0.82rem; color: var(--text-muted); line-height: 1.5; margin: 0 0 0.5rem;">
+        <strong>Prof. Dr. Jörg Schäfer</strong><br>
+        Frankfurt University of Applied Sciences<br>
+        Fachbereich 2: Informatik
+      </p>
+      <div style="font-size:0.75rem; font-weight:700; color:#38bdf8; background:rgba(56,189,248,0.12); border:1px solid rgba(56,189,248,0.25); padding:0.25rem 0.5rem; border-radius:4px; display:inline-block;">
+        ⏱️ 6–7 Mins · 10 Exam Pts
+      </div>
+    </div>
+  </aside>
+
+  <main class="page">
+    
+    <!-- Masthead -->
+    <header class="masthead">
+      <div>
+        <div class="eyebrow">Unit 2B · Behavioral Design Patterns · GoF Pattern 3 of 23</div>
+        <h1 class="title">Command Pattern</h1>
+      </div>
+      <p class="dek">
+        Master request encapsulation, modeling verbs as first-class objects, the Null Object Pattern, and reversible LIFO undo sequences. Directly synthesized from Prof. Dr. Jörg Schäfer's lecture notes and authentic exam sheets.
+      </p>
+    </header>
+
+    <!-- ============================================================== -->
+    <!-- 1. PATTERN PROFILE & UML                                       -->
+    <!-- ============================================================== -->
+    <section class="chapter" id="sec-profile">
+      <div class="chapter-head">
+        <span class="chapter-num">1</span>
+        <div>
+          <h2>Pattern Profile &amp; Canonical UML Architecture</h2>
+          <span style="font-size:0.85rem; color:var(--text-muted); font-weight:600;">Core GoF Specification</span>
+        </div>
+      </div>
+
+      <!-- Official Pattern Profile: Name, Type, Problem, Solution -->
+      <div class="pattern-spec-box">
+        <div class="spec-grid">
+          <div class="spec-row">
+            <span class="spec-label">Name:</span>
+            <span class="spec-val"><strong>Command</strong> (also known as <em>Action</em>)</span>
+          </div>
+          <div class="spec-row">
+            <span class="spec-label">Type:</span>
+            <span class="spec-val"><strong>Behavioral pattern</strong> because it decouples the object that invokes an operation from the object that actually knows how to perform it.</span>
+          </div>
+          <div class="spec-row">
+            <span class="spec-label">Problem:</span>
+            <span class="spec-val">An application needs to issue requests to objects without knowing anything about the operation being requested or the receiver of the request. Directly coupling UI triggers (like buttons or menus) to receiver classes creates tight coupling and prevents supporting undo/redo, request queues, or macro execution.</span>
+          </div>
+          <div class="spec-row">
+            <span class="spec-label">Solution:</span>
+            <span class="spec-val">
+              Encapsulate a request as an object (implementing a common <code>Command</code> interface with <code>execute()</code> and <code>undo()</code>). Bind the receiver and its required parameters inside the command object via <strong>Dependency Injection</strong>, completely decoupling the Invoker from the Receiver.
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Vector Architecture UML matching Figure 2.2 -->
+      <div class="guide-card">
+        <div class="guide-card-header">
+          <span>📐 Canonical Architecture: Figure 2.2</span>
+        </div>
+        <div class="uml-diagram-box" style="text-align:center;">
+          <svg viewBox="0 0 650 240" style="max-width:100%; height:auto;" aria-label="Figure 2.2: Command Pattern">
+            <!-- Invoker -->
+            <rect x="25" y="40" width="130" height="65" rx="3" fill="var(--bg-raised)" stroke="var(--border)" stroke-width="1.5"/>
+            <rect x="25" y="40" width="130" height="24" rx="3" fill="var(--bg-subtle)"/>
+            <text x="90" y="56" fill="var(--text)" font-family="var(--font-display)" font-size="12" font-weight="700" text-anchor="middle">Invoker</text>
+            <line x1="25" y1="64" x2="155" y2="64" stroke="var(--border)" stroke-width="1.5"/>
+
+            <!-- Association Arrow to Command -->
+            <line x1="155" y1="72" x2="235" y2="72" stroke="var(--border)" stroke-width="1.5"/>
+            <polygon points="235,72 225,67 225,77" fill="var(--border)"/>
+
+            <!-- Command Interface -->
+            <rect x="240" y="40" width="150" height="65" rx="3" fill="var(--bg-raised)" stroke="var(--border)" stroke-width="1.5"/>
+            <rect x="240" y="40" width="150" height="24" rx="3" fill="var(--bg-subtle)"/>
+            <text x="315" y="56" fill="var(--text)" font-family="var(--font-display)" font-size="12" font-style="italic" font-weight="700" text-anchor="middle">&lt;&lt;interface&gt;&gt; Command</text>
+            <line x1="240" y1="64" x2="390" y2="64" stroke="var(--border)" stroke-width="1.5"/>
+            <text x="252" y="82" fill="var(--text)" font-family="var(--font-mono)" font-size="11">+ Execute()</text>
+            <text x="252" y="96" fill="var(--text)" font-family="var(--font-mono)" font-size="11">+ Undo()</text>
+
+            <!-- Realization Arrow from ConcreteCommand -->
+            <line x1="315" y1="160" x2="315" y2="120" stroke="var(--border)" stroke-width="1.5" stroke-dasharray="4,4"/>
+            <polygon points="315,105 307,120 323,120" fill="var(--bg-raised)" stroke="var(--border)" stroke-width="1.5"/>
+
+            <!-- ConcreteCommand -->
+            <rect x="230" y="160" width="170" height="65" rx="3" fill="var(--bg-raised)" stroke="var(--border)" stroke-width="1.5"/>
+            <rect x="230" y="160" width="170" height="24" rx="3" fill="var(--bg-subtle)"/>
+            <text x="315" y="176" fill="var(--text)" font-family="var(--font-display)" font-size="12" font-weight="700" text-anchor="middle">ConcreteCommand</text>
+            <line x1="230" y1="184" x2="400" y2="184" stroke="var(--border)" stroke-width="1.5"/>
+            <text x="242" y="199" fill="var(--text-muted)" font-family="var(--font-mono)" font-size="10">- state</text>
+            <text x="242" y="214" fill="var(--text)" font-family="var(--font-mono)" font-size="11">+ Execute()</text>
+
+            <!-- Dashed line to Note -->
+            <line x1="330" y1="210" x2="440" y2="210" stroke="var(--text-muted)" stroke-width="1.5" stroke-dasharray="4,4"/>
+
+            <!-- Note Box -->
+            <path d="M 440 190 L 565 190 L 580 205 L 580 230 L 440 230 Z" fill="var(--bg-subtle)" stroke="var(--border)" stroke-width="1.5"/>
+            <path d="M 565 190 L 565 205 L 580 205 Z" fill="var(--bg-raised)" stroke="var(--border)" stroke-width="1.5"/>
+            <text x="452" y="214" fill="var(--text)" font-family="var(--font-mono)" font-size="11" font-weight="600">receiver.Action()</text>
+
+            <!-- Association from ConcreteCommand to Receiver -->
+            <line x1="400" y1="175" x2="505" y2="175" stroke="var(--border)" stroke-width="1.5"/>
+            <line x1="505" y1="175" x2="505" y2="105" stroke="var(--border)" stroke-width="1.5"/>
+            <polygon points="505,105 500,115 510,115" fill="var(--border)"/>
+            <text x="445" y="168" fill="var(--text-muted)" font-family="var(--font-mono)" font-size="10">receiver</text>
+
+            <!-- Receiver -->
+            <rect x="440" y="40" width="130" height="65" rx="3" fill="var(--bg-raised)" stroke="var(--border)" stroke-width="1.5"/>
+            <rect x="440" y="40" width="130" height="24" rx="3" fill="var(--bg-subtle)"/>
+            <text x="505" y="56" fill="var(--text)" font-family="var(--font-display)" font-size="12" font-weight="700" text-anchor="middle">Receiver</text>
+            <line x1="440" y1="64" x2="570" y2="64" stroke="var(--border)" stroke-width="1.5"/>
+            <text x="452" y="85" fill="var(--text)" font-family="var(--font-mono)" font-size="11">+ Action()</text>
+          </svg>
+          <div class="figure-caption">Figure 2.2: Command Pattern</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================== -->
+    <!-- 2. HEAD FIRST REMOTE CONTROL & MACRO COMMANDS                  -->
+    <!-- ============================================================== -->
+    <section class="chapter" id="sec-headfirst">
+      <div class="chapter-head">
+        <span class="chapter-num">2</span>
+        <div>
+          <h2>Head First: Remote Control &amp; Macro Commands</h2>
+          <span style="font-size:0.85rem; color:var(--text-muted); font-weight:600;">Textbook Example &amp; Annotated Code</span>
+        </div>
+      </div>
+
+      <!-- Head First Section (Collapsible) -->
+      <details class="headfirst-card" id="headfirst-command" open>
+        <summary class="headfirst-summary">
+          <div class="headfirst-title">
+            <span>📖 Head First: Remote Control &amp; Macro Commands</span>
+            <span class="headfirst-badge">Head First Chapter 6</span>
+          </div>
+          <div class="headfirst-toggle">
+            <span class="toggle-text-open">Collapse</span>
+            <span class="toggle-text-closed">Expand</span>
+            <svg class="headfirst-chevron" viewBox="0 0 24 24" fill="none" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          </div>
+        </summary>
+
+        <div class="headfirst-body">
+          <p style="margin:0 0 1rem; font-size:0.92rem; color:var(--text); line-height:1.6;">
+            In <em>&ldquo;Head First Design Patterns,&rdquo;</em> Chapter 6 models the <strong>Command Pattern</strong> using a multi-slot programmable home automation remote control. The remote invokes commands without knowing what receiver (Light, Ceiling Fan, Stereo) executes the action or what device-specific APIs are called.
+          </p>
+
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem;">
+            <span style="font-weight:700; font-size:0.9rem; color:var(--text);">💻 Java Code Implementation (Annotated from Exam Notes)</span>
+            <span style="font-size:0.75rem; color:var(--text-muted); font-family:var(--font-mono);">RemoteControl.java</span>
+          </div>
+          <pre><code class="language-java">// 1. Command Interface: Declares common execution protocol for all actions
+public interface Command {
+    void execute();
+    void undo();
+}
+
+// ----------------------- Receiver Classes -----------------------
+// A simple Light receiver with on/off operations
+public class Light {
+    private String location;
+    public Light(String location) { this.location = location; }
+    public void on()  { System.out.println(location + " light is on"); }
+    public void off() { System.out.println(location + " light is off"); }
+}
+
+// A stateful CeilingFan receiver maintaining multi-level speed constants
+public class CeilingFan {
+    public static final int HIGH = 3, MEDIUM = 2, LOW = 1, OFF = 0;
+    private String location;
+    private int speed;
+
+    public CeilingFan(String location) {
+        this.location = location;
+        speed = OFF;
+    }
+    public void high()   { speed = HIGH;   System.out.println(location + " ceiling fan is on high"); }
+    public void medium() { speed = MEDIUM; System.out.println(location + " ceiling fan is on medium"); }
+    public void low()    { speed = LOW;    System.out.println(location + " ceiling fan is on low"); }
+    public void off()    { speed = OFF;    System.out.println(location + " ceiling fan is off"); }
+    public int getSpeed() { return speed; }
+}
+
+// ----------------------- Concrete Commands -----------------------
+// Encapsulates turning a Light on, binding receiver via Constructor Dependency Injection
+public class LightOnCommand implements Command {
+    private Light light; // Injected Receiver
+    public LightOnCommand(Light light) { this.light = light; }
+    public void execute() { light.on(); }
+    public void undo()    { light.off(); }
+}
+
+// Stateful Undo: Records prevSpeed before mutating state to restore exact setting
+public class CeilingFanHighCommand implements Command {
+    private CeilingFan ceilingFan;
+    private int prevSpeed; // Stored previous state for reversible undo
+
+    public CeilingFanHighCommand(CeilingFan ceilingFan) {
+        this.ceilingFan = ceilingFan;
+    }
+    public void execute() {
+        prevSpeed = ceilingFan.getSpeed(); // Capture state BEFORE execution
+        ceilingFan.high();
+    }
+    public void undo() {
+        // Restore prior state faithfully
+        if (prevSpeed == CeilingFan.HIGH)        ceilingFan.high();
+        else if (prevSpeed == CeilingFan.MEDIUM) ceilingFan.medium();
+        else if (prevSpeed == CeilingFan.LOW)    ceilingFan.low();
+        else if (prevSpeed == CeilingFan.OFF)    ceilingFan.off();
+    }
+}
+
+// MacroCommand: Executes multiple commands forward; undos in strict reverse LIFO order!
+public class MacroCommand implements Command {
+    private Command[] commands;
+    public MacroCommand(Command[] commands) { this.commands = commands; }
+
+    public void execute() {
+        for (Command cmd : commands) {
+            cmd.execute();
+        }
+    }
+    // Klausur Requirement: Reverse LIFO order protects inter-command state invariants!
+    public void undo() {
+        for (int i = commands.length - 1; i >= 0; i--) {
+            commands[i].undo();
+        }
+    }
+}
+
+// Null Object Pattern: Default no-op command eliminating defensive null checks in invoker
+public class NoCommand implements Command {
+    public void execute() { /* No-op */ }
+    public void undo()    { /* No-op */ }
+}
+
+// ----------------------- Invoker -----------------------
+// The RemoteControl triggers commands without coupling to concrete receivers
+public class RemoteControl {
+    private Command[] onCommands = new Command[7];
+    private Command[] offCommands = new Command[7];
+    private Command undoCommand; // Tracks the last executed command for 1-step undo
+
+    public RemoteControl() {
+        Command noCommand = new NoCommand();
+        for (int i = 0; i < 7; i++) {
+            onCommands[i]  = noCommand;
+            offCommands[i] = noCommand;
+        }
+        undoCommand = noCommand;
+    }
+
+    public void setCommand(int slot, Command onCommand, Command offCommand) {
+        onCommands[slot]  = onCommand;
+        offCommands[slot] = offCommand;
+    }
+    public void onButtonWasPushed(int slot) {
+        onCommands[slot].execute();
+        undoCommand = onCommands[slot]; // Track for undo
+    }
+    public void offButtonWasPushed(int slot) {
+        offCommands[slot].execute();
+        undoCommand = offCommands[slot]; // Track for undo
+    }
+    public void undoButtonWasPushed() {
+        undoCommand.undo();
+    }
+}</code></pre>
+        </div>
+      </details>
+    </section>
+
+    <!-- ============================================================== -->
+    <!-- 3. THE 3 ARCHITECTURAL RULES                                  -->
+    <!-- ============================================================== -->
+    <section class="chapter" id="sec-rules">
+      <div class="chapter-head">
+        <span class="chapter-num">3</span>
+        <div>
+          <h2>The 3 Architectural Rules Tested by Prof. Schäfer</h2>
+          <span style="font-size:0.85rem; color:var(--text-muted); font-weight:600;">Klausur Essentials</span>
+        </div>
+      </div>
+
+      <div class="guide-card">
+        <div style="display:flex; flex-direction:column; gap:1rem;">
+          <div style="background:var(--bg-subtle); padding:1rem; border-radius:var(--radius-sm); border-left:3px solid #6366f1;">
+            <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:0.35rem;">
+              <span class="rule-badge">Rule 1</span>
+              <strong style="color:var(--text);">The Null Object Pattern (<code>NoCommand</code>)</strong>
+            </div>
+            <p style="margin:0; font-size:0.88rem; color:var(--text-muted); line-height:1.5;">
+              By initializing unused remote slots to <code>new NoCommand()</code>, the invoker code executes <code>onCommands[slot].execute()</code> directly without requiring messy defensive checks like <code>if (onCommands[slot] != null)</code>.
+            </p>
+          </div>
+
+          <div style="background:var(--bg-subtle); padding:1rem; border-radius:var(--radius-sm); border-left:3px solid #f59e0b;">
+            <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:0.35rem;">
+              <span class="rule-badge warn">Rule 2</span>
+              <strong style="color:var(--text);">Stateful Undo (Ceiling Fan Speed Example)</strong>
+            </div>
+            <p style="margin:0; font-size:0.88rem; color:var(--text-muted); line-height:1.5;">
+              To undo multi-state devices (e.g. <code>HIGH</code> $\to$ <code>MEDIUM</code> $\to$ <code>LOW</code> $\to$ <code>OFF</code>), the command must record the receiver's <code>prevSpeed</code> inside an instance field <em>before</em> changing it in <code>execute()</code>, and restore that exact speed in <code>undo()</code>.
+            </p>
+          </div>
+
+          <div style="background:var(--bg-subtle); padding:1rem; border-radius:var(--radius-sm); border-left:3px solid #ef4444;">
+            <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:0.35rem;">
+              <span class="rule-badge danger">Rule 3 · Klausur Rule</span>
+              <strong style="color:var(--text);">MacroCommand Undo MUST Run in Reverse LIFO Order!</strong>
+            </div>
+            <p style="margin:0; font-size:0.88rem; color:var(--text-muted); line-height:1.5;">
+              When a <code>MacroCommand</code> executes commands $[C_1, C_2, C_3]$, its <code>undo()</code> method <strong>must iterate backwards ($C_3 \to C_2 \to C_1$)</strong>. Operations frequently depend on state conditions established by prior commands; executing in forward chronological order corrupts state dependencies!
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================== -->
+    <!-- 4. ARCHITECTURAL DECOUPLING & DEPENDENCY INJECTION             -->
+    <!-- ============================================================== -->
+    <section class="chapter" id="sec-decoupling">
+      <div class="chapter-head">
+        <span class="chapter-num">4</span>
+        <div>
+          <h2>Architectural Decoupling &amp; Dependency Injection</h2>
+          <span style="font-size:0.85rem; color:var(--text-muted); font-weight:600;">Exam Notes (p. 32) Concept Analysis</span>
+        </div>
+      </div>
+
+      <div class="guide-card">
+        <p style="margin:0 0 0.75rem; font-size:0.9rem; color:var(--text); line-height:1.6;">
+          <strong>Klausur Question from Prof. Schäfer's Lecture Notes (p. 32):</strong><br>
+          <em>&ldquo;How does the Command Object get access to the data it needs to perform its job? How does one guarantee that this does not create a strong coupling?&rdquo;</em>
+        </p>
+        <div style="background:var(--bg-subtle); padding:1rem 1.25rem; border-radius:var(--radius-sm); border-left:3px solid #6366f1; margin:1rem 0;">
+          <p style="margin:0; font-size:0.9rem; color:var(--text); line-height:1.6;">
+            The Command object receives references to its Receivers and any required operational parameters through <strong>Constructor Injection (Dependency Injection)</strong> at instantiation time:
+          </p>
+          <ul style="margin:0.5rem 0 0 1.25rem; padding:0; font-size:0.88rem; color:var(--text-muted); line-height:1.6;">
+            <li><strong>Minimal Coupling:</strong> The command depends strictly on <em>abstract interfaces or narrow receiver types</em> rather than monolithic application controllers.</li>
+            <li><strong>Parameter Immutability:</strong> Any parameters needed for the action (e.g. target channel, speed, payload) are stored as private fields within the command object, preventing external tampering.</li>
+            <li><strong>Complete Decoupling:</strong> The Invoker that later triggers <code>execute()</code> has zero knowledge of these parameters or receiver dependencies.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================== -->
+    <!-- 5. AUTHENTIC FRANKFURT UAS KLAUSUR DRILLS                     -->
+    <!-- ============================================================== -->
+    <section class="chapter" id="sec-drills">
+      <div class="chapter-head">
+        <span class="chapter-num">5</span>
+        <div>
+          <h2>Prof. Dr. Jörg Schäfer Official Klausur Drills</h2>
+          <span style="font-size:0.85rem; color:var(--text-muted); font-weight:600;">Verified Examination Tasks</span>
+        </div>
+      </div>
+
+      <p style="font-size:0.95rem; color:var(--text-muted); margin-bottom:1.5rem; line-height:1.6;">
+        Every question below is an authentic examination task on the Command Pattern from Prof. Schäfer's lecture notes (<code style="color:var(--accent);">POS-exams-notes.pdf</code>). Test yourself before clicking to reveal the model solution.
+      </p>
+
+      <div class="drill-list">
+        <!-- Drill 1: Command Object Coupling (From POS-exams-notes.pdf p.32) -->
+        <details class="drill-item" open>
+          <summary>
+            <span class="drill-tag" style="background:#6366f1; color:#fff; font-weight:800;">Exam Notes (p. 32) · Architectural Decoupling [5 Pts]</span>
+            <span class="drill-q">How does the Command Object get access to the data it needs to perform its job? How do we ensure this does not create strong coupling?</span>
+            <span class="drill-reveal-hint"></span>
+          </summary>
+          <div class="drill-a">
+            <p><strong>Official Model Answer (Prof. Dr. Jörg Schäfer Standard):</strong></p>
+            <p>
+              The Command object typically receives the data it needs—often through its <strong>constructor or setter methods</strong>—in the form of references to receivers and any additional parameters required to perform the action.
+            </p>
+            <p>
+              This approach leverages <strong>dependency injection</strong> so that the command only depends on abstract interfaces (or minimal concrete types) rather than on specific implementations, thereby avoiding strong coupling. This design ensures that the command remains reusable and flexible, as it doesn’t directly create or tightly bind to its dependencies.
+            </p>
+          </div>
+        </details>
+
+        <!-- Drill 2: MacroCommand Undo Sequence (From POS-exams-notes.pdf) -->
+        <details class="drill-item">
+          <summary>
+            <span class="drill-tag" style="background:#ef4444; color:#fff; font-weight:800;">Exam Notes · LIFO Undo Invariant [5 Pts]</span>
+            <span class="drill-q">In what order must a MacroCommand execute its undo() operations, and what architectural failure occurs if executed chronologically?</span>
+            <span class="drill-reveal-hint"></span>
+          </summary>
+          <div class="drill-a">
+            <p><strong>Official Model Answer:</strong></p>
+            <p>
+              A <code>MacroCommand</code> must strictly execute its <code>undo()</code> operations in <strong>reverse chronological order (LIFO: Last-In, First-Out)</strong>:
+            </p>
+            <pre><code class="language-java">public void undo() {
+    for (int i = commands.length - 1; i &gt;= 0; i--) {
+        commands[i].undo();
+    }
+}</code></pre>
+            <p>
+              <strong>Failure Mode if Executed Chronologically ($0 \to N-1$):</strong><br>
+              In practical systems, later commands often depend on the preconditions established by earlier commands (e.g., $C_1$: Connect to Database $\to$ $C_2$: Open Transaction $\to$ $C_3$: Write Record). Undoing in forward order attempts to disconnect the database while the transaction is still unrolled, corrupting state invariants.
+            </p>
+          </div>
+        </details>
+      </div>
+    </section>
+
+    <!-- Footer Navigation -->
+    <footer class="page-footer" style="margin-top: 4rem; padding-top: 2rem; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+      <a class="nav-prev" href="unit-2-template.html" style="font-weight: 700; color: var(--accent); text-decoration: none;">← Previous: Unit 2A · Template Method Pattern</a>
+      <a class="nav-next" href="unit-3-structural.html" style="font-weight: 700; color: var(--accent); text-decoration: none;">Next: Unit 3 · Structural Patterns (Composite &amp; Iterator) →</a>
+    </footer>
+
+  </main>
+</div>
+
+<script src="assets/site.js?v=2026.16" defer></script>
+</body>
+</html>

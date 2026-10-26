@@ -61,19 +61,22 @@
 *Use this section to record our discussion points before we write any code:*
 
 ### Topic A: Handling Multi-Pattern Chapters
-* *Status:* ✅ **RESOLVED FOR UNIT 2**
-* *Decision:* Keep Template Method and Command together in Unit 2, but strictly divide them into two clear, focused parts (Part 1: Template Method; Part 2: Command), followed by Part 3: Authentic Exam Drills.
-* *Reading Time Goal:* 10–12 minutes total.
+* *Status:* ✅ **RESOLVED & IMPLEMENTED**
+* *Decision:* Split multi-pattern chapters into clean, dedicated submodule pages:
+  - **Unit 2A: Template Method Pattern** (`unit-2-template.html`)
+  - **Unit 2B: Command Pattern** (`unit-2-command.html`)
+* *Reading Time Goal:* 6–7 minutes each (crisp, zero cognitive mixing).
+* *Landing Bridge:* `unit-2-behavioral.html` auto-redirects to `unit-2-template.html`.
 
 ### Topic B: What Elements to Cut vs. What to Keep
 * *Status:* ✅ **APPROVED**
-* *Cuts Executed in Unit 2:*
+* *Cuts Executed:*
   - Cut the 8-Pillar tabs, matrix views, and copy rubric buttons (saved 35,000+ chars).
   - Cut the heavy 10-button JavaScript remote control simulation sandbox (saved 20,000+ chars).
   - Cut redundant textbook walls of text.
-* *Keeps in Unit 2:*
-  - Clean vector UML diagrams for each pattern.
-  - Minimal, high-impact Java snippets (< 25 lines) straight from `POS-exams-notes.pdf`.
+* *Keeps:*
+  - Clean vector UML diagrams for each pattern (`Figure 2.1` and `Figure 2.2`).
+  - Verbatim annotated Java snippets straight from `POS-exams-notes.pdf` inside collapsible `Head First` cards.
   - The Hollywood Principle ("Don't call us, we'll call you!").
   - The Null Object Pattern (`NoCommand`) and LIFO Reverse Undo.
   - The Composition vs Inheritance trade-off table (Duck / Comparator).
@@ -90,6 +93,6 @@
 
 - [x] Align on user's discussion points and requirements.
 - [x] Finalize the simplified specification for Unit 2.
-- [x] Implement streamlined `unit-2-behavioral.html` pilot with verbatim code & notes matching Prof. Schäfer's materials.
-- [ ] Review Unit 2 with the user.
-- [ ] Roll out to remaining units in planned batches.
+- [x] Split into dedicated chapters: Unit 2A (`unit-2-template.html`) and Unit 2B (`unit-2-command.html`).
+- [ ] Review Unit 2A & 2B with the user.
+- [ ] Roll out simplified structure to remaining units in planned batches.
