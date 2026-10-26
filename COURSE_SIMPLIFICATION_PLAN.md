@@ -79,6 +79,11 @@
   - The Composition vs Inheritance trade-off table (Duck / Comparator).
   - Authentic exam drills with click-to-reveal model answers.
 
+### Topic C: Standard Discussion Terminology
+* *Status:* ✅ **AGREED**
+* *Decision:* The foundational block comprising **[Name, Type, Problem, Solution, and Diagram]** is officially called **`Pattern Profile`** (or simply **`Profile`**). Whenever you refer to *Pattern Profile* or *Profile* in our planning, it means this exact 5-part structure.
+* *Companion Section:* The collapsible code + textbook walkthrough is called **`Head First`**.
+
 ---
 
 ## 4. Action Items & Roadmap
