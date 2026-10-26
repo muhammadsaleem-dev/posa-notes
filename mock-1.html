@@ -3,20 +3,13 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Official Frankfurt UAS Mock Exam (60 pts) | Prof. Dr. Jörg Schäfer</title>
-<meta name="description" content="Official Frankfurt UAS Masterclass Mock Exam (60 pts) directly synthesized from Prof. Dr. Jörg Schäfer's genuine written exam papers (exam-questions.pdf) and official exam preparation notes (POS-exams-notes.pdf).">
+<title>Mock 1 · Authentic Exam Sheet (exam-questions.pdf) | Prof. Dr. Jörg Schäfer</title>
+<meta name="description" content="Mock 1: Authentic written examination tasks directly transcribed from Prof. Dr. Jörg Schäfer's genuine exam sheet (exam-questions.pdf). Features Q6 (Decorator), Q7 (MVC Model), and Q8 (Strategy vs Template).">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%236366f1'/%3E%3Cpath d='M8 10h16M8 16h16M8 22h10' stroke='%23fff' stroke-width='2.2' stroke-linecap='round'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/style.css?v=2026.16">
-<script>
-  window.MathJax = {
-    tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
-    svg: { fontCache: 'global' }
-  };
-</script>
-<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<link rel="stylesheet" href="assets/style.css?v=2026.17">
 <style>
   .exam-meta-banner {
     display: grid;
@@ -57,25 +50,30 @@
     background: var(--accent-soft);
     border-radius: var(--radius-md);
     margin-bottom: 2rem;
-    border: 1px solid rgba(99, 102, 241, 0.2);
+    border: 1px solid rgba(99, 102, 241, 0.25);
   }
   .exam-timer-wrap {
     display: flex;
     align-items: center;
     gap: 0.75rem;
-    font-weight: 600;
+    font-weight: 700;
     font-family: var(--font-mono);
+    font-size: 1.05rem;
   }
   .btn-exam {
     background: var(--accent);
     color: #ffffff;
     border: none;
-    padding: 0.5rem 1rem;
+    padding: 0.55rem 1.1rem;
     border-radius: var(--radius-sm);
     font-weight: 600;
     font-size: 0.88rem;
     cursor: pointer;
     transition: opacity 0.2s;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
   }
   .btn-exam:hover { opacity: 0.9; }
   .btn-outline {
@@ -85,7 +83,7 @@
   }
   .points-badge {
     display: inline-block;
-    padding: 0.2rem 0.6rem;
+    padding: 0.2rem 0.65rem;
     background: var(--accent-soft);
     color: var(--accent);
     border-radius: 999px;
@@ -96,17 +94,18 @@
   }
   .gotcha-box {
     margin-top: 1rem;
-    padding: 0.85rem 1.1rem;
+    padding: 0.9rem 1.15rem;
     background: var(--warn-soft);
     border-left: 3px solid var(--warn);
     border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
     font-size: 0.9rem;
     color: var(--text);
+    line-height: 1.55;
   }
   .gotcha-box strong { color: var(--warn); }
   .authentic-tag {
     display: inline-block;
-    padding: 0.2rem 0.55rem;
+    padding: 0.22rem 0.6rem;
     background: #ef4444;
     color: #fff;
     border-radius: 4px;
@@ -114,6 +113,62 @@
     font-weight: 800;
     letter-spacing: 0.03em;
     margin-right: 0.5rem;
+  }
+  .exam-q-box {
+    background: var(--bg-raised);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    box-shadow: var(--shadow-sm);
+    transition: border-color 0.2s ease;
+  }
+  .exam-q-box:hover {
+    border-color: var(--accent);
+  }
+  .exam-q-num {
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--accent);
+    display: block;
+    margin-bottom: 0.5rem;
+    font-family: var(--font-mono);
+  }
+  .exam-q-text {
+    font-size: 1.15rem;
+    font-weight: 700;
+    line-height: 1.45;
+    margin: 0 0 1.25rem;
+    color: var(--text);
+  }
+  .scan-preview-box {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 1rem;
+    margin: 1.5rem 0 2rem;
+  }
+  .scan-preview-img {
+    width: 100%;
+    max-height: 480px;
+    object-fit: contain;
+    border-radius: var(--radius-sm);
+    background: #111;
+    display: block;
+  }
+  .self-eval-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1rem;
+    margin: 1.5rem 0;
+  }
+  .self-eval-card {
+    background: var(--bg-raised);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 1.25rem;
   }
 </style>
 <script>(function(){try{var t=localStorage.getItem('posa-theme')||localStorage.getItem('dm2026-theme')||'dark';document.documentElement.setAttribute('data-theme',t);var m=localStorage.getItem('posa-mode')||'concept';document.documentElement.setAttribute('data-mode',m);}catch(e){}})();</script>
@@ -126,12 +181,11 @@
       <span style="background:linear-gradient(135deg, #6366f1 0%, #38bdf8 100%);color:#fff;padding:0.2rem 0.55rem;border-radius:6px;font-size:0.82rem;font-weight:800;letter-spacing:0.04em;">POSA</span>
       <span style="font-weight:800;letter-spacing:-0.02em;">2026</span>
     </a>
-        <div class="sitenav-links">
+    <div class="sitenav-links">
       <a href="index.html">Overview</a>
       <a href="index.html#curriculum-roadmap">16 Units</a>
-      <a href="past-papers.html">📝 Real Past Papers</a>
-      <a href="mock-1.html" class="active" style="color:var(--accent); font-weight:700;">🎓 Official Mock (60 pts)</a>
-      <a href="mock-2.html">Mock 2 (95 pts)</a>
+      <a href="mock-1.html" class="active" style="color:var(--accent); font-weight:700;">🎓 Mock 1 (Exam Sheet)</a>
+      <a href="mock-2.html">📝 Mock 2 (Exam Notes)</a>
     </div>
     <button class="nav-toggle" id="navToggle" type="button" aria-expanded="false" aria-controls="navPanel">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
@@ -145,533 +199,376 @@
   </div>
   <div class="nav-panel" id="navPanel">
     <div class="nav-panel-section">
-      <span class="nav-panel-label">Mock Sections</span>
-      <a href="#section-1">1 · Written Paper Sheet (15 pts)</a>
-      <a href="#section-2">2 · Case Studies &amp; Architecture (15 pts)</a>
-      <a href="#section-3">3 · SOLID Principles &amp; Package Metrics (15 pts)</a>
-      <a href="#section-4">4 · Epistemology, Idioms &amp; Criticism (15 pts)</a>
-      <a href="past-papers.html">📝 Full Past Papers &amp; Solutions Hub</a>
-      <a href="mock-practice-bank.html">📚 Extended Syllabus Practice Bank</a>
+      <span class="nav-panel-label">Course Navigation</span>
+      <a href="index.html">Course Overview</a>
+      <a href="mock-1.html" class="active">🎓 Mock 1 (Exam Sheet)</a>
+      <a href="mock-2.html">📝 Mock 2 (Exam Notes)</a>
+      <a href="unit-1-strategy.html">Unit 1 · Strategy Pattern</a>
+      <a href="unit-2-template.html">Unit 2A · Template Method Pattern</a>
+      <a href="unit-2-command.html">Unit 2B · Command Pattern</a>
+      <a href="unit-3-structural.html">Unit 3 · Structural Patterns</a>
+      <a href="unit-6-solid.html">Unit 6 · SOLID Principles</a>
+      <a href="unit-11-mvc.html">Unit 11 · Case Study MVC</a>
     </div>
   </div>
 </nav>
 
 <!-- Mobile Native Bottom Dock -->
 <nav class="mobile-bottom-dock" aria-label="Mobile Navigation Dock">
-  <a href="#section-1" class="dock-item active">
+  <a href="#q6-decorator" class="dock-item active">
     <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line><line x1="9" y1="21" x2="9" y2="9"></line></svg>
-    <span>Part 1</span>
+    <span>Q6</span>
   </a>
-  <a href="#section-2" class="dock-item">
+  <a href="#q7-mvc" class="dock-item">
     <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
-    <span>Part 2</span>
+    <span>Q7</span>
   </a>
-  <a href="#section-3" class="dock-item">
+  <a href="#q8-strategy-template" class="dock-item">
     <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
-    <span>Part 3</span>
+    <span>Q8</span>
   </a>
-  <a href="#section-4" class="dock-item">
+  <a href="mock-2.html" class="dock-item">
     <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
-    <span>Part 4</span>
-  </a>
-  <a href="past-papers.html" class="dock-item">
-    <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
-    <span>Hub</span>
+    <span>Mock 2</span>
   </a>
 </nav>
 
 <div class="page-shell">
   <aside class="sidebar-toc">
     <div class="sidebar-block">
-      <span class="sidebar-label">Navigation</span>
+      <span class="sidebar-label">Exam Navigation</span>
       <a href="index.html">← Course Overview</a>
-      <a href="past-papers.html">📝 Past Papers Hub</a>
-      <a href="mock-practice-bank.html">📚 Extended Practice Bank</a>
-    </div>
-    <div class="sidebar-block">
-      <span class="sidebar-label">Exam Sections (60 Pts)</span>
-      <a href="#section-1"><span class="toc-num">1</span>Written Sheet (15 pts)</a>
-      <a href="#section-2"><span class="toc-num">2</span>Case Studies (15 pts)</a>
-      <a href="#section-3"><span class="toc-num">3</span>SOLID &amp; Metrics (15 pts)</a>
-      <a href="#section-4"><span class="toc-num">4</span>Epistemology (15 pts)</a>
-    </div>
-    <div class="sidebar-block">
-      <span class="sidebar-label">Curriculum Origin</span>
-      <p style="font-size: 0.82rem; color: var(--text-muted); line-height: 1.5; margin:0 0 0.5rem;">
-        <strong>Prof. Dr. Jörg Schäfer</strong><br>
-        Frankfurt University of Applied Sciences<br>
-        Fachbereich 2: Informatik
-      </p>
-      <div style="font-size:0.75rem; font-weight:700; color:#38bdf8; background:rgba(56,189,248,0.12); border:1px solid rgba(56,189,248,0.25); padding:0.25rem 0.5rem; border-radius:4px; display:inline-block;">
-        ⏱️ 90 Mins · 60 Pts
-      </div>
+      <a href="#exam-scan">📷 Authentic Exam Sheet Scan</a>
+      <a href="#q6-decorator">Question 6 · Decorator (5 pts)</a>
+      <a href="#q7-mvc">Question 7 · MVC Model (5 pts)</a>
+      <a href="#q8-strategy-template">Question 8 · Strategy vs Template (5 pts)</a>
+      <a href="#self-evaluation">📊 Self-Grading Rubric</a>
+      <a href="mock-2.html" style="color:var(--accent); font-weight:700; margin-top:0.75rem;">Next: Mock 2 (Exam Notes) →</a>
     </div>
   </aside>
 
-  <div class="page">
-    <div class="masthead">
-      <div>
-        <div class="eyebrow">Frankfurt University of Applied Sciences · Official Klausur Simulation</div>
-        <h1 class="title">Official POSA Masterclass Mock Exam</h1>
-      </div>
-    </div>
-    <p class="dek">
-      Synthesized 100% directly from Prof. Dr. Jörg Schäfer's genuine written examination paper (<code style="color:var(--accent);">exam-questions.pdf</code>) and the masterclass examination preparation notes (<code style="color:var(--accent);">POS-exams-notes.pdf</code>).
-    </p>
+  <main class="page-content" id="main-content">
+    <header class="page-header">
+      <div class="eyebrow"><span class="authentic-tag">AUTHENTIC EXAM</span> FRANKFURT UAS · PROF. DR. JÖRG SCHÄFER</div>
+      <h1 class="page-title">Mock 1 · Authentic Exam Sheet</h1>
+      <p class="page-subtitle">
+        Direct transcription of the genuine written examination paper (<code style="color:var(--accent);">exam-questions.pdf</code>). This authentic exam sheet contains Questions 6, 7, and 8 exactly as given in the Frankfurt UAS Masterclass examination.
+      </p>
+    </header>
 
-    <!-- Exam Meta Bar -->
+    <!-- Meta Banner -->
     <div class="exam-meta-banner">
       <div class="exam-meta-item">
+        <span class="exam-meta-label">Primary Source</span>
+        <span class="exam-meta-val" style="font-size:0.95rem;">exam-questions.pdf</span>
+      </div>
+      <div class="exam-meta-item">
+        <span class="exam-meta-label">Authentic Questions</span>
+        <span class="exam-meta-val">3 Tasks</span>
+      </div>
+      <div class="exam-meta-item">
         <span class="exam-meta-label">Total Points</span>
-        <span class="exam-meta-val">60 Points</span>
+        <span class="exam-meta-val">15 Points</span>
       </div>
       <div class="exam-meta-item">
-        <span class="exam-meta-label">Time Limit</span>
-        <span class="exam-meta-val">90 Mins</span>
-      </div>
-      <div class="exam-meta-item">
-        <span class="exam-meta-label">Pass Threshold</span>
-        <span class="exam-meta-val">30 / 60 (50%)</span>
-      </div>
-      <div class="exam-meta-item">
-        <span class="exam-meta-label">Source Basis</span>
-        <span class="exam-meta-val">Authentic Papers</span>
+        <span class="exam-meta-label">Target Time</span>
+        <span class="exam-meta-val">20 Minutes</span>
       </div>
     </div>
 
-    <!-- Authentic Origin Banner -->
-    <div style="background:rgba(99, 102, 241, 0.08); border: 2px solid #6366f1; border-radius: var(--radius-md); padding: 1.25rem 1.5rem; margin-bottom: 2rem;">
-      <div style="display:flex; align-items:center; gap:0.5rem; font-weight:800; color:var(--text); font-size:1.05rem; margin-bottom:0.4rem;">
-        <span>🎯 100% Grounded in Official Exam Material</span>
-      </div>
-      <p style="margin:0 0 0.5rem; font-size:0.92rem; line-height:1.6; color:var(--text);">
-        Every single question below corresponds to authentic exam tasks from <strong>Prof. Dr. Jörg Schäfer</strong>:
-      </p>
-      <ul style="margin:0; padding-left:1.25rem; font-size:0.88rem; line-height:1.55; color:var(--text-muted);">
-        <li><strong>Section 1:</strong> Questions 6, 7, and 8 scanned directly from the Frankfurt UAS printed examination paper (<code>exam-questions.pdf</code>).</li>
-        <li><strong>Sections 2–4:</strong> Verified examination tasks, derivations, and oral examination questions transcribed from the official course notes (<code>POS-exams-notes.pdf</code>).</li>
-      </ul>
-    </div>
-
-    <!-- Interactive Timer & Toggle Bar -->
+    <!-- Exam Interactive Controls -->
     <div class="exam-actions-bar">
       <div class="exam-timer-wrap">
         <span>⏱️ Time Remaining:</span>
-        <span id="examTimerDisplay">90:00</span>
+        <span id="examTimer" style="color:var(--accent);">20:00</span>
       </div>
-      <div style="display: flex; gap: 0.5rem;">
-        <button type="button" class="btn-exam" id="timerStartBtn" onclick="toggleTimer()">Start Timer</button>
-        <button type="button" class="btn-exam btn-outline" onclick="expandAllSolutions()">Expand All</button>
-        <button type="button" class="btn-exam btn-outline" onclick="collapseAllSolutions()">Collapse All</button>
+      <div style="display:flex; gap:0.6rem; flex-wrap:wrap;">
+        <button class="btn-exam" id="timerStartBtn" onclick="toggleExamTimer()">▶ Start Timer</button>
+        <button class="btn-exam btn-outline" onclick="toggleAllAnswers(false)">▲ Hide Answers (Test Mode)</button>
+        <button class="btn-exam btn-outline" onclick="toggleAllAnswers(true)">▼ Reveal All Answers</button>
       </div>
     </div>
 
-    <!-- ========================================== -->
-    <!-- SECTION 1: OFFICIAL WRITTEN EXAM SHEET     -->
-    <!-- ========================================== -->
-    <section class="chapter" id="section-1">
-      <div class="chapter-head">
-        <span class="chapter-num">1</span>
-        <h2>Official Written Examination Sheet (from exam-questions.pdf) <span class="points-badge">15 Points</span></h2>
+    <!-- Scanned Exam Paper Evidence Viewer -->
+    <details class="scan-preview-box" id="exam-scan" open>
+      <summary style="cursor:pointer; font-weight:700; font-family:var(--font-display); color:var(--text); list-style:none; display:flex; align-items:center; justify-content:space-between;">
+        <span>📷 Original Exam Paper Scan (<code style="color:var(--accent);">exam-questions.pdf</code>)</span>
+        <span style="font-size:0.82rem; color:var(--text-muted); font-family:var(--font-mono);">Click to collapse/expand</span>
+      </summary>
+      <div style="margin-top:1rem;">
+        <p style="font-size:0.88rem; color:var(--text-muted); margin-bottom:0.75rem;">
+          The image below is the authentic scanned photo of the Frankfurt UAS written examination sheet provided in the course materials.
+        </p>
+        <img src="assets/img-exam-000.png" alt="Authentic Frankfurt UAS Written Exam Sheet Scan" class="scan-preview-img" onerror="this.onerror=null; this.src='exam-prep/img-exam-000.png';">
       </div>
-      <p class="chapter-dek">These questions are taken verbatim from page 1 of the official Frankfurt UAS Klausur examination sheet.</p>
+    </details>
 
-      <div class="drill-list">
-        <!-- Q1.1 (Q6 from Exam Sheet) -->
-        <details class="drill-item" open>
-          <summary>
-            <span class="drill-tag"><span class="authentic-tag">Exam Sheet</span> Question 6 · 5 pts</span>
-            <span class="drill-q">Which of the OOP principles does decorator primarily follow: Inheritance or composition and briefly explain why?</span>
-            <span class="drill-reveal-hint"></span>
-          </summary>
-          <div class="drill-a">
-            <p><strong>Primary Principle: Composition (Object Composition over Class Inheritance)</strong></p>
-            <p><strong>Official Model Explanation (Prof. Dr. Jörg Schäfer Standard):</strong></p>
-            <ol>
-              <li><strong>Dynamic Behavioral Delegation (Composition):</strong>
-                The Decorator pattern primarily follows <strong>object composition</strong>. The decorator maintains an instance variable referencing the wrapped component (<code>protected Component component;</code>) and delegates client requests to it dynamically at runtime. This prevents the exponential <strong>subclass explosion</strong> problem (e.g. Starbuzz coffee with 64 static subclasses) by allowing responsibilities to be attached and detached at runtime.
-              </li>
-              <li><strong>Type Conformance Only (Inheritance):</strong>
-                While the abstract Decorator class extends or implements the <code>Component</code> supertype, it does so <em>strictly for interface conformance and type substitutability</em> (so the decorator can stand in transparently wherever a <code>Component</code> is expected), NOT for inheriting behavior or reusing implementation code.
-              </li>
-            </ol>
-            <div class="gotcha-box">
-              <strong>⚠️ Common Exam Trap:</strong> Stating that Decorator is an example of inheritance because <code>Decorator extends Component</code> loses the majority of points. The professor specifically tests whether you recognize that inheritance is only used for subtyping, while all functionality is delivered via composition.
-            </div>
-          </div>
-        </details>
+    <!-- Question 6 -->
+    <article class="exam-q-box" id="q6-decorator">
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem; margin-bottom:0.5rem;">
+        <span class="exam-q-num">Official Exam Question 6 · Unit 9 (Decorator)</span>
+        <span class="points-badge">5 Points</span>
+      </div>
+      <h3 class="exam-q-text">Which of the OOP principles does decorator primarily follow: Inheritance or composition and briefly explain why?</h3>
 
-        <!-- Q1.2 (Q7 from Exam Sheet) -->
-        <details class="drill-item">
-          <summary>
-            <span class="drill-tag"><span class="authentic-tag">Exam Sheet</span> Question 7 · 5 pts</span>
-            <span class="drill-q">What is the main task/role of the model in MVC?</span>
-            <span class="drill-reveal-hint"></span>
-          </summary>
-          <div class="drill-a">
-            <p><strong>Official Model Answer:</strong></p>
-            <p>
-              The <strong>Model</strong> represents the core computational and business logic of the Model-View-Controller architecture:
+      <details class="drill-item" open>
+        <summary>
+          <span class="drill-tag">Official Solution &amp; Grading Rubric</span>
+          <span class="drill-q">Prof. Dr. Jörg Schäfer Model Answer</span>
+          <span class="drill-reveal-hint"></span>
+        </summary>
+        <div class="drill-a" style="margin-top:1rem;">
+          <div style="padding:0.75rem 1rem; background:rgba(99,102,241,0.08); border-left:4px solid var(--accent); border-radius:0 6px 6px 0; margin-bottom:1rem;">
+            <p style="margin:0; font-size:1.05rem; font-weight:700; color:var(--text);">
+              Primary Principle: <span style="color:var(--accent);">Composition</span> (Object Composition over Class Inheritance)
             </p>
-            <ol>
-              <li><strong>Encapsulates Domain State &amp; Invariants:</strong>
-                It holds the application's domain data, business logic, calculations, and data consistency invariants. It acts as the single source of truth for the entire system.
-              </li>
-              <li><strong>Subject in Observer Pattern:</strong>
-                The Model manages registered observers (the views). Whenever its state changes, it broadcasts notifications via <code>notifyObservers()</code> without knowing the concrete GUI types of the observers.
-              </li>
-              <li><strong>Complete Presentation Independence:</strong>
-                The Model possesses zero knowledge of, and zero references to, user interface widgets, event listeners, or controllers. This enables headless automated testing and allows multiple disparate views (e.g., graphical chart, tabular grid, mobile app) to observe the same model simultaneously.
-              </li>
-            </ol>
           </div>
-        </details>
 
-        <!-- Q1.3 (Q8 from Exam Sheet) -->
-        <details class="drill-item">
-          <summary>
-            <span class="drill-tag"><span class="authentic-tag">Exam Sheet</span> Question 8 · 5 pts</span>
-            <span class="drill-q">How does the Strategy Pattern differ from the Template Method Pattern?</span>
-            <span class="drill-reveal-hint"></span>
-          </summary>
-          <div class="drill-a">
-            <p><strong>Official Model Answer:</strong></p>
-            <p>The fundamental distinction lies in <strong>coupling mechanism, runtime mutability, and algorithm granularity</strong>:</p>
-            <ol>
-              <li><strong>Mechanism &amp; Coupling:</strong>
-                <ul>
-                  <li><strong>Strategy</strong> utilizes <em>object composition and delegation</em>. The Context holds a reference to a Strategy interface and delegates computations to it.</li>
-                  <li><strong>Template Method</strong> utilizes <em>class inheritance</em>. Subclasses extend an abstract base class and override specific primitive/hook steps.</li>
-                </ul>
-              </li>
-              <li><strong>Runtime Mutability:</strong>
-                <ul>
-                  <li><strong>Strategy</strong> allows swapping the entire algorithm <em>dynamically at runtime</em> via a setter method (e.g., <code>duck.setFlyBehavior(new FlyRocketPowered())</code>).</li>
-                  <li><strong>Template Method</strong> binds the algorithm variant statically at <em>compile-time</em> through class inheritance; altering behavior requires creating a different class instance.</li>
-                </ul>
-              </li>
-              <li><strong>Granularity of Variation:</strong>
-                <ul>
-                  <li><strong>Strategy</strong> encapsulates and swaps the <em>entire algorithm as an atomic unit</em>.</li>
-                  <li><strong>Template Method</strong> preserves an invariant algorithm skeleton in the superclass and allows subclasses to alter only <em>individual steps</em>.</li>
-                </ul>
-              </li>
-            </ol>
+          <h4 style="font-size:0.95rem; margin:1rem 0 0.5rem; text-transform:uppercase; letter-spacing:0.04em; color:var(--text-muted);">Official Model Explanation:</h4>
+          <ol style="padding-left:1.25rem; line-height:1.65; margin:0 0 1rem;">
+            <li><strong>Primary Mechanism (Composition):</strong> The Decorator pattern dynamically attaches additional responsibilities to an object at runtime. The decorator maintains a reference to the wrapped component instance (<code>protected Component component;</code>) and delegates client method invocations to this component, optionally executing pre- or post-processing behavior.</li>
+            <li><strong>Role of Inheritance (Type Conformance Only):</strong> While the Decorator subclasses the abstract <code>Component</code> class, it does so <em>solely for type matching (subtyping)</em>—to ensure the decorator can stand in transparently wherever the original component is expected (conforming to the Liskov Substitution Principle). It does <strong>not</strong> inherit its functional behavior from the parent class.</li>
+            <li><strong>Avoidance of Class Explosion:</strong> By favoring dynamic composition over static compile-time inheritance, Decorator avoids the combinatorial explosion of subclasses (e.g., $2^N$ subclass combinations in Starbuzz Coffee with milk, mocha, soy, whip).</li>
+          </ol>
+
+          <div class="gotcha-box">
+            ⚠️ <strong>Professor Gotcha &amp; Deduction Trap:</strong> Answering "Inheritance" or simply "both" without explicitly distinguishing between <em>type conformance (subtyping via inheritance)</em> and <em>behavioral extension (delegation via composition)</em> results in up to <strong>50% deduction</strong>. You MUST state that behavior is obtained via composition!
           </div>
-        </details>
+
+          <div style="margin-top:1rem; padding:0.75rem; background:var(--bg); border:1px solid var(--border); border-radius:var(--radius-sm); font-size:0.85rem; font-family:var(--font-mono); color:var(--text-muted);">
+            <strong>Grading Breakdown (5 Pts):</strong><br>
+            • 2 pts: Clear identification of Composition as primary principle.<br>
+            • 2 pts: Clarification that inheritance is restricted to interface/type conformance.<br>
+            • 1 pt: Explanation of runtime flexibility / preventing subclass explosion.
+          </div>
+        </div>
+      </details>
+    </article>
+
+    <!-- Question 7 -->
+    <article class="exam-q-box" id="q7-mvc">
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem; margin-bottom:0.5rem;">
+        <span class="exam-q-num">Official Exam Question 7 · Unit 11 (MVC)</span>
+        <span class="points-badge">5 Points</span>
+      </div>
+      <h3 class="exam-q-text">What is the main task/role of the model in MVC?</h3>
+
+      <details class="drill-item" open>
+        <summary>
+          <span class="drill-tag">Official Solution &amp; Grading Rubric</span>
+          <span class="drill-q">Prof. Dr. Jörg Schäfer Model Answer</span>
+          <span class="drill-reveal-hint"></span>
+        </summary>
+        <div class="drill-a" style="margin-top:1rem;">
+          <h4 style="font-size:0.95rem; margin:0 0 0.5rem; text-transform:uppercase; letter-spacing:0.04em; color:var(--text-muted);">Official Model Answer (3 Core Pillars):</h4>
+          <ol style="padding-left:1.25rem; line-height:1.65; margin:0 0 1rem;">
+            <li><strong>Encapsulation of Application Domain State &amp; Business Logic:</strong> The Model represents the enterprise domain, holding all application data, entities, business rules, calculations, constraints, and persistence logic.</li>
+            <li><strong>Presentation Independence:</strong> The Model is completely independent of the User Interface. It contains zero UI code and has no direct reference to any Views or Controllers. It remains completely testable in isolation.</li>
+            <li><strong>Observer Subject Role (Notification Mechanism):</strong> The Model acts as the <code>Subject</code> in the Observer pattern. When its internal state is modified (via Controller commands), it notifies registered View observers (<code>notifyObservers()</code>). The Views then pull the updated data directly from the Model.</li>
+          </ol>
+
+          <div class="gotcha-box">
+            ⚠️ <strong>Professor Gotcha &amp; Deduction Trap:</strong> Stating that the Model <em>"updates the View"</em> or <em>"renders UI components"</em> (e.g., calling <code>view.render()</code>) is an immediate deduction. In classical GoF / Reenskaug MVC, the Model is completely passive regarding presentation: it broadcasts an abstract change notification, and the View pulls data!
+          </div>
+
+          <div style="margin-top:1rem; padding:0.75rem; background:var(--bg); border:1px solid var(--border); border-radius:var(--radius-sm); font-size:0.85rem; font-family:var(--font-mono); color:var(--text-muted);">
+            <strong>Grading Breakdown (5 Pts):</strong><br>
+            • 2 pts: Encapsulating domain state, entities, and business logic.<br>
+            • 2 pts: Complete decoupling/independence from UI presentation.<br>
+            • 1 pt: Acting as the Subject/Observable notifying registered Views upon state change.
+          </div>
+        </div>
+      </details>
+    </article>
+
+    <!-- Question 8 -->
+    <article class="exam-q-box" id="q8-strategy-template">
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem; margin-bottom:0.5rem;">
+        <span class="exam-q-num">Official Exam Question 8 · Unit 1 &amp; Unit 2A</span>
+        <span class="points-badge">5 Points</span>
+      </div>
+      <h3 class="exam-q-text">How does the Strategy Pattern differ from the Template Method Pattern?</h3>
+
+      <details class="drill-item" open>
+        <summary>
+          <span class="drill-tag">Official Solution &amp; Grading Rubric</span>
+          <span class="drill-q">Prof. Dr. Jörg Schäfer Model Answer</span>
+          <span class="drill-reveal-hint"></span>
+        </summary>
+        <div class="drill-a" style="margin-top:1rem;">
+          <p style="margin-bottom:1rem; line-height:1.6;">
+            The canonical distinction is captured in the Gang of Four principle:
+            <em>"Template Method uses inheritance to vary parts of an algorithm. Strategy uses composition to vary the entire algorithm."</em>
+          </p>
+
+          <table class="blueprint-table" style="width:100%; border-collapse:collapse; font-size:0.88rem; margin:0.75rem 0 1.25rem;">
+            <thead>
+              <tr style="border-bottom:2px solid var(--border); text-align:left; background:var(--bg-raised);">
+                <th style="padding:0.6rem;">Dimension</th>
+                <th style="padding:0.6rem; color:#6366f1;">Strategy Pattern (Unit 1)</th>
+                <th style="padding:0.6rem; color:#10b981;">Template Method Pattern (Unit 2A)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr style="border-bottom:1px solid var(--border);">
+                <td style="padding:0.6rem; font-weight:700;">Fundamental Mechanism</td>
+                <td style="padding:0.6rem;"><strong>Object Composition &amp; Delegation</strong></td>
+                <td style="padding:0.6rem;"><strong>Class Inheritance &amp; Subclassing</strong></td>
+              </tr>
+              <tr style="border-bottom:1px solid var(--border);">
+                <td style="padding:0.6rem; font-weight:700;">Binding Time</td>
+                <td style="padding:0.6rem;"><strong>Dynamic at Runtime</strong> (strategy can be hot-swapped dynamically via setter)</td>
+                <td style="padding:0.6rem;"><strong>Static at Compile-Time</strong> (bound through subclass instantiation)</td>
+              </tr>
+              <tr style="border-bottom:1px solid var(--border);">
+                <td style="padding:0.6rem; font-weight:700;">Algorithm Granularity</td>
+                <td style="padding:0.6rem;">Swaps the <strong>entire algorithm</strong> behind an interface (e.g. <code>FlyBehavior</code>)</td>
+                <td style="padding:0.6rem;">Fixes the <strong>skeletal invariant flow</strong>; subclasses override specific hook/primitive steps</td>
+              </tr>
+              <tr style="border-bottom:1px solid var(--border);">
+                <td style="padding:0.6rem; font-weight:700;">Inversion of Control</td>
+                <td style="padding:0.6rem;">Client/Context controls execution and explicitly invokes strategy interface</td>
+                <td style="padding:0.6rem;"><strong>Hollywood Principle</strong>: <em>"Don't call us, we'll call you!"</em> Base class calls child hooks</td>
+              </tr>
+              <tr>
+                <td style="padding:0.6rem; font-weight:700;">Class Coupling</td>
+                <td style="padding:0.6rem;">Loose coupling to an abstract interface</td>
+                <td style="padding:0.6rem;">Tight coupling to base class hierarchy</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="gotcha-box">
+            ⚠️ <strong>Professor Gotcha &amp; Deduction Trap:</strong> Simply saying <em>"Strategy uses interfaces and Template Method uses abstract classes"</em> is superficial and receives partial credit. You MUST articulate that Strategy delegates the <strong>entire interchangeable algorithm</strong> via composition, whereas Template Method enforces an <strong>invariant skeleton</strong> and delegates only variant sub-steps via inheritance.
+          </div>
+
+          <div style="margin-top:1rem; padding:0.75rem; background:var(--bg); border:1px solid var(--border); border-radius:var(--radius-sm); font-size:0.85rem; font-family:var(--font-mono); color:var(--text-muted);">
+            <strong>Grading Breakdown (5 Pts):</strong><br>
+            • 2 pts: Composition vs Inheritance mechanism distinction.<br>
+            • 1 pt: Runtime dynamic binding vs compile-time static binding.<br>
+            • 2 pts: Whole algorithm encapsulation vs skeletal invariant flow with step hooks.
+          </div>
+        </div>
+      </details>
+    </article>
+
+    <!-- Self-Grading Rubric -->
+    <section class="section-block" id="self-evaluation" style="margin-top:3rem;">
+      <div class="section-header">
+        <h2 class="section-title">📊 Self-Grading Rubric &amp; Exam Evaluation</h2>
+        <p class="section-subtitle">Score your answers against Prof. Schäfer's official Frankfurt UAS grading scale (15 points total).</p>
+      </div>
+
+      <div class="self-eval-grid">
+        <div class="self-eval-card" style="border-top:3px solid #10b981;">
+          <h4 style="margin:0 0 0.5rem; color:#10b981;">14 – 15 Points (Grade: 1.0 – 1.3)</h4>
+          <p style="font-size:0.88rem; color:var(--text-muted); margin:0 0 0.5rem; line-height:1.5;">
+            Masterclass distinction: Differentiated subtyping from behavioral inheritance in Decorator; detailed Model observer role without presentation leak; cited GoF skeletal vs whole algorithm distinction.
+          </p>
+          <span style="font-size:0.8rem; font-weight:700; color:#10b981; font-family:var(--font-mono);">SEHR GUT / OUTSTANDING</span>
+        </div>
+
+        <div class="self-eval-card" style="border-top:3px solid #38bdf8;">
+          <h4 style="margin:0 0 0.5rem; color:#38bdf8;">11 – 13 Points (Grade: 1.7 – 2.3)</h4>
+          <p style="font-size:0.88rem; color:var(--text-muted); margin:0 0 0.5rem; line-height:1.5;">
+            Strong pass: Correctly identified composition in Decorator and Strategy, but missed the exact Hollywood Principle wording or omitted the Observer Subject role in the Model.
+          </p>
+          <span style="font-size:0.8rem; font-weight:700; color:#38bdf8; font-family:var(--font-mono);">GUT / SOLID KNOWLEDGE</span>
+        </div>
+
+        <div class="self-eval-card" style="border-top:3px solid #f59e0b;">
+          <h4 style="margin:0 0 0.5rem; color:#f59e0b;">8 – 10 Points (Grade: 2.7 – 3.7)</h4>
+          <p style="font-size:0.88rem; color:var(--text-muted); margin:0 0 0.5rem; line-height:1.5;">
+            Basic pass: Identified patterns correctly but fell for professor gotchas (e.g. stated Model updates View directly, or answered "both" for Decorator without explanation).
+          </p>
+          <span style="font-size:0.8rem; font-weight:700; color:#f59e0b; font-family:var(--font-mono);">BEFRIEDIGEND / PASS</span>
+        </div>
+
+        <div class="self-eval-card" style="border-top:3px solid #ef4444;">
+          <h4 style="margin:0 0 0.5rem; color:#ef4444;">&lt; 8 Points (Grade: 5.0)</h4>
+          <p style="font-size:0.88rem; color:var(--text-muted); margin:0 0 0.5rem; line-height:1.5;">
+            Deficient: Confused inheritance with composition, treated Model as UI renderer, or lacked core GoF definitions.
+          </p>
+          <span style="font-size:0.8rem; font-weight:700; color:#ef4444; font-family:var(--font-mono);">NICHT BESTANDEN / RETAKE REQUIRED</span>
+        </div>
+      </div>
+
+      <!-- Callout to Mock 2 -->
+      <div style="background:linear-gradient(135deg, rgba(99,102,241,0.12) 0%, rgba(56,189,248,0.12) 100%); border:1px solid rgba(99,102,241,0.3); border-radius:var(--radius-md); padding:1.5rem; margin-top:2rem; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem;">
+        <div>
+          <span style="font-size:0.8rem; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; color:var(--accent);">Ready for the Full 102-Page Lecture Exam Vault?</span>
+          <h3 style="margin:0.25rem 0 0.5rem; font-size:1.25rem; color:var(--text);">Proceed to Mock 2 · Course Notes Exam Questions</h3>
+          <p style="margin:0; font-size:0.9rem; color:var(--text-muted); max-width:65ch;">
+            Includes all ~18 oral and written exam questions extracted from Prof. Schäfer's 102 pages of notes (<code style="color:var(--accent);">POS-exams-notes.pdf</code>): JUnit Cook's Tour, Alexander binary libraries, automatic LSP checking, and Package Main Sequence metrics.
+          </p>
+        </div>
+        <a href="mock-2.html" class="btn-exam" style="padding:0.75rem 1.4rem; font-size:0.95rem;">
+          Go to Mock 2 (Exam Notes) →
+        </a>
       </div>
     </section>
-
-    <!-- ========================================== -->
-    <!-- SECTION 2: CASE STUDIES & ARCHITECTURE     -->
-    <!-- ========================================== -->
-    <section class="chapter" id="section-2">
-      <div class="chapter-head">
-        <span class="chapter-num">2</span>
-        <h2>Case Studies, Frameworks &amp; Architecture (POS-exams-notes.pdf) <span class="points-badge">15 Points</span></h2>
-      </div>
-      <p class="chapter-dek">Authentic case study and architectural examination questions from Prof. Schäfer's lecture series.</p>
-
-      <div class="drill-list">
-        <!-- Q2.1 (JUnit Extension Points) -->
-        <details class="drill-item">
-          <summary>
-            <span class="drill-tag"><span class="authentic-tag">Exam Notes</span> Case Study JUnit · 5 pts</span>
-            <span class="drill-q">From looking at the JUnit pattern and UML diagram, where are the extension points used when using JUnit in a regular way vs extending JUnit with new framework capabilities?</span>
-            <span class="drill-reveal-hint"></span>
-          </summary>
-          <div class="drill-a">
-            <p><strong>Official Model Answer:</strong></p>
-            <ul>
-              <li><strong>Regular Use Extension Points (Application Developers):</strong>
-                <ol>
-                  <li>Subclassing <code>TestCase</code> to define concrete test fixtures.</li>
-                  <li>Adding public <code>test*()</code> methods containing assertions.</li>
-                  <li>Overriding the Template Method hooks <code>setUp()</code> and <code>tearDown()</code> to initialize and clean up fixtures before/after each test execution.</li>
-                </ol>
-              </li>
-              <li><strong>Framework Extension Points (Tool &amp; Plugin Developers):</strong>
-                <ol>
-                  <li><strong>Overriding <code>runTest()</code>:</strong> Customize how test methods are dispatched (e.g. running tests in separate threads, parameterized data-driven runners).</li>
-                  <li><strong>Extending <code>TestSuite</code>:</strong> Subclassing the Composite to dynamically assemble test suites from databases or file directories.</li>
-                  <li><strong>Custom <code>TestResult</code> &amp; <code>TestListener</code>:</strong> Implementing <code>TestListener</code> to capture start/end/failure events for custom GUIs, CI/CD XML reporting, or HTML dashboards.</li>
-                </ol>
-              </li>
-            </ul>
-          </div>
-        </details>
-
-        <!-- Q2.2 (Christopher Alexander Patterns & Binary Library) -->
-        <details class="drill-item">
-          <summary>
-            <span class="drill-tag"><span class="authentic-tag">Exam Notes</span> Christopher Alexander &amp; Epistemology · 5 pts</span>
-            <span class="drill-q">Name 4 architectural building patterns from Christopher Alexander's 1977 book. Can we implement a reusable binary "pattern library" for software? Explain why or why not.</span>
-            <span class="drill-reveal-hint"></span>
-          </summary>
-          <div class="drill-a">
-            <p><strong>Part 1: 4 Physical Building Patterns from Alexander:</strong></p>
-            <ol>
-              <li><em>Ring Roads:</em> High-speed bypass roads preserving pedestrian city centers.</li>
-              <li><em>Four-Storey Limit:</em> Limiting buildings to four floors to maintain human scale and psychological connectivity.</li>
-              <li><em>Window Place:</em> Built-in alcoves providing natural lighting for quiet reflection.</li>
-              <li><em>South Facing Outdoors:</em> Locating open-air terraces to maximize natural sunlight and thermal comfort.</li>
-            </ol>
-            <p><strong>Part 2: Why We Cannot Implement a Reusable Binary Pattern Library:</strong></p>
-            <p>
-              Software patterns are <strong>abstract architectural templates and collaboration relationships</strong>, not concrete binary components. Unlike a math library or UI widget jar, a pattern must balance conflicting forces that vary depending on the problem domain, threading model, and language paradigm. Implementing a pattern requires structural integration into the application's domain type hierarchy.
-            </p>
-          </div>
-        </details>
-
-        <!-- Q2.3 (Pipes & Filters vs Modern Compilers & Blackboard Exit) -->
-        <details class="drill-item">
-          <summary>
-            <span class="drill-tag"><span class="authentic-tag">Exam Notes</span> Architectural Styles · 5 pts</span>
-            <span class="drill-q">Could you implement a compiler using Pipes &amp; Filters? What features make it less suitable for a modern compiler? In the Blackboard architecture, when should the application main loop stop?</span>
-            <span class="drill-reveal-hint"></span>
-          </summary>
-          <div class="drill-a">
-            <p><strong>Part 1: Pipes &amp; Filters for Modern Compilers:</strong></p>
-            <ul>
-              <li><strong>Yes:</strong> Classic early compilers were structured as pure linear pipelines: Lexer $\to$ Parser $\to$ Semantic Analyzer $\to$ Code Generator.</li>
-              <li><strong>Why it is less suitable today:</strong> Modern optimizing compilers rely heavily on global symbol tables, multi-pass Abstract Syntax Tree (AST) optimizations, inline function expansions, and rich bidirectional error diagnostics. These require non-linear random access and feedback loops that strict unidirectional stream pipes cannot support.</li>
-            </ul>
-            <p><strong>Part 2: Blackboard Main Loop Termination Criteria:</strong></p>
-            <p>The control loop stops when any of the following 3 conditions occur:</p>
-            <ol>
-              <li><strong>Hypothesis Confidence Threshold:</strong> A Knowledge Source produces an acceptable solution reaching the target confidence score.</li>
-              <li><strong>Quiescence / Deadlock:</strong> No Knowledge Source is able to trigger or make further progress given the current state of the blackboard.</li>
-              <li><strong>Resource Bound Exhaustion:</strong> The allocated compute budget, memory ceiling, or time deadline is reached.</li>
-            </ol>
-          </div>
-        </details>
-      </div>
-    </section>
-
-    <!-- ========================================== -->
-    <!-- SECTION 3: SOLID PRINCIPLES & METRICS      -->
-    <!-- ========================================== -->
-    <section class="chapter" id="section-3">
-      <div class="chapter-head">
-        <span class="chapter-num">3</span>
-        <h2>SOLID Principles &amp; Package Architecture Metrics <span class="points-badge">15 Points</span></h2>
-      </div>
-      <p class="chapter-dek">Rigorous mathematical package derivations and object-oriented architectural formalisms.</p>
-
-      <div class="drill-list">
-        <!-- Q3.1 (Automatic LSP Verification) -->
-        <details class="drill-item">
-          <summary>
-            <span class="drill-tag"><span class="authentic-tag">Exam Notes</span> Liskov Substitution Principle · 5 pts</span>
-            <span class="drill-q">Can you check for conformance to the Liskov Substitution Principle (LSP) automatically using static analysis tools? Why or why not?</span>
-            <span class="drill-reveal-hint"></span>
-          </summary>
-          <div class="drill-a">
-            <p><strong>Official Model Answer: No, not completely.</strong></p>
-            <ul>
-              <li><strong>What static tools can check:</strong> Compilers and static checkers can automatically verify <em>syntactic subtyping</em> (method names, parameter type contravariance, return type covariance, and exception throwing rules).</li>
-              <li><strong>Why semantic LSP cannot be automatically checked:</strong> LSP is fundamentally a <em>behavioral contract</em>. It dictates that:
-                <ol>
-                  <li>Preconditions cannot be strengthened ($Pre(T) \implies Pre(S)$).</li>
-                  <li>Postconditions cannot be weakened ($Post(S) \implies Post(T)$).</li>
-                  <li>Class invariants must be preserved ($Inv(S) \implies Inv(T)$).</li>
-                  <li>Historical constraints must be respected (e.g. an immutable object must not become mutable in a subtype).</li>
-                </ol>
-              </li>
-            </ul>
-            <p>
-              Statically checking whether arbitrary runtime code fulfills behavioral postconditions and invariants across all execution paths is undecidable (equivalent to the Halting Problem). Conformance verification requires <strong>Design by Contract (DbC)</strong> and extensive polymorphic test suites.
-            </p>
-          </div>
-        </details>
-
-        <!-- Q3.2 (SRP Definition & OCP Semantic Validity) -->
-        <details class="drill-item">
-          <summary>
-            <span class="drill-tag"><span class="authentic-tag">Exam Notes</span> SRP &amp; OCP Formalisms · 5 pts</span>
-            <span class="drill-q">What is the precise definition of a "responsibility" in SRP? Does the sentence "This class adheres to the Open-Closed Principle" make sense in software architecture?</span>
-            <span class="drill-reveal-hint"></span>
-          </summary>
-          <div class="drill-a">
-            <p><strong>1. Definition of Responsibility in SRP:</strong></p>
-            <p>
-              Robert C. Martin explicitly defines a responsibility as <strong>"a reason to change"</strong>. In clean architecture, a reason to change is tied to a specific business actor or stakeholder group (e.g., Accounting vs Operations). A class should be responsible to one, and only one, actor.
-            </p>
-            <p><strong>2. Does "This class adheres to OCP" make sense?</strong></p>
-            <p>
-              <strong>No, not unconditionally.</strong> A class cannot be open for extension and closed for modification against <em>all possible future changes</em>. Closure is never complete; it is always tactical. An architect must anticipate the specific <em>axes of variation</em> that are likely to change and protect against those specific forces. Claiming universal OCP adherence is meaningless.
-            </p>
-          </div>
-        </details>
-
-        <!-- Q3.3 (Package Metrics Calculation) -->
-        <details class="drill-item" open>
-          <summary>
-            <span class="drill-tag"><span class="authentic-tag">Exam Notes</span> Package Metrics Calculation · 5 pts</span>
-            <span class="drill-q">Given a package $P$ with 2 abstract classes, 8 concrete classes ($N_c = 10$), 15 incoming dependencies ($C_a = 15$), and 5 outgoing dependencies ($C_e = 5$). Calculate $I$, $A$, and $D$. Interpret whether $P$ is well-designed.</span>
-            <span class="drill-reveal-hint"></span>
-          </summary>
-          <div class="drill-a">
-            <p><strong>Step-by-Step Mathematical Derivation:</strong></p>
-            <ol>
-              <li><strong>Instability Metric ($I$):</strong>
-                $$I = \frac{C_e}{C_a + C_e} = \frac{5}{15 + 5} = \frac{5}{20} = 0.25$$
-                <em>Interpretation:</em> The package is highly stable ($I \to 0$); many external packages depend on it.
-              </li>
-              <li><strong>Abstractness Metric ($A$):</strong>
-                $$A = \frac{N_a}{N_c} = \frac{2}{10} = 0.20$$
-                <em>Interpretation:</em> The package is predominantly concrete ($A = 0.20$), with only 20% interfaces/abstract classes.
-              </li>
-              <li><strong>Normalized Distance from Main Sequence ($D$):</strong>
-                $$D = |A + I - 1| = |0.20 + 0.25 - 1| = |-0.55| = 0.55$$
-              </li>
-              <li><strong>Architectural Diagnosis:</strong>
-                Because $D = 0.55 > 0.5$, the package deviates substantially from the Main Sequence line ($A + I = 1$). It falls deep into the <strong>Zone of Pain</strong>: it is heavily relied upon ($I = 0.25$), yet highly concrete ($A = 0.20$), making it rigid and difficult to modify without breaking external dependents.
-              </li>
-            </ol>
-          </div>
-        </details>
-      </div>
-    </section>
-
-    <!-- ========================================== -->
-    <!-- SECTION 4: EPISTEMOLOGY, IDIOMS & CRITICISM -->
-    <!-- ========================================== -->
-    <section class="chapter" id="section-4">
-      <div class="chapter-head">
-        <span class="chapter-num">4</span>
-        <h2>Epistemology, Idioms &amp; Norvig's Criticism <span class="points-badge">15 Points</span></h2>
-      </div>
-      <p class="chapter-dek">Academic pattern critiques, programming idioms, and creational mechanics from the course syllabus.</p>
-
-      <div class="drill-list">
-        <!-- Q4.1 (Peter Norvig 16/23 Critique) -->
-        <details class="drill-item">
-          <summary>
-            <span class="drill-tag"><span class="authentic-tag">Exam Notes</span> Norvig's 16/23 Critique · 5 pts</span>
-            <span class="drill-q">What was Peter Norvig's core critique regarding the 23 Gang of Four patterns in dynamic and functional programming languages?</span>
-            <span class="drill-reveal-hint"></span>
-          </summary>
-          <div class="drill-a">
-            <p><strong>Official Model Answer:</strong></p>
-            <p>
-              In his 1996 analysis, Peter Norvig demonstrated that <strong>16 of the 23 GoF design patterns</strong> are invisible or drastically simplified in languages with first-class functions, macros, or dynamic typing:
-            </p>
-            <ul>
-              <li><strong>Strategy:</strong> Reduced to passing a first-class lambda or function pointer directly, eliminating the need for an interface and concrete strategy classes.</li>
-              <li><strong>Command:</strong> Simply a closure or zero-argument lambda holding captured lexical state.</li>
-              <li><strong>Template Method:</strong> Parameterizing a higher-order function with customized callback functions rather than class inheritance.</li>
-              <li><strong>Composite / Iterator:</strong> Handled natively by built-in generators, list comprehensions, and uniform sequence protocols.</li>
-            </ul>
-            <p>Norvig argued that many GoF patterns are symptoms of missing language features in static languages like C++ and Java 1.0 rather than fundamental universal design constructs.</p>
-          </div>
-        </details>
-
-        <!-- Q4.2 (Programming Idioms vs Strategy Pattern) -->
-        <details class="drill-item">
-          <summary>
-            <span class="drill-tag"><span class="authentic-tag">Exam Notes</span> Idioms vs Patterns · 5 pts</span>
-            <span class="drill-q">Explain how the C function pointer compar in qsort() or Python's map() function represents the Strategy Pattern. Differentiate between an Idiom and a Design Pattern.</span>
-            <span class="drill-reveal-hint"></span>
-          </summary>
-          <div class="drill-a">
-            <p><strong>1. Strategy in C and Python:</strong></p>
-            <ul>
-              <li>In C <code>qsort(base, nmemb, size, compar)</code>: The sorting algorithm skeleton is invariant, while the comparison algorithm (Strategy) is passed as a function pointer <code>compar</code> and executed via delegation.</li>
-              <li>In Python <code>map(function, iterable)</code>: The iteration loop is invariant, while the element transformation algorithm is passed dynamically as a callable strategy object.</li>
-            </ul>
-            <p><strong>2. Idiom vs Design Pattern:</strong></p>
-            <ul>
-              <li><strong>Programming Idiom:</strong> A low-level, language-specific pattern that directly exploits the features and syntax of a particular programming language (e.g., RAII in C++, list comprehensions in Python).</li>
-              <li><strong>Design Pattern:</strong> A medium-scale, language-independent structural configuration of collaborating roles that balances forces regardless of implementation technology.</li>
-            </ul>
-          </div>
-        </details>
-
-        <!-- Q4.3 (Abstract Factory vs Factory Method Parameters) -->
-        <details class="drill-item">
-          <summary>
-            <span class="drill-tag"><span class="authentic-tag">Exam Notes</span> Creational Constraints · 5 pts</span>
-            <span class="drill-q">In [GHJV95], an Abstract Factory is composed of Factory Methods, each with exactly one signature. Does this imply that the Factory Method can only create an object in one way? What do you do if you want to specify room color &amp; size in MakeRoom()?</span>
-            <span class="drill-reveal-hint"></span>
-          </summary>
-          <div class="drill-a">
-            <p><strong>Official Model Answer:</strong></p>
-            <p><strong>No, it does not imply only one way:</strong></p>
-            <ol>
-              <li><strong>Subclass Customization:</strong> Concrete factory subclasses can override the factory method to return specialized subtypes or pre-configured instances without changing the method signature.</li>
-              <li><strong>Handling Additional Attributes (Color &amp; Size):</strong>
-                <ul>
-                  <li><strong>Parameterization:</strong> Introduce parameters to the factory method signature: <code>makeRoom(Color c, int size)</code>.</li>
-                  <li><strong>Factory Method Overloading:</strong> Provide overloaded variants in the factory interface.</li>
-                  <li><strong>Prototype / Parameter Object:</strong> Pass a configuration specification object or use the Prototype pattern to clone and customize templates without exploding the factory interface.</li>
-                </ul>
-              </li>
-            </ol>
-          </div>
-        </details>
-      </div>
-    </section>
-
-    <!-- Footer Navigation -->
-    <footer class="page-footer" style="margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--border); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 1rem;">
-      <span><a href="past-papers.html">← Official Past Papers Hub</a></span>
-      <span><a href="mock-practice-bank.html">Extended Syllabus Practice Bank →</a></span>
-    </footer>
-
-  </div>
+  </main>
 </div>
 
-<script src="assets/site.js?v=2026.15" defer></script>
+<footer class="site-footer">
+  <div class="site-footer-inner">
+    <p>Frankfurt University of Applied Sciences · Fachbereich 2 · Patterns &amp; Frameworks Masterclass</p>
+    <p style="font-size:0.82rem; color:var(--text-muted); margin-top:0.35rem;">
+      Curriculum by Prof. Dr. Jörg Schäfer · Mock 1 based on <code style="color:var(--accent);">exam-questions.pdf</code>
+    </p>
+  </div>
+</footer>
+
+<script src="assets/site.js?v=2026.17"></script>
 <script>
-// Official Exam Interactive Timer Script (90 Mins)
-var timerInterval = null;
-var secondsRemaining = 90 * 60; // 90 minutes
+  // Timer state
+  var timerSeconds = 20 * 60;
+  var timerInterval = null;
+  var timerRunning = false;
 
-function updateTimerDisplay() {
-  var minutes = Math.floor(secondsRemaining / 60);
-  var seconds = secondsRemaining % 60;
-  var formatted = (minutes < 10 ? "0" : "") + minutes + ":" + (seconds < 10 ? "0" : "") + seconds;
-  var display = document.getElementById("examTimerDisplay");
-  if (display) display.textContent = formatted;
-}
-
-function toggleTimer() {
-  var btn = document.getElementById("timerStartBtn");
-  if (timerInterval) {
-    clearInterval(timerInterval);
-    timerInterval = null;
-    if (btn) btn.textContent = "Resume Timer";
-    showToast("Exam timer paused");
-  } else {
-    timerInterval = setInterval(function() {
-      if (secondsRemaining > 0) {
-        secondsRemaining--;
-        updateTimerDisplay();
-      } else {
-        clearInterval(timerInterval);
-        timerInterval = null;
-        alert("Time is up! Review your answers against Prof. Schäfer's official model solutions.");
-      }
-    }, 1000);
-    if (btn) btn.textContent = "Pause Timer";
-    showToast("Exam timer started (90 mins)");
+  function formatTime(s) {
+    var m = Math.floor(s / 60);
+    var sec = s % 60;
+    return (m < 10 ? '0' : '') + m + ':' + (sec < 10 ? '0' : '') + sec;
   }
-}
 
-function expandAllSolutions() {
-  document.querySelectorAll("details.drill-item").forEach(function(d) {
-    d.open = true;
-  });
-  showToast("All verified solutions expanded");
-}
+  function toggleExamTimer() {
+    var btn = document.getElementById('timerStartBtn');
+    var display = document.getElementById('examTimer');
+    if (timerRunning) {
+      clearInterval(timerInterval);
+      timerRunning = false;
+      btn.textContent = '▶ Resume Timer';
+      btn.style.background = 'var(--accent)';
+    } else {
+      timerRunning = true;
+      btn.textContent = '⏸ Pause Timer';
+      btn.style.background = '#e11d48';
+      timerInterval = setInterval(function() {
+        if (timerSeconds <= 0) {
+          clearInterval(timerInterval);
+          timerRunning = false;
+          display.textContent = '00:00 (Time Up!)';
+          alert('Time is up for Mock 1! Please review your answers against the official rubrics.');
+          btn.textContent = '▶ Restart Timer';
+          return;
+        }
+        timerSeconds--;
+        display.textContent = formatTime(timerSeconds);
+      }, 1000);
+    }
+  }
 
-function collapseAllSolutions() {
-  document.querySelectorAll("details.drill-item").forEach(function(d) {
-    d.open = false;
-  });
-  showToast("All solutions collapsed for self-testing");
-}
+  function toggleAllAnswers(expand) {
+    var detailsList = document.querySelectorAll('.page-content details.drill-item');
+    detailsList.forEach(function(d) {
+      if (expand) {
+        d.setAttribute('open', '');
+      } else {
+        d.removeAttribute('open');
+      }
+    });
+  }
 </script>
 </body>
 </html>
