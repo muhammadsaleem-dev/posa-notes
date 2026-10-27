@@ -78,9 +78,13 @@
   // Desktop "16 Units" Interactive Dropdown Menu
   var navLinks = document.querySelector(".sitenav-links");
   if (navLinks) {
+    var dropdown = navLinks.querySelector(".units-dropdown");
     var unitsLink = navLinks.querySelector('a[href*="#curriculum-roadmap"]');
-    if (unitsLink) {
-      var dropdown = document.createElement("div");
+    var currentPath = window.location.pathname.split("/").pop() || "index.html";
+
+    // Fallback: If dropdown is not already statically in HTML, generate it dynamically
+    if (!dropdown && unitsLink) {
+      dropdown = document.createElement("div");
       dropdown.className = "units-dropdown";
 
       var trigger = document.createElement("button");
@@ -93,8 +97,6 @@
       var menu = document.createElement("div");
       menu.className = "units-dropdown-menu";
       menu.setAttribute("role", "menu");
-
-      var currentPath = window.location.pathname.split("/").pop() || "index.html";
 
       var units = [
         { href: "unit-1-strategy.html", num: "1", title: "Strategy Pattern" },
@@ -139,24 +141,45 @@
       dropdown.appendChild(menu);
 
       unitsLink.parentNode.replaceChild(dropdown, unitsLink);
+    }
 
-      trigger.addEventListener("click", function (e) {
-        e.stopPropagation();
-        var isOpen = dropdown.classList.toggle("open");
-        trigger.setAttribute("aria-expanded", isOpen ? "true" : "false");
+    if (dropdown) {
+      var dropdownTrigger = dropdown.querySelector(".units-dropdown-trigger");
+
+      // Set active link in dropdown
+      dropdown.querySelectorAll(".unit-dropdown-item").forEach(function(item) {
+        if (item.getAttribute("href") === currentPath) {
+          item.classList.add("active");
+        }
+      });
+
+      if (dropdownTrigger) {
+        dropdownTrigger.addEventListener("click", function (e) {
+          e.preventDefault();
+          e.stopPropagation();
+          var isOpen = dropdown.classList.toggle("open");
+          dropdownTrigger.setAttribute("aria-expanded", isOpen ? "true" : "false");
+        });
+      }
+
+      dropdown.querySelectorAll("a").forEach(function(link) {
+        link.addEventListener("click", function() {
+          dropdown.classList.remove("open");
+          if (dropdownTrigger) dropdownTrigger.setAttribute("aria-expanded", "false");
+        });
       });
 
       document.addEventListener("click", function (e) {
         if (!dropdown.contains(e.target)) {
           dropdown.classList.remove("open");
-          trigger.setAttribute("aria-expanded", "false");
+          if (dropdownTrigger) dropdownTrigger.setAttribute("aria-expanded", "false");
         }
       });
 
       document.addEventListener("keydown", function (e) {
         if (e.key === "Escape") {
           dropdown.classList.remove("open");
-          trigger.setAttribute("aria-expanded", "false");
+          if (dropdownTrigger) dropdownTrigger.setAttribute("aria-expanded", "false");
         }
       });
     }

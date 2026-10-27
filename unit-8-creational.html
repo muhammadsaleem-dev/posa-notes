@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Unit 8 · Creational Patterns · POSA Masterclass 2026</title>
 <meta name="description" content="Master Creational Patterns: Singleton thread-safety (Double-Checked Locking, Bill Pugh Holder, Enum), Reflection Guard, Factory Method vs Abstract Factory.">
-<link rel="stylesheet" href="assets/style.css?v=2026.19">
+<link rel="stylesheet" href="assets/style.css?v=2026.25">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,600;0,700;1,400&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,600;1,700&display=swap" rel="stylesheet">
@@ -199,7 +199,41 @@
     </a>
     <div class="sitenav-links">
       <a href="index.html">Overview</a>
-      <a href="index.html#curriculum-roadmap">16 Units</a>
+      <div class="units-dropdown">
+        <button type="button" class="units-dropdown-trigger" aria-expanded="false" aria-haspopup="true">
+          16 Units
+          <svg class="chevron" viewBox="0 0 10 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M1 1L5 5L9 1"/></svg>
+        </button>
+        <div class="units-dropdown-menu" role="menu">
+          <div class="units-dropdown-header">
+            <span>All 16 Curriculum Units</span>
+            <span style="font-size:0.68rem; color:var(--accent); font-weight:700;">Direct Jump</span>
+          </div>
+          <div class="units-grid">
+            <a href="unit-1-strategy.html" class="unit-dropdown-item" role="menuitem"><span class="unit-dropdown-num">1</span><span>Strategy Pattern</span></a>
+            <a href="unit-2-template.html" class="unit-dropdown-item" role="menuitem"><span class="unit-dropdown-num">2A</span><span>Template Method</span></a>
+            <a href="unit-2-command.html" class="unit-dropdown-item" role="menuitem"><span class="unit-dropdown-num">2B</span><span>Command Pattern</span></a>
+            <a href="unit-3-composite.html" class="unit-dropdown-item" role="menuitem"><span class="unit-dropdown-num">3A</span><span>Composite Pattern</span></a>
+            <a href="unit-3-iterator.html" class="unit-dropdown-item" role="menuitem"><span class="unit-dropdown-num">3B</span><span>Iterator Pattern</span></a>
+            <a href="unit-4-junit.html" class="unit-dropdown-item" role="menuitem"><span class="unit-dropdown-num">4</span><span>Case Study: JUnit</span></a>
+            <a href="unit-5-theory.html" class="unit-dropdown-item" role="menuitem"><span class="unit-dropdown-num">5</span><span>Pattern Theory</span></a>
+            <a href="unit-6-solid.html" class="unit-dropdown-item" role="menuitem"><span class="unit-dropdown-num">6</span><span>SOLID Principles</span></a>
+            <a href="unit-7-packaging.html" class="unit-dropdown-item" role="menuitem"><span class="unit-dropdown-num">7</span><span>Packaging &amp; Metrics</span></a>
+            <a href="unit-8-creational.html" class="unit-dropdown-item" role="menuitem"><span class="unit-dropdown-num">8</span><span>Creational Patterns</span></a>
+            <a href="unit-9-flexibility.html" class="unit-dropdown-item" role="menuitem"><span class="unit-dropdown-num">9</span><span>Flexibility Patterns</span></a>
+            <a href="unit-10-decoupling.html" class="unit-dropdown-item" role="menuitem"><span class="unit-dropdown-num">10</span><span>Decoupling Patterns</span></a>
+            <a href="unit-11-mvc.html" class="unit-dropdown-item" role="menuitem"><span class="unit-dropdown-num">11</span><span>MVC Architecture</span></a>
+            <a href="unit-12-architectural.html" class="unit-dropdown-item" role="menuitem"><span class="unit-dropdown-num">12</span><span>Architectural Styles</span></a>
+            <a href="unit-13-analysis.html" class="unit-dropdown-item" role="menuitem"><span class="unit-dropdown-num">13</span><span>Analysis &amp; Quality</span></a>
+            <a href="unit-14-testing.html" class="unit-dropdown-item" role="menuitem"><span class="unit-dropdown-num">14</span><span>Testing Patterns</span></a>
+            <a href="unit-15-criticism.html" class="unit-dropdown-item" role="menuitem"><span class="unit-dropdown-num">15</span><span>Pattern Criticism</span></a>
+            <a href="unit-16-genai.html" class="unit-dropdown-item" role="menuitem"><span class="unit-dropdown-num">16</span><span>GenAI &amp; Patterns</span></a>
+          </div>
+          <div class="units-dropdown-footer">
+            <a href="index.html#curriculum-roadmap">🗺️ View Full Roadmap Table on Overview Page &rarr;</a>
+          </div>
+        </div>
+      </div>
       <a href="mock-1.html">🎓 Mock Exam 1</a>
       <a href="mock-2.html">📝 Mock Exam 2</a>
     </div>
@@ -522,6 +556,6 @@
   </main>
 </div>
 
-<script src="assets/site.js?v=2026.19" defer></script>
+<script src="assets/site.js?v=2026.25" defer></script>
 </body>
 </html>
