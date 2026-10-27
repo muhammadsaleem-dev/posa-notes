@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Unit 16 · Patterns in the Age of Generative AI · POSA Masterclass 2026</title>
 <meta name="description" content="Master how classical Gang of Four and POSA architectural patterns map to modern autonomous AI agent architectures, the Weather Station case study (Primitive Obsession vs Fowler's Quantity), and architectural auditing of AI code.">
-<link rel="stylesheet" href="assets/style.css?v=2026.25">
+<link rel="stylesheet" href="assets/style.css?v=2026.26">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,600;0,700;1,400&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,600;1,700&display=swap" rel="stylesheet">
 <script>
@@ -245,7 +245,8 @@
   <aside class="sidebar-toc">
     <div class="sidebar-block">
       <span class="sidebar-label">Unit Navigation</span>
-      <a href="#sec-semantic-anchors" class="active"><span class="toc-num">1</span>Semantic Prompt Anchors</a>
+      <a href="#sec-exec-summary" class="active"><span class="toc-num">⚡</span>Executive Summary</a>
+      <a href="#sec-semantic-anchors"><span class="toc-num">1</span>Semantic Prompt Anchors</a>
       <a href="#sec-weather-station"><span class="toc-num">2</span>Case Study: Weather Station</a>
       <a href="#sec-agentic-topologies"><span class="toc-num">3</span>Agentic POSA Topologies</a>
       <a href="#sec-ai-smells"><span class="toc-num">4</span>The 4 AI Architectural Smells</a>
@@ -279,6 +280,107 @@
         Explore how classic Gang of Four and POSA architectural patterns serve as high-density semantic anchors for AI prompting, master the Weather Station case study (Primitive Obsession vs. Fowler's Quantity Pattern), and analyze how autonomous multi-agent systems re-implement Strategy, Command, Blackboard, and Chain of Responsibility.
       </p>
     </header>
+
+    <!-- ============================================================== -->
+    <!-- 0. COLLAPSIBLE EXECUTIVE SUMMARY                               -->
+    <!-- ============================================================== -->
+    <details class="executive-summary-card" id="sec-exec-summary" open>
+      <summary class="executive-summary-header">
+        <div class="executive-summary-title">
+          <span class="executive-summary-badge">⚡ Executive Summary</span>
+          <span>Core Mental Models: Why Patterns Matter in the GenAI Era</span>
+        </div>
+        <div class="executive-summary-toggle">
+          <span class="exec-toggle-open">Collapse</span>
+          <span class="exec-toggle-closed">Expand</span>
+          <svg class="executive-summary-chevron" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </div>
+      </summary>
+
+      <div class="executive-summary-body">
+        <div style="background:var(--bg-subtle); border-left:3px solid var(--accent); padding:0.85rem 1.15rem; border-radius:4px; margin-bottom:1.25rem;">
+          <p style="margin:0; font-size:0.92rem; line-height:1.6; font-style:italic; color:var(--text);">
+            &ldquo;Patterns make you a better thinker, and they make you a better communicator. And communication includes AI bots these days.&rdquo;
+          </p>
+        </div>
+
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:1.25rem; margin-bottom:1.5rem;">
+          <!-- Insight A -->
+          <div style="background:var(--code-bg); border:1px solid var(--border); border-radius:var(--radius-sm); padding:1rem 1.15rem;">
+            <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:0.6rem;">
+              <span style="font-size:1.1rem;">🎯</span>
+              <strong style="font-size:0.92rem; color:var(--text);">Insight A: High-Density Prompt Anchors</strong>
+            </div>
+            <p style="font-size:0.86rem; line-height:1.55; color:var(--text-muted); margin:0 0 0.75rem;">
+              If you tell an AI <em>&ldquo;Write a weather station&rdquo;</em>, it generates fragile code with <code style="color:#ef4444;">double temp, double pressure</code> (<strong>Primitive Obsession</strong>). If you prompt: <em>&ldquo;Use Martin Fowler&rsquo;s Quantity Pattern and Observer telemetry&rdquo;</em>, the model immediately generates typed Value Objects, unit encapsulation, and domain validation.
+            </p>
+            <div style="font-size:0.78rem; font-weight:700; color:var(--accent);">
+              &rarr; A 3-word pattern name replaces 300 lines of prompt specifications.
+            </div>
+          </div>
+
+          <!-- Insight B -->
+          <div style="background:var(--code-bg); border:1px solid var(--border); border-radius:var(--radius-sm); padding:1rem 1.15rem;">
+            <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:0.6rem;">
+              <span style="font-size:1.1rem;">🕵️‍♂️</span>
+              <strong style="font-size:0.92rem; color:var(--text);">Insight B: The Architectural Auditor Role</strong>
+            </div>
+            <p style="font-size:0.86rem; line-height:1.55; color:var(--text-muted); margin:0 0 0.75rem;">
+              When syntax generation is instantaneous, the software engineer&rsquo;s role shifts from <strong>code typist</strong> to <strong>architectural auditor</strong>. The engineer must catch the 4 modern AI smells: <em>Prompt Viscosity, Phantom Invariants, Speculative Micro-Decoupling</em>, and <em>Context Bleed</em> before code reaches production.
+            </p>
+            <div style="font-size:0.78rem; font-weight:700; color:#10b981;">
+              &rarr; Pattern theory is your evaluation harness for AI-generated code.
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top:1.25rem;">
+          <div style="font-size:0.82rem; font-weight:800; text-transform:uppercase; letter-spacing:0.06em; color:var(--text-muted); margin-bottom:0.65rem; font-family:var(--font-mono);">
+            Autonomous AI Agents Are Classic POSA &amp; GoF Patterns in Disguise
+          </div>
+          <div style="overflow-x:auto;">
+            <table style="width:100%; border-collapse:collapse; font-size:0.84rem;">
+              <thead>
+                <tr style="border-bottom:2px solid var(--border); text-align:left;">
+                  <th style="padding:0.55rem 0.75rem; color:var(--text);">Modern AI Agent Concept</th>
+                  <th style="padding:0.55rem 0.75rem; color:var(--text);">Classical Architectural Pattern</th>
+                  <th style="padding:0.55rem 0.75rem; color:var(--text);">Why It Matters in Practice</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr style="border-bottom:1px solid var(--border);">
+                  <td style="padding:0.55rem 0.75rem;"><strong>Tool / Function Calling</strong></td>
+                  <td style="padding:0.55rem 0.75rem; color:var(--accent); font-weight:700;">GoF Command Pattern</td>
+                  <td style="padding:0.55rem 0.75rem; color:var(--text-muted);">Encapsulates tool name, JSON argument schema, execution callback, and undo/retry logic.</td>
+                </tr>
+                <tr style="border-bottom:1px solid var(--border);">
+                  <td style="padding:0.55rem 0.75rem;"><strong>Model Router &amp; Fallbacks</strong></td>
+                  <td style="padding:0.55rem 0.75rem; color:var(--accent); font-weight:700;">GoF Strategy Pattern</td>
+                  <td style="padding:0.55rem 0.75rem; color:var(--text-muted);">Swaps LLM providers, temperature profiles, or fallback models dynamically behind a uniform interface.</td>
+                </tr>
+                <tr style="border-bottom:1px solid var(--border);">
+                  <td style="padding:0.55rem 0.75rem;"><strong>Multi-Agent Shared Memory</strong></td>
+                  <td style="padding:0.55rem 0.75rem; color:var(--accent); font-weight:700;">POSA Blackboard Pattern</td>
+                  <td style="padding:0.55rem 0.75rem; color:var(--text-muted);">Autonomous sub-agents independently read the problem context, write solutions, and coordinate asynchronously.</td>
+                </tr>
+                <tr style="border-bottom:1px solid var(--border);">
+                  <td style="padding:0.55rem 0.75rem;"><strong>Safety &amp; Guardrails Pipeline</strong></td>
+                  <td style="padding:0.55rem 0.75rem; color:var(--accent); font-weight:700;">GoF Chain of Responsibility</td>
+                  <td style="padding:0.55rem 0.75rem; color:var(--text-muted);">Sequentially processes input/output prompts through toxicity checks, PII masks, and schema validators.</td>
+                </tr>
+                <tr>
+                  <td style="padding:0.55rem 0.75rem;"><strong>RAG Chunking &amp; Ingestion</strong></td>
+                  <td style="padding:0.55rem 0.75rem; color:var(--accent); font-weight:700;">POSA Pipes and Filters</td>
+                  <td style="padding:0.55rem 0.75rem; color:var(--text-muted);">Transforms raw unstructured documents through discrete parsing, chunking, embedding, and indexing stages.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </details>
 
     <!-- ============================================================== -->
     <!-- 1. PATTERNS AS HIGH-DENSITY SEMANTIC ANCHORS                   -->
@@ -858,6 +960,6 @@ public class AgentDispatcher {
   </main>
 </div>
 
-<script src="assets/site.js?v=2026.25" defer></script>
+<script src="assets/site.js?v=2026.26" defer></script>
 </body>
 </html>
