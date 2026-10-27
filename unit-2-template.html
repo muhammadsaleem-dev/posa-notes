@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Unit 2A · Template Method Pattern · POSA Masterclass 2026</title>
 <meta name="description" content="Master the Template Method Pattern, the Hollywood Principle, invariant algorithm skeletons, hooks, and inheritance vs composition tradeoffs. Course Faculty Exam prep.">
-<link rel="stylesheet" href="assets/style.css?v=2026.25">
+<link rel="stylesheet" href="assets/style.css?v=2026.27">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,600;0,700;1,400&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,600;1,700&display=swap" rel="stylesheet">
@@ -327,6 +327,8 @@
   <aside class="sidebar-toc">
     <div class="sidebar-block">
       <span class="sidebar-label">Navigation</span>
+      
+      <a href="#sec-exec-summary" class="active"><span class="toc-num">⚡</span>Executive Summary</a>
       <a href="index.html">← Course Overview</a>
       <a href="unit-1-strategy.html">← Unit 1 · Strategy</a>
       <a href="unit-2-command.html">Unit 2B · Command →</a>
@@ -367,6 +369,98 @@
         Master invariant algorithm skeletons, Inversion of Control (IoC), and the Hollywood Principle (<em>"Don't call us, we'll call you"</em>). Directly synthesized from Course Faculty's lecture notes and authentic exam sheets.
       </p>
     </header>
+
+    <!-- ============================================================== -->
+    <!-- 0. COLLAPSIBLE EXECUTIVE SUMMARY                               -->
+    <!-- ============================================================== -->
+    <details class="executive-summary-card" id="sec-exec-summary" open>
+      <summary class="executive-summary-header">
+        <div class="executive-summary-title">
+          <span class="executive-summary-badge">⚡ Executive Summary</span>
+          <span>Template Method: The Invariant Workflow Skeleton</span>
+        </div>
+        <div class="executive-summary-toggle">
+          <span class="exec-toggle-open">Collapse</span>
+          <span class="exec-toggle-closed">Expand</span>
+          <svg class="executive-summary-chevron" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </div>
+      </summary>
+
+      <div class="executive-summary-body">
+        <div style="background:var(--bg-subtle); border-left:3px solid var(--accent); padding:0.85rem 1.15rem; border-radius:4px; margin-bottom:1.25rem;">
+          <p style="margin:0; font-size:0.92rem; line-height:1.6; font-style:italic; color:var(--text);">
+            &ldquo;The Hollywood Principle: 'Don't call us, we'll call you.' The parent class calls subclass operations, never the reverse.&rdquo;
+          </p>
+        </div>
+
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:1.25rem; margin-bottom:1.5rem;">
+          <!-- Insight A -->
+          <div style="background:var(--code-bg); border:1px solid var(--border); border-radius:var(--radius-sm); padding:1rem 1.15rem;">
+            <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:0.6rem;">
+              <span style="font-size:1.1rem;">🎯</span>
+              <strong style="font-size:0.92rem; color:var(--text);">Invariant Algorithm Skeleton</strong>
+            </div>
+            <p style="font-size:0.86rem; line-height:1.55; color:var(--text-muted); margin:0 0 0.75rem;">
+              An abstract base class defines the invariant execution steps in a final template method. Subclasses implement the abstract primitives or hook steps, but cannot alter the execution sequence.
+            </p>
+            <div style="font-size:0.78rem; font-weight:700; color:var(--accent);">
+              → Guarantees mandatory lifecycle ordering.
+            </div>
+          </div>
+
+          <!-- Insight B -->
+          <div style="background:var(--code-bg); border:1px solid var(--border); border-radius:var(--radius-sm); padding:1rem 1.15rem;">
+            <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:0.6rem;">
+              <span style="font-size:1.1rem;">🕵️‍♂️</span>
+              <strong style="font-size:0.92rem; color:var(--text);">Hooks vs. Abstract Primitives</strong>
+            </div>
+            <p style="font-size:0.86rem; line-height:1.55; color:var(--text-muted); margin:0 0 0.75rem;">
+              Abstract primitives must be overridden by subclasses. Hook methods provide sensible default or empty implementations that subclasses may optionally override to fine-tune behavior.
+            </p>
+            <div style="font-size:0.78rem; font-weight:700; color:#10b981;">
+              → Prevents boilerplate in subclasses that need default behavior.
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top:1.25rem;">
+          <div style="font-size:0.82rem; font-weight:800; text-transform:uppercase; letter-spacing:0.06em; color:var(--text-muted); margin-bottom:0.65rem; font-family:var(--font-mono);">
+            Template Method Architecture Matrix
+          </div>
+          <div style="overflow-x:auto;">
+            <table style="width:100%; border-collapse:collapse; font-size:0.84rem;">
+              <thead>
+                <tr style="border-bottom:2px solid var(--border); text-align:left;">
+                  <th style="padding:0.55rem 0.75rem; color:var(--text);">Concept / Pattern</th>
+                  <th style="padding:0.55rem 0.75rem; color:var(--text);">Architectural Mechanism</th>
+                  <th style="padding:0.55rem 0.75rem; color:var(--text);">Why It Matters in Practice &amp; Exams</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr style="border-bottom:1px solid var(--border);">
+                  <td style="padding:0.55rem 0.75rem;"><strong>Template Method</strong></td>
+                  <td style="padding:0.55rem 0.75rem; color:var(--accent); font-weight:700;">Final Skeleton Method</td>
+                  <td style="padding:0.55rem 0.75rem; color:var(--text-muted);">Enforces invariant step execution order across all subclasses.</td>
+                </tr>
+                <tr style="border-bottom:1px solid var(--border);">
+                  <td style="padding:0.55rem 0.75rem;"><strong>Primitive Operation</strong></td>
+                  <td style="padding:0.55rem 0.75rem; color:var(--accent); font-weight:700;">Abstract Method</td>
+                  <td style="padding:0.55rem 0.75rem; color:var(--text-muted);">Mandatory step that each concrete subclass must implement.</td>
+                </tr>
+                <tr style="border-bottom:1px solid var(--border);">
+                  <td style="padding:0.55rem 0.75rem;"><strong>Hook Method</strong></td>
+                  <td style="padding:0.55rem 0.75rem; color:var(--accent); font-weight:700;">Default / Empty Body</td>
+                  <td style="padding:0.55rem 0.75rem; color:var(--text-muted);">Optional interception point for subclasses without forcing override.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </details>
+
 
     <!-- ============================================================== -->
     <!-- 1. PATTERN PROFILE & UML                                       -->
@@ -840,6 +934,6 @@ public class Duck {
   </main>
 </div>
 
-<script src="assets/site.js?v=2026.25" defer></script>
+<script src="assets/site.js?v=2026.27" defer></script>
 </body>
 </html>

@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Unit 4 · Frameworks &amp; Case Study JUnit · POSA Masterclass 2026</title>
 <meta name="description" content="Master JUnit architecture (A Cook’s Tour), the 5 compounded patterns, Inversion of Control, Hot Spots vs Frozen Spots, and JUnit 3 to 5 evolution.">
-<link rel="stylesheet" href="assets/style.css?v=2026.25">
+<link rel="stylesheet" href="assets/style.css?v=2026.27">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,600;0,700;1,400&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,600;1,700&display=swap" rel="stylesheet">
@@ -281,6 +281,8 @@
   <aside class="sidebar-toc">
     <div class="sidebar-block">
       <span class="sidebar-label">Unit Navigation</span>
+      
+      <a href="#sec-exec-summary" class="active"><span class="toc-num">⚡</span>Executive Summary</a>
       <a href="#sec-profile" class="active"><span class="toc-num">1</span>Framework &amp; Cook's Tour</a>
       <a href="#sec-code"><span class="toc-num">2</span>Minimal Architecture Code</a>
       <a href="#sec-rules"><span class="toc-num">3</span>Hot Spots &amp; Evolution</a>
@@ -316,6 +318,103 @@
         Analyze how Kent Beck and Erich Gamma composed 5 foundational Gang of Four design patterns into JUnit, illustrating Inversion of Control, Hot Spots vs Frozen Spots, and framework extension mechanisms.
       </p>
     </header>
+
+    <!-- ============================================================== -->
+    <!-- 0. COLLAPSIBLE EXECUTIVE SUMMARY                               -->
+    <!-- ============================================================== -->
+    <details class="executive-summary-card" id="sec-exec-summary" open>
+      <summary class="executive-summary-header">
+        <div class="executive-summary-title">
+          <span class="executive-summary-badge">⚡ Executive Summary</span>
+          <span>JUnit Cook's Tour: Synergistic GoF Pattern Architecture</span>
+        </div>
+        <div class="executive-summary-toggle">
+          <span class="exec-toggle-open">Collapse</span>
+          <span class="exec-toggle-closed">Expand</span>
+          <svg class="executive-summary-chevron" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </div>
+      </summary>
+
+      <div class="executive-summary-body">
+        <div style="background:var(--bg-subtle); border-left:3px solid var(--accent); padding:0.85rem 1.15rem; border-radius:4px; margin-bottom:1.25rem;">
+          <p style="margin:0; font-size:0.92rem; line-height:1.6; font-style:italic; color:var(--text);">
+            &ldquo;How Kent Beck and Erich Gamma constructed JUnit by harmonizing 6 GoF patterns into an extensible micro-framework.&rdquo;
+          </p>
+        </div>
+
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:1.25rem; margin-bottom:1.5rem;">
+          <!-- Insight A -->
+          <div style="background:var(--code-bg); border:1px solid var(--border); border-radius:var(--radius-sm); padding:1rem 1.15rem;">
+            <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:0.6rem;">
+              <span style="font-size:1.1rem;">🎯</span>
+              <strong style="font-size:0.92rem; color:var(--text);">The Pattern Synergy in JUnit</strong>
+            </div>
+            <p style="font-size:0.86rem; line-height:1.55; color:var(--text-muted); margin:0 0 0.75rem;">
+              TestCase is a Command running tests; runBare() is a Template Method (setUp -> runTest -> tearDown); TestSuite is a Composite running recursive test trees; TestResult is a Collecting Parameter.
+            </p>
+            <div style="font-size:0.78rem; font-weight:700; color:var(--accent);">
+              → Demonstrates that clean architecture arises from combining patterns.
+            </div>
+          </div>
+
+          <!-- Insight B -->
+          <div style="background:var(--code-bg); border:1px solid var(--border); border-radius:var(--radius-sm); padding:1rem 1.15rem;">
+            <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:0.6rem;">
+              <span style="font-size:1.1rem;">🕵️‍♂️</span>
+              <strong style="font-size:0.92rem; color:var(--text);">Fixture Isolation Invariant</strong>
+            </div>
+            <p style="font-size:0.86rem; line-height:1.55; color:var(--text-muted); margin:0 0 0.75rem;">
+              JUnit creates a fresh TestCase instance for every individual test method execution. setUp() and tearDown() guarantee total test isolation, preventing state pollution between tests.
+            </p>
+            <div style="font-size:0.78rem; font-weight:700; color:#10b981;">
+              → Mandatory invariant: tests must be completely order-independent.
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top:1.25rem;">
+          <div style="font-size:0.82rem; font-weight:800; text-transform:uppercase; letter-spacing:0.06em; color:var(--text-muted); margin-bottom:0.65rem; font-family:var(--font-mono);">
+            JUnit GoF Pattern Mapping Matrix
+          </div>
+          <div style="overflow-x:auto;">
+            <table style="width:100%; border-collapse:collapse; font-size:0.84rem;">
+              <thead>
+                <tr style="border-bottom:2px solid var(--border); text-align:left;">
+                  <th style="padding:0.55rem 0.75rem; color:var(--text);">Concept / Pattern</th>
+                  <th style="padding:0.55rem 0.75rem; color:var(--text);">Architectural Mechanism</th>
+                  <th style="padding:0.55rem 0.75rem; color:var(--text);">Why It Matters in Practice &amp; Exams</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr style="border-bottom:1px solid var(--border);">
+                  <td style="padding:0.55rem 0.75rem;"><strong>TestCase</strong></td>
+                  <td style="padding:0.55rem 0.75rem; color:var(--accent); font-weight:700;">GoF Command Pattern</td>
+                  <td style="padding:0.55rem 0.75rem; color:var(--text-muted);">Encapsulates a test method into a runnable, schedulable unit of execution.</td>
+                </tr>
+                <tr style="border-bottom:1px solid var(--border);">
+                  <td style="padding:0.55rem 0.75rem;"><strong>runBare()</strong></td>
+                  <td style="padding:0.55rem 0.75rem; color:var(--accent); font-weight:700;">GoF Template Method</td>
+                  <td style="padding:0.55rem 0.75rem; color:var(--text-muted);">Enforces the mandatory fixture sequence: setUp() -> runTest() -> tearDown().</td>
+                </tr>
+                <tr style="border-bottom:1px solid var(--border);">
+                  <td style="padding:0.55rem 0.75rem;"><strong>TestSuite</strong></td>
+                  <td style="padding:0.55rem 0.75rem; color:var(--accent); font-weight:700;">GoF Composite Pattern</td>
+                  <td style="padding:0.55rem 0.75rem; color:var(--text-muted);">Enables running single TestCases and nested TestSuites through the same interface.</td>
+                </tr>
+                <tr style="border-bottom:1px solid var(--border);">
+                  <td style="padding:0.55rem 0.75rem;"><strong>TestResult</strong></td>
+                  <td style="padding:0.55rem 0.75rem; color:var(--accent); font-weight:700;">Collecting Parameter</td>
+                  <td style="padding:0.55rem 0.75rem; color:var(--text-muted);">Thread-safe accumulator gathering success counts, failures, and errors.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </details>
+
 
     <!-- ============================================================== -->
     <!-- 1. FRAMEWORK SPECIFICATION & COOK'S TOUR UML                   -->
@@ -623,6 +722,6 @@ public class TestSuite implements Test {
   </main>
 </div>
 
-<script src="assets/site.js?v=2026.25" defer></script>
+<script src="assets/site.js?v=2026.27" defer></script>
 </body>
 </html>

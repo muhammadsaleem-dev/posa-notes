@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Unit 10 · Decoupling Patterns (Observer &amp; Mediator) · POSA Masterclass 2026</title>
 <meta name="description" content="Master decoupling patterns: Observer (Publish-Subscribe), Push vs Pull models, the Lapsed Listener memory leak, and Mediator star networks.">
-<link rel="stylesheet" href="assets/style.css?v=2026.25">
+<link rel="stylesheet" href="assets/style.css?v=2026.27">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,600;0,700;1,400&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,600;1,700&display=swap" rel="stylesheet">
 <script>
@@ -182,6 +182,8 @@
   <aside class="sidebar-toc">
     <div class="sidebar-block">
       <span class="sidebar-label">Unit Navigation</span>
+      
+      <a href="#sec-exec-summary" class="active"><span class="toc-num">⚡</span>Executive Summary</a>
       <a href="#sec-profile" class="active"><span class="toc-num">1</span>Observer &amp; Mediator Profile</a>
       <a href="#sec-weather"><span class="toc-num">2</span>WeatherStation Code</a>
       <a href="#sec-pushpull"><span class="toc-num">3</span>Push vs Pull &amp; Leaks</a>
@@ -213,6 +215,98 @@
         Master one-to-many publish-subscribe communication, Push vs. Pull notification models, the Lapsed Listener memory leak hazard, and Mediator coordination hubs.
       </p>
     </header>
+
+    <!-- ============================================================== -->
+    <!-- 0. COLLAPSIBLE EXECUTIVE SUMMARY                               -->
+    <!-- ============================================================== -->
+    <details class="executive-summary-card" id="sec-exec-summary" open>
+      <summary class="executive-summary-header">
+        <div class="executive-summary-title">
+          <span class="executive-summary-badge">⚡ Executive Summary</span>
+          <span>Decoupling Patterns: Observer & Mediator Topologies</span>
+        </div>
+        <div class="executive-summary-toggle">
+          <span class="exec-toggle-open">Collapse</span>
+          <span class="exec-toggle-closed">Expand</span>
+          <svg class="executive-summary-chevron" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </div>
+      </summary>
+
+      <div class="executive-summary-body">
+        <div style="background:var(--bg-subtle); border-left:3px solid var(--accent); padding:0.85rem 1.15rem; border-radius:4px; margin-bottom:1.25rem;">
+          <p style="margin:0; font-size:0.92rem; line-height:1.6; font-style:italic; color:var(--text);">
+            &ldquo;Decouple senders from receivers. Replace tangled M-to-N dependencies with clean event broadcasting or centralized coordination.&rdquo;
+          </p>
+        </div>
+
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:1.25rem; margin-bottom:1.5rem;">
+          <!-- Insight A -->
+          <div style="background:var(--code-bg); border:1px solid var(--border); border-radius:var(--radius-sm); padding:1rem 1.15rem;">
+            <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:0.6rem;">
+              <span style="font-size:1.1rem;">🎯</span>
+              <strong style="font-size:0.92rem; color:var(--text);">Observer: 1-to-Many Publish/Subscribe</strong>
+            </div>
+            <p style="font-size:0.86rem; line-height:1.55; color:var(--text-muted); margin:0 0 0.75rem;">
+              The Subject maintains an observer registry. When state changes, it notifies observers without knowing their concrete types. Observers can pull updated state or receive push event payloads.
+            </p>
+            <div style="font-size:0.78rem; font-weight:700; color:var(--accent);">
+              → Beware the Lapsed Listener problem: unregister observers to avoid memory leaks.
+            </div>
+          </div>
+
+          <!-- Insight B -->
+          <div style="background:var(--code-bg); border:1px solid var(--border); border-radius:var(--radius-sm); padding:1rem 1.15rem;">
+            <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:0.6rem;">
+              <span style="font-size:1.1rem;">🕵️‍♂️</span>
+              <strong style="font-size:0.92rem; color:var(--text);">Mediator: Many-to-Many Hub Coordination</strong>
+            </div>
+            <p style="font-size:0.86rem; line-height:1.55; color:var(--text-muted); margin:0 0 0.75rem;">
+              Mediator encapsulates complex interactions between colleagues. Instead of colleagues referencing each other directly (tangled mesh), all communication routes through the central mediator hub.
+            </p>
+            <div style="font-size:0.78rem; font-weight:700; color:#10b981;">
+              → Centralizes control logic at the expense of a potentially complex mediator.
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top:1.25rem;">
+          <div style="font-size:0.82rem; font-weight:800; text-transform:uppercase; letter-spacing:0.06em; color:var(--text-muted); margin-bottom:0.65rem; font-family:var(--font-mono);">
+            Decoupling Patterns Comparison Matrix
+          </div>
+          <div style="overflow-x:auto;">
+            <table style="width:100%; border-collapse:collapse; font-size:0.84rem;">
+              <thead>
+                <tr style="border-bottom:2px solid var(--border); text-align:left;">
+                  <th style="padding:0.55rem 0.75rem; color:var(--text);">Concept / Pattern</th>
+                  <th style="padding:0.55rem 0.75rem; color:var(--text);">Architectural Mechanism</th>
+                  <th style="padding:0.55rem 0.75rem; color:var(--text);">Why It Matters in Practice &amp; Exams</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr style="border-bottom:1px solid var(--border);">
+                  <td style="padding:0.55rem 0.75rem;"><strong>Observer</strong></td>
+                  <td style="padding:0.55rem 0.75rem; color:var(--accent); font-weight:700;">1-to-Many Broadcast</td>
+                  <td style="padding:0.55rem 0.75rem; color:var(--text-muted);">Subject publishes state events; observers subscribe and react autonomously.</td>
+                </tr>
+                <tr style="border-bottom:1px solid var(--border);">
+                  <td style="padding:0.55rem 0.75rem;"><strong>Mediator</strong></td>
+                  <td style="padding:0.55rem 0.75rem; color:var(--accent); font-weight:700;">Many-to-Many Hub</td>
+                  <td style="padding:0.55rem 0.75rem; color:var(--text-muted);">Colleagues communicate strictly through a central mediator; eliminates cyclic colleague meshes.</td>
+                </tr>
+                <tr style="border-bottom:1px solid var(--border);">
+                  <td style="padding:0.55rem 0.75rem;"><strong>Exam Pitfall</strong></td>
+                  <td style="padding:0.55rem 0.75rem; color:var(--accent); font-weight:700;">Memory Leaks & Cycles</td>
+                  <td style="padding:0.55rem 0.75rem; color:var(--text-muted);">Unregistered observers prevent garbage collection; cascading mediator events can trigger infinite loops.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </details>
+
 
     <!-- ============================================================== -->
     <!-- 1. PATTERN SPECIFICATIONS & CANONICAL UML                      -->
@@ -457,6 +551,6 @@ public class WeatherData implements Subject {
   </main>
 </div>
 
-<script src="assets/site.js?v=2026.25" defer></script>
+<script src="assets/site.js?v=2026.27" defer></script>
 </body>
 </html>

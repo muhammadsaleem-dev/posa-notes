@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Unit 7 · Packaging Principles &amp; Metrics · POSA Masterclass 2026</title>
 <meta name="description" content="Master package cohesion (REP, CCP, CRP), package coupling (ADP, SDP, SAP), Robert C. Martin's Main Sequence metrics (I, A, D), and the Zone of Pain.">
-<link rel="stylesheet" href="assets/style.css?v=2026.25">
+<link rel="stylesheet" href="assets/style.css?v=2026.27">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,600;0,700;1,400&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,600;1,700&display=swap" rel="stylesheet">
@@ -232,6 +232,8 @@
   <aside class="sidebar-toc">
     <div class="sidebar-block">
       <span class="sidebar-label">Unit Navigation</span>
+      
+      <a href="#sec-exec-summary" class="active"><span class="toc-num">⚡</span>Executive Summary</a>
       <a href="#sec-principles" class="active"><span class="toc-num">1</span>The 6 Package Principles</a>
       <a href="#sec-metrics"><span class="toc-num">2</span>The Main Sequence (I, A, D)</a>
       <a href="#sec-zones"><span class="toc-num">3</span>Zone of Pain &amp; Uselessness</a>
@@ -266,6 +268,98 @@
         Master Robert C. Martin's 6 package principles (cohesion &amp; coupling), the Cohesion Tension Triangle, cycle breaking via DIP, and quantitative package metrics: Instability ($I$), Abstractness ($A$), and Distance from the Main Sequence ($D$).
       </p>
     </header>
+
+    <!-- ============================================================== -->
+    <!-- 0. COLLAPSIBLE EXECUTIVE SUMMARY                               -->
+    <!-- ============================================================== -->
+    <details class="executive-summary-card" id="sec-exec-summary" open>
+      <summary class="executive-summary-header">
+        <div class="executive-summary-title">
+          <span class="executive-summary-badge">⚡ Executive Summary</span>
+          <span>Packaging Principles & Metrics: Enterprise Modularity</span>
+        </div>
+        <div class="executive-summary-toggle">
+          <span class="exec-toggle-open">Collapse</span>
+          <span class="exec-toggle-closed">Expand</span>
+          <svg class="executive-summary-chevron" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </div>
+      </summary>
+
+      <div class="executive-summary-body">
+        <div style="background:var(--bg-subtle); border-left:3px solid var(--accent); padding:0.85rem 1.15rem; border-radius:4px; margin-bottom:1.25rem;">
+          <p style="margin:0; font-size:0.92rem; line-height:1.6; font-style:italic; color:var(--text);">
+            &ldquo;Packages are the unit of release and deployment. Clean architecture balances package cohesion, coupling, and stability metrics.&rdquo;
+          </p>
+        </div>
+
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:1.25rem; margin-bottom:1.5rem;">
+          <!-- Insight A -->
+          <div style="background:var(--code-bg); border:1px solid var(--border); border-radius:var(--radius-sm); padding:1rem 1.15rem;">
+            <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:0.6rem;">
+              <span style="font-size:1.1rem;">🎯</span>
+              <strong style="font-size:0.92rem; color:var(--text);">Package Cohesion vs. Package Coupling</strong>
+            </div>
+            <p style="font-size:0.86rem; line-height:1.55; color:var(--text-muted); margin:0 0 0.75rem;">
+              Cohesion rules (REP, CCP, CRP) govern which classes belong together. Coupling rules (ADP, SDP, SAP) govern package dependencies: eliminate dependency cycles and depend toward stability.
+            </p>
+            <div style="font-size:0.78rem; font-weight:700; color:var(--accent);">
+              → Acyclic Dependencies Principle (ADP) is non-negotiable.
+            </div>
+          </div>
+
+          <!-- Insight B -->
+          <div style="background:var(--code-bg); border:1px solid var(--border); border-radius:var(--radius-sm); padding:1rem 1.15rem;">
+            <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:0.6rem;">
+              <span style="font-size:1.1rem;">🕵️‍♂️</span>
+              <strong style="font-size:0.92rem; color:var(--text);">The Main Sequence & Normalized Distance (D)</strong>
+            </div>
+            <p style="font-size:0.86rem; line-height:1.55; color:var(--text-muted); margin:0 0 0.75rem;">
+              Instability I = Ce/(Ca+Ce) and Abstractness A = Na/Nc. The Main Sequence balances A + I = 1. Distance D = |A+I-1| measures design health. Avoid the Zone of Pain (I=0, A=0) and Zone of Uselessness (I=1, A=1).
+            </p>
+            <div style="font-size:0.78rem; font-weight:700; color:#10b981;">
+              → D near 0 represents optimal enterprise package architecture.
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top:1.25rem;">
+          <div style="font-size:0.82rem; font-weight:800; text-transform:uppercase; letter-spacing:0.06em; color:var(--text-muted); margin-bottom:0.65rem; font-family:var(--font-mono);">
+            Package Architecture Health Matrix
+          </div>
+          <div style="overflow-x:auto;">
+            <table style="width:100%; border-collapse:collapse; font-size:0.84rem;">
+              <thead>
+                <tr style="border-bottom:2px solid var(--border); text-align:left;">
+                  <th style="padding:0.55rem 0.75rem; color:var(--text);">Concept / Pattern</th>
+                  <th style="padding:0.55rem 0.75rem; color:var(--text);">Architectural Mechanism</th>
+                  <th style="padding:0.55rem 0.75rem; color:var(--text);">Why It Matters in Practice &amp; Exams</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr style="border-bottom:1px solid var(--border);">
+                  <td style="padding:0.55rem 0.75rem;"><strong>The Main Sequence</strong></td>
+                  <td style="padding:0.55rem 0.75rem; color:var(--accent); font-weight:700;">A + I = 1 (D ≈ 0)</td>
+                  <td style="padding:0.55rem 0.75rem; color:var(--text-muted);">Ideal balance between abstractness and package stability.</td>
+                </tr>
+                <tr style="border-bottom:1px solid var(--border);">
+                  <td style="padding:0.55rem 0.75rem;"><strong>Zone of Pain</strong></td>
+                  <td style="padding:0.55rem 0.75rem; color:var(--accent); font-weight:700;">I = 0, A = 0 (Rigid Concrete)</td>
+                  <td style="padding:0.55rem 0.75rem; color:var(--text-muted);">Highly depended-upon, completely concrete. Very painful to modify (e.g. legacy DB schema).</td>
+                </tr>
+                <tr style="border-bottom:1px solid var(--border);">
+                  <td style="padding:0.55rem 0.75rem;"><strong>Zone of Uselessness</strong></td>
+                  <td style="padding:0.55rem 0.75rem; color:var(--accent); font-weight:700;">I = 1, A = 1 (Unused Abstraction)</td>
+                  <td style="padding:0.55rem 0.75rem; color:var(--text-muted);">Completely abstract, but no packages depend on it. Pure dead speculative design.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </details>
+
 
     <!-- ============================================================== -->
     <!-- 1. THE 6 PACKAGE PRINCIPLES (COHESION & COUPLING)              -->
@@ -644,6 +738,6 @@
   </main>
 </div>
 
-<script src="assets/site.js?v=2026.25" defer></script>
+<script src="assets/site.js?v=2026.27" defer></script>
 </body>
 </html>

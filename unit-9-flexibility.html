@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Unit 9 · Flexibility Patterns (Decorator, Adapter, Facade) · POSA Masterclass 2026</title>
 <meta name="description" content="Master structural flexibility patterns: Decorator vs Inheritance subclass explosion, Object vs Class Adapter, Facade subsystem simplification, and java.io streams.">
-<link rel="stylesheet" href="assets/style.css?v=2026.25">
+<link rel="stylesheet" href="assets/style.css?v=2026.27">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,600;0,700;1,400&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,600;1,700&display=swap" rel="stylesheet">
 <script>
@@ -177,6 +177,8 @@
   <aside class="sidebar-toc">
     <div class="sidebar-block">
       <span class="sidebar-label">Unit Navigation</span>
+      
+      <a href="#sec-exec-summary" class="active"><span class="toc-num">⚡</span>Executive Summary</a>
       <a href="#sec-profile" class="active"><span class="toc-num">1</span>Decorator &amp; Adapter Profile</a>
       <a href="#sec-decorator"><span class="toc-num">2</span>The Starbuzz Onion Code</a>
       <a href="#sec-comparisons"><span class="toc-num">3</span>Wrapper Disambiguation</a>
@@ -209,6 +211,103 @@
         Master runtime responsibility augmentation (Decorator), interface translation (Adapter), and subsystem simplification (Facade). Solve the subclass explosion dilemma and eliminate rigid inheritance hierarchies.
       </p>
     </header>
+
+    <!-- ============================================================== -->
+    <!-- 0. COLLAPSIBLE EXECUTIVE SUMMARY                               -->
+    <!-- ============================================================== -->
+    <details class="executive-summary-card" id="sec-exec-summary" open>
+      <summary class="executive-summary-header">
+        <div class="executive-summary-title">
+          <span class="executive-summary-badge">⚡ Executive Summary</span>
+          <span>Flexibility Patterns: Structural Wrappers & Decoupling</span>
+        </div>
+        <div class="executive-summary-toggle">
+          <span class="exec-toggle-open">Collapse</span>
+          <span class="exec-toggle-closed">Expand</span>
+          <svg class="executive-summary-chevron" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </div>
+      </summary>
+
+      <div class="executive-summary-body">
+        <div style="background:var(--bg-subtle); border-left:3px solid var(--accent); padding:0.85rem 1.15rem; border-radius:4px; margin-bottom:1.25rem;">
+          <p style="margin:0; font-size:0.92rem; line-height:1.6; font-style:italic; color:var(--text);">
+            &ldquo;Combine structural patterns to dynamically extend, adapt, and decouple classes without triggering subclass explosion.&rdquo;
+          </p>
+        </div>
+
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:1.25rem; margin-bottom:1.5rem;">
+          <!-- Insight A -->
+          <div style="background:var(--code-bg); border:1px solid var(--border); border-radius:var(--radius-sm); padding:1rem 1.15rem;">
+            <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:0.6rem;">
+              <span style="font-size:1.1rem;">🎯</span>
+              <strong style="font-size:0.92rem; color:var(--text);">The Structural Wrapper Trinity (Intent Matters!)</strong>
+            </div>
+            <p style="font-size:0.86rem; line-height:1.55; color:var(--text-muted); margin:0 0 0.75rem;">
+              Decorator, Adapter, and Proxy share identical wrapper structures, but their intents differ: Adapter converts interfaces; Decorator dynamically adds behavior; Proxy controls access to the subject.
+            </p>
+            <div style="font-size:0.78rem; font-weight:700; color:var(--accent);">
+              → Never classify a pattern by its UML diagram alone; classify by its intent.
+            </div>
+          </div>
+
+          <!-- Insight B -->
+          <div style="background:var(--code-bg); border:1px solid var(--border); border-radius:var(--radius-sm); padding:1rem 1.15rem;">
+            <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:0.6rem;">
+              <span style="font-size:1.1rem;">🕵️‍♂️</span>
+              <strong style="font-size:0.92rem; color:var(--text);">Bridge: Decoupling Abstraction from Implementation</strong>
+            </div>
+            <p style="font-size:0.86rem; line-height:1.55; color:var(--text-muted); margin:0 0 0.75rem;">
+              Bridge separates an abstraction hierarchy from its implementation hierarchy, allowing both to vary independently along orthogonal dimensions (e.g. Window GUI vs. OS Platform).
+            </p>
+            <div style="font-size:0.78rem; font-weight:700; color:#10b981;">
+              → Prevents cartesian product subclass explosion (M × N).
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top:1.25rem;">
+          <div style="font-size:0.82rem; font-weight:800; text-transform:uppercase; letter-spacing:0.06em; color:var(--text-muted); margin-bottom:0.65rem; font-family:var(--font-mono);">
+            Wrapper Patterns Intent Matrix
+          </div>
+          <div style="overflow-x:auto;">
+            <table style="width:100%; border-collapse:collapse; font-size:0.84rem;">
+              <thead>
+                <tr style="border-bottom:2px solid var(--border); text-align:left;">
+                  <th style="padding:0.55rem 0.75rem; color:var(--text);">Concept / Pattern</th>
+                  <th style="padding:0.55rem 0.75rem; color:var(--text);">Architectural Mechanism</th>
+                  <th style="padding:0.55rem 0.75rem; color:var(--text);">Why It Matters in Practice &amp; Exams</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr style="border-bottom:1px solid var(--border);">
+                  <td style="padding:0.55rem 0.75rem;"><strong>Adapter</strong></td>
+                  <td style="padding:0.55rem 0.75rem; color:var(--accent); font-weight:700;">Changes Interface</td>
+                  <td style="padding:0.55rem 0.75rem; color:var(--text-muted);">Converts incompatible interface A into client-expected interface B.</td>
+                </tr>
+                <tr style="border-bottom:1px solid var(--border);">
+                  <td style="padding:0.55rem 0.75rem;"><strong>Decorator</strong></td>
+                  <td style="padding:0.55rem 0.75rem; color:var(--accent); font-weight:700;">Enhances Behavior</td>
+                  <td style="padding:0.55rem 0.75rem; color:var(--text-muted);">Maintains identical interface while recursively adding dynamic responsibilities.</td>
+                </tr>
+                <tr style="border-bottom:1px solid var(--border);">
+                  <td style="padding:0.55rem 0.75rem;"><strong>Proxy</strong></td>
+                  <td style="padding:0.55rem 0.75rem; color:var(--accent); font-weight:700;">Controls Access</td>
+                  <td style="padding:0.55rem 0.75rem; color:var(--text-muted);">Maintains identical interface while handling lazy loading, security, caching, or remote RPC.</td>
+                </tr>
+                <tr style="border-bottom:1px solid var(--border);">
+                  <td style="padding:0.55rem 0.75rem;"><strong>Bridge</strong></td>
+                  <td style="padding:0.55rem 0.75rem; color:var(--accent); font-weight:700;">Separates Hierarchies</td>
+                  <td style="padding:0.55rem 0.75rem; color:var(--text-muted);">Decouples abstraction hierarchy from implementor hierarchy independently.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </details>
+
 
     <!-- ============================================================== -->
     <!-- 1. PATTERN SPECIFICATIONS & CANONICAL UML                      -->
@@ -469,6 +568,6 @@ Beverage order = new Whip(new Mocha(new Espresso()));</code></pre>
   </main>
 </div>
 
-<script src="assets/site.js?v=2026.25" defer></script>
+<script src="assets/site.js?v=2026.27" defer></script>
 </body>
 </html>

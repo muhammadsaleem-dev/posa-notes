@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Unit 15 · Pattern Criticism &amp; Functional Alternatives · POSA Masterclass 2026</title>
 <meta name="description" content="Master pattern criticism: Mark Dominus' thesis, Peter Norvig's 16/23 absorption, first-class functions vs Strategy, and Python quicksort lambda comparison.">
-<link rel="stylesheet" href="assets/style.css?v=2026.25">
+<link rel="stylesheet" href="assets/style.css?v=2026.27">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,600;0,700;1,400&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,600;1,700&display=swap" rel="stylesheet">
 <script>
@@ -177,6 +177,8 @@
   <aside class="sidebar-toc">
     <div class="sidebar-block">
       <span class="sidebar-label">Unit Navigation</span>
+      
+      <a href="#sec-exec-summary" class="active"><span class="toc-num">⚡</span>Executive Summary</a>
       <a href="#sec-profile" class="active"><span class="toc-num">1</span>Dominus &amp; Graham Thesis</a>
       <a href="#sec-python"><span class="toc-num">2</span>Python Quicksort Code</a>
       <a href="#sec-norvig"><span class="toc-num">3</span>16/23 Absorption Spectrum</a>
@@ -208,6 +210,98 @@
         Analyze Mark Dominus and Paul Graham's critique that design patterns are workarounds for language deficiencies, Peter Norvig's 16 of 23 pattern absorption, and functional alternatives using Python lambdas.
       </p>
     </header>
+
+    <!-- ============================================================== -->
+    <!-- 0. COLLAPSIBLE EXECUTIVE SUMMARY                               -->
+    <!-- ============================================================== -->
+    <details class="executive-summary-card" id="sec-exec-summary" open>
+      <summary class="executive-summary-header">
+        <div class="executive-summary-title">
+          <span class="executive-summary-badge">⚡ Executive Summary</span>
+          <span>Pattern Criticism: Anti-Patterns, YAGNI & Modern Alternatives</span>
+        </div>
+        <div class="executive-summary-toggle">
+          <span class="exec-toggle-open">Collapse</span>
+          <span class="exec-toggle-closed">Expand</span>
+          <svg class="executive-summary-chevron" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </div>
+      </summary>
+
+      <div class="executive-summary-body">
+        <div style="background:var(--bg-subtle); border-left:3px solid var(--accent); padding:0.85rem 1.15rem; border-radius:4px; margin-bottom:1.25rem;">
+          <p style="margin:0; font-size:0.92rem; line-height:1.6; font-style:italic; color:var(--text);">
+            &ldquo;Patterns are signs of weakness in programming languages. What requires 5 classes in Java is often 1 line in modern languages. — Peter Norvig&rdquo;
+          </p>
+        </div>
+
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:1.25rem; margin-bottom:1.5rem;">
+          <!-- Insight A -->
+          <div style="background:var(--code-bg); border:1px solid var(--border); border-radius:var(--radius-sm); padding:1rem 1.15rem;">
+            <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:0.6rem;">
+              <span style="font-size:1.1rem;">🎯</span>
+              <strong style="font-size:0.92rem; color:var(--text);">The Norvig Critique: 16 of 23 Are Language Deficiencies</strong>
+            </div>
+            <p style="font-size:0.86rem; line-height:1.55; color:var(--text-muted); margin:0 0 0.75rem;">
+              Peter Norvig proved that 16 of the 23 GoF patterns are invisible or trivial in dynamic and functional languages. Strategy is just a first-class function/lambda; Visitor is multimethods; Prototype is cloning.
+            </p>
+            <div style="font-size:0.78rem; font-weight:700; color:var(--accent);">
+              → Do not introduce architectural indirection when a language feature suffices.
+            </div>
+          </div>
+
+          <!-- Insight B -->
+          <div style="background:var(--code-bg); border:1px solid var(--border); border-radius:var(--radius-sm); padding:1rem 1.15rem;">
+            <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:0.6rem;">
+              <span style="font-size:1.1rem;">🕵️‍♂️</span>
+              <strong style="font-size:0.92rem; color:var(--text);">Classic Architectural Anti-Patterns</strong>
+            </div>
+            <p style="font-size:0.86rem; line-height:1.55; color:var(--text-muted); margin:0 0 0.75rem;">
+              Golden Hammer (using a favorite pattern everywhere); Speculative Generality (over-engineering for imaginary future requirements); Poltergeists (stateless classes that only exist to invoke another class).
+            </p>
+            <div style="font-size:0.78rem; font-weight:700; color:#10b981;">
+              → Apply YAGNI: You Aren't Gonna Need It. Patterns solve variance, not speculation.
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top:1.25rem;">
+          <div style="font-size:0.82rem; font-weight:800; text-transform:uppercase; letter-spacing:0.06em; color:var(--text-muted); margin-bottom:0.65rem; font-family:var(--font-mono);">
+            Pattern Anti-Pattern & Cure Matrix
+          </div>
+          <div style="overflow-x:auto;">
+            <table style="width:100%; border-collapse:collapse; font-size:0.84rem;">
+              <thead>
+                <tr style="border-bottom:2px solid var(--border); text-align:left;">
+                  <th style="padding:0.55rem 0.75rem; color:var(--text);">Concept / Pattern</th>
+                  <th style="padding:0.55rem 0.75rem; color:var(--text);">Architectural Mechanism</th>
+                  <th style="padding:0.55rem 0.75rem; color:var(--text);">Why It Matters in Practice &amp; Exams</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr style="border-bottom:1px solid var(--border);">
+                  <td style="padding:0.55rem 0.75rem;"><strong>Golden Hammer</strong></td>
+                  <td style="padding:0.55rem 0.75rem; color:var(--accent); font-weight:700;">Overusing a pattern everywhere</td>
+                  <td style="padding:0.55rem 0.75rem; color:var(--text-muted);">Choose architecture based on genuine forces, not developer familiarity.</td>
+                </tr>
+                <tr style="border-bottom:1px solid var(--border);">
+                  <td style="padding:0.55rem 0.75rem;"><strong>Speculative Generality</strong></td>
+                  <td style="padding:0.55rem 0.75rem; color:var(--accent); font-weight:700;">Unneeded abstract factories & bridges</td>
+                  <td style="padding:0.55rem 0.75rem; color:var(--text-muted);">Delete unused abstractions; add patterns only when variance is proven required.</td>
+                </tr>
+                <tr style="border-bottom:1px solid var(--border);">
+                  <td style="padding:0.55rem 0.75rem;"><strong>Poltergeist</strong></td>
+                  <td style="padding:0.55rem 0.75rem; color:var(--accent); font-weight:700;">Transient useless pass-through class</td>
+                  <td style="padding:0.55rem 0.75rem; color:var(--text-muted);">Inline transient classes into the actual business domain object.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </details>
+
 
     <!-- ============================================================== -->
     <!-- 1. THE DOMINUS & GRAHAM CRITIQUE                               -->
@@ -408,6 +502,6 @@ comp2 = lambda a, b: a &gt; b</code></pre>
   </main>
 </div>
 
-<script src="assets/site.js?v=2026.25" defer></script>
+<script src="assets/site.js?v=2026.27" defer></script>
 </body>
 </html>

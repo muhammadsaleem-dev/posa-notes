@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Unit 6 · SOLID Principles &amp; Design Smells · POSA Masterclass 2026</title>
 <meta name="description" content="Master the 5 SOLID principles (SRP, OCP, LSP, ISP, DIP), the 4 symptoms of rotting design, formal Liskov substitution proofs, and OCP refactoring.">
-<link rel="stylesheet" href="assets/style.css?v=2026.25">
+<link rel="stylesheet" href="assets/style.css?v=2026.27">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,600;0,700;1,400&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,600;1,700&display=swap" rel="stylesheet">
@@ -295,6 +295,8 @@
   <aside class="sidebar-toc">
     <div class="sidebar-block">
       <span class="sidebar-label">Unit Navigation</span>
+      
+      <a href="#sec-exec-summary" class="active"><span class="toc-num">⚡</span>Executive Summary</a>
       <a href="#sec-profile" class="active"><span class="toc-num">1</span>The 5 Principles</a>
       <a href="#sec-smells"><span class="toc-num">2</span>Rotting Design Smells</a>
       <a href="#sec-lsp"><span class="toc-num">3</span>Formal LSP &amp; Square Paradox</a>
@@ -330,6 +332,108 @@
         Master Robert C. Martin's 5 foundational design principles, the 4 classic symptoms of architectural rot (Rigidity, Fragility, Immobility, Viscosity), and the formal proof of why Square is NOT a Rectangle in object orientation.
       </p>
     </header>
+
+    <!-- ============================================================== -->
+    <!-- 0. COLLAPSIBLE EXECUTIVE SUMMARY                               -->
+    <!-- ============================================================== -->
+    <details class="executive-summary-card" id="sec-exec-summary" open>
+      <summary class="executive-summary-header">
+        <div class="executive-summary-title">
+          <span class="executive-summary-badge">⚡ Executive Summary</span>
+          <span>SOLID Principles: The Antidote to Rotting Design</span>
+        </div>
+        <div class="executive-summary-toggle">
+          <span class="exec-toggle-open">Collapse</span>
+          <span class="exec-toggle-closed">Expand</span>
+          <svg class="executive-summary-chevron" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </div>
+      </summary>
+
+      <div class="executive-summary-body">
+        <div style="background:var(--bg-subtle); border-left:3px solid var(--accent); padding:0.85rem 1.15rem; border-radius:4px; margin-bottom:1.25rem;">
+          <p style="margin:0; font-size:0.92rem; line-height:1.6; font-style:italic; color:var(--text);">
+            &ldquo;Software decays through 4 symptoms of rotting design: Rigidity, Fragility, Immobility, and Viscosity. SOLID is the architectural cure.&rdquo;
+          </p>
+        </div>
+
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:1.25rem; margin-bottom:1.5rem;">
+          <!-- Insight A -->
+          <div style="background:var(--code-bg); border:1px solid var(--border); border-radius:var(--radius-sm); padding:1rem 1.15rem;">
+            <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:0.6rem;">
+              <span style="font-size:1.1rem;">🎯</span>
+              <strong style="font-size:0.92rem; color:var(--text);">The 4 Diseases & 5 Antidotes</strong>
+            </div>
+            <p style="font-size:0.86rem; line-height:1.55; color:var(--text-muted); margin:0 0 0.75rem;">
+              Rigidity (hard to change) is cured by OCP; Fragility (unrelated breaks) by SRP; Immobility (cannot reuse) by DIP; Viscosity (easy to do wrong) by clean interfaces (ISP).
+            </p>
+            <div style="font-size:0.78rem; font-weight:700; color:var(--accent);">
+              → Maintainability requires continuous adherence to all 5 principles.
+            </div>
+          </div>
+
+          <!-- Insight B -->
+          <div style="background:var(--code-bg); border:1px solid var(--border); border-radius:var(--radius-sm); padding:1rem 1.15rem;">
+            <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:0.6rem;">
+              <span style="font-size:1.1rem;">🕵️‍♂️</span>
+              <strong style="font-size:0.92rem; color:var(--text);">The Square/Rectangle Paradox (LSP)</strong>
+            </div>
+            <p style="font-size:0.86rem; line-height:1.55; color:var(--text-muted); margin:0 0 0.75rem;">
+              A Square is mathematically a rectangle, but in OOP, mutating width on a Square breaks the height invariant. Subtypes must never weaken postconditions or break caller expectations.
+            </p>
+            <div style="font-size:0.78rem; font-weight:700; color:#10b981;">
+              → Behavioral substitutability overrides mathematical intuition.
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top:1.25rem;">
+          <div style="font-size:0.82rem; font-weight:800; text-transform:uppercase; letter-spacing:0.06em; color:var(--text-muted); margin-bottom:0.65rem; font-family:var(--font-mono);">
+            The SOLID Architectural Principles Matrix
+          </div>
+          <div style="overflow-x:auto;">
+            <table style="width:100%; border-collapse:collapse; font-size:0.84rem;">
+              <thead>
+                <tr style="border-bottom:2px solid var(--border); text-align:left;">
+                  <th style="padding:0.55rem 0.75rem; color:var(--text);">Concept / Pattern</th>
+                  <th style="padding:0.55rem 0.75rem; color:var(--text);">Architectural Mechanism</th>
+                  <th style="padding:0.55rem 0.75rem; color:var(--text);">Why It Matters in Practice &amp; Exams</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr style="border-bottom:1px solid var(--border);">
+                  <td style="padding:0.55rem 0.75rem;"><strong>SRP (Single Responsibility)</strong></td>
+                  <td style="padding:0.55rem 0.75rem; color:var(--accent); font-weight:700;">1 actor / 1 reason to change</td>
+                  <td style="padding:0.55rem 0.75rem; color:var(--text-muted);">Eliminates cross-department merge conflicts and fragile God-classes.</td>
+                </tr>
+                <tr style="border-bottom:1px solid var(--border);">
+                  <td style="padding:0.55rem 0.75rem;"><strong>OCP (Open/Closed)</strong></td>
+                  <td style="padding:0.55rem 0.75rem; color:var(--accent); font-weight:700;">Open for extension, closed for modification</td>
+                  <td style="padding:0.55rem 0.75rem; color:var(--text-muted);">Add new features by adding new classes, not hacking existing code.</td>
+                </tr>
+                <tr style="border-bottom:1px solid var(--border);">
+                  <td style="padding:0.55rem 0.75rem;"><strong>LSP (Liskov Substitution)</strong></td>
+                  <td style="padding:0.55rem 0.75rem; color:var(--accent); font-weight:700;">Subtypes must preserve invariants</td>
+                  <td style="padding:0.55rem 0.75rem; color:var(--text-muted);">Subtypes must never surprise callers with unexpected side effects or exceptions.</td>
+                </tr>
+                <tr style="border-bottom:1px solid var(--border);">
+                  <td style="padding:0.55rem 0.75rem;"><strong>ISP (Interface Segregation)</strong></td>
+                  <td style="padding:0.55rem 0.75rem; color:var(--accent); font-weight:700;">Client-tailored thin interfaces</td>
+                  <td style="padding:0.55rem 0.75rem; color:var(--text-muted);">Clients should never be forced to depend on methods they do not use.</td>
+                </tr>
+                <tr style="border-bottom:1px solid var(--border);">
+                  <td style="padding:0.55rem 0.75rem;"><strong>DIP (Dependency Inversion)</strong></td>
+                  <td style="padding:0.55rem 0.75rem; color:var(--accent); font-weight:700;">Depend on abstractions, not concretions</td>
+                  <td style="padding:0.55rem 0.75rem; color:var(--text-muted);">High-level business policies must never import low-level I/O or database drivers.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </details>
+
 
     <!-- ============================================================== -->
     <!-- 1. THE 5 SOLID PRINCIPLES & DEEP CODE ANATOMY                  -->
@@ -939,6 +1043,6 @@ public class DataSorter {
   </main>
 </div>
 
-<script src="assets/site.js?v=2026.25" defer></script>
+<script src="assets/site.js?v=2026.27" defer></script>
 </body>
 </html>
