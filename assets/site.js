@@ -75,6 +75,93 @@
     });
   }
 
+  // Desktop "16 Units" Interactive Dropdown Menu
+  var navLinks = document.querySelector(".sitenav-links");
+  if (navLinks) {
+    var unitsLink = navLinks.querySelector('a[href*="#curriculum-roadmap"]');
+    if (unitsLink) {
+      var dropdown = document.createElement("div");
+      dropdown.className = "units-dropdown";
+
+      var trigger = document.createElement("button");
+      trigger.type = "button";
+      trigger.className = "units-dropdown-trigger";
+      trigger.innerHTML = '16 Units <svg class="chevron" viewBox="0 0 10 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M1 1L5 5L9 1"/></svg>';
+      trigger.setAttribute("aria-expanded", "false");
+      trigger.setAttribute("aria-haspopup", "true");
+
+      var menu = document.createElement("div");
+      menu.className = "units-dropdown-menu";
+      menu.setAttribute("role", "menu");
+
+      var currentPath = window.location.pathname.split("/").pop() || "index.html";
+
+      var units = [
+        { href: "unit-1-strategy.html", num: "1", title: "Strategy Pattern" },
+        { href: "unit-2-template.html", num: "2A", title: "Template Method" },
+        { href: "unit-2-command.html", num: "2B", title: "Command Pattern" },
+        { href: "unit-3-composite.html", num: "3A", title: "Composite Pattern" },
+        { href: "unit-3-iterator.html", num: "3B", title: "Iterator Pattern" },
+        { href: "unit-4-junit.html", num: "4", title: "Case Study: JUnit" },
+        { href: "unit-5-theory.html", num: "5", title: "Pattern Theory" },
+        { href: "unit-6-solid.html", num: "6", title: "SOLID Principles" },
+        { href: "unit-7-packaging.html", num: "7", title: "Packaging & Metrics" },
+        { href: "unit-8-creational.html", num: "8", title: "Creational Patterns" },
+        { href: "unit-9-flexibility.html", num: "9", title: "Flexibility Patterns" },
+        { href: "unit-10-decoupling.html", num: "10", title: "Decoupling Patterns" },
+        { href: "unit-11-mvc.html", num: "11", title: "Case Study: MVC" },
+        { href: "unit-12-architectural.html", num: "12", title: "Architectural Patterns" },
+        { href: "unit-13-analysis.html", num: "13", title: "Analysis & Quality" },
+        { href: "unit-14-testing.html", num: "14", title: "Testing Patterns" },
+        { href: "unit-15-criticism.html", num: "15", title: "Pattern Criticism" },
+        { href: "unit-16-genai.html", num: "16", title: "GenAI & Patterns" }
+      ];
+
+      var itemsHtml = units.map(function(u) {
+        var isActive = currentPath === u.href ? " active" : "";
+        return '<a href="' + u.href + '" class="unit-dropdown-item' + isActive + '" role="menuitem">' +
+               '<span class="unit-dropdown-num">' + u.num + '</span>' +
+               '<span>' + u.title + '</span>' +
+               '</a>';
+      }).join("");
+
+      menu.innerHTML = 
+        '<div class="units-dropdown-header">' +
+          '<span>All 16 Curriculum Units</span>' +
+          '<span style="font-size:0.68rem; color:var(--accent); font-weight:700;">Direct Jump</span>' +
+        '</div>' +
+        '<div class="units-grid">' + itemsHtml + '</div>' +
+        '<div class="units-dropdown-footer">' +
+          '<a href="index.html#curriculum-roadmap">🗺️ View Full Roadmap Table on Overview Page &rarr;</a>' +
+        '</div>';
+
+      dropdown.appendChild(trigger);
+      dropdown.appendChild(menu);
+
+      unitsLink.parentNode.replaceChild(dropdown, unitsLink);
+
+      trigger.addEventListener("click", function (e) {
+        e.stopPropagation();
+        var isOpen = dropdown.classList.toggle("open");
+        trigger.setAttribute("aria-expanded", isOpen ? "true" : "false");
+      });
+
+      document.addEventListener("click", function (e) {
+        if (!dropdown.contains(e.target)) {
+          dropdown.classList.remove("open");
+          trigger.setAttribute("aria-expanded", "false");
+        }
+      });
+
+      document.addEventListener("keydown", function (e) {
+        if (e.key === "Escape") {
+          dropdown.classList.remove("open");
+          trigger.setAttribute("aria-expanded", "false");
+        }
+      });
+    }
+  }
+
 
   // Highlight.js initialization
   var isDark = document.documentElement.getAttribute('data-theme') === 'dark';

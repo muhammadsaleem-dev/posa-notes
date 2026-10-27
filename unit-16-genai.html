@@ -4,8 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Unit 16 · Patterns in the Age of Generative AI · POSA Masterclass 2026</title>
-<meta name="description" content="Master how classic POSA design patterns map to modern autonomous AI agent architectures (Router Strategy, Multi-Agent Blackboard, Tool Pipelines).">
-<link rel="stylesheet" href="assets/style.css?v=2026.19">
+<meta name="description" content="Master how classical Gang of Four and POSA architectural patterns map to modern autonomous AI agent architectures, the Weather Station case study (Primitive Obsession vs Fowler's Quantity), and architectural auditing of AI code.">
+<link rel="stylesheet" href="assets/style.css?v=2026.20">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,600;0,700;1,400&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,600;1,700&display=swap" rel="stylesheet">
 <script>
@@ -127,9 +127,34 @@
     margin-bottom: 0.75rem;
     letter-spacing: 0.05em;
   }
+  .diff-box {
+    border-radius: var(--radius-md);
+    padding: 1.25rem;
+    margin: 1.25rem 0;
+    border: 1px solid var(--border);
+  }
+  .diff-bad {
+    background: rgba(239, 68, 68, 0.05);
+    border-color: rgba(239, 68, 68, 0.3);
+  }
+  .diff-good {
+    background: rgba(16, 185, 129, 0.05);
+    border-color: rgba(16, 185, 129, 0.3);
+  }
+  .diff-title {
+    font-weight: 700;
+    font-size: 0.92rem;
+    margin-bottom: 0.6rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .diff-bad .diff-title { color: #ef4444; }
+  .diff-good .diff-title { color: #10b981; }
 </style>
 </head>
 <body>
+  <!-- Top Navigation -->
   <nav class="sitenav">
   <div class="sitenav-inner">
     <a class="sitenav-home" href="index.html">
@@ -186,22 +211,26 @@
   <aside class="sidebar-toc">
     <div class="sidebar-block">
       <span class="sidebar-label">Unit Navigation</span>
-      <a href="#sec-profile" class="active"><span class="toc-num">1</span>Patterns as Semantic Anchors</a>
-      <a href="#sec-agents"><span class="toc-num">2</span>Agentic POSA Mappings</a>
-      <a href="#sec-drills"><span class="toc-num">3</span>Core Exam Drills</a>
+      <a href="#sec-semantic-anchors" class="active"><span class="toc-num">1</span>Semantic Prompt Anchors</a>
+      <a href="#sec-weather-station"><span class="toc-num">2</span>Case Study: Weather Station</a>
+      <a href="#sec-agentic-topologies"><span class="toc-num">3</span>Agentic POSA Topologies</a>
+      <a href="#sec-ai-smells"><span class="toc-num">4</span>The 4 AI Architectural Smells</a>
+      <a href="#sec-drills"><span class="toc-num">5</span>Core Exam Drills</a>
     </div>
 
     <div class="sidebar-block">
       <span class="sidebar-label">Related Modules</span>
-      <a href="unit-1-strategy.html">Unit 1 · Strategy Pattern</a>
-      <a href="unit-12-architectural.html">Unit 12 · Architectural Patterns</a>
-      <a href="mock-2.html">📝 Mock Exam 2</a>
+      <a href="unit-1-strategy.html">Unit 1 · Strategy (Router Pattern)</a>
+      <a href="unit-2-command.html">Unit 2B · Command (Agent Tools)</a>
+      <a href="unit-12-architectural.html">Unit 12 · Blackboard & Pipes</a>
+      <a href="unit-13-analysis.html">Unit 13 · Analysis Patterns (Quantity)</a>
+      <a href="mock-2.html">📝 Mock Exam 2 (Module 4)</a>
     </div>
 
     <div class="sidebar-block">
       <span class="sidebar-label">Exam Profile</span>
       <div style="font-size:0.75rem; font-weight:700; color:#38bdf8; background:rgba(56,189,248,0.12); border:1px solid rgba(56,189,248,0.25); padding:0.25rem 0.5rem; border-radius:4px; display:inline-block;">
-        ⏱️ 6–8 Mins · Synthesis
+        ⏱️ 12–15 Mins · 20 Exam Pts
       </div>
     </div>
   </aside>
@@ -213,14 +242,14 @@
         <h1 class="title">Patterns in the Age of Generative AI</h1>
       </div>
       <p class="dek">
-        Understand how classical Gang of Four and POSA architectural patterns serve as high-density semantic anchors for AI prompting, and how autonomous agentic systems re-implement Strategy, Blackboard, and Pipes &amp; Filters.
+        Explore how classic Gang of Four and POSA architectural patterns serve as high-density semantic anchors for AI prompting, master the Weather Station case study (Primitive Obsession vs. Fowler's Quantity Pattern), and analyze how autonomous multi-agent systems re-implement Strategy, Command, Blackboard, and Chain of Responsibility.
       </p>
     </header>
 
     <!-- ============================================================== -->
-    <!-- 1. PATTERNS AS SEMANTIC ANCHORS                                -->
+    <!-- 1. PATTERNS AS HIGH-DENSITY SEMANTIC ANCHORS                   -->
     <!-- ============================================================== -->
-    <section class="chapter" id="sec-profile">
+    <section class="chapter" id="sec-semantic-anchors">
       <div class="chapter-head">
         <span class="chapter-num">1</span>
         <div>
@@ -232,63 +261,60 @@
       <div class="pattern-spec-box">
         <div class="spec-grid">
           <div class="spec-row">
-            <span class="spec-label">Why Patterns Matter MORE in the GenAI Era:</span>
+            <span class="spec-label">The "Vibe Coding" Dilemma:</span>
             <span class="spec-val">
-              • <strong>High-Density Semantic Prompts:</strong> Specifying <em>"Refactor this data pipeline using the Pipes and Filters pattern with passive filters"</em> communicates an entire architecture in 10 words, avoiding ambiguous walls of prompt text.<br>
-              • <strong>From Syntax Typist to Architectural Auditor:</strong> AI can generate thousands of lines of syntactically valid code in seconds, but often creates high-coupling, low-cohesion "vibe code". The human engineer's primary job is verifying SOLID compliance, package dependencies, and architectural invariants.
+              Generative AI models excel at generating syntactically valid code in milliseconds. However, unguided LLM outputs naturally converge on <strong>high-coupling, low-cohesion "vibe code"</strong>—sprawling monolithic classes, hardcoded primitive doubles, and tangled control flows. Why? Large Language Models optimize for local next-token conditional probabilities, not long-term system maintainability or architectural lifecycle invariants.
             </span>
           </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ============================================================== -->
-    <!-- 2. AGENTIC ARCHITECTURES & CLASSIC POSA MAPPINGS               -->
-    <!-- ============================================================== -->
-    <section class="chapter" id="sec-agents">
-      <div class="chapter-head">
-        <span class="chapter-num">2</span>
-        <div>
-          <h2>Mapping Classic POSA Patterns to AI Agent Systems</h2>
-          <span style="font-size:0.85rem; color:var(--text-muted); font-weight:600;">Autonomous System Topologies</span>
+          <div class="spec-row">
+            <span class="spec-label">Semantic Prompt Compression:</span>
+            <span class="spec-val">
+              Design patterns serve as <strong>high-density conceptual shorthand</strong>. Instead of typing a 300-word ambiguous English specification describing abstract interfaces, runtime swapping, and decoupling, the architect instructs the AI: <em>"Refactor this sensor telemetry pipeline using Martin Fowler's Quantity Pattern and GoF Observer with dynamic Strategy thresholds."</em> In 18 words, the prompt accesses well-defined latent structures in the model's training space, guaranteeing modular boundaries.
+            </span>
+          </div>
+          <div class="spec-row">
+            <span class="spec-label">Shift in the Software Engineering Role:</span>
+            <span class="spec-val">
+              The human software engineer is no longer a manual syntax typist; the modern engineer operates as an <strong>Architectural Auditor</strong>. The engineer's responsibility is verifying contract substitutability (LSP), dependency directions (DIP), package stability metrics ($I, A, D$), and ensuring business invariants are strictly enforced rather than hallucinated.
+            </span>
+          </div>
         </div>
       </div>
 
       <div class="guide-card">
         <div class="guide-card-header">
-          <span class="rule-badge">AGENT TOPOLOGIES</span>
-          <span>Classic Patterns Inside Modern AI Architectures</span>
+          <span class="rule-badge">PROMPT DENSITY COMPARISON</span>
+          <span>Natural Language Ambiguity vs. Pattern Nomenclature</span>
         </div>
-
         <div style="overflow-x:auto;">
           <table style="width:100%; border-collapse:collapse; font-size:0.88rem;">
             <thead>
               <tr style="border-bottom:2px solid var(--border); text-align:left;">
-                <th style="padding:0.6rem;">Classic Pattern</th>
-                <th style="padding:0.6rem;">Agentic AI Equivalent</th>
-                <th style="padding:0.6rem;">Architectural Role</th>
+                <th style="padding:0.65rem;">Informal English Prompt (High Entropy)</th>
+                <th style="padding:0.65rem;">Pattern-Anchored Prompt (Dense)</th>
+                <th style="padding:0.65rem;">Architectural Invariant Enforced</th>
               </tr>
             </thead>
             <tbody>
               <tr style="border-bottom:1px solid var(--border);">
-                <td style="padding:0.6rem;"><strong>Strategy Pattern</strong></td>
-                <td style="padding:0.6rem;">LLM Router / Dynamic Dispatch</td>
-                <td style="padding:0.6rem;">Router classifies user intent and dynamically delegates to specialized models (e.g. Flash-Lite for math, Pro for code).</td>
+                <td style="padding:0.65rem; color:var(--text-muted);">"Make it so we can calculate shipping costs in different ways depending on what the user selects at checkout."</td>
+                <td style="padding:0.65rem;"><strong>"Implement shipping fee calculation via the Strategy Pattern."</strong></td>
+                <td style="padding:0.65rem; color:#10b981;">OCP &amp; Polymorphic encapsulation (Unit 1).</td>
               </tr>
               <tr style="border-bottom:1px solid var(--border);">
-                <td style="padding:0.6rem;"><strong>Blackboard Pattern</strong></td>
-                <td style="padding:0.6rem;">Multi-Agent Shared Context</td>
-                <td style="padding:0.6rem;">Multiple specialized subagents (Researcher, Coder, Reviewer) read and write hypotheses to a shared conversation transcript.</td>
+                <td style="padding:0.65rem; color:var(--text-muted);">"We have a bunch of steps for generating reports that are mostly the same, but PDF and HTML output need different header formatting."</td>
+                <td style="padding:0.65rem;"><strong>"Structure report generation as a Template Method with primitive hooks."</strong></td>
+                <td style="padding:0.65rem; color:#10b981;">Hollywood Principle &amp; invariant algorithm skeleton (Unit 2A).</td>
               </tr>
               <tr style="border-bottom:1px solid var(--border);">
-                <td style="padding:0.6rem;"><strong>Pipes &amp; Filters</strong></td>
-                <td style="padding:0.6rem;">Tool Execution Pipelines</td>
-                <td style="padding:0.6rem;">Sequential prompt conditioning: Prompt &rarr; Tokenizer &rarr; Embedding &rarr; RAG Search &rarr; Generation.</td>
+                <td style="padding:0.65rem; color:var(--text-muted);">"We have multiple AI subagents that need to work on a task together and share notes without calling each other directly."</td>
+                <td style="padding:0.65rem;"><strong>"Coordinate subagent tasks using the POSA Blackboard Architecture."</strong></td>
+                <td style="padding:0.65rem; color:#10b981;">Decoupled opportunistic problem solving (Unit 12).</td>
               </tr>
               <tr>
-                <td style="padding:0.6rem;"><strong>Decorator / Proxy</strong></td>
-                <td style="padding:0.6rem;">Guardrails &amp; Interceptors</td>
-                <td style="padding:0.6rem;">Transparently intercepting prompts and model outputs for safety, PII redaction, and hallucination evaluation.</td>
+                <td style="padding:0.65rem; color:var(--text-muted);">"Store readings from temperature and pressure sensors in the database and show them on desktop and mobile screens."</td>
+                <td style="padding:0.65rem;"><strong>"Model sensor telemetry using Martin Fowler's Quantity Pattern and Observer."</strong></td>
+                <td style="padding:0.65rem; color:#10b981;">Type-safe unit dimensioning &amp; decoupled presentation (Unit 13 &amp; 16).</td>
               </tr>
             </tbody>
           </table>
@@ -297,39 +323,498 @@
     </section>
 
     <!-- ============================================================== -->
-    <!-- 3. CORE EXAM PRACTICE & DIRECT MODEL ANSWERS                   -->
+    <!-- 2. THE CORE SYLLABUS CASE STUDY: WEATHER STATION               -->
+    <!-- ============================================================== -->
+    <section class="chapter" id="sec-weather-station">
+      <div class="chapter-head">
+        <span class="chapter-num">2</span>
+        <div>
+          <h2>Case Study: The Weather Station Architecture</h2>
+          <span style="font-size:0.85rem; color:var(--text-muted); font-weight:600;">Primitive Obsession vs. Fowler's Quantity Pattern</span>
+        </div>
+      </div>
+
+      <p style="font-size:0.95rem; line-height:1.65; color:var(--text); margin-bottom:1.5rem;">
+        Consider the official course case study: a developer prompts an AI to build a multi-sensor weather station (temperature, pressure, humidity) recording history to a database and rendering dashboards across mobile and desktop. Below is the contrast between the naive AI output and the pattern-refactored architecture.
+      </p>
+
+      <!-- Naive Output -->
+      <div class="diff-box diff-bad">
+        <div class="diff-title">
+          <span>❌ Naive GenAI Output: Primitive Obsession &amp; Rigid Schema</span>
+        </div>
+        <p style="font-size:0.88rem; color:var(--text-muted); margin-bottom:0.75rem;">
+          The initial prompt produced raw primitive doubles with no unit safety, violating OCP whenever new sensor types are introduced:
+        </p>
+        <pre><code class="language-java">// VIOLATION: Primitive Obsession &amp; Schema Rigidity
+@Entity
+public class Measurement {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @ManyToOne
+    private Sensor sensor;
+    private LocalDateTime timestamp;
+
+    // What units are these? Celsius or Fahrenheit? hPa, bar, or psi?
+    private double temperature; 
+    private double pressure;    
+    private double humidity;    
+
+    // Fatal Flaw 1: Adding WindSpeed or UVIndex forces modifying DB schema and entity code (Violates OCP).
+    // Fatal Flaw 2: Calling `setTemperature(72.5)` without unit semantics causes disastrous dimension mismatch bugs!
+}</code></pre>
+      </div>
+
+      <!-- Refactoring Prompt -->
+      <div class="pattern-spec-box">
+        <div class="spec-grid">
+          <div class="spec-row">
+            <span class="spec-label">The Architectural Intervention Prompt:</span>
+            <span class="spec-val">
+              <em>"Refactor this weather station using <strong>Martin Fowler's Quantity Pattern</strong> (Value Object + Unit dimensioning) for all measurement representations, and decouple sensor polling via the <strong>Observer Pattern</strong>."</em>
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pattern-Refactored Solution -->
+      <div class="diff-box diff-good">
+        <div class="diff-title">
+          <span>✅ Pattern-Driven Solution: Martin Fowler's Quantity Pattern</span>
+        </div>
+        <p style="font-size:0.88rem; color:var(--text-muted); margin-bottom:0.75rem;">
+          Quantities become immutable Value Objects bound to explicit physical Dimensions and Units, preventing dimension mismatch bugs and enabling open-ended sensor expansion:
+        </p>
+        <pre><code class="language-java">package posa.weather.domain;
+
+import java.time.Instant;
+import java.util.Objects;
+
+// 1. Formal Physical Dimensions
+public enum Dimension {
+    TEMPERATURE, PRESSURE, HUMIDITY, WIND_SPEED, UV_INDEX
+}
+
+// 2. Unit Model with Conversion Multipliers &amp; Offsets
+public final class Unit {
+    private final String name;
+    private final String symbol;
+    private final Dimension dimension;
+    private final double toBaseMultiplier;
+    private final double toBaseOffset;
+
+    // Standard Temperature Units (Base: Kelvin)
+    public static final Unit KELVIN = new Unit("Kelvin", "K", Dimension.TEMPERATURE, 1.0, 0.0);
+    public static final Unit CELSIUS = new Unit("Celsius", "°C", Dimension.TEMPERATURE, 1.0, 273.15);
+    public static final Unit FAHRENHEIT = new Unit("Fahrenheit", "°F", Dimension.TEMPERATURE, 5.0 / 9.0, 273.15 - 32.0 * (5.0 / 9.0));
+
+    // Standard Pressure Units (Base: Pascal)
+    public static final Unit HECTOPASCAL = new Unit("Hectopascal", "hPa", Dimension.PRESSURE, 100.0, 0.0);
+    public static final Unit PSI = new Unit("Pounds per Square Inch", "psi", Dimension.PRESSURE, 6894.76, 0.0);
+
+    public static final Unit PERCENT_HUMIDITY = new Unit("Percent RH", "%", Dimension.HUMIDITY, 1.0, 0.0);
+
+    public Unit(String name, String symbol, Dimension dimension, double multiplier, double offset) {
+        this.name = name;
+        this.symbol = symbol;
+        this.dimension = dimension;
+        this.toBaseMultiplier = multiplier;
+        this.toBaseOffset = offset;
+    }
+
+    public Dimension getDimension() { return dimension; }
+    public String getSymbol() { return symbol; }
+    public double toBase(double val) { return val * toBaseMultiplier + toBaseOffset; }
+    public double fromBase(double baseVal) { return (baseVal - toBaseOffset) / toBaseMultiplier; }
+}
+
+// 3. Immutable Quantity Value Object (Martin Fowler Analysis Pattern)
+public record Quantity(double amount, Unit unit) {
+    public Quantity {
+        Objects.requireNonNull(unit, "Unit must not be null");
+    }
+
+    // Type-safe unit conversion: Throws runtime error on dimension mismatch!
+    public Quantity convertTo(Unit targetUnit) {
+        if (this.unit.getDimension() != targetUnit.getDimension()) {
+            throw new IllegalArgumentException(
+                "Dimension Mismatch: Cannot convert " + unit.getDimension() + " to " + targetUnit.getDimension()
+            );
+        }
+        double baseVal = this.unit.toBase(this.amount);
+        double converted = targetUnit.fromBase(baseVal);
+        return new Quantity(converted, targetUnit);
+    }
+
+    @Override
+    public String toString() {
+        return String.format("%.2f %s", amount, unit.getSymbol());
+    }
+}</code></pre>
+      </div>
+
+      <!-- Observer Sensor Telemetry -->
+      <div class="diff-box diff-good">
+        <div class="diff-title">
+          <span>✅ Decoupled Sensor Streaming via Observer Pattern</span>
+        </div>
+        <p style="font-size:0.88rem; color:var(--text-muted); margin-bottom:0.75rem;">
+          Sensors stream readings polymorphically. Adding new sensors (e.g. Anemometer) requires zero changes to the weather station core (Open-Closed Principle fulfilled):
+        </p>
+        <pre><code class="language-java">package posa.weather.station;
+
+import posa.weather.domain.*;
+import java.time.Instant;
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
+
+// Observer Interface for Telemetry Consumers (Database Writer, Mobile Push, UI View)
+public interface SensorObserver {
+    void onMeasurement(String sensorId, Quantity reading, Instant timestamp);
+}
+
+// Polymorphic Sensor Abstraction
+public interface Sensor {
+    String getSensorId();
+    Dimension getDimension();
+    Quantity poll();
+}
+
+// WeatherStation Observable Subject
+public class WeatherStation {
+    private final List&lt;Sensor&gt; sensors = new CopyOnWriteArrayList&lt;&gt;();
+    private final List&lt;SensorObserver&gt; observers = new CopyOnWriteArrayList&lt;&gt;();
+
+    public void registerSensor(Sensor s) { sensors.add(s); }
+    public void registerObserver(SensorObserver o) { observers.add(o); }
+
+    public void captureAndBroadcast() {
+        Instant now = Instant.now();
+        for (Sensor sensor : sensors) {
+            Quantity reading = sensor.poll();
+            for (SensorObserver observer : observers) {
+                observer.onMeasurement(sensor.getSensorId(), reading, now);
+            }
+        }
+    }
+}</code></pre>
+      </div>
+    </section>
+
+    <!-- ============================================================== -->
+    <!-- 3. AGENTIC ARCHITECTURES & CLASSIC POSA MAPPINGS               -->
+    <!-- ============================================================== -->
+    <section class="chapter" id="sec-agentic-topologies">
+      <div class="chapter-head">
+        <span class="chapter-num">3</span>
+        <div>
+          <h2>Mapping Classic POSA Patterns to AI Agent Systems</h2>
+          <span style="font-size:0.85rem; color:var(--text-muted); font-weight:600;">Autonomous Agentic Topologies</span>
+        </div>
+      </div>
+
+      <p style="font-size:0.95rem; line-height:1.65; color:var(--text); margin-bottom:1.5rem;">
+        Modern autonomous AI systems (e.g., Google Antigravity, LangGraph, AutoGen, CrewAI) do not invent new software architecture principles; they represent <strong>pure implementations of classical POSA and Gang of Four patterns</strong> operating over stochastic neural networks.
+      </p>
+
+      <!-- SVG Architecture Diagram -->
+      <div style="background:var(--bg-raised); border:1px solid var(--border); border-radius:var(--radius-md); padding:1.5rem; margin:1.5rem 0; text-align:center;">
+        <svg viewBox="0 0 760 380" style="max-width:100%; height:auto;" aria-label="POSA Patterns in Agentic AI Architecture">
+          <defs>
+            <marker id="arrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+              <path d="M 0 1 L 8 5 L 0 9 z" fill="#6366f1"/>
+            </marker>
+          </defs>
+
+          <!-- Outer Container: Agent System -->
+          <rect x="20" y="20" width="720" height="340" rx="8" fill="rgba(99, 102, 241, 0.04)" stroke="#6366f1" stroke-width="1.5" stroke-dasharray="4,4"/>
+          <text x="40" y="45" fill="#6366f1" font-family="var(--font-mono)" font-size="12" font-weight="800">AUTONOMOUS MULTI-AGENT SWARM (POSA 1 &amp; 2 SYSTEM)</text>
+
+          <!-- 1. Guardrail Layer: Chain of Responsibility -->
+          <rect x="50" y="70" width="180" height="90" rx="6" fill="var(--bg)" stroke="#ef4444" stroke-width="1.5"/>
+          <text x="140" y="95" fill="#ef4444" font-family="var(--font-mono)" font-size="11" font-weight="700" text-anchor="middle">CHAIN OF RESPONSIBILITY</text>
+          <text x="140" y="115" fill="var(--text)" font-family="var(--font-display)" font-size="12" font-weight="700" text-anchor="middle">Guardrail Filters</text>
+          <text x="140" y="135" fill="var(--text-muted)" font-family="var(--font-mono)" font-size="10" text-anchor="middle">PII Mask → Jailbreak Check</text>
+
+          <!-- Arrow 1 to Router -->
+          <line x1="230" y1="115" x2="280" y2="115" stroke="#6366f1" stroke-width="2" marker-end="url(#arrow)"/>
+
+          <!-- 2. Router: Strategy Pattern -->
+          <rect x="290" y="70" width="180" height="90" rx="6" fill="var(--bg)" stroke="#38bdf8" stroke-width="1.5"/>
+          <text x="380" y="95" fill="#38bdf8" font-family="var(--font-mono)" font-size="11" font-weight="700" text-anchor="middle">STRATEGY PATTERN</text>
+          <text x="380" y="115" fill="var(--text)" font-family="var(--font-display)" font-size="12" font-weight="700" text-anchor="middle">LLM Inference Router</text>
+          <text x="380" y="135" fill="var(--text-muted)" font-family="var(--font-mono)" font-size="10" text-anchor="middle">Flash-Lite vs. Pro Model</text>
+
+          <!-- Arrow 2 to Tool Execution -->
+          <line x1="470" y1="115" x2="520" y2="115" stroke="#6366f1" stroke-width="2" marker-end="url(#arrow)"/>
+
+          <!-- 3. Tool Execution: Command Pattern -->
+          <rect x="530" y="70" width="180" height="90" rx="6" fill="var(--bg)" stroke="#10b981" stroke-width="1.5"/>
+          <text x="620" y="95" fill="#10b981" font-family="var(--font-mono)" font-size="11" font-weight="700" text-anchor="middle">COMMAND PATTERN</text>
+          <text x="620" y="115" fill="var(--text)" font-family="var(--font-display)" font-size="12" font-weight="700" text-anchor="middle">ReAct Tool Execution</text>
+          <text x="620" y="135" fill="var(--text-muted)" font-family="var(--font-mono)" font-size="10" text-anchor="middle">execute(), undo(), sandbox</text>
+
+          <!-- Downward Arrow from Router & Command to Blackboard -->
+          <line x1="380" y1="160" x2="380" y2="200" stroke="#6366f1" stroke-width="2" marker-end="url(#arrow)"/>
+          <line x1="620" y1="160" x2="620" y2="200" stroke="#6366f1" stroke-width="2" marker-end="url(#arrow)"/>
+
+          <!-- 4. Multi-Agent Memory: Blackboard Pattern -->
+          <rect x="50" y="210" width="660" height="130" rx="6" fill="var(--bg)" stroke="#a855f7" stroke-width="1.5"/>
+          <text x="70" y="235" fill="#a855f7" font-family="var(--font-mono)" font-size="11" font-weight="800">POSA BLACKBOARD ARCHITECTURE (MULTI-AGENT MEMORY &amp; ARTIFACTS)</text>
+
+          <!-- Blackboard Internal Components -->
+          <rect x="70" y="250" width="180" height="70" rx="4" fill="var(--bg-raised)" stroke="var(--border)"/>
+          <text x="160" y="275" fill="var(--text)" font-family="var(--font-display)" font-size="11" font-weight="700" text-anchor="middle">Blackboard Repository</text>
+          <text x="160" y="295" fill="var(--text-muted)" font-family="var(--font-mono)" font-size="9" text-anchor="middle">Shared Conversation &amp; Artifacts</text>
+
+          <rect x="270" y="250" width="220" height="70" rx="4" fill="var(--bg-raised)" stroke="var(--border)"/>
+          <text x="380" y="275" fill="var(--text)" font-family="var(--font-display)" font-size="11" font-weight="700" text-anchor="middle">Specialist Knowledge Sources</text>
+          <text x="380" y="295" fill="var(--text-muted)" font-family="var(--font-mono)" font-size="9" text-anchor="middle">Research Agent · Coder · Reviewer</text>
+
+          <rect x="510" y="250" width="180" height="70" rx="4" fill="var(--bg-raised)" stroke="var(--border)"/>
+          <text x="600" y="275" fill="var(--text)" font-family="var(--font-display)" font-size="11" font-weight="700" text-anchor="middle">Control Component</text>
+          <text x="600" y="295" fill="var(--text-muted)" font-family="var(--font-mono)" font-size="9" text-anchor="middle">Meta-Prompt Orchestrator</text>
+        </svg>
+      </div>
+
+      <!-- Pattern Mapping Table -->
+      <div class="guide-card">
+        <div class="guide-card-header">
+          <span class="rule-badge">EXHAUSTIVE POSA MAPPING</span>
+          <span>Classic Patterns in Autonomous Agent Frameworks</span>
+        </div>
+        <div style="overflow-x:auto;">
+          <table style="width:100%; border-collapse:collapse; font-size:0.88rem;">
+            <thead>
+              <tr style="border-bottom:2px solid var(--border); text-align:left;">
+                <th style="padding:0.65rem;">Classic Pattern</th>
+                <th style="padding:0.65rem;">Agentic AI Equivalent</th>
+                <th style="padding:0.65rem;">Architectural Mechanism</th>
+                <th style="padding:0.65rem;">Failure Mode Prevented</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr style="border-bottom:1px solid var(--border);">
+                <td style="padding:0.65rem;"><strong>Strategy Pattern</strong> (GoF)</td>
+                <td style="padding:0.65rem;">LLM Router / Dynamic Dispatcher</td>
+                <td style="padding:0.65rem;">A lightweight classifier model inspects prompt complexity and dynamically dispatches to specialized models (e.g., Flash for routing, Pro for formal synthesis).</td>
+                <td style="padding:0.65rem; color:#ef4444;">Prohibitive API token latency and costs on trivial queries.</td>
+              </tr>
+              <tr style="border-bottom:1px solid var(--border);">
+                <td style="padding:0.65rem;"><strong>Command Pattern</strong> (GoF)</td>
+                <td style="padding:0.65rem;">ReAct Tool Calling &amp; Function Invocations</td>
+                <td style="padding:0.65rem;">Encapsulating external operations (SQL query, bash command, file edit) as self-contained objects with validation, parameters, and rollback support.</td>
+                <td style="padding:0.65rem; color:#ef4444;">Unchecked catastrophic execution on non-idempotent operations.</td>
+              </tr>
+              <tr style="border-bottom:1px solid var(--border);">
+                <td style="padding:0.65rem;"><strong>Blackboard Architecture</strong> (POSA 1)</td>
+                <td style="padding:0.65rem;">Multi-Agent Collaboration Swarms</td>
+                <td style="padding:0.65rem;">Autonomous agents (Researcher, Coder, Auditor) read and write hypotheses asynchronously to a shared transcript and scratchpad directory.</td>
+                <td style="padding:0.65rem; color:#ef4444;">Rigid point-to-point agent communication deadlocks.</td>
+              </tr>
+              <tr style="border-bottom:1px solid var(--border);">
+                <td style="padding:0.65rem;"><strong>Chain of Responsibility</strong> (GoF)</td>
+                <td style="padding:0.65rem;">AI Safety &amp; Guardrail Pipelines</td>
+                <td style="padding:0.65rem;">Streaming prompt inputs through discrete interceptors: PII Redactor &rarr; Jailbreak Detector &rarr; Content Policy &rarr; Hallucination Auditor.</td>
+                <td style="padding:0.65rem; color:#ef4444;">Prompt injection vulnerabilities and regulatory PII leaks.</td>
+              </tr>
+              <tr>
+                <td style="padding:0.65rem;"><strong>Pipes &amp; Filters</strong> (POSA 1)</td>
+                <td style="padding:0.65rem;">Retrieval-Augmented Generation (RAG)</td>
+                <td style="padding:0.65rem;">Unidirectional streaming data pipeline: Document Chunking &rarr; Embedding Model &rarr; Vector Search &rarr; Reranker &rarr; Synthesis.</td>
+                <td style="padding:0.65rem; color:#ef4444;">Context window saturation with irrelevant reference documents.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Code Anatomy: Router as Strategy -->
+      <div class="pattern-spec-box">
+        <span class="spec-label">Code Anatomy: The LLM Router Strategy</span>
+        <pre><code class="language-java">public interface ModelStrategy {
+    ModelResponse complete(PromptContext ctx);
+}
+
+public class FastRouterStrategy implements ModelStrategy {
+    public ModelResponse complete(PromptContext ctx) {
+        return callApi("gemini-2.5-flash-lite", ctx); // Rapid intent classification (sub-100ms)
+    }
+}
+
+public class DeepReasoningStrategy implements ModelStrategy {
+    public ModelResponse complete(PromptContext ctx) {
+        return callApi("gemini-2.5-pro", ctx); // Complex architectural synthesis & proofs
+    }
+}
+
+public class AgentDispatcher {
+    private ModelStrategy strategy;
+
+    public void selectStrategy(TaskComplexity complexity) {
+        this.strategy = (complexity == TaskComplexity.SIMPLE) 
+            ? new FastRouterStrategy() 
+            : new DeepReasoningStrategy();
+    }
+
+    public ModelResponse executeTask(PromptContext ctx) {
+        return strategy.complete(ctx);
+    }
+}</code></pre>
+      </div>
+    </section>
+
+    <!-- ============================================================== -->
+    <!-- 4. THE 4 MODERN AI ARCHITECTURAL SMELLS                        -->
+    <!-- ============================================================== -->
+    <section class="chapter" id="sec-ai-smells">
+      <div class="chapter-head">
+        <span class="chapter-num">4</span>
+        <div>
+          <h2>The 4 Modern AI Architectural Smells</h2>
+          <span style="font-size:0.85rem; color:var(--text-muted); font-weight:600;">Diagnosing AI Code Degradation</span>
+        </div>
+      </div>
+
+      <p style="font-size:0.95rem; line-height:1.65; color:var(--text); margin-bottom:1.5rem;">
+        Just as Robert C. Martin identified the 4 classic smells of rotting design (Rigidity, Fragility, Immobility, Viscosity in Unit 6), AI-assisted software generation introduces <strong>4 distinct architectural decay smells</strong> that the human auditor must actively detect and eliminate:
+      </p>
+
+      <div class="pattern-spec-box">
+        <div class="spec-grid">
+          <div class="spec-row">
+            <span class="spec-label">1. Prompt Viscosity (Architectural Resistance):</span>
+            <span class="spec-val">
+              When working with LLMs, it is cognitively easier to accept a 300-line monolithic helper function generated in one shot than to demand the AI break it into five decoupled, polymorphic classes. <strong>Viscosity is at its peak when the easiest way to generate code is the architecturally incorrect way.</strong>
+            </span>
+          </div>
+          <div class="spec-row">
+            <span class="spec-label">2. Phantom Invariants (Hallucinated Contracts):</span>
+            <span class="spec-val">
+              LLMs frequently generate code that <em>looks</em> defensive by creating getters, setters, and wrapper methods, but fails to actually validate class invariants. For example, generating a <code>setDiscount(double d)</code> method with no verification that $0 \le d \le 1.0$, creating an illusion of encapsulation with none of the safety.
+            </span>
+          </div>
+          <div class="spec-row">
+            <span class="spec-label">3. Speculative Micro-Decoupling (Over-Abstraction):</span>
+            <span class="spec-val">
+              To appear "enterprise-ready", LLMs frequently generate an interface, an abstract class, a factory, and an implementation class for a simple 10-line utility that will never have a second implementation. This violates the Open-Closed Principle and YAGNI, drastically inflating cognitive load.
+            </span>
+          </div>
+          <div class="spec-row">
+            <span class="spec-label">4. Context Bleed (Single Responsibility Dissolution):</span>
+            <span class="spec-val">
+              As context windows grow, developers paste entire files into the prompt. The AI naturally starts blending concerns across boundaries—placing SQL persistence queries, DTO transformations, and HTTP status codes inside domain entities. The human auditor must enforce strict SRP package boundaries.
+            </span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================== -->
+    <!-- 5. CORE EXAM PRACTICE DRILLS & DIRECT MODEL ANSWERS            -->
     <!-- ============================================================== -->
     <section class="chapter" id="sec-drills">
       <div class="chapter-head">
-        <span class="chapter-num">3</span>
+        <span class="chapter-num">5</span>
         <div>
           <h2>Core Exam Practice &amp; Model Solutions</h2>
           <span style="font-size:0.85rem; color:var(--text-muted); font-weight:600;">Direct Question &rarr; Answer Format</span>
         </div>
       </div>
 
-      <!-- QA 1: Multi-Agent Blackboard -->
+      <!-- QA 1: Semantic Prompt Compression -->
       <div class="qa-block">
         <div class="qa-q">
-          Question 1: Multi-Agent Collaboration and the Blackboard Pattern
+          Question 1: Semantic Prompt Compression and Hallucination Control
           <span class="pts-badge">4 Points</span>
           <p style="font-size:0.92rem; font-weight:400; color:var(--text-muted); margin-top:0.5rem;">
-            Why does a multi-agent AI system with specialized subagents (e.g., Code Researcher, Unit Tester, Auditor) represent an implementation of the POSA Blackboard pattern?
+            Why does utilizing formal GoF and POSA pattern nomenclature (e.g., Strategy, Blackboard, Observer) in prompts drastically reduce architectural hallucinations in GenAI code generation compared to extensive natural language descriptions?
           </p>
         </div>
         <div class="qa-a">
           <span class="ans-label">Model Answer:</span>
           <p>
-            The multi-agent system maps directly to the three components of the <strong>Blackboard Pattern</strong>:
+            Pattern nomenclature reduces architectural hallucinations through two mechanisms:
           </p>
           <ol>
-            <li><strong>Blackboard:</strong> The shared conversation context / scratchpad memory where all system state, user requirements, and evolving code artifacts reside.</li>
-            <li><strong>Knowledge Sources:</strong> The individual specialized AI agents. They do not communicate peer-to-peer; each inspects the shared workspace and contributes domain-specific output (research notes, unit tests, code patches).</li>
-            <li><strong>Control:</strong> The primary orchestrator agent (or meta-prompt loop) that evaluates current progress and decides which specialist subagent should be invoked next.</li>
+            <li><strong>High-Density Semantic Anchoring:</strong> Design patterns represent dense consensus clusters in the LLM's pre-training corpus. When an engineer specifies <em>"Strategy Pattern"</em>, the model activates tightly coupled weights associated with interface segregation, interchangeable algorithm delegates, and composition over inheritance, bypassing hundreds of ambiguous natural language sentences.</li>
+            <li><strong>Elimination of Interpretive Entropy:</strong> Long natural language requirements suffer from semantic drift; the model must probabilistically guess where module boundaries lie. Pattern names impose strict structural constraints (e.g., ConcreteStrategies must implement a shared Strategy interface), restricting the model's generation space to architecturally sound topologies.</li>
           </ol>
         </div>
       </div>
+
+      <!-- QA 2: Weather Station Fowler Quantity -->
+      <div class="qa-block">
+        <div class="qa-q">
+          Question 2: The Weather Station Case Study &amp; Fowler's Quantity Pattern
+          <span class="pts-badge">6 Points</span>
+          <p style="font-size:0.92rem; font-weight:400; color:var(--text-muted); margin-top:0.5rem;">
+            In the Weather Station case study, an AI initially models measurements as primitive <code>double temperature</code>, <code>double pressure</code>, and <code>double humidity</code>. (a) Detail two critical architectural vulnerabilities of this design. (b) Explain how Martin Fowler's Quantity Pattern resolves both vulnerabilities.
+          </p>
+        </div>
+        <div class="qa-a">
+          <span class="ans-label">Model Answer:</span>
+          <p><strong>(a) Two Critical Architectural Vulnerabilities:</strong></p>
+          <ul>
+            <li><strong>Primitive Obsession &amp; Dimension Loss:</strong> Naked double values strip away physical units. A temperature of <code>32.0</code> is freezing in Fahrenheit ($0^\circ	ext{C}$), but boiling hot in Celsius ($89.6^\circ	ext{F}$). If client code passes Celsius into a Fahrenheit repository, silent arithmetic errors occur without compiler warnings.</li>
+            <li><strong>Violation of Open-Closed Principle (OCP):</strong> Hardcoding measurement columns/fields inside the entity class means introducing a new sensor (e.g., Anemometer for wind speed or UV sensor) forces modifying the database schema, entity class, and data-access layers.</li>
+          </ul>
+          <p><strong>(b) Resolution via Martin Fowler's Quantity Pattern:</strong></p>
+          <ul>
+            <li><strong>Type-Safe Value Object:</strong> Fowler's pattern encapsulates the numerical magnitude and its physical <code>Unit</code> inside an immutable <code>Quantity(double amount, Unit unit)</code> record. Conversions occur through explicit methods (<code>quantity.convertTo(Unit.FAHRENHEIT)</code>), which verify physical Dimension compatibility and throw runtime exceptions on dimension mismatches.</li>
+            <li><strong>Polymorphic Extensibility:</strong> By coupling sensors to an abstract <code>Quantity</code> rather than hardcoded primitive fields, new sensors can be added dynamically without changing existing entity schemas or business logic.</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- QA 3: Multi-Agent Blackboard Topology -->
+      <div class="qa-block">
+        <div class="qa-q">
+          Question 3: Multi-Agent Swarms and the POSA Blackboard Pattern
+          <span class="pts-badge">6 Points</span>
+          <p style="font-size:0.92rem; font-weight:400; color:var(--text-muted); margin-top:0.5rem;">
+            A modern autonomous software development agentic system utilizes a team of specialized subagents (Researcher, Code Author, Test Engineer, Security Auditor). Map this architecture to the three formal components of the POSA 1 Blackboard Pattern and explain how control flow is managed.
+          </p>
+        </div>
+        <div class="qa-a">
+          <span class="ans-label">Model Answer:</span>
+          <p>The multi-agent swarm maps directly to the three components of the <strong>POSA Blackboard Pattern</strong>:</p>
+          <ol>
+            <li><strong>The Blackboard (Shared State):</strong> The central repository containing the current state of problem solving. In modern AI systems, this is the shared conversation transcript, JSON workspace state, and generated file artifacts. Subagents do not maintain isolated, conflicting states; they read from and append to the shared Blackboard.</li>
+            <li><strong>Knowledge Sources (Specialized Subagents):</strong> Independent AI models configured with dedicated system prompts and tool access (e.g., Code Researcher with read-only tools, Security Auditor with AST analyzers). They do not call each other directly; they inspect the Blackboard and contribute their specialized outputs when applicable.</li>
+            <li><strong>Control Component (Orchestrator):</strong> The primary supervisor agent or state machine loop. It evaluates the current state of the Blackboard, checks completion conditions, and schedules which Knowledge Source (subagent) is triggered next.</li>
+          </ol>
+        </div>
+      </div>
+
+      <!-- QA 4: AI Guardrail Pipelines & Chain of Responsibility -->
+      <div class="qa-block">
+        <div class="qa-q">
+          Question 4: Guardrail Interceptors and Chain of Responsibility
+          <span class="pts-badge">4 Points</span>
+          <p style="font-size:0.92rem; font-weight:400; color:var(--text-muted); margin-top:0.5rem;">
+            Why must production LLM guardrails (PII redaction, prompt injection defense, hallucination evaluation) be architected as an external Chain of Responsibility rather than relying on system prompt instructions inside the LLM itself?
+          </p>
+        </div>
+        <div class="qa-a">
+          <span class="ans-label">Model Answer:</span>
+          <p>
+            Relying solely on system prompts for safety fails because probabilistic natural language prompts are susceptible to <strong>prompt injection and jailbreaks</strong> (adversarial user inputs that override system instructions).
+          </p>
+          <p>
+            Architecting guardrails as an external <strong>Chain of Responsibility</strong> guarantees deterministic enforcement:
+          </p>
+          <ul>
+            <li><strong>Deterministic Pre-Processing:</strong> Every incoming prompt must sequentially pass through discrete filters (e.g., Regex/NER PII Redactor &rarr; Vector Jailbreak Classifier). If an injection is detected, the request is terminated before reaching the LLM, consuming zero model tokens.</li>
+            <li><strong>Independent Modifiability &amp; Auditing (OCP):</strong> New regulatory filters (e.g., GDPR compliance, medical disclaimer interceptors) can be inserted into the chain dynamically without modifying model weights, prompt text, or downstream application business logic.</li>
+          </ul>
+        </div>
+      </div>
+
     </section>
+
     <!-- Footer Navigation -->
     <footer class="page-footer" style="margin-top: 4rem; padding-top: 2rem; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
       <a class="nav-prev" href="unit-15-criticism.html" style="font-weight: 700; color: var(--accent); text-decoration: none;">← Previous: Unit 15 · Pattern Criticism</a>
@@ -339,6 +824,6 @@
   </main>
 </div>
 
-<script src="assets/site.js?v=2026.19" defer></script>
+<script src="assets/site.js?v=2026.20" defer></script>
 </body>
 </html>
