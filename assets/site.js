@@ -111,12 +111,12 @@
         { href: "unit-8-creational.html", num: "8", title: "Creational Patterns" },
         { href: "unit-9-flexibility.html", num: "9", title: "Flexibility Patterns" },
         { href: "unit-10-decoupling.html", num: "10", title: "Decoupling Patterns" },
-        { href: "unit-11-mvc.html", num: "11", title: "Case Study: MVC" },
-        { href: "unit-12-architectural.html", num: "12", title: "Architectural Patterns" },
-        { href: "unit-13-analysis.html", num: "13", title: "Analysis & Quality" },
-        { href: "unit-14-testing.html", num: "14", title: "Testing Patterns" },
-        { href: "unit-15-criticism.html", num: "15", title: "Pattern Criticism" },
-        { href: "unit-16-genai.html", num: "16", title: "GenAI & Patterns" }
+        { href: "unit-11-mvc.html", num: "11", title: "MVC Architecture <small style=\"opacity:0.65;font-size:0.7em;\">(2026: U10)</small>" },
+        { href: "unit-12-architectural.html", num: "12", title: "Architectural Styles <small style=\"opacity:0.65;font-size:0.7em;\">(2026: U11)</small>" },
+        { href: "unit-13-analysis.html", num: "13", title: "Analysis & Quality <small style=\"opacity:0.65;font-size:0.7em;\">(2026: U12)</small>" },
+        { href: "unit-14-testing.html", num: "14", title: "Testing Patterns <small style=\"opacity:0.65;font-size:0.7em;\">(2026: Opt)</small>" },
+        { href: "unit-15-criticism.html", num: "15", title: "Pattern Criticism <small style=\"opacity:0.65;font-size:0.7em;\">(2026: U14)</small>" },
+        { href: "unit-16-genai.html", num: "16", title: "GenAI & Patterns <small style=\"opacity:0.65;font-size:0.7em;\">(2026: U13)</small>" }
       ];
 
       var itemsHtml = units.map(function(u) {
@@ -130,7 +130,7 @@
       menu.innerHTML = 
         '<div class="units-dropdown-header">' +
           '<span>All 16 Curriculum Units</span>' +
-          '<span style="font-size:0.68rem; color:var(--accent); font-weight:700;">Direct Jump</span>' +
+          '<span style="font-size:0.68rem; color:var(--accent); font-weight:700;">2025 · 2026 Mapped</span>' +
         '</div>' +
         '<div class="units-grid">' + itemsHtml + '</div>' +
         '<div class="units-dropdown-footer">' +
